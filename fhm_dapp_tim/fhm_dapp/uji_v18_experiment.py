@@ -79,7 +79,7 @@ FLOOR_HEIGHT_M = 4.0
 PREDICTIVE_DRAWS = 64
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TRAIN = ROOT / "data" / "UJIndoorLoc" / "trainingData.csv"
+DEFAULT_TRAIN = ROOT.parent / "data" / "UJIndoorLoc" / "trainingData.csv"
 DEFAULT_EVIDENCE = ROOT / "evidence" / "v18_single"
 DEFAULT_MODELS = ROOT / "models" / "v18_single"
 DEFAULT_REGISTRY = DEFAULT_EVIDENCE / "registry_v18.json"
