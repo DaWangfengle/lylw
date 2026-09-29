@@ -12,8 +12,7 @@ Protocol:
 5. Refit exactly one final checkpoint on outer_refit for the frozen epoch count.
 6. Only after the freeze, evaluate outer_test once.
 
-The official UJI validationData.csv is deliberately outside this main
-experiment.
+The official UJI validation split is deliberately outside this main experiment.
 """
 
 from __future__ import annotations
