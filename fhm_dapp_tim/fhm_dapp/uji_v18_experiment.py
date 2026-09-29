@@ -55,6 +55,10 @@ from fhm_dapp_tim.fhm_dapp.train_anchor_v2 import (
     _remap_training_devices,
     _training_reference_stats,
 )
+from fhm_dapp_tim.fhm_dapp.coherent_marked_v9 import (
+    common_student_t_randomness,
+    continuous_energy_score_mc,
+)
 from fhm_dapp_tim.fhm_dapp.v18_single import (
     V18_CONFIG,
     build_v18_model,
@@ -421,6 +425,7 @@ def evaluate_model(
     floor_errors: list[torch.Tensor] = []
     entropy_parts: list[torch.Tensor] = []
     radial_parts: list[torch.Tensor] = []
+    energy_parts: list[torch.Tensor] = []
 
     for start in range(0, len(rows), int(batch_size)):
         selected = rows[start : start + int(batch_size)]
@@ -449,6 +454,20 @@ def evaluate_model(
             (-(weights * weights.clamp(min=1e-12).log()).sum(dim=1)).cpu()
         )
         radial_parts.append(result["radial_scale"].cpu())
+        randomness = common_student_t_randomness(
+            len(selected),
+            draws=PREDICTIVE_DRAWS,
+            degrees_freedom=float(V18_CONFIG["student_df"]),
+            seed=SCORING_SEED + start,
+        )
+        energy, _, _ = continuous_energy_score_mc(
+            weights.cpu(),
+            result["component_locations"].cpu(),
+            result["component_scales"].cpu(),
+            target.cpu(),
+            randomness,
+        )
+        energy_parts.append(energy)
 
     nll = torch.cat(nll_parts)
     error = torch.cat(error_parts)
@@ -456,11 +475,13 @@ def evaluate_model(
     floor_error = torch.cat(floor_errors)
     entropy = torch.cat(entropy_parts)
     radial = torch.cat(radial_parts)
+    energy = torch.cat(energy_parts)
     keys = [data["keys"][int(row)] for row in rows]
     macro_nll, nll_se, groups = _coordinate_macro(nll, keys)
     macro_mae, mae_se, _ = _coordinate_macro(error, keys)
     macro_building, _, _ = _coordinate_macro(building_error, keys)
     macro_floor, _, _ = _coordinate_macro(floor_error, keys)
+    macro_energy, energy_se, _ = _coordinate_macro(energy, keys)
     return {
         "coordinate_macro_mixture_nll": macro_nll,
         "coordinate_macro_mixture_nll_se": nll_se,
@@ -468,6 +489,8 @@ def evaluate_model(
         "coordinate_macro_mae_se_m": mae_se,
         "coordinate_macro_building_error": macro_building,
         "coordinate_macro_floor_error": macro_floor,
+        "coordinate_macro_energy_score_m": macro_energy,
+        "coordinate_macro_energy_score_se_m": energy_se,
         "mean_anchor_entropy_nats": float(entropy.mean()),
         "mean_radial_scale_m": float(radial.mean()),
         "coordinate_groups": groups,
