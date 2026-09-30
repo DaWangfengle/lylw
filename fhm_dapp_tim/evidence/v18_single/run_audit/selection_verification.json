@@ -1,0 +1,146 @@
+{
+  "phase": "selection",
+  "checkpoint_sha256": "6dcc0ccdb6c4adcadfee75312d756dbc498be180d9144d8102d3cb060e3a0d1f",
+  "selected_epoch": 1,
+  "anchors": 595,
+  "parameters": 606873,
+  "training_seconds": 165.21064500001376,
+  "best_early_stop_mixture_nll": 9.41831075341514,
+  "selection_epochs_run": 29,
+  "refit_epochs": 1,
+  "all_checkpoint_tensors_and_history_finite": true,
+  "single_member_contract": {
+    "checkpoint_count": 1,
+    "member_axis": false,
+    "residual_experts": 1
+  },
+  "config": {
+    "d_model": 128,
+    "num_heads": 4,
+    "num_layers": 2,
+    "max_visible": 64,
+    "dropout": 0.1,
+    "student_df": 4.0,
+    "min_scale_m": 0.25,
+    "max_residual_m": 30.0,
+    "residual_experts": 1,
+    "scan_feature_mode": "bounded_maximal_invariant",
+    "prototype_metric": "none",
+    "candidate_reranker": true,
+    "candidate_reranker_mode": "summary",
+    "reranker_anchor_decoder": false,
+    "batch_size": 96,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 5.0,
+    "maximum_epochs": 80,
+    "minimum_epochs": 20,
+    "patience": 10,
+    "minimum_improvement_nll": 0.001,
+    "rss_offset_aug_db": 4.0,
+    "rss_scale_aug": 0.08,
+    "ap_dropout": 0.1,
+    "domain_adversarial_weight": 0.05,
+    "retrieval_weight": 0.25,
+    "hierarchy_weight": 0.5,
+    "self_target_weight": 0.5,
+    "coordinate_weight": 0.1,
+    "reranker_weight": 0.5,
+    "train_candidates": 48,
+    "inference_top_k": 64,
+    "posterior_temperature": 1.0,
+    "condition_building": false,
+    "deterministic_building": true
+  },
+  "delaunay_transform_reconstruction_exact": true,
+  "delaunay_min_eigenvalue": 0.4525708556175232,
+  "geometry": {
+    "definition": "same-building-floor Delaunay closed one-ring",
+    "maximum_closed_neighborhood": 14,
+    "minimum_degree": 2,
+    "median_degree": 5.0,
+    "maximum_degree": 13,
+    "strata": {
+      "0:0": {
+        "anchors": 34,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 94
+      },
+      "0:1": {
+        "anchors": 43,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 122
+      },
+      "0:2": {
+        "anchors": 45,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 128
+      },
+      "0:3": {
+        "anchors": 43,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 122
+      },
+      "1:0": {
+        "anchors": 49,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 132
+      },
+      "1:1": {
+        "anchors": 38,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 103
+      },
+      "1:2": {
+        "anchors": 50,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 137
+      },
+      "1:3": {
+        "anchors": 32,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 85
+      },
+      "2:0": {
+        "anchors": 43,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 116
+      },
+      "2:1": {
+        "anchors": 57,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 154
+      },
+      "2:2": {
+        "anchors": 46,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 121
+      },
+      "2:3": {
+        "anchors": 72,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 203
+      },
+      "2:4": {
+        "anchors": 43,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 118
+      }
+    }
+  },
+  "first_refit_loss": 8.504770442745782,
+  "last_refit_loss": 8.504770442745782
+}

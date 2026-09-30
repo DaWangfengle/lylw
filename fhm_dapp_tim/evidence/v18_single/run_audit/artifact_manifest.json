@@ -1,0 +1,45 @@
+{
+  "experiment_commit_sha": "17860cf50b7b32d97854a02c642ffb86a9b2562c",
+  "files": {
+    "fhm_dapp_tim\\evidence\\v18_single\\registry_v18.json": {
+      "sha256": "84fbfc89d6eb811476384513201abe6964be7c452e29f9f491370cdd0466ba95",
+      "bytes": 975242
+    },
+    "fhm_dapp_tim\\models\\v18_single\\selection.pt": {
+      "sha256": "6dcc0ccdb6c4adcadfee75312d756dbc498be180d9144d8102d3cb060e3a0d1f",
+      "bytes": 7448289
+    },
+    "fhm_dapp_tim\\evidence\\v18_single\\development_result_v18.json": {
+      "sha256": "aa988bbe3a6443fae154ecaf589e9cd416fdbf0fa6430a53d5fab69f2a0e9d80",
+      "bytes": 1291
+    },
+    "fhm_dapp_tim\\evidence\\v18_single\\selection_freeze_v18.json": {
+      "sha256": "86862bf4c797230d57a49cb28caef1294b375e93ed3f7e97c90a3c75edc0ae5d",
+      "bytes": 1639
+    },
+    "fhm_dapp_tim\\models\\v18_single\\final.pt": {
+      "sha256": "22b92ee307c0b207d7d724aaa75f91cc63eb0183d89a2e843074e1fa22965c54",
+      "bytes": 8768337
+    },
+    "fhm_dapp_tim\\evidence\\v18_single\\outer_test_result_v18.json": {
+      "sha256": "ed8e0b2f645ec8c758e95a09a6d673e8b12df6fd1f55e9ca343fac31287b8502",
+      "bytes": 1194
+    },
+    "fhm_dapp_tim\\evidence\\v18_single\\RUN_SUMMARY_V18.json": {
+      "sha256": "57bb8ec6f09579d67158d96d733ebde8900185cfb21180d47121ef08d0b5f83f",
+      "bytes": 14549
+    },
+    "fhm_dapp_tim\\evidence\\v18_single\\RUN_REPORT_V18.md": {
+      "sha256": "3aeaa0375ab1788dba18cc8107e05e4a1f931abca93b100eab7c11744a3e887f",
+      "bytes": 6865
+    },
+    "fhm_dapp_tim\\evidence\\v18_single\\run_audit\\training_trajectory_v18.json": {
+      "sha256": "41c4bb3af89b3da5cdf37fcfca5297bc72713e63ac4ab0378c753436b744149d",
+      "bytes": 44999
+    },
+    "fhm_dapp_tim\\evidence\\v18_single\\run_audit\\code_snapshot.json": {
+      "sha256": "13edb1cf759283285f8b42c15d74bc83a15923818a6696f23f7d56022dc7c4f7",
+      "bytes": 9778
+    }
+  }
+}

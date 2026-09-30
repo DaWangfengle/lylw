@@ -1,0 +1,433 @@
+{
+  "git_commit_sha": "17860cf50b7b32d97854a02c642ffb86a9b2562c",
+  "initial_commit_sha": "8e9a50d2bfc89027f97925d695a194db3d6eb8d5",
+  "tests": {
+    "passed": 12,
+    "failed": 0,
+    "seconds": 3.89
+  },
+  "py_compile": {
+    "v18_single.py": 0,
+    "uji_v18_experiment.py": 0
+  },
+  "fixes": [
+    {
+      "commit": "ed2e5ab50cc1feedf218246b86357c505a554198",
+      "file": "fhm_dapp_tim/fhm_dapp/uji_v18_experiment.py",
+      "change": "remove forbidden filename literal from scope-exclusion docstring"
+    },
+    {
+      "commit": "17860cf50b7b32d97854a02c642ffb86a9b2562c",
+      "file": "fhm_dapp_tim/fhm_dapp/uji_v18_experiment.py",
+      "change": "resolve default trainingData.csv from repository data directory"
+    }
+  ],
+  "protocol": {
+    "registry_sha256": "f5b9bb72d9d84efbaa0746ce18e17e33ff1e900d3018b96a671c46b2dcf2a2f6",
+    "self_hash_valid": true,
+    "training_rows": 19937,
+    "training_coordinate_count": 933,
+    "roles": {
+      "development": {
+        "coordinates": 151,
+        "rows": 3139
+      },
+      "early_stop": {
+        "coordinates": 89,
+        "rows": 1895
+      },
+      "member_fit": {
+        "coordinates": 506,
+        "rows": 10770
+      },
+      "outer_refit": {
+        "coordinates": 746,
+        "rows": 15804
+      },
+      "outer_test": {
+        "coordinates": 187,
+        "rows": 4133
+      },
+      "selection_refit": {
+        "coordinates": 595,
+        "rows": 12665
+      }
+    },
+    "diagnostics": {
+      "coordinate_grouping": "complete (building,floor,longitude,latitude)",
+      "disjoint_intersections": {
+        "member_fit_early_stop": 0,
+        "selection_refit_development": 0,
+        "outer_refit_outer_test": 0
+      },
+      "exact_union_identities": true,
+      "all_roles_keep_all_building_floor_strata": true,
+      "hull_checks": {
+        "all_hull_missing_from_outer_refit": 0,
+        "outer_refit_hull_missing_from_selection_refit": 0,
+        "selection_refit_hull_missing_from_member_fit": 0
+      }
+    }
+  },
+  "selection_model": {
+    "phase": "selection",
+    "checkpoint_sha256": "6dcc0ccdb6c4adcadfee75312d756dbc498be180d9144d8102d3cb060e3a0d1f",
+    "selected_epoch": 1,
+    "anchors": 595,
+    "parameters": 606873,
+    "training_seconds": 165.21064500001376,
+    "best_early_stop_mixture_nll": 9.41831075341514,
+    "selection_epochs_run": 29,
+    "refit_epochs": 1,
+    "all_checkpoint_tensors_and_history_finite": true,
+    "single_member_contract": {
+      "checkpoint_count": 1,
+      "member_axis": false,
+      "residual_experts": 1
+    },
+    "config": {
+      "d_model": 128,
+      "num_heads": 4,
+      "num_layers": 2,
+      "max_visible": 64,
+      "dropout": 0.1,
+      "student_df": 4.0,
+      "min_scale_m": 0.25,
+      "max_residual_m": 30.0,
+      "residual_experts": 1,
+      "scan_feature_mode": "bounded_maximal_invariant",
+      "prototype_metric": "none",
+      "candidate_reranker": true,
+      "candidate_reranker_mode": "summary",
+      "reranker_anchor_decoder": false,
+      "batch_size": 96,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.0001,
+      "gradient_clip": 5.0,
+      "maximum_epochs": 80,
+      "minimum_epochs": 20,
+      "patience": 10,
+      "minimum_improvement_nll": 0.001,
+      "rss_offset_aug_db": 4.0,
+      "rss_scale_aug": 0.08,
+      "ap_dropout": 0.1,
+      "domain_adversarial_weight": 0.05,
+      "retrieval_weight": 0.25,
+      "hierarchy_weight": 0.5,
+      "self_target_weight": 0.5,
+      "coordinate_weight": 0.1,
+      "reranker_weight": 0.5,
+      "train_candidates": 48,
+      "inference_top_k": 64,
+      "posterior_temperature": 1.0,
+      "condition_building": false,
+      "deterministic_building": true
+    },
+    "delaunay_transform_reconstruction_exact": true,
+    "delaunay_min_eigenvalue": 0.4525708556175232,
+    "geometry": {
+      "definition": "same-building-floor Delaunay closed one-ring",
+      "maximum_closed_neighborhood": 14,
+      "minimum_degree": 2,
+      "median_degree": 5.0,
+      "maximum_degree": 13,
+      "strata": {
+        "0:0": {
+          "anchors": 34,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 94
+        },
+        "0:1": {
+          "anchors": 43,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 122
+        },
+        "0:2": {
+          "anchors": 45,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 128
+        },
+        "0:3": {
+          "anchors": 43,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 122
+        },
+        "1:0": {
+          "anchors": 49,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 132
+        },
+        "1:1": {
+          "anchors": 38,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 103
+        },
+        "1:2": {
+          "anchors": 50,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 137
+        },
+        "1:3": {
+          "anchors": 32,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 85
+        },
+        "2:0": {
+          "anchors": 43,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 116
+        },
+        "2:1": {
+          "anchors": 57,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 154
+        },
+        "2:2": {
+          "anchors": 46,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 121
+        },
+        "2:3": {
+          "anchors": 72,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 203
+        },
+        "2:4": {
+          "anchors": 43,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 118
+        }
+      }
+    },
+    "first_refit_loss": 8.504770442745782,
+    "last_refit_loss": 8.504770442745782
+  },
+  "final_model": {
+    "phase": "final",
+    "checkpoint_sha256": "22b92ee307c0b207d7d724aaa75f91cc63eb0183d89a2e843074e1fa22965c54",
+    "selected_epoch": 1,
+    "anchors": 746,
+    "parameters": 626201,
+    "training_seconds": 9.704447600001004,
+    "best_early_stop_mixture_nll": null,
+    "selection_epochs_run": 0,
+    "refit_epochs": 1,
+    "all_checkpoint_tensors_and_history_finite": true,
+    "single_member_contract": {
+      "checkpoint_count": 1,
+      "member_axis": false,
+      "residual_experts": 1
+    },
+    "config": {
+      "d_model": 128,
+      "num_heads": 4,
+      "num_layers": 2,
+      "max_visible": 64,
+      "dropout": 0.1,
+      "student_df": 4.0,
+      "min_scale_m": 0.25,
+      "max_residual_m": 30.0,
+      "residual_experts": 1,
+      "scan_feature_mode": "bounded_maximal_invariant",
+      "prototype_metric": "none",
+      "candidate_reranker": true,
+      "candidate_reranker_mode": "summary",
+      "reranker_anchor_decoder": false,
+      "batch_size": 96,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.0001,
+      "gradient_clip": 5.0,
+      "maximum_epochs": 80,
+      "minimum_epochs": 20,
+      "patience": 10,
+      "minimum_improvement_nll": 0.001,
+      "rss_offset_aug_db": 4.0,
+      "rss_scale_aug": 0.08,
+      "ap_dropout": 0.1,
+      "domain_adversarial_weight": 0.05,
+      "retrieval_weight": 0.25,
+      "hierarchy_weight": 0.5,
+      "self_target_weight": 0.5,
+      "coordinate_weight": 0.1,
+      "reranker_weight": 0.5,
+      "train_candidates": 48,
+      "inference_top_k": 64,
+      "posterior_temperature": 1.0,
+      "condition_building": false,
+      "deterministic_building": true
+    },
+    "delaunay_transform_reconstruction_exact": true,
+    "delaunay_min_eigenvalue": 0.4525708556175232,
+    "geometry": {
+      "definition": "same-building-floor Delaunay closed one-ring",
+      "maximum_closed_neighborhood": 17,
+      "minimum_degree": 2,
+      "median_degree": 5.0,
+      "maximum_degree": 16,
+      "strata": {
+        "0:0": {
+          "anchors": 43,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 121
+        },
+        "0:1": {
+          "anchors": 54,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 155
+        },
+        "0:2": {
+          "anchors": 56,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 161
+        },
+        "0:3": {
+          "anchors": 54,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 155
+        },
+        "1:0": {
+          "anchors": 61,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 168
+        },
+        "1:1": {
+          "anchors": 48,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 133
+        },
+        "1:2": {
+          "anchors": 63,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 176
+        },
+        "1:3": {
+          "anchors": 40,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 109
+        },
+        "2:0": {
+          "anchors": 54,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 149
+        },
+        "2:1": {
+          "anchors": 71,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 196
+        },
+        "2:2": {
+          "anchors": 58,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 157
+        },
+        "2:3": {
+          "anchors": 90,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 257
+        },
+        "2:4": {
+          "anchors": 54,
+          "intrinsic_rank": 2,
+          "graph_method": "delaunay",
+          "undirected_edges": 151
+        }
+      }
+    },
+    "first_refit_loss": 7.778617076830332,
+    "last_refit_loss": 7.778617076830332
+  },
+  "development": {
+    "coordinate_groups": 151,
+    "coordinate_macro_building_error": 0.0009933774982461866,
+    "coordinate_macro_energy_score_m": 6.3132405754746195,
+    "coordinate_macro_energy_score_se_m": 0.2800712821178187,
+    "coordinate_macro_floor_error": 0.1685252555874207,
+    "coordinate_macro_mae_m": 8.559118619817772,
+    "coordinate_macro_mae_se_m": 0.4393877472138776,
+    "coordinate_macro_mixture_nll": 7.867258714524326,
+    "coordinate_macro_mixture_nll_se": 0.3321417478102425,
+    "mean_anchor_entropy_nats": 2.902897834777832,
+    "mean_radial_scale_m": 22.52463150024414,
+    "rows": 3139
+  },
+  "outer_test": {
+    "coordinate_groups": 187,
+    "coordinate_macro_building_error": 0.006557168289620608,
+    "coordinate_macro_energy_score_m": 6.258373566489806,
+    "coordinate_macro_energy_score_se_m": 0.3820212297524763,
+    "coordinate_macro_floor_error": 0.09963745336959706,
+    "coordinate_macro_mae_m": 9.11477151592785,
+    "coordinate_macro_mae_se_m": 0.5988422529041496,
+    "coordinate_macro_mixture_nll": 7.00155960557295,
+    "coordinate_macro_mixture_nll_se": 0.23003257632601856,
+    "mean_anchor_entropy_nats": 2.9233458042144775,
+    "mean_radial_scale_m": 20.252485275268555,
+    "rows": 4133
+  },
+  "registry_sha256": "f5b9bb72d9d84efbaa0746ce18e17e33ff1e900d3018b96a671c46b2dcf2a2f6",
+  "freeze_sha256": "379deb013d51b9f075e0e57235f3676757e90756f10311ef4e6c8676498e84cc",
+  "development_result_sha256": "f0843ab86451be75f556c3b6bd154c9a025f5b6b73c8c1ec1d982203b229c896",
+  "outer_result_sha256": "83d9b7200d7c5089345e7bc0e2add1db6b23b58545199c9ce1fb68dcd3541f52",
+  "compute": {
+    "gpu": "NVIDIA GeForce RTX 2060",
+    "selection_training_seconds": 165.21064500001376,
+    "final_training_seconds": 9.704447600001004,
+    "peak_sampled_total_gpu_memory_mib": 2133,
+    "memory_sampling_note": "Total device usage sampled every 2 seconds; allocator peak unavailable.",
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "torch": "2.10.0+cu128"
+  },
+  "audit": {
+    "one_inference_checkpoint": true,
+    "residual_experts_equals_one": true,
+    "ensemble_or_consensus_called_in_formal_run": false,
+    "member_weighting_used": false,
+    "outer_role_scored_before_freeze": false,
+    "outer_role_used_for_training": false,
+    "outer_test_metrics_inspected_before_freeze": false,
+    "outer_test_label_rows_materialized_by_shared_full_csv_loader_before_freeze": true,
+    "literal_no_outer_label_loading_before_freeze_compliant": false,
+    "role_isolation_and_outer_freeze_gate_compliant": true,
+    "validationData_csv_accessed": false,
+    "historical_V9_V17_results_inspected": false,
+    "outcome_driven_tuning": false,
+    "outer_cli_invocations": 1,
+    "development_cli_invocations": 1,
+    "source_hashes_unchanged_since_registration": true,
+    "all_self_hashes_and_checkpoint_links_valid": true,
+    "data_access_limitation": "Registration and train-selection call experiment_v7._load_uji(), whose data.load_dataset() uses pandas.read_csv() on the entire trainingData.csv and constructs all raw coordinates. Outer rows are excluded from model fitting, anchor statistics, epoch selection and scoring until freeze, but their labels are physically loaded by the shared loader. Thus the literal pre-freeze label-read ban is not fully satisfied. The reported outer result remains one-shot; no corrective same-run evaluation is permitted.",
+    "ensemble_audit_basis": "V18 call-path inspection and fixed single-member checkpoint contracts; required V9 mechanism unit tests are outside the formal inference path."
+  },
+  "convergence": {
+    "first_train_loss": 8.990920504089186,
+    "last_train_loss": 2.4487707370503036,
+    "first_early_stop_nll": 9.41831075341514,
+    "last_early_stop_nll": 11.80546211258749,
+    "best_early_stop_nll": 9.41831075341514
+  }
+}

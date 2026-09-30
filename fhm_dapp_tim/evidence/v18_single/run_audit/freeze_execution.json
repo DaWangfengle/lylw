@@ -1,0 +1,28 @@
+{
+  "phase": "freeze",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v18_experiment",
+    "freeze",
+    "--device",
+    "cuda"
+  ],
+  "started_utc": "2026-09-29T14:49:07.204872+00:00",
+  "experiment_commit_sha": "17860cf50b7b32d97854a02c642ffb86a9b2562c",
+  "source_snapshot_verified": true,
+  "gpu_memory_sampling_interval_seconds": 2,
+  "environment": {
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1"
+  },
+  "python_process_id": 9440,
+  "finished_utc": "2026-09-29T14:49:15.432257+00:00",
+  "exit_code": 0,
+  "wall_seconds": 8.231932099995902,
+  "gpu_memory_samples": 4,
+  "peak_sampled_total_gpu_memory_mib": 982,
+  "gpu_memory_measurement": "nvidia-smi total device usage, 2-second samples; not allocator peak",
+  "source_snapshot_matches_after_phase": true
+}

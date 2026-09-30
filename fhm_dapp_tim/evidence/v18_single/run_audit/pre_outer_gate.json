@@ -1,0 +1,13 @@
+{
+  "git_commit_sha": "17860cf50b7b32d97854a02c642ffb86a9b2562c",
+  "registry_sha256": "f5b9bb72d9d84efbaa0746ce18e17e33ff1e900d3018b96a671c46b2dcf2a2f6",
+  "freeze_sha256": "379deb013d51b9f075e0e57235f3676757e90756f10311ef4e6c8676498e84cc",
+  "final_checkpoint_sha256": "22b92ee307c0b207d7d724aaa75f91cc63eb0183d89a2e843074e1fa22965c54",
+  "outer_test_access_authorized": true,
+  "frozen_selected_epoch": 1,
+  "all_source_hashes_unchanged_since_registration": true,
+  "config_unchanged_since_freeze": true,
+  "prior_outer_invocations": 0,
+  "final_single_member_contract_verified": true,
+  "ready_for_one_shot_outer": true
+}

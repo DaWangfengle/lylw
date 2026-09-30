@@ -1,0 +1,132 @@
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ============================================================
+# Virtual environments
+# ============================================================
+.venv/
+venv/
+env/
+ENV/
+
+# ============================================================
+# IDE / editor
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vs/
+
+# ============================================================
+# OS generated files
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# Logs / temporary files
+# ============================================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.old
+*.out
+*.err
+*_gpu_samples.jsonl
+
+logs/
+log/
+tmp/
+temp/
+
+# ============================================================
+# Python build / packaging
+# ============================================================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ============================================================
+# ML checkpoints / binary model artifacts
+# Do NOT upload trained model weights to GitHub by default.
+# ============================================================
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+
+# Ignore model files by type so JSON, Markdown and source files in
+# model directories remain uploadable.
+
+# ============================================================
+# Large experiment caches / intermediate binary artifacts
+# JSON / Markdown result summaries are intentionally NOT ignored.
+# ============================================================
+**/cache/
+**/caches/
+**/*_cache.pt
+**/*cache*.pt
+**/*.pickle
+**/*.pkl
+
+# Optional numerical intermediate dumps
+*.npy
+*.npz
+
+# ============================================================
+# Experiment runtime logs
+# ============================================================
+events.out.tfevents.*
+*.wandb
+
+# Keep JSON / Markdown summaries in runs/, wandb/, tensorboard/
+# and lightning_logs/; ignore their log files by type above.
+
+# ============================================================
+# Jupyter
+# ============================================================
+.ipynb_checkpoints/
+
+# ============================================================
+# Local environment / secrets
+# ============================================================
+.env
+.env.*
+!.env.example
+
+# ============================================================
+# Codex / local scratch work
+# ============================================================
+.codex/
+scratch/
+local_notes/
+
+# ============================================================
+# IMPORTANT:
+# Keep source code and lightweight experiment evidence tracked.
+#
+# Examples that SHOULD remain uploadable:
+#   fhm_dapp_tim/fhm_dapp/*.py
+#   tests/*.py
+#   fhm_dapp_tim/evidence/**/*.json
+#   fhm_dapp_tim/evidence/**/*.md
+#   V18_CODEX_RUN.md
+#   README.md
+# ============================================================

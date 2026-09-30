@@ -1,0 +1,22 @@
+{
+  "decision_rule": "V18 has no development hyperparameter search; development is a post-training diagnostic only. The model/configuration and epoch count were fixed without development outcomes.",
+  "development_metrics": {
+    "coordinate_groups": 151,
+    "coordinate_macro_building_error": 0.0009933774982461866,
+    "coordinate_macro_energy_score_m": 6.3132405754746195,
+    "coordinate_macro_energy_score_se_m": 0.2800712821178187,
+    "coordinate_macro_floor_error": 0.1685252555874207,
+    "coordinate_macro_mae_m": 8.559118619817772,
+    "coordinate_macro_mae_se_m": 0.4393877472138776,
+    "coordinate_macro_mixture_nll": 7.867258714524326,
+    "coordinate_macro_mixture_nll_se": 0.3321417478102425,
+    "mean_anchor_entropy_nats": 2.902897834777832,
+    "mean_radial_scale_m": 22.52463150024414,
+    "rows": 3139
+  },
+  "protocol_version": "uji_v18_single_geometry_radio_v1_20260929",
+  "registry_sha256": "f5b9bb72d9d84efbaa0746ce18e17e33ff1e900d3018b96a671c46b2dcf2a2f6",
+  "result_sha256": "f0843ab86451be75f556c3b6bd154c9a025f5b6b73c8c1ec1d982203b229c896",
+  "selection_checkpoint": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_single\\selection.pt",
+  "selection_checkpoint_sha256": "6dcc0ccdb6c4adcadfee75312d756dbc498be180d9144d8102d3cb060e3a0d1f"
+}

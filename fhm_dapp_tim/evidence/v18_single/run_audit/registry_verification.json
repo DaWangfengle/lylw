@@ -1,0 +1,47 @@
+{
+  "registry_sha256": "f5b9bb72d9d84efbaa0746ce18e17e33ff1e900d3018b96a671c46b2dcf2a2f6",
+  "self_hash_valid": true,
+  "training_rows": 19937,
+  "training_coordinate_count": 933,
+  "roles": {
+    "development": {
+      "coordinates": 151,
+      "rows": 3139
+    },
+    "early_stop": {
+      "coordinates": 89,
+      "rows": 1895
+    },
+    "member_fit": {
+      "coordinates": 506,
+      "rows": 10770
+    },
+    "outer_refit": {
+      "coordinates": 746,
+      "rows": 15804
+    },
+    "outer_test": {
+      "coordinates": 187,
+      "rows": 4133
+    },
+    "selection_refit": {
+      "coordinates": 595,
+      "rows": 12665
+    }
+  },
+  "diagnostics": {
+    "coordinate_grouping": "complete (building,floor,longitude,latitude)",
+    "disjoint_intersections": {
+      "member_fit_early_stop": 0,
+      "selection_refit_development": 0,
+      "outer_refit_outer_test": 0
+    },
+    "exact_union_identities": true,
+    "all_roles_keep_all_building_floor_strata": true,
+    "hull_checks": {
+      "all_hull_missing_from_outer_refit": 0,
+      "outer_refit_hull_missing_from_selection_refit": 0,
+      "selection_refit_hull_missing_from_member_fit": 0
+    }
+  }
+}

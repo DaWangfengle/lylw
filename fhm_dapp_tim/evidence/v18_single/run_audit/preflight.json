@@ -1,0 +1,86 @@
+{
+  "initial_commit_sha": "8e9a50d2bfc89027f97925d695a194db3d6eb8d5",
+  "experiment_commit_sha": "17860cf50b7b32d97854a02c642ffb86a9b2562c",
+  "branch": "v18-single-member",
+  "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "python_version": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+  "torch_version": "2.10.0+cu128",
+  "cuda_version": "12.8",
+  "numpy_version": "2.4.4",
+  "scipy_version": "1.17.1",
+  "gpu_name": "NVIDIA GeForce RTX 2060",
+  "gpu_total_memory_bytes": 6442123264,
+  "initial_pytest": {
+    "passed": 11,
+    "failed": 1,
+    "reason": "official validation filename in V18 module docstring"
+  },
+  "verified_pytest": {
+    "passed": 12,
+    "failed": 0,
+    "seconds": 3.89
+  },
+  "py_compile": {
+    "v18_single.py": 0,
+    "uji_v18_experiment.py": 0
+  },
+  "fixes": [
+    {
+      "commit": "ed2e5ab50cc1feedf218246b86357c505a554198",
+      "file": "fhm_dapp_tim/fhm_dapp/uji_v18_experiment.py",
+      "change": "remove forbidden filename literal from scope-exclusion docstring"
+    },
+    {
+      "commit": "17860cf50b7b32d97854a02c642ffb86a9b2562c",
+      "file": "fhm_dapp_tim/fhm_dapp/uji_v18_experiment.py",
+      "change": "resolve default trainingData.csv from repository data directory"
+    }
+  ],
+  "tests_modified": false,
+  "V18_CONFIG_unchanged_from_initial_commit": true,
+  "model_definition_unchanged": true,
+  "config": {
+    "d_model": 128,
+    "num_heads": 4,
+    "num_layers": 2,
+    "max_visible": 64,
+    "dropout": 0.1,
+    "student_df": 4.0,
+    "min_scale_m": 0.25,
+    "max_residual_m": 30.0,
+    "residual_experts": 1,
+    "scan_feature_mode": "bounded_maximal_invariant",
+    "prototype_metric": "none",
+    "candidate_reranker": true,
+    "candidate_reranker_mode": "summary",
+    "reranker_anchor_decoder": false,
+    "batch_size": 96,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 5.0,
+    "maximum_epochs": 80,
+    "minimum_epochs": 20,
+    "patience": 10,
+    "minimum_improvement_nll": 0.001,
+    "rss_offset_aug_db": 4.0,
+    "rss_scale_aug": 0.08,
+    "ap_dropout": 0.1,
+    "domain_adversarial_weight": 0.05,
+    "retrieval_weight": 0.25,
+    "hierarchy_weight": 0.5,
+    "self_target_weight": 0.5,
+    "coordinate_weight": 0.1,
+    "reranker_weight": 0.5,
+    "train_candidates": 48,
+    "inference_top_k": 64,
+    "posterior_temperature": 1.0,
+    "condition_building": false,
+    "deterministic_building": true
+  },
+  "old_v18_experimental_artifacts_present": false,
+  "formal_run_restarts": 0,
+  "historical_v9_v17_results_inspected": false,
+  "official_validation_file_opened": false,
+  "attention_determinism_warning": "PyTorch memory-efficient attention backward warns of a nondeterministic kernel under the existing warn_only protocol",
+  "data_access_scope_note": "Registration and the shared loader read trainingData.csv; frozen coordinate-role indices isolate training and scoring. No outer scoring or outcome inspection occurs before freeze."
+}

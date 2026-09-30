@@ -1,0 +1,23 @@
+{
+  "final_checkpoint": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_single\\final.pt",
+  "final_checkpoint_sha256": "22b92ee307c0b207d7d724aaa75f91cc63eb0183d89a2e843074e1fa22965c54",
+  "freeze_sha256": "379deb013d51b9f075e0e57235f3676757e90756f10311ef4e6c8676498e84cc",
+  "outer_test_metrics": {
+    "coordinate_groups": 187,
+    "coordinate_macro_building_error": 0.006557168289620608,
+    "coordinate_macro_energy_score_m": 6.258373566489806,
+    "coordinate_macro_energy_score_se_m": 0.3820212297524763,
+    "coordinate_macro_floor_error": 0.09963745336959706,
+    "coordinate_macro_mae_m": 9.11477151592785,
+    "coordinate_macro_mae_se_m": 0.5988422529041496,
+    "coordinate_macro_mixture_nll": 7.00155960557295,
+    "coordinate_macro_mixture_nll_se": 0.23003257632601856,
+    "mean_anchor_entropy_nats": 2.9233458042144775,
+    "mean_radial_scale_m": 20.252485275268555,
+    "rows": 4133
+  },
+  "protocol_version": "uji_v18_single_geometry_radio_v1_20260929",
+  "registry_sha256": "f5b9bb72d9d84efbaa0746ce18e17e33ff1e900d3018b96a671c46b2dcf2a2f6",
+  "result_sha256": "83d9b7200d7c5089345e7bc0e2add1db6b23b58545199c9ce1fb68dcd3541f52",
+  "single_member": true
+}

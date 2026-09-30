@@ -1,0 +1,146 @@
+{
+  "phase": "final",
+  "checkpoint_sha256": "22b92ee307c0b207d7d724aaa75f91cc63eb0183d89a2e843074e1fa22965c54",
+  "selected_epoch": 1,
+  "anchors": 746,
+  "parameters": 626201,
+  "training_seconds": 9.704447600001004,
+  "best_early_stop_mixture_nll": null,
+  "selection_epochs_run": 0,
+  "refit_epochs": 1,
+  "all_checkpoint_tensors_and_history_finite": true,
+  "single_member_contract": {
+    "checkpoint_count": 1,
+    "member_axis": false,
+    "residual_experts": 1
+  },
+  "config": {
+    "d_model": 128,
+    "num_heads": 4,
+    "num_layers": 2,
+    "max_visible": 64,
+    "dropout": 0.1,
+    "student_df": 4.0,
+    "min_scale_m": 0.25,
+    "max_residual_m": 30.0,
+    "residual_experts": 1,
+    "scan_feature_mode": "bounded_maximal_invariant",
+    "prototype_metric": "none",
+    "candidate_reranker": true,
+    "candidate_reranker_mode": "summary",
+    "reranker_anchor_decoder": false,
+    "batch_size": 96,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 5.0,
+    "maximum_epochs": 80,
+    "minimum_epochs": 20,
+    "patience": 10,
+    "minimum_improvement_nll": 0.001,
+    "rss_offset_aug_db": 4.0,
+    "rss_scale_aug": 0.08,
+    "ap_dropout": 0.1,
+    "domain_adversarial_weight": 0.05,
+    "retrieval_weight": 0.25,
+    "hierarchy_weight": 0.5,
+    "self_target_weight": 0.5,
+    "coordinate_weight": 0.1,
+    "reranker_weight": 0.5,
+    "train_candidates": 48,
+    "inference_top_k": 64,
+    "posterior_temperature": 1.0,
+    "condition_building": false,
+    "deterministic_building": true
+  },
+  "delaunay_transform_reconstruction_exact": true,
+  "delaunay_min_eigenvalue": 0.4525708556175232,
+  "geometry": {
+    "definition": "same-building-floor Delaunay closed one-ring",
+    "maximum_closed_neighborhood": 17,
+    "minimum_degree": 2,
+    "median_degree": 5.0,
+    "maximum_degree": 16,
+    "strata": {
+      "0:0": {
+        "anchors": 43,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 121
+      },
+      "0:1": {
+        "anchors": 54,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 155
+      },
+      "0:2": {
+        "anchors": 56,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 161
+      },
+      "0:3": {
+        "anchors": 54,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 155
+      },
+      "1:0": {
+        "anchors": 61,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 168
+      },
+      "1:1": {
+        "anchors": 48,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 133
+      },
+      "1:2": {
+        "anchors": 63,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 176
+      },
+      "1:3": {
+        "anchors": 40,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 109
+      },
+      "2:0": {
+        "anchors": 54,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 149
+      },
+      "2:1": {
+        "anchors": 71,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 196
+      },
+      "2:2": {
+        "anchors": 58,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 157
+      },
+      "2:3": {
+        "anchors": 90,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 257
+      },
+      "2:4": {
+        "anchors": 54,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 151
+      }
+    }
+  },
+  "first_refit_loss": 7.778617076830332,
+  "last_refit_loss": 7.778617076830332
+}

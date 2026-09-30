@@ -1,0 +1,22 @@
+{
+  "freeze_sha256": "379deb013d51b9f075e0e57235f3676757e90756f10311ef4e6c8676498e84cc",
+  "self_hash_valid": true,
+  "frozen_selected_epoch": 1,
+  "config_matches_source": true,
+  "checkpoint_hash_matches": true,
+  "outer_test_access_authorized": true,
+  "development_metrics": {
+    "coordinate_groups": 151,
+    "coordinate_macro_building_error": 0.0009933774982461866,
+    "coordinate_macro_energy_score_m": 6.3132405754746195,
+    "coordinate_macro_energy_score_se_m": 0.2800712821178187,
+    "coordinate_macro_floor_error": 0.1685252555874207,
+    "coordinate_macro_mae_m": 8.559118619817772,
+    "coordinate_macro_mae_se_m": 0.4393877472138776,
+    "coordinate_macro_mixture_nll": 7.867258714524326,
+    "coordinate_macro_mixture_nll_se": 0.3321417478102425,
+    "mean_anchor_entropy_nats": 2.902897834777832,
+    "mean_radial_scale_m": 22.52463150024414,
+    "rows": 3139
+  }
+}

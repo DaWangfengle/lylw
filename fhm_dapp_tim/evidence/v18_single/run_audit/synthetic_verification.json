@@ -1,0 +1,40 @@
+{
+  "synthetic_only": true,
+  "cuda_forward_backward_finite": true,
+  "checkpoint_reconstruction_exact": true,
+  "anchors": 64,
+  "geometry": {
+    "definition": "same-building-floor Delaunay closed one-ring",
+    "maximum_closed_neighborhood": 9,
+    "minimum_degree": 2,
+    "median_degree": 4.0,
+    "maximum_degree": 8,
+    "strata": {
+      "0:0": {
+        "anchors": 16,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 33
+      },
+      "0:1": {
+        "anchors": 16,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 33
+      },
+      "1:0": {
+        "anchors": 16,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 33
+      },
+      "1:1": {
+        "anchors": 16,
+        "intrinsic_rank": 2,
+        "graph_method": "delaunay",
+        "undirected_edges": 33
+      }
+    }
+  },
+  "peak_cuda_allocated_bytes": 95171072
+}
