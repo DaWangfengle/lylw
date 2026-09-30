@@ -1,0 +1,21 @@
+name: V18.1 syntax check
+
+on:
+  push:
+    branches:
+      - v18-1-single-member
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile V18.1 sources
+        run: |
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_1_single.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/uji_v18_1_experiment.py
+          python -m py_compile tests/test_uji_v18_1_experiment.py
