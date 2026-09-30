@@ -134,6 +134,7 @@ fhm_dapp_tim/evidence/v18_1/role_shards/calibration.pt
 fhm_dapp_tim/models/v18_1/selection.pt
 fhm_dapp_tim/evidence/v18_1/calibration_result_v18_1.json
 fhm_dapp_tim/evidence/v18_1/selection_freeze_v18_1.json
+fhm_dapp_tim/evidence/v18_1/stability_result_v18_1.json
 fhm_dapp_tim/models/v18_1/final.pt
 fhm_dapp_tim/evidence/v18_1/external_validation_consumed.lock
 fhm_dapp_tim/evidence/v18_1/external_result_v18_1.json
@@ -331,6 +332,48 @@ Freeze must contain:
 After freeze, no outcome-driven model/config change is allowed.
 
 ======================================================================
+E2. INTERNAL E=1 STABILITY PANEL
+======================================================================
+
+After calibrate-freeze and before external access, run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment stability --device cuda
+
+This is an internal descriptive stability study, not an ensemble stage.
+
+Pre-registered seeds:
+18311, 18312, 18313, 18314, 18315
+
+For each seed:
+- train one independent single-member model on member_fit;
+- use the already frozen epoch count;
+- evaluate only early_stop;
+- use the already frozen posterior temperature and scale multiplier;
+- report the run separately.
+
+Strict rules:
+- report all five seeds;
+- do not select the best seed;
+- do not average predictions;
+- do not construct an ensemble;
+- do not change the formal checkpoint;
+- do not change the freeze;
+- do not alter any hyperparameter based on stability outcomes;
+- do not access the official validation file.
+
+Record mean and sample standard deviation across the five independent E=1 runs
+for:
+- MAE;
+- Energy Score;
+- mixture NLL;
+- nearest-anchor recall@64;
+- entropy;
+- radial scale.
+
+This panel is intended to quantify initialization sensitivity of the
+single-member method. It has no role in formal model selection.
+
+======================================================================
 F. STAGE 4 — FINAL SINGLE-MEMBER REFIT
 ======================================================================
 
@@ -474,6 +517,16 @@ TRAINING
 - best eligible Energy Score epoch
 - selected epoch and why it won the registered tie-break
 - early-stop MAE / Energy / NLL at selected epoch
+
+STABILITY
+- all five pre-registered seed results
+- MAE mean and sample SD
+- Energy Score mean and sample SD
+- mixture NLL mean and sample SD
+- recall@64 mean and sample SD
+- entropy mean and sample SD
+- radial-scale mean and sample SD
+- confirmation that no best seed was selected and no ensemble was constructed
 
 CALIBRATION
 - selected posterior temperature
