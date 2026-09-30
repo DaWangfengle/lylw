@@ -240,3 +240,24 @@ local residual uncertainty and calibration failure.
   - scientific-contract unit tests.
 - V18_1_CODEX_RUN.txt
   - exact execution instructions for the formal run.
+
+## 11. Independent E=1 stability panel
+
+Single-member does not mean one lucky initialization should define the method.
+
+After freeze, V18.1 optionally runs five pre-registered seeds:
+
+18311, 18312, 18313, 18314, 18315.
+
+Each seed trains an independent E=1 model on member_fit for the frozen epoch
+count and evaluates only the internal early_stop role using the already frozen
+calibration scalars.
+
+All five runs are reported. No best seed is selected, no predictions are
+averaged, and no ensemble is constructed.
+
+The stability report gives mean, sample standard deviation, minimum and maximum
+for MAE, Energy Score, mixture NLL, recall@64, entropy and radial scale.
+
+The stability panel is descriptive only and is forbidden from changing the
+formal frozen model or the external evaluation.
