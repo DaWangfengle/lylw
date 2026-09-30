@@ -408,9 +408,11 @@ def candidate_union(
         dtype=torch.bool,
         device=invariant_logits.device,
     )
-    _scatter_candidate_mask(source_mask, inv_indices)
-    _scatter_candidate_mask(source_mask, proto_indices)
-    _scatter_candidate_mask(source_mask, floor_indices)
+    mandatory_mask = torch.zeros_like(source_mask)
+    _scatter_candidate_mask(mandatory_mask, inv_indices)
+    _scatter_candidate_mask(mandatory_mask, proto_indices)
+    _scatter_candidate_mask(mandatory_mask, floor_indices)
+    source_mask |= mandatory_mask
     _scatter_candidate_mask(source_mask, geometry_indices)
 
     # Source-normalized priority prevents the numeric scale of raw RSS distance
@@ -435,6 +437,17 @@ def candidate_union(
         dim=1,
     ).indices
     _scatter_candidate_mask(source_mask, fallback)
+
+    # All three primary source lists fit by construction:
+    # 32 invariant + 32 prototype + 16 floor <= L=96.  Give them a strict
+    # priority tier so "candidate union" cannot silently discard a source's
+    # registered Top-K merely because another source has a larger numeric score.
+    mandatory_bonus = (
+        priority.max(dim=1, keepdim=True).values
+        - priority.min(dim=1, keepdim=True).values
+        + 100.0
+    )
+    priority = priority + mandatory_mask.to(priority.dtype) * mandatory_bonus
 
     if force_indices is not None:
         if force_indices.ndim != 2 or len(force_indices) != batch:
