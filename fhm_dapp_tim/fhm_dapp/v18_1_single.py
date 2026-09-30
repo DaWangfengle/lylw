@@ -154,6 +154,15 @@ def build_v181_model(
         memory["floor"],
     )
     neighbour_indices, neighbour_weights = delaunay_neighbor_targets(geometry)
+    anchors = torch.arange(len(neighbour_indices), dtype=torch.long).unsqueeze(1)
+    positive_self = (
+        (neighbour_indices == anchors) & (neighbour_weights > 0.0)
+    )
+    if bool(positive_self.any()):
+        raise ValueError(
+            "V18.1 leave-self-out geometry requires at least two anchors "
+            "in every building-floor stratum"
+        )
     seen = (memory["prototype_rss"] > VISIBLE_THRESHOLD).any(dim=0)
     owner = _ap_building_owner(
         memory["prototype_rss"],
