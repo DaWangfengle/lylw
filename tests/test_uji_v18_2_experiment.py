@@ -293,3 +293,10 @@ def test_v182_floor_opinion_preserves_floor_mass_under_unequal_anchor_counts() -
     restricted = floor_probability[:2] / floor_probability[:2].sum()
     assert torch.allclose(mass0, restricted[0], atol=1e-6)
     assert torch.allclose(mass1, restricted[1], atol=1e-6)
+
+
+def test_v182_rejects_candidate_union_that_cannot_hold_primary_quotas() -> None:
+    bad = dict(V182_CONFIG)
+    bad["candidate_union_size"] = 64
+    with pytest.raises(ValueError, match="primary source quotas"):
+        validate_v182_config(bad)
