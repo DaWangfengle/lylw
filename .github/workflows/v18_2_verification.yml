@@ -59,3 +59,64 @@ jobs:
               for name, record in registry["role_shards"].items()
           })
           PY
+      - name: Real-UJI V18.2 forward and backward smoke
+        run: |
+          python - <<'PY'
+          import torch
+          from fhm_dapp_tim.fhm_dapp import uji_v18_2_experiment as exp
+          from fhm_dapp_tim.fhm_dapp.v18_2_single import (
+              v182_predict,
+              v182_training_loss,
+          )
+
+          registry = exp.load_registry("/tmp/registry_v18_2.json")
+          shard = exp.load_role_shard(registry, "member_fit")
+          (
+              model,
+              _memory,
+              sample_anchor,
+              centered,
+              _origin,
+              neighbours,
+              neighbour_weights,
+              mapping,
+              _stats,
+          ) = exp._build_training_state(shard, device=torch.device("cpu"))
+
+          width = 2
+          phone = shard["phone_t"][:width].numpy()
+          device_id = torch.tensor(
+              [mapping[int(value)] for value in phone],
+              dtype=torch.long,
+          )
+          terms = v182_training_loss(
+              model,
+              shard["rss"][:width],
+              centered[:width],
+              torch.from_numpy(sample_anchor[:width]).long(),
+              device_id,
+              neighbours,
+              neighbour_weights,
+          )
+          assert torch.isfinite(terms["loss"])
+          terms["loss"].backward()
+
+          model.eval()
+          result = v182_predict(
+              model,
+              shard["rss"][:width],
+              posterior_temperature=1.0,
+              scale_multiplier=1.0,
+              target_coords=centered[:width],
+          )
+          assert result["union_candidate_indices"].shape == (width, 96)
+          assert result["candidate_indices"].shape == (width, 64)
+          assert result["gate_weights"].shape == (width, 6)
+          assert torch.isfinite(result["nll"]).all()
+          print({
+              "anchors": model.n_anchors,
+              "union": result["union_candidate_indices"].shape[1],
+              "posterior": result["candidate_indices"].shape[1],
+              "loss": float(terms["loss"]),
+          })
+          PY
