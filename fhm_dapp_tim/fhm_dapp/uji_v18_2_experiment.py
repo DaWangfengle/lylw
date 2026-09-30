@@ -1650,6 +1650,29 @@ def evaluate_confirmation_once(
     return result
 
 
+def load_confirmation_result(
+    path: str | Path,
+    *,
+    registry: dict,
+    freeze: dict,
+) -> dict:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if payload.get("protocol_version") != PROTOCOL_VERSION:
+        raise ValueError("not a V18.2 confirmation result")
+    if payload.get("registry_sha256") != registry["registry_sha256"]:
+        raise ValueError("V18.2 confirmation registry mismatch")
+    if payload.get("freeze_sha256") != freeze["freeze_sha256"]:
+        raise ValueError("V18.2 confirmation freeze mismatch")
+    if payload.get("result_sha256") != _canonical_json_sha256(
+        payload,
+        omit="result_sha256",
+    ):
+        raise ValueError("V18.2 confirmation result self-hash failed")
+    if payload.get("one_shot_internal_confirmation") is not True:
+        raise ValueError("V18.2 confirmation result lacks one-shot marker")
+    return payload
+
+
 def train_final(
     *,
     registry_path: str | Path = DEFAULT_REGISTRY,
@@ -1665,6 +1688,11 @@ def train_final(
         raise PermissionError(
             "V18.2 final refit is allowed only after one-shot confirmation"
         )
+    confirmation_record = load_confirmation_result(
+        confirmation_result_path,
+        registry=registry,
+        freeze=freeze,
+    )
     destination = Path(output)
     if destination.exists():
         raise FileExistsError(destination)
@@ -1702,7 +1730,10 @@ def train_final(
         refit_history=history,
     )
     payload["freeze_sha256"] = freeze["freeze_sha256"]
-    payload["confirmation_result_sha256"] = _sha256_file(
+    payload["confirmation_result_sha256"] = confirmation_record[
+        "result_sha256"
+    ]
+    payload["confirmation_result_file_sha256"] = _sha256_file(
         confirmation_result_path
     )
     payload["training_seconds"] = float(time.perf_counter() - started)
