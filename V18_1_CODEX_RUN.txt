@@ -1,0 +1,560 @@
+V18.1 FORMAL RUN INSTRUCTIONS FOR CODEX
+========================================
+
+Repository:
+DaWangfengle/lylw
+
+Branch:
+v18-1-single-member
+
+Purpose
+-------
+Run the V18.1 single-member experiment from scratch without changing the
+registered scientific design.
+
+V18.1 is not an ensemble. Inference must use exactly one checkpoint and one
+residual expert.
+
+The official UJI validation file is the only sealed one-shot external
+confirmation set. Do not open, hash, preview, parse, count, summarize or inspect
+that file before the final external command.
+
+The formal run has five stages:
+
+1. prepare
+2. train-selection
+3. calibrate-freeze
+4. train-final
+5. external
+
+The fifth stage is irreversible.
+
+======================================================================
+A. CHECKOUT AND PREFLIGHT
+======================================================================
+
+From the repository root:
+
+git checkout v18-1-single-member
+git status
+git rev-parse HEAD
+
+Record the exact starting commit SHA.
+
+Read these source/design files only:
+
+fhm_dapp_tim/fhm_dapp/v18_1_single.py
+fhm_dapp_tim/fhm_dapp/uji_v18_1_experiment.py
+fhm_dapp_tim/evidence/v18_1/DESIGN_V18_1.md
+tests/test_uji_v18_1_experiment.py
+V18_1_CODEX_RUN.txt
+
+Do not inspect any V18.0 result JSON, V9/V17 outcome file, or the official
+validation CSV before the V18.1 external result is produced.
+
+Verify syntax:
+
+python -m py_compile fhm_dapp_tim/fhm_dapp/v18_1_single.py
+python -m py_compile fhm_dapp_tim/fhm_dapp/uji_v18_1_experiment.py
+python -m py_compile tests/test_uji_v18_1_experiment.py
+
+Run the relevant unit tests:
+
+python -m pytest -q ^
+  tests/test_coherent_marked_v9.py ^
+  tests/test_uji_v18_experiment.py ^
+  tests/test_uji_v18_1_experiment.py
+
+If running in a shell that does not support ^ line continuation, run the same
+pytest command on one line.
+
+Do not delete, skip, xfail, weaken or rewrite a protocol test merely to make the
+suite pass.
+
+Allowed bug fixes before the formal prepare stage:
+- syntax errors;
+- API mismatches;
+- tensor shape/device errors;
+- deterministic-runtime incompatibilities;
+- checkpoint reconstruction bugs;
+- mathematical implementation bugs clearly exposed by tests;
+- incorrect file paths.
+
+Not allowed:
+- changing the scientific objective because a metric looks bad;
+- changing K, seeds, radio lambda, loss weights, calibration grids, architecture
+  or selection rule after seeing real-data results;
+- reintroducing self-anchor likelihood;
+- reintroducing an ensemble;
+- inspecting external validation outcomes.
+
+If a legitimate code bug is fixed before prepare:
+1. commit the fix;
+2. rerun py_compile and all listed tests;
+3. record the new formal experiment SHA;
+4. start the formal run only after tests pass.
+
+Also verify the V18.1 source contract:
+
+- residual_experts == 1
+- scan_feature_mode == bounded_maximal_invariant
+- prototype_metric == none
+- candidate_reranker == true
+- inference_top_k == 64
+- radio_lambda == 1.0
+- minimum_epochs == 12
+- no ProjectedEnsemble call
+- no alpha consensus
+- no member weighting
+
+======================================================================
+B. CLEAN-START RULE
+======================================================================
+
+Before stage 1, confirm there are no prior V18.1 formal artifacts.
+
+Relevant local locations are:
+
+fhm_dapp_tim/evidence/v18_1/
+fhm_dapp_tim/models/v18_1/
+
+Source-controlled DESIGN_V18_1.md must remain.
+
+If stale V18.1 runtime artifacts from a failed pre-formal smoke attempt exist,
+remove only those V18.1 runtime artifacts. Do not delete V18.0, V9 or V17
+evidence.
+
+The following must NOT exist at the start of the formal run:
+
+fhm_dapp_tim/evidence/v18_1/registry_v18_1.json
+fhm_dapp_tim/evidence/v18_1/role_shards/member_fit.pt
+fhm_dapp_tim/evidence/v18_1/role_shards/early_stop.pt
+fhm_dapp_tim/evidence/v18_1/role_shards/selection_refit.pt
+fhm_dapp_tim/evidence/v18_1/role_shards/calibration.pt
+fhm_dapp_tim/models/v18_1/selection.pt
+fhm_dapp_tim/evidence/v18_1/calibration_result_v18_1.json
+fhm_dapp_tim/evidence/v18_1/selection_freeze_v18_1.json
+fhm_dapp_tim/models/v18_1/final.pt
+fhm_dapp_tim/evidence/v18_1/external_validation_consumed.lock
+fhm_dapp_tim/evidence/v18_1/external_result_v18_1.json
+
+======================================================================
+C. STAGE 1 — PREPARE INTERNAL DEVELOPMENT ROLES
+======================================================================
+
+Run exactly:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment prepare
+
+This command is allowed to read trainingData.csv only.
+
+It must not open or hash the official validation file.
+
+Expected outputs:
+- registry_v18_1.json
+- member_fit.pt
+- early_stop.pt
+- selection_refit.pt
+- calibration.pt
+
+There must be NO full_train.pt before freeze.
+
+Inspect only the registry and shard metadata, not external validation data.
+
+Verify:
+- registry self-hash is valid;
+- source trainingData SHA is recorded;
+- all four shard SHA256 values are valid;
+- member_fit and early_stop are coordinate-disjoint;
+- member_fit union early_stop equals selection_refit;
+- selection_refit and calibration are coordinate-disjoint;
+- selection_refit union calibration equals all trainingData coordinates;
+- every role retains all building-floor strata;
+- every hull_missing diagnostic equals 0;
+- checkpoint_count_at_inference == 1;
+- residual_experts == 1.
+
+Record role coordinate counts and row counts.
+
+After prepare, do not modify:
+- registry;
+- role shards;
+- V181_CONFIG;
+- split seeds;
+- model seed;
+- selection rule;
+- calibration grids.
+
+======================================================================
+D. STAGE 2 — TRAIN AND SELECT EPOCH
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment train-selection --device cuda
+
+This stage may load only:
+- member_fit shard;
+- early_stop shard;
+- selection_refit shard.
+
+It must not load:
+- calibration shard during gradient training or epoch selection;
+- official validation file.
+
+Training law must remain leave-self-out:
+
+L_joint =
+  -sum_j q_ij [
+    log p(anchor_j | scan_i)
+    + log p(position_i | scan_i, anchor_j)
+  ]
+
+where j is a non-self Delaunay neighbour.
+
+The true anchor must not receive positive geometry target mass.
+
+The natural neural retrieval diagnostic must be computed before geometry target
+forcing.
+
+Epoch selection contract:
+- epochs 1 through 11 are ineligible;
+- eligible epochs begin at epoch 12;
+- primary metric is coordinate-macro Energy Score;
+- find the minimum eligible Energy Score;
+- shortlist epochs within 0.05 m of that minimum;
+- choose the lowest MAE in the shortlist;
+- then lower Energy Score and earlier epoch break remaining ties.
+
+NLL must NOT be the epoch-selection statistic.
+
+Record the full per-epoch trajectory:
+- total training loss;
+- joint_geometry_loss;
+- retrieval_nll;
+- coordinate_nll;
+- reranker_loss;
+- hierarchy_loss;
+- coordinate_loss;
+- domain_loss;
+- natural_geometry_recall_mass;
+- early-stop MAE;
+- early-stop Energy Score;
+- early-stop mixture NLL;
+- floor/building error;
+- entropy;
+- effective anchor count;
+- top1 probability;
+- radial scale;
+- within/between uncertainty;
+- nearest-anchor recall@8/16/32/64;
+- predictive coverage 50/80/90/95.
+
+Confirm:
+- selected_epoch >= 12;
+- selection checkpoint uses exactly one checkpoint contract;
+- residual_experts == 1;
+- all checkpoint tensors and history values are finite;
+- no external validation access occurred.
+
+If a genuine code bug is discovered before external access:
+- invalidate all V18.1 runtime artifacts;
+- fix the bug;
+- rerun tests;
+- create a new formal experiment SHA;
+- restart from stage 1.
+
+Do not continue a partially modified formal run.
+
+======================================================================
+E. STAGE 3 — CALIBRATE AND FREEZE
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment calibrate-freeze --device cuda
+
+This stage may load:
+- frozen selection checkpoint;
+- calibration shard.
+
+It must not change backbone weights.
+
+Only two scalar inference quantities may be selected:
+- posterior_temperature;
+- scale_multiplier.
+
+Registered temperature grid:
+0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 2.50, 3.00
+
+Registered scale grid:
+0.50, 0.75, 1.00, 1.25, 1.50, 2.00
+
+Selection criterion:
+coordinate-macro mixture NLL on calibration coordinates.
+
+Do not change or search:
+- architecture;
+- radio_lambda;
+- inference_top_k;
+- train_candidates;
+- loss weights;
+- model seed;
+- epoch count;
+- geometry;
+- reranker;
+- calibration grid itself.
+
+Record:
+- selected posterior temperature;
+- selected scale multiplier;
+- full calibration grid surface;
+- whether either selected value is on a grid boundary;
+- calibrated calibration MAE;
+- calibrated calibration NLL;
+- calibrated calibration Energy Score;
+- predictive coverage;
+- entropy/effective anchors/top1;
+- within/between uncertainty;
+- nearest-anchor recall.
+
+Freeze must contain:
+- registry SHA;
+- selection checkpoint SHA;
+- calibration result SHA;
+- frozen selected epoch;
+- full frozen V181_CONFIG;
+- frozen posterior temperature;
+- frozen scale multiplier;
+- external-access authorization.
+
+After freeze, no outcome-driven model/config change is allowed.
+
+======================================================================
+F. STAGE 4 — FINAL SINGLE-MEMBER REFIT
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment train-final --device cuda
+
+This stage reconstructs the complete trainingData development pool by combining
+the already verified selection_refit and calibration shards in memory.
+
+It must NOT reopen trainingData.csv for final fitting.
+
+It must NOT open the official validation file.
+
+The final model must:
+- use the frozen epoch count;
+- use the frozen V181_CONFIG;
+- contain all trainingData physical anchors;
+- contain exactly one residual expert;
+- remain one checkpoint at inference.
+
+Record:
+- final anchor count;
+- final parameter count;
+- selected epoch;
+- training seconds;
+- checkpoint SHA256;
+- all final training losses;
+- whether every tensor is finite.
+
+Verify the final checkpoint references the exact freeze SHA.
+
+======================================================================
+G. PRE-EXTERNAL GATE
+======================================================================
+
+Before running the external command, verify all of the following:
+
+1. registry self-hash valid;
+2. freeze self-hash valid;
+3. calibration result hash matches freeze;
+4. final checkpoint hash recorded;
+5. final checkpoint freeze SHA matches current freeze;
+6. selected epoch matches freeze;
+7. final V181_CONFIG matches freeze;
+8. posterior temperature matches freeze;
+9. scale multiplier matches freeze;
+10. external_validation_consumed.lock does not exist;
+11. external_result_v18_1.json does not exist;
+12. no previous external command invocation exists in the run audit;
+13. no official validation file read/hash/preview occurred earlier.
+
+Do not compute a validation file hash as part of this pre-gate. Hashing is an
+external file read and is forbidden before the irreversible lock.
+
+======================================================================
+H. STAGE 5 — ONE-SHOT EXTERNAL CONFIRMATION
+======================================================================
+
+Run exactly once:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment external --device cuda
+
+IMPORTANT IRREVERSIBILITY RULE:
+
+The program writes:
+
+fhm_dapp_tim/evidence/v18_1/external_validation_consumed.lock
+
+BEFORE the first read of the external validation CSV.
+
+Once this lock exists, the external set is considered consumed.
+
+If anything fails after the lock is written:
+- do NOT delete the lock;
+- do NOT retry external evaluation;
+- do NOT patch code and rerun the same external set;
+- report that the sealed confirmation was consumed but evaluation failed.
+
+A second external run is forbidden.
+
+The external command may then:
+- load the official validation file;
+- hash it;
+- evaluate the final checkpoint;
+- write external_result_v18_1.json.
+
+Do not tune anything after seeing external results.
+
+======================================================================
+I. REQUIRED FINAL REPORT
+======================================================================
+
+Return a complete but concise report with these sections.
+
+GIT
+- branch
+- formal experiment commit SHA
+- whether any code fix occurred before prepare
+- exact fix commits if any
+
+TESTS
+- three py_compile results
+- pytest passed/failed count
+- deterministic CUDA status
+- whether flash/memory-efficient SDPA were disabled
+- whether strict deterministic algorithms remained enabled
+
+PROTOCOL
+- training rows
+- total training coordinates
+- member_fit coordinates/rows
+- early_stop coordinates/rows
+- selection_refit coordinates/rows
+- calibration coordinates/rows
+- building-floor strata count
+- hull checks
+- all disjoint/union checks
+- shard SHA verification
+
+MODEL
+- selection parameters
+- final parameters
+- selection anchors
+- final anchors
+- selected epoch
+- residual_experts
+- scan_feature_mode
+- prototype_metric
+- candidate_reranker
+- train_candidates
+- inference_top_k
+- radio_lambda
+
+TRAINING
+- first/last joint_geometry_loss
+- first/last retrieval_nll
+- first/last coordinate_nll
+- first/last reranker_loss
+- first/last natural_geometry_recall_mass
+- best eligible Energy Score epoch
+- selected epoch and why it won the registered tie-break
+- early-stop MAE / Energy / NLL at selected epoch
+
+CALIBRATION
+- selected posterior temperature
+- selected scale multiplier
+- whether temperature hit grid boundary
+- whether scale hit grid boundary
+- calibration MAE
+- calibration Energy Score
+- calibration NLL
+- calibration coverage 50/80/90/95
+
+EXTERNAL
+Highlight these three values separately:
+
+EXTERNAL MAE
+EXTERNAL ENERGY SCORE
+EXTERNAL NLL
+
+Also report:
+- building error
+- floor error
+- entropy
+- effective anchor count
+- top1 posterior probability
+- radial scale
+- within-component radial SD
+- between-anchor radial SD
+- nearest-anchor recall@8/16/32/64
+- mean posterior radio energy
+- profiled style offset/gain
+- error/radial-scale correlation
+- coverage 50/80/90/95
+- predictive radii 50/80/90/95
+- external data SHA256
+- external lock SHA256
+- external result self-hash
+
+COMPUTE
+- GPU model
+- Python version
+- PyTorch/CUDA version
+- selection training time
+- final training time
+- peak GPU memory if measured
+
+AUDIT
+Explicit yes/no:
+- one inference checkpoint
+- residual_experts == 1
+- self-anchor positive geometry target used
+- ensemble used
+- consensus used
+- member weighting used
+- calibration labels used for gradient training
+- external validation accessed before freeze
+- external validation accessed before final refit
+- external lock written before external read
+- external command invocation count
+- external result used for tuning
+- V18.0/V9/V17 outcomes inspected before external result
+
+INTERPRETATION
+Without modifying or rerunning the experiment, assess:
+1. whether leave-anchor-out geometry training converged;
+2. whether natural candidate recall is adequate;
+3. whether explicit radio correction remained finite;
+4. whether calibration hit a boundary;
+5. whether predictive coverage is under- or over-confident;
+6. whether within-component or between-anchor uncertainty dominates;
+7. whether a future V18.2 is justified.
+
+Do not rerun the sealed external confirmation to investigate any issue.
+
+======================================================================
+J. OPTIONAL POST-EXTERNAL ANALYSIS
+======================================================================
+
+Only after external_result_v18_1.json exists may you compare V18.1 with the
+already recorded V18.0, V9 or V17 evidence.
+
+Such comparison is descriptive only and must not trigger a V18.1 rerun.
+
+If a new model change is proposed, it belongs to a newly registered experiment
+such as V18.2.
