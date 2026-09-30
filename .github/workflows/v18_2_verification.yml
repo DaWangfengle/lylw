@@ -113,6 +113,17 @@ jobs:
           assert result["candidate_indices"].shape == (width, 64)
           assert result["gate_weights"].shape == (width, 6)
           assert torch.isfinite(result["nll"]).all()
+          union = result["union_candidate_indices"]
+          for source_name in (
+              "retrieval_invariant_indices",
+              "retrieval_prototype_indices",
+              "retrieval_floor_indices",
+          ):
+              source = result[source_name]
+              covered = (
+                  union.unsqueeze(2) == source.unsqueeze(1)
+              ).any(dim=1)
+              assert covered.all(), source_name
           print({
               "anchors": model.n_anchors,
               "union": result["union_candidate_indices"].shape[1],
