@@ -1,0 +1,669 @@
+V18.2 FORMAL CODEX RUN INSTRUCTIONS
+====================================
+
+Repository:
+DaWangfengle/lylw
+
+Branch:
+v18-2-adaptive-evidence
+
+Scientific model:
+Single-Member Adaptive Multi-Evidence Anchor Posterior
+
+This is a journal-method experiment.  It is NOT a teacher/student compression
+experiment and NOT an ensemble.
+
+======================================================================
+0. NON-NEGOTIABLE MODEL CONTRACT
+======================================================================
+
+V18.2 must satisfy all of the following:
+
+- exactly one checkpoint at inference;
+- residual_experts == 1;
+- no V9/V17 checkpoint loaded for training;
+- no teacher posterior;
+- no knowledge distillation;
+- no ProjectedEnsemble;
+- no member axis;
+- no alpha consensus across models;
+- no best-seed selection;
+- no prediction averaging across seeds.
+
+The six evidence opinions must remain:
+
+1. invariant neural;
+2. raw-RSS prototype;
+3. learned candidate evidence;
+4. robust marked radio;
+5. soft floor;
+6. geometry manifold.
+
+They are combined inside ONE model by an adaptive alpha=1 arithmetic evidence
+consensus.
+
+Registered support sizes:
+
+invariant_retrieval_k = 32
+prototype_retrieval_k = 32
+floor_retrieval_k = 16
+geometry_seed_k = 8
+candidate_union_size L = 96
+posterior_top_k K = 64
+
+L>K is intentional and represents wide single-model evidence support before
+posterior contraction.  It is not an ensemble support.
+
+======================================================================
+1. IMPORTANT EVALUATION STATUS
+======================================================================
+
+The official UJI validationData.csv was already opened by the completed V18.1
+study.
+
+Therefore V18.2 MUST NOT call that file a new blind external test.
+
+V18.2 has two different result levels:
+
+A. FORMAL ONE-SHOT CONFIRMATION
+   A newly registered physical-coordinate holdout inside trainingData.csv.
+   This is the primary V18.2 confirmation result.
+
+B. PRE-EXPOSED DESCRIPTIVE BENCHMARK
+   Official validationData.csv after final refit.
+   This may be reported for comparison but:
+   - blind_confirmation_claim must remain false;
+   - it must not select or tune V18.2;
+   - it must not trigger a V18.2 rerun.
+
+======================================================================
+2. CHECKOUT AND PREFLIGHT
+======================================================================
+
+From repository root:
+
+git checkout v18-2-adaptive-evidence
+git status
+git rev-parse HEAD
+
+Record the exact formal experiment commit SHA.
+
+Read:
+
+fhm_dapp_tim/fhm_dapp/v18_2_single.py
+fhm_dapp_tim/fhm_dapp/uji_v18_2_experiment.py
+fhm_dapp_tim/evidence/v18_2/DESIGN_V18_2.md
+tests/test_uji_v18_2_experiment.py
+V18_2_CODEX_RUN.txt
+
+Compile:
+
+python -m py_compile fhm_dapp_tim/fhm_dapp/v18_2_single.py
+python -m py_compile fhm_dapp_tim/fhm_dapp/uji_v18_2_experiment.py
+python -m py_compile tests/test_uji_v18_2_experiment.py
+
+Run:
+
+python -m pytest -q tests/test_coherent_marked_v9.py tests/test_uji_v18_1_experiment.py tests/test_uji_v18_2_experiment.py
+
+Do not skip, delete, weaken or xfail a scientific-contract test merely to make
+the suite pass.
+
+Allowed bug fixes before the formal run:
+- syntax/API errors;
+- tensor shape/device errors;
+- deterministic CUDA incompatibilities;
+- checkpoint reconstruction bugs;
+- mathematically incorrect implementation clearly exposed by tests;
+- incorrect file paths.
+
+Not allowed as a "bug fix":
+- changing L or K after looking at metrics;
+- changing source counts;
+- changing radio lambda;
+- changing evidence alpha;
+- changing loss weights;
+- changing selection rule;
+- adding a teacher;
+- adding an ensemble;
+- removing leave-anchor-out training;
+- choosing a better seed.
+
+If a legitimate implementation bug is fixed before prepare:
+1. commit it;
+2. rerun all compilation/tests;
+3. record the new formal SHA;
+4. only then begin the formal protocol.
+
+======================================================================
+3. VERIFY THE SOURCE CONTRACT
+======================================================================
+
+Confirm:
+
+residual_experts == 1
+scan_feature_mode == bounded_maximal_invariant
+prototype_metric == none
+candidate_reranker == true
+evidence_alpha == 1.0
+candidate_union_size == 96
+posterior_top_k == 64
+radio_lambda == 1.0
+minimum_epochs == 12
+
+Confirm there is no import or invocation of:
+- ProjectedEnsemble;
+- V17 member checkpoints;
+- V9 member checkpoints;
+- teacher inference;
+- distillation loss.
+
+Confirm the registered primary training law is leave-self-out:
+
+L_joint =
+  - sum_j q_ij [
+      log p_consensus(j | scan_i)
+      + log p(position_i | scan_i, j)
+    ]
+
+where j is a non-self Delaunay neighbor.
+
+======================================================================
+4. CLEAN START
+======================================================================
+
+Keep the source-controlled file:
+
+fhm_dapp_tim/evidence/v18_2/DESIGN_V18_2.md
+
+Before formal prepare, these runtime artifacts must not exist:
+
+fhm_dapp_tim/evidence/v18_2/registry_v18_2.json
+fhm_dapp_tim/evidence/v18_2/role_shards/
+fhm_dapp_tim/models/v18_2/selection.pt
+fhm_dapp_tim/evidence/v18_2/calibration_result_v18_2.json
+fhm_dapp_tim/evidence/v18_2/selection_freeze_v18_2.json
+fhm_dapp_tim/evidence/v18_2/stability_result_v18_2.json
+fhm_dapp_tim/models/v18_2/confirmation.pt
+fhm_dapp_tim/evidence/v18_2/confirmation_consumed.lock
+fhm_dapp_tim/evidence/v18_2/confirmation_result_v18_2.json
+fhm_dapp_tim/models/v18_2/final.pt
+fhm_dapp_tim/evidence/v18_2/benchmark_result_v18_2.json
+
+Do not delete V18.1/V18.0/V17/V9 evidence.
+
+======================================================================
+5. STAGE 1 — PREPARE
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment prepare
+
+The protocol constructs:
+
+trainingData
+  = outer_refit + confirmation
+
+outer_refit
+  = selection_refit + calibration
+
+selection_refit
+  = member_fit + early_stop
+
+All splits are complete physical-coordinate groups.
+
+Inspect only protocol metadata.
+
+Verify:
+
+- registry self-hash;
+- trainingData SHA;
+- every shard SHA;
+- all role coordinate counts;
+- all role row counts;
+- all disjoint intersections are zero;
+- exact union identities hold;
+- every role retains every building-floor stratum;
+- all hull_missing values are zero;
+- single_member_contract says:
+  checkpoint_count_at_inference = 1
+  residual_experts = 1
+  teacher_model = false
+  knowledge_distillation = false
+  member_axis = false
+  ensemble = false
+
+IMPORTANT:
+
+Do NOT load, inspect, summarize or evaluate the confirmation shard after
+prepare.  The file exists so its hash can be fixed at registration, but its
+contents are reserved until the formal confirm command.
+
+Do not modify registry or shards after prepare.
+
+======================================================================
+6. STAGE 2 — TRAIN-SELECTION
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment train-selection --device cuda
+
+This stage may load only:
+
+member_fit
+early_stop
+selection_refit
+
+It must not load:
+- calibration for gradient learning or epoch selection;
+- confirmation;
+- validationData.
+
+Strict deterministic runtime must remain active:
+
+CUBLAS_WORKSPACE_CONFIG=:4096:8
+flash SDPA disabled
+memory-efficient SDPA disabled
+math SDPA enabled
+torch deterministic algorithms with warn_only=False
+cuDNN benchmark disabled
+cuDNN deterministic enabled
+
+Epoch rules:
+
+- epochs 1..11 cannot be selected;
+- primary selection metric = coordinate-macro Energy Score;
+- shortlist = eligible epochs within 0.05 m of best Energy Score;
+- choose lowest MAE within shortlist;
+- then lower Energy Score;
+- then earlier epoch.
+
+Record every epoch:
+
+TRAINING
+- loss
+- joint_geometry_loss
+- fused_anchor_nll
+- coordinate_nll
+- invariant_aux_loss
+- reranker_aux_loss
+- hierarchy_loss
+- coordinate_loss
+- ranking_loss
+- domain_loss
+- invariant_recall_mass
+- prototype_recall_mass
+- floor_recall_mass
+- union_recall_mass
+- six gate_weight_* values
+
+EARLY STOP
+- MAE
+- Energy Score
+- mixture NLL
+- building/floor error
+- final nearest-anchor recall@8/16/32/64
+- invariant retrieval recall
+- prototype retrieval recall
+- floor retrieval recall
+- union recall
+- six evidence gate weights
+- six source entropies
+- posterior entropy
+- effective anchor count
+- top1 posterior mass
+- radial scale
+- within/between uncertainty
+- radio energy
+- style offset/gain
+- predictive coverage 50/80/90/95
+
+Confirm selected_epoch >= 12.
+
+======================================================================
+7. STAGE 3 — CALIBRATE AND FREEZE
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment calibrate-freeze --device cuda
+
+This stage may use:
+
+selection checkpoint
+calibration shard
+
+It must not change backbone/gate/reranker weights.
+
+Only these two scalar inference values may be selected:
+
+posterior temperature
+Student-t scale multiplier
+
+Temperature grid:
+0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 2.50, 3.00
+
+Scale grid:
+0.50, 0.75, 1.00, 1.25, 1.50, 2.00
+
+Criterion:
+coordinate-macro mixture NLL.
+
+Do not tune:
+- six evidence sources;
+- gate architecture;
+- alpha;
+- radio lambda;
+- source retrieval K values;
+- L=96;
+- final K=64;
+- loss weights;
+- model seed;
+- selected epoch.
+
+Record whether the selected temperature or scale touches a grid boundary.
+
+After freeze, the V18.2 model/configuration is immutable.
+
+======================================================================
+8. OPTIONAL BUT REQUIRED-FOR-PAPER E=1 STABILITY PANEL
+======================================================================
+
+Run before confirmation:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment stability --device cuda
+
+Registered seeds:
+
+18321
+18322
+18323
+18324
+18325
+
+Rules:
+
+- train all five independent E=1 models;
+- report every seed;
+- do not choose the best;
+- do not average predictions;
+- do not construct an ensemble;
+- do not modify the freeze.
+
+Report mean +/- sample SD for:
+
+MAE
+Energy Score
+mixture NLL
+final recall@8
+final recall@64
+
+Also report all six gate weights per seed if available.
+
+======================================================================
+9. STAGE 4A — TRAIN CONFIRMATION MODEL
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment train-confirmation --device cuda
+
+This refits exactly one checkpoint on outer_refit using:
+
+- frozen epoch count;
+- frozen V182_CONFIG;
+- no confirmation labels;
+- no benchmark labels.
+
+Record:
+- anchors;
+- parameters;
+- training seconds;
+- checkpoint SHA.
+
+======================================================================
+10. PRE-CONFIRMATION GATE
+======================================================================
+
+Before the confirm command, verify:
+
+1. registry hash valid;
+2. calibration result hash valid;
+3. freeze hash valid;
+4. confirmation checkpoint registry SHA matches;
+5. confirmation checkpoint freeze SHA matches;
+6. selected epoch matches freeze;
+7. V182_CONFIG matches freeze;
+8. posterior temperature matches freeze;
+9. scale multiplier matches freeze;
+10. confirmation_consumed.lock does not exist;
+11. confirmation_result_v18_2.json does not exist;
+12. confirmation shard has not been loaded/evaluated manually.
+
+Do not manually inspect confirmation labels or predictions before the command.
+
+======================================================================
+11. STAGE 4B — ONE-SHOT INTERNAL CONFIRMATION
+======================================================================
+
+Run exactly once:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment confirm --device cuda
+
+The program must:
+
+1. validate registry/freeze/checkpoint;
+2. write confirmation_consumed.lock;
+3. only then load the confirmation shard;
+4. evaluate once;
+5. write confirmation_result_v18_2.json.
+
+IRREVERSIBILITY RULE:
+
+Once confirmation_consumed.lock exists:
+
+- do not delete it;
+- do not rerun confirm;
+- do not patch V18.2 and reuse the same confirmation as a fresh result;
+- do not change any hyperparameter based on confirmation.
+
+If the program crashes after writing the lock, report that the registered
+confirmation was consumed but the evaluation failed.
+
+Highlight:
+
+CONFIRMATION MAE
+CONFIRMATION ENERGY SCORE
+CONFIRMATION NLL
+
+Also report:
+- recall@8/16/32/64;
+- invariant/prototype/floor/union recall;
+- six gate weights;
+- six source entropies;
+- building/floor error;
+- uncertainty and coverage.
+
+======================================================================
+12. STAGE 5A — FINAL REFIT ON ALL trainingData
+======================================================================
+
+Only after a valid confirmation result exists:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment train-final --device cuda
+
+The program reconstructs all trainingData from:
+
+outer_refit + confirmation
+
+and refits one final checkpoint with the already frozen epoch/config/calibration
+contract.
+
+The confirmation result is verified by self-hash before final refit.
+
+Record:
+- final anchors;
+- final parameter count;
+- training seconds;
+- checkpoint SHA.
+
+======================================================================
+13. STAGE 5B — PRE-EXPOSED OFFICIAL BENCHMARK
+======================================================================
+
+After final refit, run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment benchmark --device cuda
+
+This evaluates official validationData.csv.
+
+IMPORTANT:
+
+This set was already exposed during V18.1.
+
+Therefore the result MUST be reported exactly as:
+
+PRE-EXPOSED DESCRIPTIVE BENCHMARK
+
+and never as:
+- new external validation;
+- new blind test;
+- untouched confirmation.
+
+The result file must contain:
+
+benchmark_was_pre_exposed_before_v18_2 = true
+blind_confirmation_claim = false
+used_for_model_selection = false
+
+Do not tune V18.2 from this benchmark and rerun it.
+
+If benchmark results motivate a method change, that change belongs to V18.3.
+
+======================================================================
+14. REQUIRED FINAL REPORT
+======================================================================
+
+GIT
+- branch
+- formal experiment SHA
+- any bug-fix commits before prepare
+
+TESTS
+- all three py_compile outcomes
+- pytest count
+- deterministic CUDA status
+
+PROTOCOL
+- all coordinate/row counts
+- all union/disjoint checks
+- all hull checks
+- all shard hashes
+
+MODEL
+- parameter count
+- selection/confirmation/final anchor counts
+- L=96 and K=64
+- evidence_alpha
+- residual_experts
+- confirmation that no teacher/ensemble exists
+
+TRAINING
+- selected epoch
+- selection rule explanation
+- first/last joint geometry loss
+- first/last fused anchor NLL
+- first/last coordinate NLL
+- first/last ranking loss
+- first/last invariant/prototype/floor/union recall mass
+- first/last six gate weights
+
+CALIBRATION
+- temperature
+- scale multiplier
+- grid-boundary flags
+- calibration MAE/ES/NLL
+
+STABILITY
+- all five seeds
+- mean +/- sample SD
+- no best seed selected
+- no ensemble constructed
+
+CONFIRMATION
+Highlight:
+CONFIRMATION MAE
+CONFIRMATION ENERGY SCORE
+CONFIRMATION NLL
+
+Then:
+- building/floor error
+- final recall@8/16/32/64
+- invariant recall
+- prototype recall
+- floor-aware recall
+- candidate-union recall
+- six gate weights
+- six source entropies
+- entropy/effective anchors/top1
+- within/between uncertainty
+- radio energy
+- style profile
+- coverage 50/80/90/95
+
+PRE-EXPOSED BENCHMARK
+Highlight separately:
+BENCHMARK MAE
+BENCHMARK ENERGY SCORE
+BENCHMARK NLL
+
+Explicitly state:
+blind confirmation = NO
+pre-exposed benchmark = YES
+
+COMPUTE
+- GPU
+- Python
+- PyTorch/CUDA
+- selection time
+- stability time
+- confirmation refit time
+- final refit time
+- peak GPU memory if measured
+
+AUDIT — explicit YES/NO
+- one inference checkpoint
+- residual_experts == 1
+- teacher used
+- distillation used
+- ensemble used
+- best seed selected
+- self-anchor positive target used
+- calibration labels used before freeze for backbone gradients
+- confirmation accessed before lock
+- confirmation command count
+- confirmation used for tuning
+- benchmark used for tuning
+
+INTERPRETATION
+Without rerunning confirmation or benchmark, answer:
+
+1. Did prototype retrieval recover anchors missed by invariant retrieval?
+2. Did the 96-anchor union materially improve recall over either source alone?
+3. Did final recall@8 improve, not merely recall@64?
+4. Which evidence sources received the largest gate weights?
+5. Did the gate adapt away from radio evidence when style mismatch was large?
+6. Did floor evidence help without hard-filter cascade?
+7. Did between-anchor uncertainty shrink?
+8. Is V18.3 scientifically justified?
+
+======================================================================
+15. POST-RUN RULE
+======================================================================
+
+After the one-shot confirmation, V18.2 is frozen as a scientific record.
+
+Any outcome-driven method change belongs to a newly registered experiment
+(V18.3 or later).  Do not edit V18.2 and reuse its confirmation as if blind.
