@@ -1,0 +1,79 @@
+{
+  "stage": "prepare",
+  "registry_sha256": "04ce53f37f34d6129c6ef62901619e226591afa659090028a5c4ec2d68824006",
+  "training_rows": 19937,
+  "physical_coordinates": 933,
+  "n_aps": 520,
+  "building_floor_strata": 13,
+  "roles": {
+    "member_fit": {
+      "coordinates": 635,
+      "rows": 13523
+    },
+    "early_stop": {
+      "coordinates": 111,
+      "rows": 2281
+    },
+    "selection_refit": {
+      "coordinates": 746,
+      "rows": 15804
+    },
+    "calibration": {
+      "coordinates": 187,
+      "rows": 4133
+    },
+    "full_train": {
+      "coordinates": 933,
+      "rows": 19937
+    }
+  },
+  "split_diagnostics": {
+    "coordinate_grouping": "complete (building,floor,longitude,latitude)",
+    "member_fit_early_stop_intersection": 0,
+    "selection_refit_calibration_intersection": 0,
+    "exact_union_identities": true,
+    "all_roles_keep_all_building_floor_strata": true,
+    "hull_checks": {
+      "all_hull_missing_from_selection_refit": 0,
+      "selection_refit_hull_missing_from_member_fit": 0
+    }
+  },
+  "train_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "shards": {
+    "member_fit": {
+      "coordinate_count": 635,
+      "coordinate_key_sha256": "e0df8a528571246589ba9d40e71d35d1d8a3977acb3dcb588f537c2e048de209",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_1\\role_shards\\member_fit.pt",
+      "row_count": 13523,
+      "row_index_sha256": "a18a155b9c09a1cb4f2af15d321c586669f8efddbb2785e6b367edbb1297b60b",
+      "sha256": "8649abeca73393512adac1e6165e015238da1e5f71887f662d759f5e564960fd"
+    },
+    "early_stop": {
+      "coordinate_count": 111,
+      "coordinate_key_sha256": "f99e61802043f7ff394e954f32998bbaf4403b42d84f031b5814f1d43dc0f56f",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_1\\role_shards\\early_stop.pt",
+      "row_count": 2281,
+      "row_index_sha256": "bc0e34e76f62a929c667483b377e9edcf0c346645e9c011bc38ca12296c01932",
+      "sha256": "96f9bc5ec8ca549c1fa12806e67d2c8c161b37dc0f28ac9a0e2b89d205e0e5bb"
+    },
+    "selection_refit": {
+      "coordinate_count": 746,
+      "coordinate_key_sha256": "c9126f29ac0dd27a74e71d2dd229785efd9aeeccd702dd8e468178ec004dc822",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_1\\role_shards\\selection_refit.pt",
+      "row_count": 15804,
+      "row_index_sha256": "5377e342115c13fda1b6154b9d55e80d1a0741b8d6252674a48f3da2be63b87c",
+      "sha256": "ee6cf897b3441478bb75fc6240690bf24ac0f60f4e61afd77f381160c9105830"
+    },
+    "calibration": {
+      "coordinate_count": 187,
+      "coordinate_key_sha256": "38c7eacb26a05f9fd395737ac69fcd017a6b9fe07816ed0fabe78af603296667",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_1\\role_shards\\calibration.pt",
+      "row_count": 4133,
+      "row_index_sha256": "dcf07097d43c834653caca374448706fd5607e7f7ee356e4e8c20130b7755e97",
+      "sha256": "0e4eea5e364c2942f55394e40b43ae8d6119110a631f864252ad1c2166286a4d"
+    }
+  },
+  "training_sha_valid": true,
+  "shard_sha_valid": true,
+  "no_full_train_pt": true
+}

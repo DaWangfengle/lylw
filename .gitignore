@@ -48,6 +48,7 @@ desktop.ini
 *.out
 *.err
 *_gpu_samples.jsonl
+**/run_audit/*_io.jsonl
 
 logs/
 log/

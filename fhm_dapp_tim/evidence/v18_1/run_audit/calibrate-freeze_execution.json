@@ -1,0 +1,18 @@
+{
+  "phase": "calibrate-freeze",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment",
+    "calibrate-freeze",
+    "--device",
+    "cuda"
+  ],
+  "started_utc": "2026-09-30T07:07:08.991932+00:00",
+  "formal_experiment_sha": "e87871d6f5d75c1c3e21e3911b2a3fb0b4a5e781",
+  "python_process_id": 6640,
+  "finished_utc": "2026-09-30T07:07:22.388917+00:00",
+  "wall_seconds": 13.39719220000552,
+  "exit_code": 0,
+  "sources_unchanged": true
+}

@@ -1,0 +1,21 @@
+{
+  "phase": "calibrate-freeze",
+  "io_counts": {
+    "validation_reads": 0,
+    "training_csv_reads": 0,
+    "denied": 0
+  },
+  "torch_version": "2.10.0+cu128",
+  "cuda_version": "12.8",
+  "deterministic_algorithms": false,
+  "deterministic_warn_only": false,
+  "flash_sdpa": true,
+  "memory_efficient_sdpa": true,
+  "math_sdpa": true,
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": false,
+  "cublas_workspace_config": ":4096:8",
+  "gpu": "NVIDIA GeForce RTX 2060",
+  "peak_cuda_allocated_bytes": 430879232,
+  "peak_cuda_reserved_bytes": 662700032
+}

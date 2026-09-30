@@ -1,0 +1,291 @@
+{
+  "stage": "freeze",
+  "registry_sha256": "04ce53f37f34d6129c6ef62901619e226591afa659090028a5c4ec2d68824006",
+  "freeze_sha256": "0a3e7fa2bca99a3684dccf8843d6ae5dc1c26285bb115ec2b2005da3514ddbf0",
+  "calibration_result_sha256": "efaf760d77a3809a8d6a4d39a14c575f946808cfeb53002e28d25694c693c39d",
+  "selection_checkpoint_unchanged": true,
+  "grid_cases": 48,
+  "calibration": {
+    "best_coordinate_macro_mixture_nll": 5.334452376646154,
+    "posterior_temperature": 1.25,
+    "scale_multiplier": 1.0,
+    "scale_on_grid_boundary": false,
+    "surface": [
+      {
+        "coordinate_macro_mixture_nll": 6.05714886711243,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.618113039649106,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.479429927101747,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.466592125714144,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.513780482950057,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.683747123269474,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.817941541977745,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.473142622626401,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.388466939569157,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.406862568727789,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.4731276315801285,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.663279755230256,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.697136705571955,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.401545548821516,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.346993026886394,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.384166173118959,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.462318802899856,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.665369921189578,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.63364391785892,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.3705173622478135,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.334452376646154,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.383447007061964,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.469334784676047,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.680925007172447,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.601621212168811,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.3638612038311475,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.340965291395545,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.398033465931122,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.489250438098601,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.70677006818394,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.592090953480113,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.394230687044521,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.390460561303532,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.458504233130797,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.556650702328605,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.781746423180728,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.624682986162563,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.45706524440949,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.467335125979255,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.543034879919042,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.645733596169375,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.875439164472774,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.67733427547516,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.533086498790884,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.554148396068716,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.635627291419289,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.741648977453059,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.974474445383817,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 2.0
+      }
+    ],
+    "temperature_on_grid_boundary": false
+  },
+  "calibration_metrics": {
+    "coordinate_groups": 187,
+    "coordinate_macro_building_error": 0.006557168289620608,
+    "coordinate_macro_energy_score_m": 4.492849483846981,
+    "coordinate_macro_energy_score_se_m": 0.3308540671624761,
+    "coordinate_macro_floor_error": 0.01671292617877218,
+    "coordinate_macro_mae_m": 6.3687771708570065,
+    "coordinate_macro_mae_se_m": 0.4910699438617854,
+    "coordinate_macro_mixture_nll": 5.334452381746017,
+    "coordinate_macro_mixture_nll_se": 0.08760065719388335,
+    "error_radial_scale_correlation": 0.8142911593228163,
+    "mean_abs_profiled_style_offset": 0.07309593260288239,
+    "mean_anchor_entropy_nats": 1.9587821960449219,
+    "mean_between_anchor_radial_sd_m": 7.0022993087768555,
+    "mean_effective_anchor_count": 7.625079154968262,
+    "mean_posterior_radio_energy": 0.35336625576019287,
+    "mean_predictive_radius_50_m": 5.360706806182861,
+    "mean_predictive_radius_80_m": 9.18925952911377,
+    "mean_predictive_radius_90_m": 12.575169563293457,
+    "mean_predictive_radius_95_m": 16.361858367919922,
+    "mean_profiled_style_scale": 0.9542563557624817,
+    "mean_radial_scale_m": 9.529462814331055,
+    "mean_top1_probability": 0.3015739917755127,
+    "mean_within_component_radial_sd_m": 6.1705427169799805,
+    "nearest_same_stratum_anchor_recall_at_16": 0.9847568273544312,
+    "nearest_same_stratum_anchor_recall_at_32": 0.9934672117233276,
+    "nearest_same_stratum_anchor_recall_at_64": 0.9975804686546326,
+    "nearest_same_stratum_anchor_recall_at_8": 0.9474957585334778,
+    "predictive_radial_coverage_50": 0.5451245903968811,
+    "predictive_radial_coverage_80": 0.8311154246330261,
+    "predictive_radial_coverage_90": 0.9281393885612488,
+    "predictive_radial_coverage_95": 0.9697556495666504,
+    "rows": 4133
+  }
+}

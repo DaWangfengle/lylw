@@ -1,0 +1,9 @@
+{
+  "external_consumed": true,
+  "final_checkpoint_sha256": "543d8d532f8f63cf1b446a62cea4251ce8a70505960acaa36e825e748ff31cd5",
+  "freeze_sha256": "0a3e7fa2bca99a3684dccf8843d6ae5dc1c26285bb115ec2b2005da3514ddbf0",
+  "lock_sha256": "1b9d008c4dbbf1111a25db8b1dfdc8381b082c63d89399b67649d2e32b73635a",
+  "note": "Written before opening the external validation file. If the evaluation crashes after this lock, do not silently rerun it.",
+  "protocol_version": "uji_v18_1_single_geometry_radio_calibrated_20260930",
+  "registry_sha256": "04ce53f37f34d6129c6ef62901619e226591afa659090028a5c4ec2d68824006"
+}
