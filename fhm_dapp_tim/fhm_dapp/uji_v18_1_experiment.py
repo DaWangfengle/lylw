@@ -265,7 +265,8 @@ def prepare_protocol(
 
     shard_records: dict[str, dict] = {}
     shard_root = Path(shard_dir)
-    for role, keys in roles.items():
+    for role in ("member_fit", "early_stop", "selection_refit", "calibration"):
+        keys = roles[role]
         rows = _rows_for_keys(data["keys"], keys)
         destination = shard_root / f"{role}.pt"
         payload = _shard_payload(
@@ -374,6 +375,37 @@ def load_role_shard(registry: dict, role: str) -> dict:
     if len(rows) != int(record["row_count"]):
         raise ValueError(f"V18.1 shard row count failed: {role}")
     return payload
+
+
+def combine_role_shards(
+    first: dict,
+    second: dict,
+    *,
+    role: str = "full_train",
+) -> dict:
+    """Combine two verified internal shards after freeze without reopening CSV."""
+
+    if first["source_sha256"] != second["source_sha256"]:
+        raise ValueError("cannot combine V18.1 shards from different sources")
+    if int(first["stats"]["n_aps"]) != int(second["stats"]["n_aps"]):
+        raise ValueError("cannot combine V18.1 shards with different AP widths")
+    return {
+        "protocol_version": PROTOCOL_VERSION,
+        "role": role,
+        "source_sha256": first["source_sha256"],
+        "rss": torch.cat([first["rss"], second["rss"]], dim=0),
+        "raw_xy": torch.cat([first["raw_xy"], second["raw_xy"]], dim=0),
+        "building_t": torch.cat(
+            [first["building_t"], second["building_t"]], dim=0
+        ),
+        "floor_t": torch.cat([first["floor_t"], second["floor_t"]], dim=0),
+        "phone_t": torch.cat([first["phone_t"], second["phone_t"]], dim=0),
+        "timestamp_t": torch.cat(
+            [first["timestamp_t"], second["timestamp_t"]], dim=0
+        ),
+        "stats": first["stats"],
+        "keys": list(first["keys"]) + list(second["keys"]),
+    }
 
 
 def _shard_arrays(shard: dict) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -1376,7 +1408,17 @@ def train_final(
     if destination.exists():
         raise FileExistsError(destination)
 
-    full_shard = load_role_shard(registry, "full_train")
+    selection_shard = load_role_shard(registry, "selection_refit")
+    calibration_shard = load_role_shard(registry, "calibration")
+    full_shard = combine_role_shards(
+        selection_shard,
+        calibration_shard,
+        role="full_train",
+    )
+    if len(set(_decode_shard_keys(full_shard))) != int(
+        registry["training_coordinate_count"]
+    ):
+        raise RuntimeError("V18.1 final shard does not reconstruct trainingData")
     device = torch.device(device_name)
     started = time.perf_counter()
     model, memory, origin, mapping, history = fit_fixed(
