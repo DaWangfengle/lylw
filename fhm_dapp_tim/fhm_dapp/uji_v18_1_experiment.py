@@ -897,7 +897,7 @@ def select_epoch(
         centered,
         sample_anchor,
         mapping,
-        seed=int(seed),
+        seed=MODEL_SEED,
     )
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -987,7 +987,7 @@ def fit_fixed(
         centered,
         sample_anchor,
         mapping,
-        seed=MODEL_SEED,
+        seed=int(seed),
     )
     optimizer = torch.optim.AdamW(
         model.parameters(),
