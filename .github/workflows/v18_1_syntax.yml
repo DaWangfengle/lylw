@@ -27,3 +27,28 @@ jobs:
       - name: Run V18.1 contract tests
         run: |
           python -m pytest -q tests/test_coherent_marked_v9.py tests/test_uji_v18_experiment.py tests/test_uji_v18_1_experiment.py
+      - name: Prepare real UJI V18.1 protocol without external access
+        run: |
+          python -m fhm_dapp_tim.fhm_dapp.uji_v18_1_experiment prepare --registry /tmp/registry_v18_1.json --shard-dir /tmp/v18_1_shards
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          registry = json.loads(Path("/tmp/registry_v18_1.json").read_text())
+          assert registry["training_rows"] == 19937
+          assert registry["training_coordinate_count"] == 933
+          assert set(registry["role_shards"]) == {
+              "member_fit", "early_stop", "selection_refit", "calibration"
+          }
+          assert not Path("/tmp/v18_1_shards/full_train.pt").exists()
+          assert all(
+              value == 0
+              for value in registry["split_diagnostics"]["hull_checks"].values()
+          )
+          print({
+              name: (
+                  record["coordinate_count"],
+                  record["row_count"],
+              )
+              for name, record in registry["role_shards"].items()
+          })
+          PY
