@@ -1424,6 +1424,36 @@ def _external_as_shard(data: dict) -> dict:
     }
 
 
+def create_external_consumption_lock(
+    path: str | Path,
+    *,
+    registry_sha256: str,
+    freeze_sha256: str,
+    final_checkpoint_sha256: str,
+) -> dict:
+    """Create the irreversible external-access lock exactly once."""
+
+    destination = Path(path)
+    if destination.exists():
+        raise PermissionError(
+            "V18.1 external validation has already been consumed"
+        )
+    payload = {
+        "protocol_version": PROTOCOL_VERSION,
+        "registry_sha256": str(registry_sha256),
+        "freeze_sha256": str(freeze_sha256),
+        "final_checkpoint_sha256": str(final_checkpoint_sha256),
+        "external_consumed": True,
+        "note": (
+            "Written before opening the external validation file. If the "
+            "evaluation crashes after this lock, do not silently rerun it."
+        ),
+    }
+    payload["lock_sha256"] = _canonical_json_sha256(payload)
+    _write_json_new(destination, payload)
+    return payload
+
+
 def evaluate_external_once(
     *,
     registry_path: str | Path = DEFAULT_REGISTRY,
@@ -1467,19 +1497,12 @@ def evaluate_external_once(
         raise ValueError("V18.1 final checkpoint epoch mismatch")
 
     # This is the irreversible access boundary.
-    lock_payload = {
-        "protocol_version": PROTOCOL_VERSION,
-        "registry_sha256": registry["registry_sha256"],
-        "freeze_sha256": freeze["freeze_sha256"],
-        "final_checkpoint_sha256": _sha256_file(final_path),
-        "external_consumed": True,
-        "note": (
-            "Written before opening the external validation file. If the "
-            "evaluation crashes after this lock, do not silently rerun it."
-        ),
-    }
-    lock_payload["lock_sha256"] = _canonical_json_sha256(lock_payload)
-    _write_json_new(lock_destination, lock_payload)
+    lock_payload = create_external_consumption_lock(
+        lock_destination,
+        registry_sha256=registry["registry_sha256"],
+        freeze_sha256=freeze["freeze_sha256"],
+        final_checkpoint_sha256=_sha256_file(final_path),
+    )
 
     external_path = Path(external_data).resolve()
     external = _load_uji(
