@@ -146,6 +146,16 @@ def validate_v182_config(
     posterior = int(config["posterior_top_k"])
     if union <= posterior:
         raise ValueError("candidate_union_size must exceed posterior_top_k")
+    primary_quota = (
+        int(config["invariant_retrieval_k"])
+        + int(config["prototype_retrieval_k"])
+        + int(config["floor_retrieval_k"])
+    )
+    if primary_quota > union:
+        raise ValueError(
+            "candidate_union_size must contain all registered primary "
+            "source quotas before deduplication"
+        )
     for name in (
         "invariant_retrieval_k",
         "prototype_retrieval_k",
@@ -231,6 +241,10 @@ def build_v182_model(
         memory["floor"],
     )
     neighbour_indices, neighbour_weights = delaunay_neighbor_targets(geometry)
+    if neighbour_indices.shape[1] > int(config["candidate_union_size"]):
+        raise ValueError(
+            "candidate_union_size cannot contain the widest Delaunay target"
+        )
     anchor_id = torch.arange(len(neighbour_indices), dtype=torch.long).unsqueeze(1)
     if bool(
         (
