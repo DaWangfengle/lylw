@@ -243,3 +243,37 @@ def test_v181_external_lock_is_irreversible(tmp_path: Path) -> None:
             freeze_sha256="freeze",
             final_checkpoint_sha256="checkpoint",
         )
+
+
+def test_v181_formal_and_stability_seeds_are_not_conflated() -> None:
+    assert len(exp.STABILITY_SEEDS) == 5
+    assert len(set(exp.STABILITY_SEEDS)) == 5
+    assert exp.STABILITY_SEEDS[0] == exp.MODEL_SEED
+    select_source = inspect.getsource(exp.select_epoch)
+    fixed_source = inspect.getsource(exp.fit_fixed)
+    assert "seed=MODEL_SEED" in select_source
+    assert "seed=int(seed)" in fixed_source
+
+
+def test_v181_stability_summary_reports_all_runs_without_selection() -> None:
+    records = []
+    for index, seed in enumerate(exp.STABILITY_SEEDS):
+        metrics = {
+            "coordinate_macro_mae_m": 8.0 + index * 0.1,
+            "coordinate_macro_energy_score_m": 6.0 + index * 0.05,
+            "coordinate_macro_mixture_nll": 7.0 + index * 0.2,
+            "nearest_same_stratum_anchor_recall_at_64": 0.90 - index * 0.01,
+            "mean_anchor_entropy_nats": 2.0 + index * 0.02,
+            "mean_radial_scale_m": 12.0 + index * 0.2,
+        }
+        records.append({"seed": seed, "metrics": metrics})
+    summary = exp._stability_summary(records)
+    assert set(summary) == {
+        "coordinate_macro_mae_m",
+        "coordinate_macro_energy_score_m",
+        "coordinate_macro_mixture_nll",
+        "nearest_same_stratum_anchor_recall_at_64",
+        "mean_anchor_entropy_nats",
+        "mean_radial_scale_m",
+    }
+    assert summary["coordinate_macro_mae_m"]["sample_std"] > 0.0
