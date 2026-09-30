@@ -18,6 +18,7 @@ import argparse
 import copy
 import json
 import math
+import os
 import random
 import time
 from collections.abc import Mapping, Sequence
@@ -110,12 +111,21 @@ LocationKey = tuple[int, int, float, float]
 
 
 def _set_seed(seed: int) -> None:
+    """Set a fail-closed deterministic training runtime."""
+
+    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
     random.seed(int(seed))
     np.random.seed(int(seed))
     torch.manual_seed(int(seed))
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(int(seed))
-    torch.use_deterministic_algorithms(True, warn_only=True)
+        if hasattr(torch.backends.cuda, "enable_flash_sdp"):
+            torch.backends.cuda.enable_flash_sdp(False)
+        if hasattr(torch.backends.cuda, "enable_mem_efficient_sdp"):
+            torch.backends.cuda.enable_mem_efficient_sdp(False)
+        if hasattr(torch.backends.cuda, "enable_math_sdp"):
+            torch.backends.cuda.enable_math_sdp(True)
+    torch.use_deterministic_algorithms(True, warn_only=False)
     if torch.backends.cudnn.is_available():
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
