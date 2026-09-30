@@ -297,6 +297,6 @@ def test_v182_floor_opinion_preserves_floor_mass_under_unequal_anchor_counts() -
 
 def test_v182_rejects_candidate_union_that_cannot_hold_primary_quotas() -> None:
     bad = dict(V182_CONFIG)
-    bad["candidate_union_size"] = 64
+    bad["candidate_union_size"] = 72
     with pytest.raises(ValueError, match="primary source quotas"):
         validate_v182_config(bad)
