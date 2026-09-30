@@ -506,6 +506,46 @@ def _source_overlap(
     return intersection / union.clamp(min=1.0)
 
 
+def _candidate_floor_probability(
+    model: AdaptiveEvidenceAnchorModel,
+    invariant_logits: torch.Tensor,
+    candidate_indices: torch.Tensor,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Distribute each floor's posterior mass uniformly over its candidates.
+
+    This prevents a floor from gaining probability merely because the current
+    candidate union contains more anchors from that floor.
+    """
+
+    floor_logp = _floor_log_probability(model, invariant_logits)
+    floor_probability = floor_logp.exp()
+    candidate_floor = model.anchor_floors[candidate_indices]
+    floor_count = floor_probability.shape[1]
+    one_hot = F.one_hot(
+        candidate_floor,
+        num_classes=floor_count,
+    ).to(floor_probability.dtype)
+    count = one_hot.sum(dim=1).clamp(min=1.0)
+    candidate_floor_probability = torch.gather(
+        floor_probability,
+        1,
+        candidate_floor,
+    )
+    candidate_floor_count = torch.gather(
+        count,
+        1,
+        candidate_floor,
+    )
+    candidate_floor_probability = (
+        candidate_floor_probability / candidate_floor_count
+    )
+    candidate_floor_probability = (
+        candidate_floor_probability
+        / candidate_floor_probability.sum(dim=1, keepdim=True).clamp(min=1e-12)
+    )
+    return candidate_floor_probability, floor_logp
+
+
 def evidence_opinions(
     model: AdaptiveEvidenceAnchorModel,
     rss: torch.Tensor,
@@ -564,11 +604,10 @@ def evidence_opinions(
         )
     radio_energy = radio_energy.to(inv_score)
 
-    floor_logp = _floor_log_probability(model, invariant_logits)
-    candidate_floor_logp = torch.gather(
-        floor_logp,
-        1,
-        model.anchor_floors[candidate_indices],
+    floor_probability, floor_logp = _candidate_floor_probability(
+        model,
+        invariant_logits,
+        candidate_indices,
     )
 
     candidate_locations = model.anchor_coords[candidate_indices]
@@ -588,7 +627,7 @@ def evidence_opinions(
                 -radio_energy / float(config["radio_lambda"]),
                 dim=1,
             ),
-            F.softmax(candidate_floor_logp, dim=1),
+            floor_probability,
             F.softmax(-geometry_energy, dim=1),
         ],
         dim=1,
@@ -649,7 +688,9 @@ def evidence_opinions(
         "learned_score": learned_score,
         "radio_energy": radio_energy,
         "geometry_energy": geometry_energy,
-        "floor_log_probability": candidate_floor_logp,
+        "floor_log_probability": torch.log(
+            floor_probability.clamp(min=1e-12)
+        ),
         "source_probability": source_probability,
         "source_entropy": source_entropy,
         "gate_features": gate_features,
