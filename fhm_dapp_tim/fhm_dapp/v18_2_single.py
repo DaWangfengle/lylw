@@ -1101,6 +1101,10 @@ def v182_predict(
             "style_scale": evidence["style_scale"],
             "union_candidate_indices": evidence["candidate_indices"],
             "union_probability": union_probability,
+            "retrieval_invariant_indices": union["invariant_indices"],
+            "retrieval_prototype_indices": union["prototype_indices"],
+            "retrieval_floor_indices": union["floor_indices"],
+            "retrieval_geometry_indices": union["geometry_indices"],
         }
         if target_coords is not None:
             component_lp = model.student_log_prob(
