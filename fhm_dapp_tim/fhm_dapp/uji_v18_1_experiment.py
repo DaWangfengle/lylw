@@ -68,6 +68,7 @@ PROTOCOL_VERSION = "uji_v18_1_single_geometry_radio_calibrated_20260930"
 GEOMETRY_SEED = 18111
 EARLY_STOP_SEED = 18112
 MODEL_SEED = 18311
+STABILITY_SEEDS = (18311, 18312, 18313, 18314, 18315)
 SCORING_SEED = 18511
 SELECTION_REFIT_FRACTION = 0.80
 EARLY_STOP_FRACTION = 0.15
@@ -102,6 +103,7 @@ DEFAULT_SHARDS = DEFAULT_EVIDENCE / "role_shards"
 DEFAULT_REGISTRY = DEFAULT_EVIDENCE / "registry_v18_1.json"
 DEFAULT_SELECTION_CHECKPOINT = DEFAULT_MODELS / "selection.pt"
 DEFAULT_CALIBRATION_RESULT = DEFAULT_EVIDENCE / "calibration_result_v18_1.json"
+DEFAULT_STABILITY_RESULT = DEFAULT_EVIDENCE / "stability_result_v18_1.json"
 DEFAULT_FREEZE = DEFAULT_EVIDENCE / "selection_freeze_v18_1.json"
 DEFAULT_FINAL_CHECKPOINT = DEFAULT_MODELS / "final.pt"
 DEFAULT_EXTERNAL_LOCK = DEFAULT_EVIDENCE / "external_validation_consumed.lock"
@@ -320,6 +322,7 @@ def prepare_protocol(
             "geometry_seed": GEOMETRY_SEED,
             "early_stop_seed": EARLY_STOP_SEED,
             "model_seed": MODEL_SEED,
+            "stability_seeds": list(STABILITY_SEEDS),
             "scoring_seed": SCORING_SEED,
             "selection_refit_fraction": SELECTION_REFIT_FRACTION,
             "early_stop_fraction": EARLY_STOP_FRACTION,
@@ -894,7 +897,7 @@ def select_epoch(
         centered,
         sample_anchor,
         mapping,
-        seed=MODEL_SEED,
+        seed=int(seed),
     )
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -963,10 +966,11 @@ def fit_fixed(
     epochs: int,
     device: torch.device,
     log_every: int = 5,
+    seed: int = MODEL_SEED,
 ) -> tuple[torch.nn.Module, dict, np.ndarray, dict, list[dict]]:
     if int(epochs) < int(V181_CONFIG["minimum_epochs"]):
         raise ValueError("V18.1 refit epoch count violates minimum_epochs")
-    _set_seed(MODEL_SEED)
+    _set_seed(int(seed))
     (
         model,
         memory,
@@ -1404,6 +1408,106 @@ def load_freeze(
     return payload
 
 
+def _stability_summary(records: Sequence[dict]) -> dict:
+    """Summarize independent E=1 runs without selecting or averaging models."""
+
+    if not records:
+        raise ValueError("stability records must be nonempty")
+    metric_names = (
+        "coordinate_macro_mae_m",
+        "coordinate_macro_energy_score_m",
+        "coordinate_macro_mixture_nll",
+        "nearest_same_stratum_anchor_recall_at_64",
+        "mean_anchor_entropy_nats",
+        "mean_radial_scale_m",
+    )
+    summary: dict[str, dict[str, float]] = {}
+    for name in metric_names:
+        values = np.asarray(
+            [float(record["metrics"][name]) for record in records],
+            dtype=np.float64,
+        )
+        summary[name] = {
+            "mean": float(values.mean()),
+            "sample_std": float(values.std(ddof=1)) if len(values) > 1 else 0.0,
+            "minimum": float(values.min()),
+            "maximum": float(values.max()),
+        }
+    return summary
+
+
+def run_stability_panel(
+    *,
+    registry_path: str | Path = DEFAULT_REGISTRY,
+    freeze_path: str | Path = DEFAULT_FREEZE,
+    output: str | Path = DEFAULT_STABILITY_RESULT,
+    device_name: str = "cuda",
+    log_every: int = 0,
+) -> dict:
+    """Run pre-registered independent single-member repeats on internal roles.
+
+    Every seed is reported. No seed is selected, ensembled, or used to modify
+    the frozen formal model.
+    """
+
+    registry = load_registry(registry_path)
+    freeze = load_freeze(freeze_path, registry=registry)
+    destination = Path(output)
+    if destination.exists():
+        raise FileExistsError(destination)
+
+    fit_shard = load_role_shard(registry, "member_fit")
+    stop_shard = load_role_shard(registry, "early_stop")
+    device = torch.device(device_name)
+    records: list[dict] = []
+    for seed in STABILITY_SEEDS:
+        model, _memory, origin, _mapping, history = fit_fixed(
+            fit_shard,
+            epochs=int(freeze["frozen_selected_epoch"]),
+            device=device,
+            log_every=(
+                int(log_every)
+                if int(log_every) > 0
+                else int(freeze["frozen_selected_epoch"]) + 1
+            ),
+            seed=int(seed),
+        )
+        metrics = evaluate_shard(
+            model,
+            stop_shard,
+            origin,
+            posterior_temperature=float(
+                freeze["frozen_posterior_temperature"]
+            ),
+            scale_multiplier=float(freeze["frozen_scale_multiplier"]),
+            device=device,
+        )
+        records.append(
+            {
+                "seed": int(seed),
+                "epochs": int(freeze["frozen_selected_epoch"]),
+                "metrics": metrics,
+                "last_train_metrics": history[-1],
+            }
+        )
+
+    result = {
+        "protocol_version": PROTOCOL_VERSION,
+        "registry_sha256": registry["registry_sha256"],
+        "freeze_sha256": freeze["freeze_sha256"],
+        "seeds": list(map(int, STABILITY_SEEDS)),
+        "independent_single_member_runs": len(records),
+        "ensemble_constructed": False,
+        "best_seed_selected": False,
+        "records": records,
+        "summary": _stability_summary(records),
+        "used_for_formal_model_selection": False,
+    }
+    result["result_sha256"] = _canonical_json_sha256(result)
+    _write_json_new(destination, result)
+    return result
+
+
 def train_final(
     *,
     registry_path: str | Path = DEFAULT_REGISTRY,
@@ -1631,6 +1735,13 @@ def main() -> None:
     calibrate.add_argument("--freeze", default=str(DEFAULT_FREEZE))
     calibrate.add_argument("--device", default="cuda")
 
+    stability_parser = sub.add_parser("stability")
+    stability_parser.add_argument("--registry", default=str(DEFAULT_REGISTRY))
+    stability_parser.add_argument("--freeze", default=str(DEFAULT_FREEZE))
+    stability_parser.add_argument("--output", default=str(DEFAULT_STABILITY_RESULT))
+    stability_parser.add_argument("--device", default="cuda")
+    stability_parser.add_argument("--log-every", type=int, default=0)
+
     train_fin = sub.add_parser("train-final")
     train_fin.add_argument("--registry", default=str(DEFAULT_REGISTRY))
     train_fin.add_argument("--freeze", default=str(DEFAULT_FREEZE))
@@ -1674,6 +1785,14 @@ def main() -> None:
             calibration_result_path=args.calibration_result,
             freeze_path=args.freeze,
             device_name=args.device,
+        )
+    elif args.command == "stability":
+        payload = run_stability_panel(
+            registry_path=args.registry,
+            freeze_path=args.freeze,
+            output=args.output,
+            device_name=args.device,
+            log_every=args.log_every,
         )
     elif args.command == "train-final":
         payload = train_final(
