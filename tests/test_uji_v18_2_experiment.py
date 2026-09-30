@@ -16,6 +16,7 @@ from fhm_dapp_tim.fhm_dapp.v18_2_single import (
     candidate_union,
     evidence_opinions,
     prototype_retrieval_score,
+    _candidate_floor_probability,
     validate_v182_config,
     v182_predict,
     v182_training_loss,
@@ -269,3 +270,26 @@ def test_v182_benchmark_is_explicitly_not_blind() -> None:
     registry_source = inspect.getsource(exp.prepare_protocol)
     assert "DEFAULT_BENCHMARK" not in registry_source
     assert "validationData.csv" not in registry_source
+
+
+def test_v182_floor_opinion_preserves_floor_mass_under_unequal_anchor_counts() -> None:
+    model, memory, _sample_anchor, _geometry, _neighbours, _weights = _model()
+    # Create two synthetic floor labels with unequal candidate counts.
+    model.anchor_floors[:5] = 0
+    model.anchor_floors[5:] = 1
+    rss = memory["prototype_rss"][:1]
+    with torch.no_grad():
+        invariant, _embedding = model.retrieval_logits(rss)
+    candidate_indices = torch.tensor([[0, 1, 2, 3, 4, 5, 6, 7]])
+    probability, floor_logp = _candidate_floor_probability(
+        model,
+        invariant,
+        candidate_indices,
+    )
+    candidate_floor = model.anchor_floors[candidate_indices]
+    mass0 = probability[candidate_floor == 0].sum()
+    mass1 = probability[candidate_floor == 1].sum()
+    floor_probability = floor_logp.exp()[0]
+    restricted = floor_probability[:2] / floor_probability[:2].sum()
+    assert torch.allclose(mass0, restricted[0], atol=1e-6)
+    assert torch.allclose(mass1, restricted[1], atol=1e-6)
