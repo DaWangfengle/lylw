@@ -699,6 +699,9 @@ def evaluate_shard(
             target_coords=target,
             config=V183_CONFIG,
         )
+        # Prediction diagnostics may carry the radio profiler's autograd
+        # graph. Statistics need values only, including NumPy correlations.
+        result = {name: value.detach() for name, value in result.items()}
         for name in (
             "nll",
             "coords",

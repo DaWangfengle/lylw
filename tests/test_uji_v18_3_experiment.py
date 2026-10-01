@@ -329,6 +329,38 @@ def test_v183_temperature_grid_is_non_sharpening() -> None:
     assert 0.75 not in exp.CALIBRATION_TEMPERATURE_GRID
 
 
+def test_v183_evaluate_shard_handles_autograd_diagnostics() -> None:
+    model, memory, _sample_anchor, _geometry, _neighbours, _weights = _model()
+    shard = {
+        "rss": memory["prototype_rss"],
+        "raw_xy": memory["coords"],
+        "building_t": memory["building"],
+        "floor_t": memory["floor"],
+        "keys": [
+            exp._encode_key((int(b), int(f), float(x), float(y)))
+            for b, f, (x, y) in zip(
+                memory["building"], memory["floor"], memory["coords"]
+            )
+        ],
+    }
+    grad_enabled = torch.is_grad_enabled()
+    metrics = exp.evaluate_shard(
+        model,
+        shard,
+        np.zeros(2, dtype=np.float32),
+        posterior_temperature=1.0,
+        scale_multiplier=1.0,
+        device=torch.device("cpu"),
+        batch_size=3,
+    )
+    assert metrics["rows"] == len(memory["coords"])
+    assert metrics["coordinate_groups"] == len(memory["coords"])
+    assert all(np.isfinite(value) for value in metrics.values())
+    assert -1.0 <= metrics["error_evidence_disagreement_correlation"] <= 1.0
+    assert -1.0 <= metrics["radio_mismatch_radio_weight_correlation"] <= 1.0
+    assert torch.is_grad_enabled() == grad_enabled
+
+
 def test_v183_nested_roles_are_disjoint_complete_and_new() -> None:
     keys = _synthetic_grid()
     roles, _details = exp.construct_coordinate_roles(keys)
