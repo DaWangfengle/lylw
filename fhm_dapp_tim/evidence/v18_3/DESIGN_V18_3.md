@@ -34,6 +34,10 @@ It has:
 
 The model must remain scientifically meaningful at E=1.
 
+The V18.3 runtime model law is self-contained in the V18.3 module.  It does
+not import V18.2 model utilities at execution time; V18.2 is historical
+evidence, not a hidden software dependency.
+
 ## 3. The same six evidence opinions
 
 V18.3 retains the six V18.2 opinions because V18.2 did not show that the
@@ -221,6 +225,10 @@ The registered support construction is unchanged:
 This is important scientifically: V18.3 changes the component that failed
 (fusion), not the component that was empirically successful (candidate
 discovery).
+
+The registered L=96 capacity must be large enough to hold the complete
+32+32+16 primary source quotas and the widest non-self Delaunay training target
+simultaneously.  Model construction fails closed if this cannot be guaranteed.
 
 ## 12. Leave-anchor-out geometry objective
 
