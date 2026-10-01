@@ -247,9 +247,18 @@ def build_v183_model(
         memory["floor"],
     )
     neighbour_indices, neighbour_weights = delaunay_neighbor_targets(geometry)
-    if neighbour_indices.shape[1] > int(config["candidate_union_size"]):
+    primary_quota = (
+        int(config["invariant_retrieval_k"])
+        + int(config["prototype_retrieval_k"])
+        + int(config["floor_retrieval_k"])
+    )
+    if (
+        primary_quota + int(neighbour_indices.shape[1])
+        > int(config["candidate_union_size"])
+    ):
         raise ValueError(
-            "candidate_union_size cannot contain the widest Delaunay target"
+            "candidate_union_size must simultaneously contain all registered "
+            "primary source quotas and the widest Delaunay training target"
         )
     anchor_id = torch.arange(
         len(neighbour_indices),
