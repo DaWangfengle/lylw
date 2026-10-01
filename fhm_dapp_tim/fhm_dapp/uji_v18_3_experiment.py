@@ -370,6 +370,16 @@ def prepare_protocol(
             "knowledge_distillation": False,
             "member_axis": False,
             "ensemble": False,
+            "trainable_evidence_gate": False,
+            "evidence_families": list(EVIDENCE_FAMILIES),
+            "inference_family_weight_floor": float(
+                V183_CONFIG["family_min_weight"]
+            ),
+            "within_family_source_weight_floor": float(
+                V183_CONFIG["within_family_min_source_weight"]
+            ),
+            "family_dropout_training_only": True,
+            "calibration_temperature_can_sharpen": False,
         },
         "evaluation_contract": {
             "confirmation_is_new_registered_trainingData_holdout": True,
