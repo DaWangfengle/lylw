@@ -104,6 +104,7 @@ def test_v183_contract_is_single_member_without_trainable_gate() -> None:
     assert "projectedensemble" not in source
     assert "knowledge_distillation" not in source
     assert "teacher checkpoint" not in source
+    assert "v18_2_single" not in source
 
     bad = dict(V183_CONFIG)
     bad["residual_experts"] = 2
