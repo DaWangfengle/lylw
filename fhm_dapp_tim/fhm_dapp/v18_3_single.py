@@ -45,19 +45,16 @@ from fhm_dapp_tim.fhm_dapp.model import (
 )
 from fhm_dapp_tim.fhm_dapp.train_anchor import _ap_building_owner
 from fhm_dapp_tim.fhm_dapp.v18_single import delaunay_neighbor_targets
-from fhm_dapp_tim.fhm_dapp.v18_2_single import (
-    EVIDENCE_SOURCES,
-    _candidate_floor_probability,
-    _hierarchy_prediction,
-    _standardize,
-    _support_recall_mass,
-    _weighted_target_mass,
-    candidate_union,
-    prototype_retrieval_score,
-)
-
-
 VISIBLE_THRESHOLD = -0.999
+
+EVIDENCE_SOURCES = (
+    "invariant",
+    "prototype",
+    "learned",
+    "marked_radio",
+    "floor",
+    "geometry",
+)
 
 EVIDENCE_FAMILIES = (
     "representation",
@@ -328,6 +325,281 @@ def build_v183_model(
         neighbour_indices.to(device),
         neighbour_weights.to(device),
     )
+
+
+def _standardize(values: torch.Tensor) -> torch.Tensor:
+    centered = values - values.mean(dim=1, keepdim=True)
+    scale = centered.square().mean(dim=1, keepdim=True).sqrt()
+    return centered / scale.clamp(min=1e-4)
+
+
+def prototype_retrieval_score(
+    model: StructuredEvidenceAnchorModel,
+    rss: torch.Tensor,
+) -> torch.Tensor:
+    """Raw-RSS prototype opinion kept separate from invariant retrieval."""
+
+    seen = model.encoder.seen_ap_mask
+    query = rss[:, seen].float()
+    prototypes = model.prototype_rss[:, seen].float()
+    query_norm = query.square().mean(dim=1, keepdim=True)
+    prototype_norm = prototypes.square().mean(dim=1).unsqueeze(0)
+    cross = query @ prototypes.t() / max(1, int(seen.sum()))
+    distance = (
+        query_norm + prototype_norm - 2.0 * cross
+    ).clamp(min=0.0).sqrt()
+    return -distance
+
+
+def _floor_log_probability(
+    model: StructuredEvidenceAnchorModel,
+    invariant_logits: torch.Tensor,
+) -> torch.Tensor:
+    floor_logits = model._marginal_logits(
+        invariant_logits,
+        model.anchor_floors,
+    )
+    return F.log_softmax(floor_logits, dim=1)
+
+
+def _scatter_candidate_mask(
+    mask: torch.Tensor,
+    indices: torch.Tensor,
+) -> None:
+    mask.scatter_(1, indices, True)
+
+
+def candidate_union(
+    model: StructuredEvidenceAnchorModel,
+    invariant_logits: torch.Tensor,
+    prototype_score: torch.Tensor,
+    *,
+    force_indices: torch.Tensor | None = None,
+    config: Mapping[str, object] = V183_CONFIG,
+) -> dict[str, torch.Tensor]:
+    """Build the registered single-model multi-source L=96 support."""
+
+    validate_v183_config(config)
+    batch, anchors = invariant_logits.shape
+    if anchors != model.n_anchors:
+        raise ValueError("invariant logits do not match the anchor dictionary")
+
+    inv_k = min(int(config["invariant_retrieval_k"]), anchors)
+    proto_k = min(int(config["prototype_retrieval_k"]), anchors)
+    floor_k = min(int(config["floor_retrieval_k"]), anchors)
+    seed_k = min(int(config["geometry_seed_k"]), anchors)
+    union_k = min(int(config["candidate_union_size"]), anchors)
+
+    inv_indices = torch.topk(invariant_logits, inv_k, dim=1).indices
+    proto_indices = torch.topk(prototype_score, proto_k, dim=1).indices
+
+    floor_logp = _floor_log_probability(model, invariant_logits)
+    floor_anchor_score = torch.gather(
+        floor_logp,
+        1,
+        model.anchor_floors.unsqueeze(0).expand(batch, -1),
+    )
+    floor_aware_score = _standardize(invariant_logits) + floor_anchor_score
+    floor_indices = torch.topk(
+        floor_aware_score,
+        floor_k,
+        dim=1,
+    ).indices
+
+    seed = torch.cat(
+        [inv_indices[:, :seed_k], proto_indices[:, :seed_k]],
+        dim=1,
+    )
+    geometry_indices = model.evidence_geometry_neighbors[seed].reshape(
+        batch,
+        -1,
+    )
+
+    source_mask = torch.zeros(
+        batch,
+        anchors,
+        dtype=torch.bool,
+        device=invariant_logits.device,
+    )
+    mandatory_mask = torch.zeros_like(source_mask)
+    _scatter_candidate_mask(mandatory_mask, inv_indices)
+    _scatter_candidate_mask(mandatory_mask, proto_indices)
+    _scatter_candidate_mask(mandatory_mask, floor_indices)
+    source_mask |= mandatory_mask
+    _scatter_candidate_mask(source_mask, geometry_indices)
+
+    priority = torch.maximum(
+        _standardize(invariant_logits),
+        _standardize(prototype_score),
+    )
+    priority = torch.maximum(priority, _standardize(floor_aware_score))
+
+    fallback = torch.topk(
+        (
+            _standardize(invariant_logits)
+            + _standardize(prototype_score)
+            + 0.5 * floor_anchor_score
+        ),
+        union_k,
+        dim=1,
+    ).indices
+    _scatter_candidate_mask(source_mask, fallback)
+
+    # The registered 32+32+16 primary source quotas fit inside L=96.
+    # A strict bonus guarantees that candidate construction cannot silently
+    # delete a registered source's Top-K because another source has a larger
+    # score scale.
+    mandatory_bonus = (
+        priority.max(dim=1, keepdim=True).values
+        - priority.min(dim=1, keepdim=True).values
+        + 100.0
+    )
+    priority = priority + mandatory_mask.to(priority.dtype) * mandatory_bonus
+
+    if force_indices is not None:
+        if force_indices.ndim != 2 or len(force_indices) != batch:
+            raise ValueError("force_indices must be [batch,width]")
+        _scatter_candidate_mask(source_mask, force_indices)
+
+    masked_priority = priority.masked_fill(~source_mask, float("-inf"))
+    if force_indices is not None:
+        forced_priority = (
+            masked_priority.max(dim=1, keepdim=True).values
+            + 10.0
+            + torch.arange(
+                force_indices.shape[1],
+                dtype=masked_priority.dtype,
+                device=masked_priority.device,
+            ).unsqueeze(0)
+            * 1e-3
+        )
+        masked_priority = masked_priority.scatter(
+            1,
+            force_indices,
+            forced_priority,
+        )
+
+    candidate_indices = torch.topk(
+        masked_priority,
+        union_k,
+        dim=1,
+    ).indices
+
+    def on_union(indices: torch.Tensor) -> torch.Tensor:
+        return (
+            candidate_indices.unsqueeze(2) == indices.unsqueeze(1)
+        ).any(dim=2)
+
+    return {
+        "candidate_indices": candidate_indices,
+        "invariant_indices": inv_indices,
+        "prototype_indices": proto_indices,
+        "floor_indices": floor_indices,
+        "geometry_indices": geometry_indices,
+        "candidate_from_invariant": on_union(inv_indices),
+        "candidate_from_prototype": on_union(proto_indices),
+        "candidate_from_floor": on_union(floor_indices),
+        "candidate_from_geometry": on_union(geometry_indices),
+    }
+
+
+def _candidate_floor_probability(
+    model: StructuredEvidenceAnchorModel,
+    invariant_logits: torch.Tensor,
+    candidate_indices: torch.Tensor,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Preserve floor posterior mass under unequal candidate counts."""
+
+    floor_logp = _floor_log_probability(model, invariant_logits)
+    floor_probability = floor_logp.exp()
+    candidate_floor = model.anchor_floors[candidate_indices]
+    floor_count = floor_probability.shape[1]
+    one_hot = F.one_hot(
+        candidate_floor,
+        num_classes=floor_count,
+    ).to(floor_probability.dtype)
+    count = one_hot.sum(dim=1).clamp(min=1.0)
+    candidate_probability = torch.gather(
+        floor_probability,
+        1,
+        candidate_floor,
+    )
+    candidate_count = torch.gather(count, 1, candidate_floor)
+    candidate_probability = candidate_probability / candidate_count
+    candidate_probability = candidate_probability / candidate_probability.sum(
+        dim=1,
+        keepdim=True,
+    ).clamp(min=1e-12)
+    return candidate_probability, floor_logp
+
+
+def _weighted_target_mass(
+    candidate_indices: torch.Tensor,
+    target_indices: torch.Tensor,
+    target_weights: torch.Tensor,
+) -> torch.Tensor:
+    return torch.sum(
+        (
+            candidate_indices.unsqueeze(2)
+            == target_indices.unsqueeze(1)
+        ).to(target_weights.dtype)
+        * target_weights.unsqueeze(1),
+        dim=2,
+    )
+
+
+def _support_recall_mass(
+    candidate_indices: torch.Tensor,
+    target_indices: torch.Tensor,
+    target_weights: torch.Tensor,
+) -> torch.Tensor:
+    matched = (
+        candidate_indices.unsqueeze(2)
+        == target_indices.unsqueeze(1)
+    ).any(dim=1)
+    return torch.sum(
+        matched.to(target_weights.dtype) * target_weights,
+        dim=1,
+    )
+
+
+def _hierarchy_prediction(
+    model: StructuredEvidenceAnchorModel,
+    rss: torch.Tensor,
+    invariant_logits: torch.Tensor,
+    *,
+    deterministic_building: bool,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    building_logits = model._marginal_logits(
+        invariant_logits,
+        model.anchor_buildings,
+    )
+    floor_logits = model._marginal_logits(
+        invariant_logits,
+        model.anchor_floors,
+    )
+    pred_building = building_logits.argmax(dim=1)
+    pred_floor = floor_logits.argmax(dim=1)
+    if deterministic_building:
+        visible = (
+            (rss > model.encoder.visible_threshold)
+            & model.encoder.seen_ap_mask.unsqueeze(0)
+        )
+        signal = (rss + 1.0).clamp(min=0.0) * visible
+        building_scores = torch.stack(
+            [
+                signal[:, model.ap_building_owner == class_id].sum(dim=1)
+                for class_id in range(building_logits.shape[1])
+            ],
+            dim=1,
+        )
+        has_signal = building_scores.sum(dim=1) > 0.0
+        pred_building = torch.where(
+            has_signal,
+            building_scores.argmax(dim=1),
+            pred_building,
+        )
+    return pred_building, pred_floor
 
 
 def _normalized_entropy(probability: torch.Tensor) -> torch.Tensor:
