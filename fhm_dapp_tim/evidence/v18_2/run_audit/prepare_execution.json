@@ -1,0 +1,16 @@
+{
+  "phase": "prepare",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment",
+    "prepare"
+  ],
+  "started_utc": "2026-09-30T08:55:00.895160+00:00",
+  "formal_experiment_sha": "8d986195e4ea10c05943b63a17ad2ca0c54ba205",
+  "python_process_id": 16024,
+  "finished_utc": "2026-09-30T08:55:08.688995+00:00",
+  "wall_seconds": 7.793466900009662,
+  "exit_code": 0,
+  "sources_unchanged": true
+}

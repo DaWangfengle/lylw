@@ -1,0 +1,104 @@
+{
+  "stage": "prepare",
+  "registry_sha256": "93a442bfe21e378ef87fee3c08442d49d54a41aa3e145cc0bab1dfe55f8a276a",
+  "training_rows": 19937,
+  "physical_coordinates": 933,
+  "building_floor_strata": 13,
+  "n_aps": 520,
+  "roles": {
+    "member_fit": {
+      "coordinates": 506,
+      "rows": 10708
+    },
+    "early_stop": {
+      "coordinates": 89,
+      "rows": 1957
+    },
+    "selection_refit": {
+      "coordinates": 595,
+      "rows": 12665
+    },
+    "calibration": {
+      "coordinates": 151,
+      "rows": 3139
+    },
+    "outer_refit": {
+      "coordinates": 746,
+      "rows": 15804
+    },
+    "confirmation": {
+      "coordinates": 187,
+      "rows": 4133
+    }
+  },
+  "train_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "split_diagnostics": {
+    "coordinate_grouping": "complete (building,floor,longitude,latitude)",
+    "disjoint_intersections": {
+      "member_fit_early_stop": 0,
+      "selection_refit_calibration": 0,
+      "outer_refit_confirmation": 0
+    },
+    "exact_union_identities": true,
+    "all_roles_keep_all_building_floor_strata": true,
+    "hull_checks": {
+      "all_hull_missing_from_outer_refit": 0,
+      "outer_refit_hull_missing_from_selection_refit": 0,
+      "selection_refit_hull_missing_from_member_fit": 0
+    }
+  },
+  "role_shards": {
+    "calibration": {
+      "coordinate_count": 151,
+      "coordinate_key_sha256": "46212a826932e00579d1a7ff041cb80a7c3d237f7a59de9f25b62ec9c58fcd58",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_2\\role_shards\\calibration.pt",
+      "row_count": 3139,
+      "row_index_sha256": "ccf499ab5980c3a9d3629b034906141e0e23256fb3bb300a34bec250ae9264e4",
+      "sha256": "e4357029b932bd990385313c319ceb0b7738dc59ffcbeee5798836c3a3c5bcf3"
+    },
+    "confirmation": {
+      "coordinate_count": 187,
+      "coordinate_key_sha256": "38c7eacb26a05f9fd395737ac69fcd017a6b9fe07816ed0fabe78af603296667",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_2\\role_shards\\confirmation.pt",
+      "row_count": 4133,
+      "row_index_sha256": "dcf07097d43c834653caca374448706fd5607e7f7ee356e4e8c20130b7755e97",
+      "sha256": "faed56655888d1e9756c2daea45a6ca8c50e5acb6290bef22741645878283e74"
+    },
+    "early_stop": {
+      "coordinate_count": 89,
+      "coordinate_key_sha256": "14d73c79b317ee896831a3c661f3617c604637fe1bed5e9e34d8bd72fcefeb52",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_2\\role_shards\\early_stop.pt",
+      "row_count": 1957,
+      "row_index_sha256": "33fc387bc881538cabfd4c146a2a12ba264889acc860dcfed074b7d29f89d47b",
+      "sha256": "b828e6a52aa20a8aeadf77748e1f31c311d720388b267e919a9eda0bc00dcfb8"
+    },
+    "member_fit": {
+      "coordinate_count": 506,
+      "coordinate_key_sha256": "ddda8283f1fdf13fbd63de666cb2434c2dbc1bfc919b2d06531d78243b9a6341",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_2\\role_shards\\member_fit.pt",
+      "row_count": 10708,
+      "row_index_sha256": "1e07b577be2320c094018c09fbbacafeb4b42f03005d16982b95ce55aaecd248",
+      "sha256": "e9267c1123616eff1a623f8beb7cb6e26b861a3da57fe4fa86493ae6fd3c340c"
+    },
+    "outer_refit": {
+      "coordinate_count": 746,
+      "coordinate_key_sha256": "c9126f29ac0dd27a74e71d2dd229785efd9aeeccd702dd8e468178ec004dc822",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_2\\role_shards\\outer_refit.pt",
+      "row_count": 15804,
+      "row_index_sha256": "5377e342115c13fda1b6154b9d55e80d1a0741b8d6252674a48f3da2be63b87c",
+      "sha256": "50db20cc51adfbea7a67724dd2df308e12d001358e48caaa40e222b8f3c00b3b"
+    },
+    "selection_refit": {
+      "coordinate_count": 595,
+      "coordinate_key_sha256": "ffe00abc52443a72b3f4ca4d36d75ca8b63253b6c10163e24d94d858852373af",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_2\\role_shards\\selection_refit.pt",
+      "row_count": 12665,
+      "row_index_sha256": "d563241f176bf6edda3da4fbd5bb81884acbb5308f91eb01f7a9b1e2e8a9ec65",
+      "sha256": "3bd7c4aa402e8d57eedaeadc3ba8ff79aa8982280be35a6937580865c1b0ac56"
+    }
+  },
+  "independent_loaded_shard_hash_checks": 5,
+  "confirmation_hash_fixed_by_prepare": true,
+  "confirmation_contents_not_manually_loaded": true,
+  "confirmation_hash_checked_by_protocol_after_lock": false
+}

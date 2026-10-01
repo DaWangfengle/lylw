@@ -1,0 +1,9 @@
+{
+  "checkpoint_sha256": "97741796d71dacb37b1ee661cb80b6fabd692dd1fba1156c2f165d373e809e7e",
+  "confirmation_consumed": true,
+  "freeze_sha256": "9b7de01b4ca84db703afe5dd930a1bd92147231e893fcc1312ae66fbd1e7b49a",
+  "lock_sha256": "a9578f7dc94dfd14e01ef85122ccb95ac67fdca44c625b03ab9ca108d2f59ac4",
+  "note": "Written before loading the confirmation shard.",
+  "protocol_version": "uji_v18_2_adaptive_multi_evidence_v1_20260930",
+  "registry_sha256": "93a442bfe21e378ef87fee3c08442d49d54a41aa3e145cc0bab1dfe55f8a276a"
+}

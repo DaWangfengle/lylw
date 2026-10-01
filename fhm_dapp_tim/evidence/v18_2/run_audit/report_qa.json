@@ -1,0 +1,35 @@
+{
+  "all_checks_passed": true,
+  "model_inference_performed_by_qa": false,
+  "report_self_sha256": "58047a1c8014deaadc4ac5681bb14698386784b0ec8b29b8e1f0fcadea45befe",
+  "required_sections": [
+    "GIT",
+    "TESTS",
+    "PROTOCOL",
+    "MODEL",
+    "TRAINING",
+    "CALIBRATION",
+    "STABILITY",
+    "CONFIRMATION",
+    "PRE-EXPOSED BENCHMARK",
+    "COMPUTE",
+    "AUDIT",
+    "INTERPRETATION"
+  ],
+  "commands_in_registered_order": [
+    "prepare",
+    "train-selection",
+    "calibrate-freeze",
+    "stability",
+    "train-confirmation",
+    "confirm",
+    "train-final",
+    "benchmark"
+  ],
+  "five_seed_sample_sd_valid": true,
+  "strict_cuda_training_valid": true,
+  "one_shot_confirmation_valid": true,
+  "pre_exposed_benchmark_label_valid": true,
+  "formal_scientific_source_unchanged": true,
+  "checked_utc": "2026-09-30T10:23:32.306583+00:00"
+}

@@ -1,0 +1,10 @@
+{
+  "formal_experiment_sha": "8d986195e4ea10c05943b63a17ad2ca0c54ba205",
+  "files": {
+    "fhm_dapp_tim/fhm_dapp/v18_2_single.py": "84db59687a6bce15ddaa6952acd8ac8bbe1afd207d89b4d75c426dcf18bd2323",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_2_experiment.py": "92bc0cae01c6450de1187ee9fd8a48f46b2697b27d0356f4d1ebe728d6c16ebe",
+    "fhm_dapp_tim/evidence/v18_2/DESIGN_V18_2.md": "50de9fd46992f092d7db73d16b603c5572e648a6ee7d03a6c948ddfa5e7efa79",
+    "tests/test_uji_v18_2_experiment.py": "6e88f4f573bb56a77b3c6c21dc57afd9f1428a75defacf10a23352a5acabd86e",
+    "V18_2_CODEX_RUN.txt": "f33b902ce9d9264dfd1a0385e3aa2f20b1e67e889620930e5d1465c81fd896f3"
+  }
+}

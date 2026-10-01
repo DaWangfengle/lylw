@@ -1,0 +1,306 @@
+{
+  "stage": "freeze",
+  "registry_sha256": "93a442bfe21e378ef87fee3c08442d49d54a41aa3e145cc0bab1dfe55f8a276a",
+  "freeze_sha256": "9b7de01b4ca84db703afe5dd930a1bd92147231e893fcc1312ae66fbd1e7b49a",
+  "selection_checkpoint_unchanged": true,
+  "calibration_result_sha256": "b535feaf53a5d82e22f285f489fee9d19c8cae28b9332d823647e6d97b13f6f4",
+  "calibration": {
+    "best_coordinate_macro_mixture_nll": 5.82841603961212,
+    "posterior_temperature": 0.75,
+    "scale_multiplier": 1.0,
+    "scale_on_grid_boundary": false,
+    "surface": [
+      {
+        "coordinate_macro_mixture_nll": 6.299434548182203,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.9526143910869065,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.863655726641219,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.876722342131154,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.938553063285272,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.123368196929527,
+        "posterior_temperature": 0.5,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.179474930100094,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.885381589662161,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.82841603961212,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.861055982033938,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.934843338088484,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.132023501869859,
+        "posterior_temperature": 0.75,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.141310118681548,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.875946809124473,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.835311682808478,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.87766949230472,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.957243240432234,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.15986066780343,
+        "posterior_temperature": 1.0,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.135838963338081,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.891539395250232,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.8616806908159065,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.910115147268535,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.993111124101853,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.1985389886312925,
+        "posterior_temperature": 1.25,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.146719165195693,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.921208487441208,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.899791543846888,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.952770160523471,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.038191536404439,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.245325277972695,
+        "posterior_temperature": 1.5,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.19542871879426,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.003551629994878,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 5.996121501291035,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.0562177020192935,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.145297530471095,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.354646335374441,
+        "posterior_temperature": 2.0,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.261564496337184,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.096834687997174,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.100865803017522,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.166637449075055,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.258588636158318,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.469567276784126,
+        "posterior_temperature": 2.5,
+        "scale_multiplier": 2.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.330724305664467,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 0.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.186725528034943,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 0.75
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.199908180742074,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 1.0
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.270252148836653,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 1.25
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.364514792991789,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 1.5
+      },
+      {
+        "coordinate_macro_mixture_nll": 6.576792369615164,
+        "posterior_temperature": 3.0,
+        "scale_multiplier": 2.0
+      }
+    ],
+    "temperature_on_grid_boundary": false
+  },
+  "calibration_metrics": {
+    "coordinate_groups": 151,
+    "coordinate_macro_building_error": 0.0009933774982461866,
+    "coordinate_macro_energy_score_m": 4.972292641930233,
+    "coordinate_macro_energy_score_se_m": 0.3095231727243315,
+    "coordinate_macro_floor_error": 0.011778881748681826,
+    "coordinate_macro_mae_m": 6.717949111730058,
+    "coordinate_macro_mae_se_m": 0.4093859619472236,
+    "coordinate_macro_mixture_nll": 5.828416045927844,
+    "coordinate_macro_mixture_nll_se": 0.09645853758436382,
+    "error_radial_scale_correlation": 0.612496849179538,
+    "final_nearest_anchor_recall_at_16": 0.9894871115684509,
+    "final_nearest_anchor_recall_at_32": 0.9964957237243652,
+    "final_nearest_anchor_recall_at_64": 0.9987257122993469,
+    "final_nearest_anchor_recall_at_8": 0.9401082992553711,
+    "floor_nearest_anchor_recall": 0.9856642484664917,
+    "invariant_nearest_anchor_recall": 0.9971328377723694,
+    "mean_abs_profiled_style_offset": 0.08502200245857239,
+    "mean_anchor_entropy_nats": 1.8314250707626343,
+    "mean_between_anchor_radial_sd_m": 6.231256008148193,
+    "mean_effective_anchor_count": 6.5539398193359375,
+    "mean_gate_weight_floor": 0.00040194063331000507,
+    "mean_gate_weight_geometry": 0.00011183425522176549,
+    "mean_gate_weight_invariant": 0.0018794359639286995,
+    "mean_gate_weight_learned": 0.9970253705978394,
+    "mean_gate_weight_marked_radio": 0.00028995564207434654,
+    "mean_gate_weight_prototype": 0.00029145224834792316,
+    "mean_posterior_radio_energy": 0.6705335378646851,
+    "mean_predictive_radius_50_m": 5.827146053314209,
+    "mean_predictive_radius_80_m": 10.172307014465332,
+    "mean_predictive_radius_90_m": 13.661782264709473,
+    "mean_predictive_radius_95_m": 17.532487869262695,
+    "mean_profiled_style_scale": 0.9323467016220093,
+    "mean_radial_scale_m": 9.755830764770508,
+    "mean_source_entropy_floor": 0.9514187574386597,
+    "mean_source_entropy_geometry": 0.8706663846969604,
+    "mean_source_entropy_invariant": 0.5391036868095398,
+    "mean_source_entropy_learned": 0.448327898979187,
+    "mean_source_entropy_marked_radio": 0.8957804441452026,
+    "mean_source_entropy_prototype": 0.8726552724838257,
+    "mean_top1_probability": 0.3212725818157196,
+    "mean_within_component_radial_sd_m": 7.309032917022705,
+    "predictive_radial_coverage_50": 0.5399808883666992,
+    "predictive_radial_coverage_80": 0.8235106468200684,
+    "predictive_radial_coverage_90": 0.9225867986679077,
+    "predictive_radial_coverage_95": 0.9761070609092712,
+    "prototype_nearest_anchor_recall": 0.9898056983947754,
+    "rows": 3139,
+    "union_nearest_anchor_recall": 0.9993628263473511
+  }
+}

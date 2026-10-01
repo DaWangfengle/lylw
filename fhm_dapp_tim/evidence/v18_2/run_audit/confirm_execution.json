@@ -1,0 +1,18 @@
+{
+  "phase": "confirm",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v18_2_experiment",
+    "confirm",
+    "--device",
+    "cuda"
+  ],
+  "started_utc": "2026-09-30T10:05:16.097698+00:00",
+  "formal_experiment_sha": "8d986195e4ea10c05943b63a17ad2ca0c54ba205",
+  "python_process_id": 22900,
+  "finished_utc": "2026-09-30T10:05:27.549952+00:00",
+  "wall_seconds": 11.4636073000147,
+  "exit_code": 0,
+  "sources_unchanged": true
+}
