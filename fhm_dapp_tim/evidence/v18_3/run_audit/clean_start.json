@@ -1,0 +1,52 @@
+{
+  "restart_explicitly_authorized": true,
+  "preserved_failed_attempt": "failed_attempts/d7500d3-20261001T081726Z",
+  "products": [
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\registry_v18_3.json"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_3\\selection.pt"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\calibration_result_v18_3.json"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\selection_freeze_v18_3.json"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\stability_result_v18_3.json"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_3\\confirmation.pt"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\confirmation_consumed.lock"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\confirmation_result_v18_3.json"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_3\\final.pt"
+    },
+    {
+      "absent": true,
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\benchmark_result_v18_3.json"
+    }
+  ],
+  "checked_utc": "2026-10-01T08:28:00.9492927Z",
+  "all_products_absent": true
+}

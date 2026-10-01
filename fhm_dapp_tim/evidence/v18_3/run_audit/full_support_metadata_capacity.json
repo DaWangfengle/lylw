@@ -1,0 +1,12 @@
+{
+  "scope": "Registry coordinate-support metadata only; no shard or RSS content loaded, no predictions, no model fitting",
+  "registered_full_coordinates": 933,
+  "maximum_positive_nonself_target_count": 18,
+  "padded_width": 19,
+  "primary_quotas": 80,
+  "registered_L": 96,
+  "required_capacity_for_positive_targets": 98,
+  "confirmation_shard_opened": false,
+  "benchmark_opened": false,
+  "configuration_changed": false
+}

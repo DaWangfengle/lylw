@@ -1,0 +1,87 @@
+{
+  "phase": "calibrate-freeze",
+  "audit_armed": true,
+  "io_counts": {
+    "training_csv_reads": 0,
+    "confirmation_reads": 0,
+    "benchmark_reads": 0,
+    "historical_checkpoint_reads": 0,
+    "denied": 0,
+    "v18_2_import_attempts": 0
+  },
+  "tensor_checks": {
+    "structured_calls": 50,
+    "training_scans": 0,
+    "inference_scans": 6278,
+    "dropped_training_scans": 0,
+    "training_loss_calls": 0,
+    "prediction_calls": 50,
+    "builds": 1,
+    "violations": 0
+  },
+  "observed_ranges": {
+    "family_representation": [
+      0.3454154133796692,
+      0.5034536123275757
+    ],
+    "family_radio": [
+      0.1842755526304245,
+      0.3255120515823364
+    ],
+    "family_structure": [
+      0.27018582820892334,
+      0.3879026472568512
+    ],
+    "within_0_0": [
+      0.43701171875,
+      0.5117166042327881
+    ],
+    "within_0_1": [
+      0.4882833957672119,
+      0.56298828125
+    ],
+    "within_1_0": [
+      0.44921034574508667,
+      0.5878651738166809
+    ],
+    "within_1_1": [
+      0.4121348559856415,
+      0.5507897138595581
+    ],
+    "within_2_0": [
+      0.4708957374095917,
+      0.5134615302085876
+    ],
+    "within_2_1": [
+      0.48653852939605713,
+      0.5291043519973755
+    ],
+    "global_disagreement": [
+      0.20300522446632385,
+      0.42418092489242554
+    ],
+    "disagreement_temperature": [
+      1.2030051946640015,
+      1.4241809844970703
+    ],
+    "radio_mismatch": [
+      0.02336600422859192,
+      0.8321629166603088
+    ]
+  },
+  "v18_2_runtime_modules": [],
+  "instrumentation_changes_rng_or_model_outputs": false,
+  "torch_version": "2.10.0+cu128",
+  "cuda_version": "12.8",
+  "deterministic_algorithms": true,
+  "deterministic_warn_only": false,
+  "flash_sdpa": false,
+  "memory_efficient_sdpa": false,
+  "math_sdpa": true,
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": true,
+  "cublas_workspace_config": ":4096:8",
+  "gpu": "NVIDIA GeForce RTX 2060",
+  "peak_cuda_allocated_bytes": 468027904,
+  "peak_cuda_reserved_bytes": 671088640
+}

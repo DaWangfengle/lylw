@@ -1,0 +1,87 @@
+{
+  "phase": "preflight",
+  "audit_armed": true,
+  "io_counts": {
+    "training_csv_reads": 0,
+    "confirmation_reads": 0,
+    "benchmark_reads": 0,
+    "historical_checkpoint_reads": 0,
+    "denied": 0,
+    "v18_2_import_attempts": 0
+  },
+  "tensor_checks": {
+    "structured_calls": 6,
+    "training_scans": 72,
+    "inference_scans": 144,
+    "dropped_training_scans": 30,
+    "training_loss_calls": 2,
+    "prediction_calls": 4,
+    "builds": 4,
+    "violations": 0
+  },
+  "observed_ranges": {
+    "family_representation": [
+      0.3299722671508789,
+      0.3882220983505249
+    ],
+    "family_radio": [
+      0.241047665476799,
+      0.3499278426170349
+    ],
+    "family_structure": [
+      0.2988141179084778,
+      0.37075066566467285
+    ],
+    "within_0_0": [
+      0.5,
+      0.5000579357147217
+    ],
+    "within_0_1": [
+      0.4999421238899231,
+      0.5
+    ],
+    "within_1_0": [
+      0.5295069813728333,
+      0.6506460905075073
+    ],
+    "within_1_1": [
+      0.34935396909713745,
+      0.47049301862716675
+    ],
+    "within_2_0": [
+      0.4995006322860718,
+      0.5018549561500549
+    ],
+    "within_2_1": [
+      0.49814504384994507,
+      0.5004993677139282
+    ],
+    "global_disagreement": [
+      0.07333970069885254,
+      0.2795213460922241
+    ],
+    "disagreement_temperature": [
+      1.0733397006988525,
+      1.2795213460922241
+    ],
+    "radio_mismatch": [
+      0.136361762881279,
+      0.6974924206733704
+    ]
+  },
+  "v18_2_runtime_modules": [],
+  "instrumentation_changes_rng_or_model_outputs": false,
+  "torch_version": "2.10.0+cu128",
+  "cuda_version": "12.8",
+  "deterministic_algorithms": true,
+  "deterministic_warn_only": false,
+  "flash_sdpa": false,
+  "memory_efficient_sdpa": false,
+  "math_sdpa": true,
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": true,
+  "cublas_workspace_config": ":4096:8",
+  "gpu": "NVIDIA GeForce RTX 2060",
+  "peak_cuda_allocated_bytes": 387317760,
+  "peak_cuda_reserved_bytes": 425721856
+}

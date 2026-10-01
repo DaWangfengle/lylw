@@ -1,0 +1,36 @@
+{
+  "scientific_source_modified": false,
+  "model_config_changed": false,
+  "positive_targets_pruned": false,
+  "quotas_changed": false,
+  "L_changed": false,
+  "synthetic_only": true,
+  "confirmation_accessed": false,
+  "benchmark_accessed": false,
+  "all_checks_passed": true,
+  "cases": [
+    {
+      "device": "cpu",
+      "unchanged_model_state": true,
+      "unchanged_targets_and_weights": true,
+      "unchanged_predictions_bitwise": true
+    },
+    {
+      "device": "cuda",
+      "unchanged_model_state": true,
+      "unchanged_targets_and_weights": true,
+      "unchanged_predictions_bitwise": true
+    },
+    {
+      "positive_targets": 16,
+      "padded_width": 17,
+      "corrected_capacity": 96,
+      "passes_without_pruning": true
+    },
+    {
+      "positive_targets": 17,
+      "corrected_capacity": 97,
+      "genuine_overflow_still_fail_closed": true
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "status": "READ-ONLY GEOMETRY CAPACITY DIAGNOSIS",
+  "scientific_source_changed": false,
+  "registered_config_changed": false,
+  "confirmation_shard_loaded": false,
+  "new_prediction_or_training": false,
+  "benchmark_loaded": false,
+  "roles": [
+    {
+      "role": "member_fit",
+      "anchors": 506,
+      "padded_target_width": 14,
+      "maximum_positive_nonself_target_count": 13,
+      "zero_weight_padding_in_widest_target_rows": [
+        1
+      ],
+      "primary_quota": 80,
+      "registered_L": 96,
+      "guard_required_capacity": 94,
+      "positive_targets_required_capacity": 93,
+      "actual_positive_targets_exceed_registered_capacity": false,
+      "widest_target_anchor_indices": [
+        49
+      ],
+      "all_widest_target_neighbours": [
+        [
+          {
+            "anchor_index": 38,
+            "weight": 0.0
+          },
+          {
+            "anchor_index": 38,
+            "weight": 0.12945149838924408
+          },
+          {
+            "anchor_index": 39,
+            "weight": 0.13316670060157776
+          },
+          {
+            "anchor_index": 40,
+            "weight": 0.08793948590755463
+          },
+          {
+            "anchor_index": 42,
+            "weight": 0.14071807265281677
+          },
+          {
+            "anchor_index": 45,
+            "weight": 0.14326563477516174
+          },
+          {
+            "anchor_index": 48,
+            "weight": 0.13573962450027466
+          },
+          {
+            "anchor_index": 50,
+            "weight": 0.12231975048780441
+          },
+          {
+            "anchor_index": 53,
+            "weight": 0.045937057584524155
+          },
+          {
+            "anchor_index": 59,
+            "weight": 0.02123453840613365
+          },
+          {
+            "anchor_index": 61,
+            "weight": 0.017161540687084198
+          },
+          {
+            "anchor_index": 62,
+            "weight": 0.011839156039059162
+          },
+          {
+            "anchor_index": 64,
+            "weight": 0.007142029702663422
+          },
+          {
+            "anchor_index": 65,
+            "weight": 0.004084896761924028
+          }
+        ]
+      ]
+    },
+    {
+      "role": "selection_refit",
+      "anchors": 595,
+      "padded_target_width": 14,
+      "maximum_positive_nonself_target_count": 13,
+      "zero_weight_padding_in_widest_target_rows": [
+        1
+      ],
+      "primary_quota": 80,
+      "registered_L": 96,
+      "guard_required_capacity": 94,
+      "positive_targets_required_capacity": 93,
+      "actual_positive_targets_exceed_registered_capacity": false,
+      "widest_target_anchor_indices": [
+        59
+      ],
+      "all_widest_target_neighbours": [
+        [
+          {
+            "anchor_index": 47,
+            "weight": 0.0
+          },
+          {
+            "anchor_index": 47,
+            "weight": 0.12945149838924408
+          },
+          {
+            "anchor_index": 48,
+            "weight": 0.13316670060157776
+          },
+          {
+            "anchor_index": 49,
+            "weight": 0.08793948590755463
+          },
+          {
+            "anchor_index": 51,
+            "weight": 0.14071807265281677
+          },
+          {
+            "anchor_index": 54,
+            "weight": 0.14326563477516174
+          },
+          {
+            "anchor_index": 58,
+            "weight": 0.13573962450027466
+          },
+          {
+            "anchor_index": 60,
+            "weight": 0.12231975048780441
+          },
+          {
+            "anchor_index": 63,
+            "weight": 0.045937057584524155
+          },
+          {
+            "anchor_index": 70,
+            "weight": 0.02123453840613365
+          },
+          {
+            "anchor_index": 72,
+            "weight": 0.017161540687084198
+          },
+          {
+            "anchor_index": 73,
+            "weight": 0.011839156039059162
+          },
+          {
+            "anchor_index": 75,
+            "weight": 0.007142029702663422
+          },
+          {
+            "anchor_index": 76,
+            "weight": 0.004084896761924028
+          }
+        ]
+      ]
+    },
+    {
+      "role": "outer_refit",
+      "anchors": 746,
+      "padded_target_width": 17,
+      "maximum_positive_nonself_target_count": 16,
+      "zero_weight_padding_in_widest_target_rows": [
+        1
+      ],
+      "primary_quota": 80,
+      "registered_L": 96,
+      "guard_required_capacity": 97,
+      "positive_targets_required_capacity": 96,
+      "actual_positive_targets_exceed_registered_capacity": false,
+      "widest_target_anchor_indices": [
+        75
+      ],
+      "all_widest_target_neighbours": [
+        [
+          {
+            "anchor_index": 60,
+            "weight": 0.0
+          },
+          {
+            "anchor_index": 60,
+            "weight": 0.10418670624494553
+          },
+          {
+            "anchor_index": 61,
+            "weight": 0.10899961739778519
+          },
+          {
+            "anchor_index": 62,
+            "weight": 0.05620886757969856
+          },
+          {
+            "anchor_index": 65,
+            "weight": 0.1190299466252327
+          },
+          {
+            "anchor_index": 67,
+            "weight": 0.12122511863708496
+          },
+          {
+            "anchor_index": 69,
+            "weight": 0.12334921956062317
+          },
+          {
+            "anchor_index": 70,
+            "weight": 0.12248773127794266
+          },
+          {
+            "anchor_index": 74,
+            "weight": 0.11238010972738266
+          },
+          {
+            "anchor_index": 76,
+            "weight": 0.09517736732959747
+          },
+          {
+            "anchor_index": 80,
+            "weight": 0.019938673824071884
+          },
+          {
+            "anchor_index": 87,
+            "weight": 0.005818889942020178
+          },
+          {
+            "anchor_index": 89,
+            "weight": 0.004142194055020809
+          },
+          {
+            "anchor_index": 90,
+            "weight": 0.0036516133695840836
+          },
+          {
+            "anchor_index": 92,
+            "weight": 0.001962575362995267
+          },
+          {
+            "anchor_index": 94,
+            "weight": 0.0010222879936918616
+          },
+          {
+            "anchor_index": 96,
+            "weight": 0.00041909838910214603
+          }
+        ]
+      ]
+    }
+  ],
+  "recorded_utc": "2026-10-01T09:32:17.188211+00:00"
+}

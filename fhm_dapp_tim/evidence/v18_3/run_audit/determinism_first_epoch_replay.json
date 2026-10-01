@@ -1,0 +1,8 @@
+{
+  "seed": 18431,
+  "registered_independent_training_replay": true,
+  "comparison": "First stability epoch vs first selection-search epoch on the identical member_fit role",
+  "metric_count": 21,
+  "all_training_scalars_bitwise_equal": true,
+  "new_training_or_inference_for_this_check": false
+}

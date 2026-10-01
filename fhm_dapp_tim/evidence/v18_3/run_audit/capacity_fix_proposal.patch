@@ -1,0 +1,13 @@
+--- a/fhm_dapp_tim/fhm_dapp/v18_3_single.py
++++ b/fhm_dapp_tim/fhm_dapp/v18_3_single.py
+@@ -252,8 +252,9 @@
+         + int(config["prototype_retrieval_k"])
+         + int(config["floor_retrieval_k"])
+     )
++    positive_target_width = int((neighbour_weights > 0.0).sum(dim=1).max().item())
+     if (
+-        primary_quota + int(neighbour_indices.shape[1])
++        primary_quota + positive_target_width
+         > int(config["candidate_union_size"])
+     ):
+         raise ValueError(

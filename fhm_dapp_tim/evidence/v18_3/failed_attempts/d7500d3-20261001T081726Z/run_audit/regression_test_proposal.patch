@@ -1,0 +1,38 @@
+--- a/tests/test_uji_v18_3_experiment.py
++++ b/tests/test_uji_v18_3_experiment.py
+@@ -394,3 +394,35 @@
+     registry_source = inspect.getsource(exp.prepare_protocol)
+     assert "DEFAULT_BENCHMARK" not in registry_source
+     assert "validationData.csv" not in registry_source
++
++
++def test_v183_evaluate_shard_handles_autograd_diagnostics() -> None:
++    model, memory, _sample_anchor, _geometry, _neighbours, _weights = _model()
++    shard = {
++        "rss": memory["prototype_rss"],
++        "raw_xy": memory["coords"],
++        "building_t": memory["building"],
++        "floor_t": memory["floor"],
++        "keys": [
++            exp._encode_key((int(b), int(f), float(x), float(y)))
++            for b, f, (x, y) in zip(
++                memory["building"], memory["floor"], memory["coords"]
++            )
++        ],
++    }
++    grad_enabled = torch.is_grad_enabled()
++    metrics = exp.evaluate_shard(
++        model,
++        shard,
++        np.zeros(2, dtype=np.float32),
++        posterior_temperature=1.0,
++        scale_multiplier=1.0,
++        device=torch.device("cpu"),
++        batch_size=3,
++    )
++    assert metrics["rows"] == len(memory["coords"])
++    assert metrics["coordinate_groups"] == len(memory["coords"])
++    assert all(np.isfinite(value) for value in metrics.values())
++    assert -1.0 <= metrics["error_evidence_disagreement_correlation"] <= 1.0
++    assert -1.0 <= metrics["radio_mismatch_radio_weight_correlation"] <= 1.0
++    assert torch.is_grad_enabled() == grad_enabled

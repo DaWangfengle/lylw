@@ -1,0 +1,35 @@
+{
+  "phase": "verify-prepare",
+  "audit_armed": true,
+  "io_counts": {
+    "training_csv_reads": 1,
+    "confirmation_reads": 0,
+    "benchmark_reads": 0,
+    "historical_checkpoint_reads": 0,
+    "denied": 0,
+    "v18_2_import_attempts": 0
+  },
+  "tensor_checks": {
+    "structured_calls": 0,
+    "training_scans": 0,
+    "inference_scans": 0,
+    "dropped_training_scans": 0,
+    "training_loss_calls": 0,
+    "prediction_calls": 0,
+    "builds": 0,
+    "violations": 0
+  },
+  "observed_ranges": {},
+  "v18_2_runtime_modules": [],
+  "instrumentation_changes_rng_or_model_outputs": false,
+  "torch_version": "2.10.0+cu128",
+  "cuda_version": "12.8",
+  "deterministic_algorithms": false,
+  "deterministic_warn_only": false,
+  "flash_sdpa": true,
+  "memory_efficient_sdpa": true,
+  "math_sdpa": true,
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": false,
+  "cublas_workspace_config": ":4096:8"
+}

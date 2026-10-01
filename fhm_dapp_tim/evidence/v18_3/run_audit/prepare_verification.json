@@ -1,0 +1,198 @@
+{
+  "stage": "prepare",
+  "registry_sha256": "2261fbf3660d7fca56a8014bae8b1165f5d2ac695373f77a7f0b75eca87568dd",
+  "training_rows": 19937,
+  "physical_coordinates": 933,
+  "building_floor_strata": 13,
+  "n_aps": 520,
+  "roles": {
+    "member_fit": {
+      "coordinates": 506,
+      "rows": 10601
+    },
+    "early_stop": {
+      "coordinates": 89,
+      "rows": 2064
+    },
+    "selection_refit": {
+      "coordinates": 595,
+      "rows": 12665
+    },
+    "calibration": {
+      "coordinates": 151,
+      "rows": 3139
+    },
+    "outer_refit": {
+      "coordinates": 746,
+      "rows": 15804
+    },
+    "confirmation": {
+      "coordinates": 187,
+      "rows": 4133
+    }
+  },
+  "role_strata_coordinate_counts": {
+    "calibration": {
+      "(2, 2)": 12,
+      "(2, 0)": 11,
+      "(0, 0)": 9,
+      "(2, 4)": 11,
+      "(0, 1)": 11,
+      "(1, 0)": 12,
+      "(1, 2)": 13,
+      "(2, 3)": 18,
+      "(0, 2)": 11,
+      "(2, 1)": 14,
+      "(0, 3)": 11,
+      "(1, 3)": 8,
+      "(1, 1)": 10
+    },
+    "confirmation": {
+      "(2, 3)": 23,
+      "(1, 0)": 15,
+      "(0, 3)": 14,
+      "(2, 0)": 13,
+      "(2, 2)": 15,
+      "(0, 2)": 14,
+      "(1, 1)": 12,
+      "(0, 1)": 13,
+      "(2, 4)": 13,
+      "(1, 2)": 16,
+      "(1, 3)": 10,
+      "(2, 1)": 18,
+      "(0, 0)": 11
+    },
+    "early_stop": {
+      "(0, 1)": 6,
+      "(0, 3)": 6,
+      "(1, 2)": 8,
+      "(1, 1)": 6,
+      "(2, 3)": 11,
+      "(2, 2)": 7,
+      "(2, 0)": 6,
+      "(2, 1)": 9,
+      "(0, 0)": 5,
+      "(2, 4)": 6,
+      "(1, 0)": 7,
+      "(1, 3)": 5,
+      "(0, 2)": 7
+    },
+    "member_fit": {
+      "(2, 1)": 48,
+      "(0, 1)": 37,
+      "(2, 0)": 37,
+      "(2, 2)": 39,
+      "(0, 0)": 29,
+      "(1, 0)": 42,
+      "(1, 2)": 42,
+      "(2, 4)": 37,
+      "(0, 3)": 37,
+      "(1, 3)": 27,
+      "(0, 2)": 38,
+      "(1, 1)": 32,
+      "(2, 3)": 61
+    },
+    "outer_refit": {
+      "(0, 3)": 54,
+      "(2, 1)": 71,
+      "(0, 1)": 54,
+      "(2, 0)": 54,
+      "(2, 2)": 58,
+      "(2, 4)": 54,
+      "(0, 0)": 43,
+      "(1, 0)": 61,
+      "(1, 2)": 63,
+      "(1, 3)": 40,
+      "(0, 2)": 56,
+      "(2, 3)": 90,
+      "(1, 1)": 48
+    },
+    "selection_refit": {
+      "(0, 3)": 43,
+      "(2, 1)": 57,
+      "(0, 1)": 43,
+      "(2, 0)": 43,
+      "(2, 2)": 46,
+      "(0, 0)": 34,
+      "(1, 0)": 49,
+      "(1, 2)": 50,
+      "(2, 4)": 43,
+      "(1, 3)": 32,
+      "(0, 2)": 45,
+      "(1, 1)": 38,
+      "(2, 3)": 72
+    }
+  },
+  "train_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "split_diagnostics": {
+    "coordinate_grouping": "complete (building,floor,longitude,latitude)",
+    "disjoint_intersections": {
+      "member_fit_early_stop": 0,
+      "selection_refit_calibration": 0,
+      "outer_refit_confirmation": 0
+    },
+    "exact_union_identities": true,
+    "all_roles_keep_all_building_floor_strata": true,
+    "hull_checks": {
+      "all_hull_missing_from_outer_refit": 0,
+      "outer_refit_hull_missing_from_selection_refit": 0,
+      "selection_refit_hull_missing_from_member_fit": 0
+    }
+  },
+  "role_shards": {
+    "calibration": {
+      "coordinate_count": 151,
+      "coordinate_key_sha256": "46212a826932e00579d1a7ff041cb80a7c3d237f7a59de9f25b62ec9c58fcd58",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards\\calibration.pt",
+      "row_count": 3139,
+      "row_index_sha256": "ccf499ab5980c3a9d3629b034906141e0e23256fb3bb300a34bec250ae9264e4",
+      "sha256": "cb1ef90851769f157ca186cf9c3667be40b3c21a75a5e0d5386002e9e0c2d517"
+    },
+    "confirmation": {
+      "coordinate_count": 187,
+      "coordinate_key_sha256": "38c7eacb26a05f9fd395737ac69fcd017a6b9fe07816ed0fabe78af603296667",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards\\confirmation.pt",
+      "row_count": 4133,
+      "row_index_sha256": "dcf07097d43c834653caca374448706fd5607e7f7ee356e4e8c20130b7755e97",
+      "sha256": "441c88c0962c0ed7b348104739db46891d981c531556a5790b3e4a4e937e28d9"
+    },
+    "early_stop": {
+      "coordinate_count": 89,
+      "coordinate_key_sha256": "bba682e498e3a30db2d6997e1aa01edd935ceeffcc3a958edbf48cf03825ca7f",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards\\early_stop.pt",
+      "row_count": 2064,
+      "row_index_sha256": "09aec3009c659eba08833f4bbb5222d2ae53106f2f0c1fe3c3cb00098eacff84",
+      "sha256": "c52b7f58c8bbe942ed217dd9d74de027c9fd08362b6875d29d8fd1059087ef69"
+    },
+    "member_fit": {
+      "coordinate_count": 506,
+      "coordinate_key_sha256": "674dcda2bb0fd8247921cb676bbc4c2f852c5f03a2dcd0b9099abbbeb0cfcb80",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards\\member_fit.pt",
+      "row_count": 10601,
+      "row_index_sha256": "606a7cfbb3d41878d0ba581b3751395e3174e21ec8767f55837115ac73120d6a",
+      "sha256": "63d309dc6fdc6a9cad8f66561d607fd3813ede27bc5367bb6012c719a0b01891"
+    },
+    "outer_refit": {
+      "coordinate_count": 746,
+      "coordinate_key_sha256": "c9126f29ac0dd27a74e71d2dd229785efd9aeeccd702dd8e468178ec004dc822",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards\\outer_refit.pt",
+      "row_count": 15804,
+      "row_index_sha256": "5377e342115c13fda1b6154b9d55e80d1a0741b8d6252674a48f3da2be63b87c",
+      "sha256": "6e4b19195437d5328131d8a11cb02cac970a3e27e1489a426e45abdaa2c4b658"
+    },
+    "selection_refit": {
+      "coordinate_count": 595,
+      "coordinate_key_sha256": "ffe00abc52443a72b3f4ca4d36d75ca8b63253b6c10163e24d94d858852373af",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards\\selection_refit.pt",
+      "row_count": 12665,
+      "row_index_sha256": "d563241f176bf6edda3da4fbd5bb81884acbb5308f91eb01f7a9b1e2e8a9ec65",
+      "sha256": "4b5e02af1c777f6df73fe8a874265ac263faabef7737f2539d8becf271f82c0b"
+    }
+  },
+  "independent_loaded_shard_hash_checks": 5,
+  "confirmation_hash_fixed_by_prepare": true,
+  "confirmation_contents_not_manually_loaded": true,
+  "confirmation_hash_checked_by_protocol_after_lock": false,
+  "confirmation_evidence_grade": "one-shot sequential internal confirmation",
+  "official_evidence_grade": "PRE-EXPOSED DESCRIPTIVE BENCHMARK"
+}
