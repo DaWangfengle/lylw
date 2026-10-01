@@ -1,0 +1,271 @@
+V18.4 DECODER DIAGNOSTIC GATE — CODEX INSTRUCTIONS
+=================================================
+
+Repository:
+DaWangfengle/lylw
+
+Branch:
+v18-4-trust-region-posterior
+
+Purpose:
+Run the preregistered read-only decoder mechanism probe on the already-open
+V18.3 early-stop and calibration roles before the formal V18.4 model is
+implemented.
+
+This probe DOES NOT continue V18.3.
+It DOES NOT consume V18.3 confirmation.
+It DOES NOT access official validationData.csv.
+
+=================================================
+1. SCIENTIFIC STATUS
+=================================================
+
+V18.3 has already informed V18.4 model development.
+
+This probe is therefore a model-development diagnostic, not a new blind test.
+
+Allowed inputs:
+- V18.3 registry
+- V18.3 selection checkpoint
+- V18.3 freeze
+- V18.3 early-stop role shard
+- V18.3 calibration role shard
+
+Forbidden inputs:
+- V18.3 confirmation shard
+- V18.3 confirmation labels/predictions
+- official validationData.csv
+- V18.2/V18.1 external outcomes for decoder selection
+
+No training and no parameter updates are allowed.
+
+=================================================
+2. CHECKOUT AND VERIFY
+=================================================
+
+Run:
+
+git checkout v18-4-trust-region-posterior
+git status
+git rev-parse HEAD
+
+Read:
+
+fhm_dapp_tim/fhm_dapp/v18_4_decoder_probe.py
+fhm_dapp_tim/evidence/v18_4/DESIGN_GATE_V18_4.md
+tests/test_v18_4_decoder_probe.py
+V18_4_DECODER_PROBE.txt
+
+Compile:
+
+python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_decoder_probe.py
+python -m py_compile tests/test_v18_4_decoder_probe.py
+
+Run:
+
+python -m pytest -q tests/test_v18_4_decoder_probe.py tests/test_uji_v18_3_experiment.py
+
+Do not weaken, skip or edit the preregistered decision rule after seeing probe
+results.
+
+=================================================
+3. REQUIRED LOCAL V18.3 ARTIFACTS
+=================================================
+
+These files must exist locally from the interrupted V18.3 run:
+
+fhm_dapp_tim/evidence/v18_3/registry_v18_3.json
+fhm_dapp_tim/models/v18_3/selection.pt
+fhm_dapp_tim/evidence/v18_3/selection_freeze_v18_3.json
+fhm_dapp_tim/evidence/v18_3/role_shards/early_stop.pt
+fhm_dapp_tim/evidence/v18_3/role_shards/calibration.pt
+
+These must NOT exist:
+
+fhm_dapp_tim/evidence/v18_3/confirmation_consumed.lock
+fhm_dapp_tim/evidence/v18_3/confirmation_result_v18_3.json
+
+If confirmation has already been consumed, STOP. Do not run this preregistered
+pre-confirmation probe.
+
+=================================================
+4. CLEAN V18.4 PROBE OUTPUT
+=================================================
+
+Before the one-shot probe, these must not exist:
+
+fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.json
+fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.md
+
+If either already exists, do not overwrite it.
+
+=================================================
+5. FIXED DECODERS
+=================================================
+
+The probe compares exactly four point decisions from the SAME frozen posterior:
+
+1. posterior_mean
+2. map_component
+3. top8_mean
+4. geometric_median
+
+No fifth decoder may be added after seeing results.
+
+top8_mean is fixed at K=8.
+
+geometric_median uses the registered modified-Weiszfeld solver.
+
+The predictive posterior itself is unchanged.
+
+Therefore:
+- decoder MAE values may differ;
+- the probe must NOT report alternative NLL or Energy Score as if each decoder
+  were a different probabilistic model.
+
+=================================================
+6. PREREGISTERED DECISION RULE
+=================================================
+
+The reference is posterior_mean.
+
+A mechanism passes only if its coordinate-macro MAE improves by at least 10%
+relative to posterior_mean on BOTH:
+
+- early_stop
+- calibration
+
+and does not worsen either role by more than 0.25 m.
+
+Decision logic:
+
+A. geometric_median passes:
+   conclusion =
+   loss_aligned_geometric_median_supported
+
+   V18.4 may register weighted geometric median as its formal point decoder.
+
+B. geometric_median fails but top8_mean passes:
+   conclusion =
+   posterior_tail_dilution_supported
+
+   V18.4 should treat trust-region posterior contraction/transport as the
+   primary fix. Do not promote geometric median from this evidence alone.
+
+C. neither passes:
+   conclusion =
+   posterior_learning_dominates
+
+   V18.4 should prioritize trust-region posterior inference plus spatial OT.
+   Decoder mismatch must not be claimed as a primary contribution.
+
+Do not change the 10% threshold or 0.25 m rule after results are observed.
+
+=================================================
+7. RUN THE PROBE
+=================================================
+
+Use the same Python environment used for V18.3.
+
+Recommended GPU run:
+
+python -m fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe --device cuda
+
+CPU is allowed only if CUDA is unavailable:
+
+python -m fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe --device cpu
+
+The script must verify:
+- V18.3 registry
+- freeze
+- selection checkpoint SHA
+- selected epoch
+- early-stop shard hash
+- calibration shard hash
+- confirmation not consumed
+
+It must not train or update the checkpoint.
+
+=================================================
+8. EXPECTED OUTPUT FILES
+=================================================
+
+The probe writes exactly:
+
+fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.json
+fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.md
+
+Upload both to GitHub on branch:
+
+v18-4-trust-region-posterior
+
+Do not upload V18.3 binary checkpoints or role shards unless separately needed.
+
+=================================================
+9. REQUIRED REPORT
+=================================================
+
+Report for BOTH early_stop and calibration:
+
+For each decoder:
+- coordinate-macro MAE
+- coordinate-macro MAE SE
+- row MAE
+- row median error
+- row P75 error
+- row P90 error
+- relative improvement vs posterior mean
+
+For each non-mean decoder:
+- paired mean coordinate improvement vs posterior mean
+- paired improvement SE
+- fraction of coordinates improved
+
+Also report:
+- mean posterior entropy
+- mean effective anchor count
+- mean top1 probability
+- mean geometric-median displacement from posterior mean
+- P90 geometric-median displacement from posterior mean
+
+Then report exactly one preregistered mechanism conclusion:
+
+loss_aligned_geometric_median_supported
+OR
+posterior_tail_dilution_supported
+OR
+posterior_learning_dominates
+
+=================================================
+10. AFTER THE PROBE
+=================================================
+
+Do not implement or tune the final V18.4 model based on arbitrary decoder
+ranking.
+
+Use only the preregistered mechanism conclusion to finalize the V18.4 design.
+
+The planned V18.4 architecture remains:
+
+- dynamic multi-source proposal support with computational ceiling L_max=128;
+- one learned discriminative base posterior q_theta(a|x);
+- radio and geometry as correction energies, not probability voters;
+- trust-region posterior correction;
+- spatial OT/Sinkhorn posterior supervision;
+- one Student-t residual model;
+- one checkpoint;
+- no teacher;
+- no ensemble.
+
+Whether geometric median becomes the formal point decoder is determined by this
+probe.
+
+=================================================
+11. FINAL BOUNDARY
+=================================================
+
+This probe does not consume V18.3 confirmation.
+
+Do not run V18.3 confirmation as part of this task.
+
+Do not run official validationData.csv as part of this task.
