@@ -625,6 +625,9 @@ def evaluate_shard(
             "radio_energy",
             "style_offset_abs",
             "style_scale",
+            "global_disagreement",
+            "disagreement_temperature",
+            "radio_mismatch",
         )
     }
     final_recall: dict[int, list[torch.Tensor]] = {
@@ -639,11 +642,30 @@ def evaluate_shard(
             "union",
         )
     }
-    gate_parts: dict[str, list[torch.Tensor]] = {
-        name: [] for name in EVIDENCE_SOURCES
+    family_weight_parts: dict[str, list[torch.Tensor]] = {
+        name: [] for name in EVIDENCE_FAMILIES
+    }
+    family_entropy_parts: dict[str, list[torch.Tensor]] = {
+        name: [] for name in EVIDENCE_FAMILIES
+    }
+    family_disagreement_parts: dict[str, list[torch.Tensor]] = {
+        name: [] for name in EVIDENCE_FAMILIES
     }
     source_entropy_parts: dict[str, list[torch.Tensor]] = {
         name: [] for name in EVIDENCE_SOURCES
+    }
+    within_family_parts: dict[str, list[torch.Tensor]] = {
+        "representation_invariant": [],
+        "representation_learned": [],
+        "radio_prototype": [],
+        "radio_marked": [],
+        "structure_floor": [],
+        "structure_geometry": [],
+    }
+    consensus_parts: dict[str, list[torch.Tensor]] = {
+        "global_disagreement": [],
+        "disagreement_temperature": [],
+        "radio_mismatch": [],
     }
     coverage_parts: dict[float, list[torch.Tensor]] = {
         level: [] for level in COVERAGE_LEVELS
@@ -673,7 +695,10 @@ def evaluate_shard(
             "candidate_weights",
             "component_locations",
             "component_scales",
-            "gate_weights",
+            "family_weights",
+            "global_disagreement",
+            "disagreement_temperature",
+            "radio_mismatch",
         ):
             if not bool(torch.isfinite(result[name]).all()):
                 raise RuntimeError(f"non-finite V18.3 prediction tensor: {name}")
@@ -710,6 +735,13 @@ def evaluate_shard(
             result["style_offset"].abs().cpu()
         )
         values["style_scale"].append(result["style_scale"].cpu())
+        values["global_disagreement"].append(
+            result["global_disagreement"].cpu()
+        )
+        values["disagreement_temperature"].append(
+            result["disagreement_temperature"].cpu()
+        )
+        values["radio_mismatch"].append(result["radio_mismatch"].cpu())
 
         randomness = common_student_t_randomness(
             len(target),
@@ -780,12 +812,31 @@ def evaluate_shard(
         )
 
         for source_index, source_name in enumerate(EVIDENCE_SOURCES):
-            gate_parts[source_name].append(
-                result["gate_weights"][:, source_index].cpu()
-            )
             source_entropy_parts[source_name].append(
                 result["source_entropy_union"][:, source_index].cpu()
             )
+        for family_index, family_name in enumerate(EVIDENCE_FAMILIES):
+            family_weight_parts[family_name].append(
+                result["family_weights"][:, family_index].cpu()
+            )
+            family_entropy_parts[family_name].append(
+                result["family_entropy"][:, family_index].cpu()
+            )
+            family_disagreement_parts[family_name].append(
+                result["family_disagreement"][:, family_index].cpu()
+            )
+
+        within = result["within_family_weights"].cpu()
+        within_family_parts["representation_invariant"].append(
+            within[:, 0, 0]
+        )
+        within_family_parts["representation_learned"].append(
+            within[:, 0, 1]
+        )
+        within_family_parts["radio_prototype"].append(within[:, 1, 0])
+        within_family_parts["radio_marked"].append(within[:, 1, 1])
+        within_family_parts["structure_floor"].append(within[:, 2, 0])
+        within_family_parts["structure_geometry"].append(within[:, 2, 1])
 
         for level in COVERAGE_LEVELS:
             radius = torch.quantile(draw_radius, float(level), dim=1)
@@ -832,6 +883,13 @@ def evaluate_shard(
             joined["style_offset_abs"].mean()
         ),
         "mean_profiled_style_scale": float(joined["style_scale"].mean()),
+        "mean_global_evidence_disagreement": float(
+            joined["global_disagreement"].mean()
+        ),
+        "mean_disagreement_temperature": float(
+            joined["disagreement_temperature"].mean()
+        ),
+        "mean_radio_mismatch": float(joined["radio_mismatch"].mean()),
         "error_radial_scale_correlation": corr,
         "coordinate_groups": groups,
         "rows": int(len(raw_xy)),
@@ -845,12 +903,39 @@ def evaluate_shard(
             torch.cat(parts).mean()
         )
     for name in EVIDENCE_SOURCES:
-        metrics[f"mean_gate_weight_{name}"] = float(
-            torch.cat(gate_parts[name]).mean()
-        )
         metrics[f"mean_source_entropy_{name}"] = float(
             torch.cat(source_entropy_parts[name]).mean()
         )
+    for name in EVIDENCE_FAMILIES:
+        metrics[f"mean_family_weight_{name}"] = float(
+            torch.cat(family_weight_parts[name]).mean()
+        )
+        metrics[f"mean_family_entropy_{name}"] = float(
+            torch.cat(family_entropy_parts[name]).mean()
+        )
+        metrics[f"mean_family_disagreement_{name}"] = float(
+            torch.cat(family_disagreement_parts[name]).mean()
+        )
+    for name, parts in within_family_parts.items():
+        metrics[f"mean_within_family_weight_{name}"] = float(
+            torch.cat(parts).mean()
+        )
+
+    disagreement_np = joined["global_disagreement"].double().numpy()
+    radio_mismatch_np = joined["radio_mismatch"].double().numpy()
+    radio_weight_np = torch.cat(
+        family_weight_parts["radio"]
+    ).double().numpy()
+    metrics["error_evidence_disagreement_correlation"] = (
+        float(np.corrcoef(error_np, disagreement_np)[0, 1])
+        if np.std(error_np) > 0.0 and np.std(disagreement_np) > 0.0
+        else 0.0
+    )
+    metrics["radio_mismatch_radio_weight_correlation"] = (
+        float(np.corrcoef(radio_mismatch_np, radio_weight_np)[0, 1])
+        if np.std(radio_mismatch_np) > 0.0 and np.std(radio_weight_np) > 0.0
+        else 0.0
+    )
     for level in COVERAGE_LEVELS:
         label = int(round(100 * level))
         metrics[f"predictive_radial_coverage_{label}"] = float(
