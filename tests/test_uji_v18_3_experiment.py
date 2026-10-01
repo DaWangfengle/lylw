@@ -111,6 +111,27 @@ def test_v183_contract_is_single_member_without_trainable_gate() -> None:
         validate_v183_config(bad)
 
 
+
+
+def test_v183_candidate_union_contains_all_forced_geometry_targets() -> None:
+    model, memory, _sample_anchor, _geometry, neighbours, _weights = _model()
+    rss = memory["prototype_rss"][:3]
+    with torch.no_grad():
+        invariant, _embedding = model.retrieval_logits(rss)
+        prototype = prototype_retrieval_score(model, rss)
+    forced = neighbours[:3]
+    union = candidate_union(
+        model,
+        invariant,
+        prototype,
+        force_indices=forced,
+        config=V183_CONFIG,
+    )
+    indices = union["candidate_indices"]
+    for row in range(len(indices)):
+        for target in forced[row].tolist():
+            assert int(target) in indices[row].tolist()
+
 def test_v183_within_family_consensus_has_hard_source_bounds() -> None:
     first = torch.tensor([[0.99, 0.01], [0.50, 0.50]], dtype=torch.float32)
     second = torch.tensor([[0.50, 0.50], [0.99, 0.01]], dtype=torch.float32)
