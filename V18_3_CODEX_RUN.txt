@@ -1,0 +1,831 @@
+V18.3 FORMAL CODEX RUN INSTRUCTIONS
+====================================
+
+Repository:
+DaWangfengle/lylw
+
+Branch:
+v18-3-structured-consensus
+
+Method:
+Single-Member Hierarchical Robust Evidence Consensus
+
+Purpose:
+Run the full registered V18.3 experiment without changing the scientific model
+after real-data outcomes are observed.
+
+======================================================================
+0. SCIENTIFIC STATUS
+======================================================================
+
+V18.3 was designed after inspecting the completed V18.2 results.
+
+Therefore:
+
+- V18.3 may make a one-shot SEQUENTIAL INTERNAL CONFIRMATION claim on its newly
+  registered trainingData coordinate holdout.
+- It must NOT be described as a new independent external validation.
+- official UJI validationData.csv was already exposed in V18.1/V18.2 and is
+  PRE-EXPOSED DESCRIPTIVE BENCHMARK ONLY.
+
+Any method change after V18.3 confirmation belongs to V18.4.
+
+======================================================================
+1. NON-NEGOTIABLE MODEL CONTRACT
+======================================================================
+
+The deployed model must have:
+
+- exactly one inference checkpoint;
+- residual_experts == 1;
+- no teacher;
+- no knowledge distillation;
+- no member axis;
+- no prediction averaging across seeds;
+- no ProjectedEnsemble;
+- no trainable evidence gate.
+
+Six source opinions:
+
+1. invariant neural
+2. raw-RSS prototype
+3. learned candidate evidence
+4. robust marked radio
+5. soft floor
+6. geometry manifold
+
+Three semantic evidence families:
+
+Representation:
+- invariant neural
+- learned candidate evidence
+
+Radio:
+- raw-RSS prototype
+- robust marked radio
+
+Structure:
+- soft floor
+- geometry manifold
+
+Registered support:
+
+invariant_retrieval_k = 32
+prototype_retrieval_k = 32
+floor_retrieval_k = 16
+geometry_seed_k = 8
+candidate_union_size L = 96
+posterior_top_k K = 64
+
+Registered anti-collapse constraints:
+
+within_family_min_source_weight = 0.30
+family_min_weight = 0.15
+family_dropout_probability = 0.30
+disagreement_temperature_strength = 1.0
+disagreement_temperature_max = 2.0
+
+Inference-family weights must always satisfy:
+
+Representation >= 0.15
+Radio          >= 0.15
+Structure      >= 0.15
+
+No family is allowed to collapse to zero at inference.
+
+Within each two-source family, each source must remain in [0.30, 0.70].
+
+======================================================================
+2. HIERARCHICAL CONSENSUS LAW
+======================================================================
+
+V18.3 has no learned gate.
+
+Within-family source weights are deterministic functions of normalized source
+entropy and are hard-bounded to [0.30, 0.70].
+
+Family reliability depends on:
+
+- family normalized entropy;
+- mean Jensen-Shannon disagreement with the other two families;
+- for the Radio family only, an additional radio mismatch penalty based on
+  marked-radio energy and affine style correction.
+
+Family weights are:
+
+w_f = m + (1 - 3m) softmax(r_f / tau)
+
+with m=0.15.
+
+This guarantees every family positive mass.
+
+During training only:
+
+- with probability 0.30 per scan, exactly one family is dropped;
+- at most one family can be dropped;
+- the remaining two family weights are renormalized.
+
+At inference:
+
+- family dropout is disabled.
+
+Global family disagreement creates model-internal softening:
+
+T_dis(x) =
+  clip(1 + global_JS_disagreement(x), 1, 2).
+
+The consensus posterior is softened by T_dis before final K=64 contraction.
+
+======================================================================
+3. CALIBRATION CANNOT SHARPEN
+======================================================================
+
+V18.3 calibration may only preserve or soften the posterior.
+
+Registered posterior-temperature grid:
+
+1.00
+1.25
+1.50
+2.00
+2.50
+3.00
+
+Temperature < 1 is forbidden.
+
+Registered Student-t scale grid:
+
+0.50
+0.75
+1.00
+1.25
+1.50
+2.00
+
+Calibration criterion:
+coordinate-macro mixture NLL.
+
+Only:
+- posterior_temperature
+- scale_multiplier
+
+may be selected on calibration coordinates.
+
+Do NOT tune:
+- family floors;
+- within-family floors;
+- dropout probability;
+- disagreement coefficients;
+- L/K;
+- radio lambda;
+- ranking weight;
+- architecture;
+- model seed;
+- selected epoch.
+
+======================================================================
+4. CHECKOUT AND PREFLIGHT
+======================================================================
+
+From repository root:
+
+git checkout v18-3-structured-consensus
+git status
+git rev-parse HEAD
+
+Record the exact formal experiment SHA.
+
+Read:
+
+fhm_dapp_tim/fhm_dapp/v18_3_single.py
+fhm_dapp_tim/fhm_dapp/uji_v18_3_experiment.py
+fhm_dapp_tim/evidence/v18_3/DESIGN_V18_3.md
+tests/test_uji_v18_3_experiment.py
+V18_3_CODEX_RUN.txt
+
+Compile:
+
+python -m py_compile fhm_dapp_tim/fhm_dapp/v18_3_single.py
+python -m py_compile fhm_dapp_tim/fhm_dapp/uji_v18_3_experiment.py
+python -m py_compile tests/test_uji_v18_3_experiment.py
+
+Run:
+
+python -m pytest -q tests/test_coherent_marked_v9.py tests/test_uji_v18_1_experiment.py tests/test_uji_v18_2_experiment.py tests/test_uji_v18_3_experiment.py
+
+Current GitHub CI expectation:
+41 passed or more.
+
+Do not delete, skip, xfail, or weaken scientific-contract tests.
+
+Allowed pre-prepare bug fixes:
+- syntax/API bugs;
+- tensor shape/device bugs;
+- checkpoint reconstruction bugs;
+- deterministic CUDA incompatibilities;
+- mathematically incorrect implementation exposed by tests;
+- wrong file paths.
+
+Not allowed as a bug fix:
+- changing family floors;
+- changing dropout probability;
+- changing reliability penalties;
+- changing disagreement temperature;
+- changing L/K;
+- changing radio lambda;
+- increasing model size because metrics look poor;
+- adding a trainable gate;
+- adding teacher/ensemble;
+- choosing a better seed.
+
+If a legitimate implementation bug is fixed before formal prepare:
+
+1. commit it;
+2. rerun all py_compile checks;
+3. rerun all tests;
+4. record the new formal experiment SHA;
+5. start formal V18.3 from stage 1.
+
+======================================================================
+5. CLEAN START
+======================================================================
+
+Keep:
+
+fhm_dapp_tim/evidence/v18_3/DESIGN_V18_3.md
+
+Before formal prepare, the following runtime artifacts must not exist:
+
+fhm_dapp_tim/evidence/v18_3/registry_v18_3.json
+fhm_dapp_tim/evidence/v18_3/role_shards/
+fhm_dapp_tim/models/v18_3/selection.pt
+fhm_dapp_tim/evidence/v18_3/calibration_result_v18_3.json
+fhm_dapp_tim/evidence/v18_3/selection_freeze_v18_3.json
+fhm_dapp_tim/evidence/v18_3/stability_result_v18_3.json
+fhm_dapp_tim/models/v18_3/confirmation.pt
+fhm_dapp_tim/evidence/v18_3/confirmation_consumed.lock
+fhm_dapp_tim/evidence/v18_3/confirmation_result_v18_3.json
+fhm_dapp_tim/models/v18_3/final.pt
+fhm_dapp_tim/evidence/v18_3/benchmark_result_v18_3.json
+
+Do not delete V18.2/V18.1/V18.0/V17/V9 evidence.
+
+======================================================================
+6. STAGE 1 — PREPARE
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment prepare
+
+The registered nested roles are:
+
+trainingData
+  = outer_refit + confirmation
+
+outer_refit
+  = selection_refit + calibration
+
+selection_refit
+  = member_fit + early_stop
+
+GitHub CI on the registered real UJI data currently gives:
+
+member_fit:
+  506 coordinates
+  10601 rows
+
+early_stop:
+  89 coordinates
+  2064 rows
+
+selection_refit:
+  595 coordinates
+  12665 rows
+
+calibration:
+  151 coordinates
+  3139 rows
+
+outer_refit:
+  746 coordinates
+  15804 rows
+
+confirmation:
+  187 coordinates
+  4133 rows
+
+Total:
+  933 coordinates
+  19937 rows
+  13 building-floor strata
+
+Verify:
+
+- registry self-hash;
+- trainingData SHA;
+- every shard SHA;
+- all role row/coordinate counts;
+- all disjoint intersections = 0;
+- all exact union relations;
+- all roles retain all building-floor strata;
+- all hull_missing values = 0.
+
+Registry single-member contract must explicitly state:
+
+checkpoint_count_at_inference = 1
+residual_experts = 1
+teacher_model = false
+knowledge_distillation = false
+member_axis = false
+ensemble = false
+trainable_evidence_gate = false
+family_dropout_training_only = true
+calibration_temperature_can_sharpen = false
+
+After prepare:
+
+Do NOT manually load or inspect the confirmation shard.
+
+The confirmation shard is created to fix its content/hash at registration.
+Its evaluation contents remain reserved until the one-shot confirm command.
+
+======================================================================
+7. STAGE 2 — TRAIN-SELECTION
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment train-selection --device cuda
+
+Allowed data:
+- member_fit
+- early_stop
+- selection_refit
+
+Forbidden:
+- calibration for gradient training or epoch selection;
+- confirmation;
+- official validation benchmark.
+
+Strict deterministic CUDA must remain active:
+
+CUBLAS_WORKSPACE_CONFIG=:4096:8
+flash SDPA disabled
+memory-efficient SDPA disabled
+math SDPA enabled
+torch.use_deterministic_algorithms(... warn_only=False)
+cuDNN benchmark disabled
+cuDNN deterministic enabled
+
+Epoch selection:
+
+- epochs 1..11 ineligible;
+- primary statistic = coordinate-macro Energy Score;
+- find best eligible Energy Score;
+- shortlist epochs within 0.05 m;
+- choose lowest MAE in shortlist;
+- then lower Energy Score;
+- then earlier epoch.
+
+For every training epoch record:
+
+- loss
+- joint_geometry_loss
+- fused_anchor_nll
+- coordinate_nll
+- invariant_aux_loss
+- reranker_aux_loss
+- hierarchy_loss
+- coordinate_loss
+- ranking_loss
+- domain_loss
+- invariant_recall_mass
+- prototype_recall_mass
+- floor_recall_mass
+- union_recall_mass
+- family_weight_representation
+- family_weight_radio
+- family_weight_structure
+- mean_global_disagreement
+- mean_disagreement_temperature
+- mean_radio_mismatch
+- family_dropout_fraction
+
+Expected dropout fraction should be approximately the registered 0.30 over a
+large number of training examples, but do not change the model if a particular
+epoch differs by sampling noise.
+
+For every early-stop evaluation record:
+
+Localization:
+- MAE
+- Energy Score
+- mixture NLL
+- building error
+- floor error
+
+Retrieval:
+- final recall@8/16/32/64
+- invariant retrieval recall
+- prototype retrieval recall
+- floor retrieval recall
+- union recall
+
+Structured consensus:
+- mean family weight Representation
+- mean family weight Radio
+- mean family weight Structure
+- all six within-family source weights
+- three family entropies
+- three family disagreements
+- mean global disagreement
+- mean disagreement temperature
+- mean radio mismatch
+- all six source entropies
+
+Uncertainty:
+- anchor entropy
+- effective anchor count
+- top1 posterior mass
+- radial scale
+- within-component SD
+- between-anchor SD
+- coverage 50/80/90/95
+
+FAIL-CLOSED CHECKS:
+
+At inference/early-stop evaluation:
+- every family weight >= 0.15;
+- every within-family source weight in [0.30,0.70];
+- disagreement_temperature in [1,2];
+- all tensors finite.
+
+selected_epoch must be >= 12.
+
+======================================================================
+8. STAGE 3 — CALIBRATE-FREEZE
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment calibrate-freeze --device cuda
+
+Allowed:
+- frozen selection checkpoint;
+- calibration shard.
+
+Backbone/reranker weights must not change.
+
+Select only:
+- posterior_temperature >= 1;
+- scale_multiplier.
+
+Record complete calibration surface.
+
+FAIL if:
+- selected temperature < 1;
+- model/family configuration changes;
+- any confirmation data are accessed.
+
+Record:
+- selected temperature;
+- selected scale;
+- whether either hits a grid boundary;
+- calibration MAE/ES/NLL;
+- coverage;
+- three family weights;
+- global disagreement;
+- disagreement temperature;
+- radio mismatch.
+
+Freeze must hash-link:
+- registry;
+- selection checkpoint;
+- calibration result;
+- selected epoch;
+- full V183_CONFIG;
+- selected temperature;
+- selected scale.
+
+After freeze the formal method is immutable.
+
+======================================================================
+9. STAGE 4 — FIVE-SEED E=1 STABILITY
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment stability --device cuda
+
+Registered seeds:
+
+18431
+18432
+18433
+18434
+18435
+
+Rules:
+
+- every run is E=1;
+- report all five;
+- no best-seed selection;
+- no prediction averaging;
+- no ensemble;
+- no freeze modification.
+
+Report mean +/- sample SD for:
+
+- MAE
+- Energy Score
+- NLL
+- final recall@8
+- final recall@64
+
+Also report for each seed:
+- three family weights;
+- global disagreement;
+- disagreement temperature;
+- radio mismatch.
+
+The stability panel is descriptive and cannot alter the formal model.
+
+======================================================================
+10. STAGE 5 — TRAIN CONFIRMATION MODEL
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment train-confirmation --device cuda
+
+Train exactly one checkpoint on outer_refit.
+
+Use:
+- frozen selected epoch;
+- frozen V183_CONFIG;
+- no confirmation labels;
+- no official benchmark labels.
+
+Record:
+- anchors;
+- parameters;
+- training seconds;
+- checkpoint SHA;
+- all tensors finite.
+
+======================================================================
+11. PRE-CONFIRMATION GATE
+======================================================================
+
+Before confirm, verify:
+
+1. registry self-hash valid;
+2. calibration result self-hash valid;
+3. freeze self-hash valid;
+4. confirmation checkpoint registry SHA matches;
+5. confirmation checkpoint freeze SHA matches;
+6. selected epoch matches freeze;
+7. V183_CONFIG matches freeze;
+8. temperature matches freeze and >=1;
+9. scale multiplier matches freeze;
+10. confirmation_consumed.lock does not exist;
+11. confirmation_result_v18_3.json does not exist;
+12. confirmation shard has not been manually evaluated.
+
+======================================================================
+12. STAGE 6 — ONE-SHOT SEQUENTIAL CONFIRMATION
+======================================================================
+
+Run exactly once:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment confirm --device cuda
+
+Required order:
+
+1. validate registry/freeze/checkpoint;
+2. write confirmation_consumed.lock;
+3. only then load confirmation shard;
+4. evaluate once;
+5. write confirmation_result_v18_3.json.
+
+Once confirmation_consumed.lock exists:
+
+- do not delete it;
+- do not retry confirm;
+- do not patch V18.3 and reuse the confirmation as a fresh result;
+- do not change hyperparameters from the result.
+
+If execution fails after the lock is written:
+
+Report:
+"V18.3 sequential confirmation was consumed but evaluation failed."
+
+Do not rerun.
+
+Highlight:
+
+CONFIRMATION MAE
+CONFIRMATION ENERGY SCORE
+CONFIRMATION NLL
+
+Also report:
+
+- final recall@8/16/32/64;
+- invariant/prototype/floor/union recall;
+- three family weights;
+- six within-family source weights;
+- family entropy/disagreement;
+- global disagreement;
+- disagreement temperature;
+- radio mismatch;
+- building/floor error;
+- uncertainty;
+- coverage;
+- error/disagreement correlation;
+- radio-mismatch/radio-weight correlation.
+
+Interpret whether:
+
+- no family collapsed;
+- disagreement raised temperature on conflicting scans;
+- radio mismatch reduced Radio family reliability;
+- Top-8 ranking improved while union recall stayed high.
+
+======================================================================
+13. STAGE 7 — FINAL REFIT
+======================================================================
+
+Only after a valid confirmation result exists:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment train-final --device cuda
+
+The program must verify the confirmation self-hash.
+
+Then reconstruct:
+
+outer_refit + confirmation = full trainingData
+
+and train one final checkpoint using the frozen epoch/configuration.
+
+Record:
+- final anchors;
+- parameter count;
+- training seconds;
+- checkpoint SHA.
+
+======================================================================
+14. STAGE 8 — PRE-EXPOSED OFFICIAL BENCHMARK
+======================================================================
+
+Run:
+
+python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment benchmark --device cuda
+
+This evaluates official UJI validationData.csv.
+
+It MUST be labeled:
+
+PRE-EXPOSED DESCRIPTIVE BENCHMARK
+
+It is NOT:
+- an independent test;
+- a new blind external validation;
+- a new untouched confirmation.
+
+Result file must state:
+
+benchmark_was_pre_exposed_before_v18_3 = true
+blind_confirmation_claim = false
+used_for_model_selection = false
+
+Do not modify V18.3 after seeing the benchmark and rerun it.
+
+Any new method change belongs to V18.4.
+
+======================================================================
+15. REQUIRED FINAL REPORT
+======================================================================
+
+GIT
+- branch
+- formal experiment SHA
+- any legitimate pre-prepare fix commits
+
+TESTS
+- three py_compile results
+- pytest passed/failed
+- deterministic CUDA status for every CUDA phase
+- flash/memory-efficient/math SDPA states
+
+PROTOCOL
+- all role coordinate/row counts
+- 13 strata check
+- disjoint/union checks
+- hull checks
+- all shard hashes
+
+MODEL
+- selection/confirmation/final parameters
+- anchor counts
+- selected epoch
+- residual_experts
+- L=96 / K=64
+- no trainable evidence gate
+- no teacher
+- no ensemble
+- family source grouping
+- family/source floors
+
+TRAINING
+- full selection trajectory
+- first/last joint_geometry_loss
+- first/last fused_anchor_nll
+- first/last coordinate_nll
+- first/last ranking_loss
+- first/last recall masses
+- first/last three family weights
+- first/last global disagreement
+- first/last disagreement temperature
+- first/last radio mismatch
+- first/last family dropout fraction
+
+CALIBRATION
+- posterior temperature
+- scale multiplier
+- boundary flags
+- confirmation temperature >=1
+- calibration MAE/ES/NLL
+- coverage
+
+STABILITY
+- all five seeds
+- mean +/- sample SD
+- no best seed selected
+- no ensemble constructed
+- family-weight ranges across seeds
+
+CONFIRMATION
+Highlight:
+CONFIRMATION MAE
+CONFIRMATION ENERGY SCORE
+CONFIRMATION NLL
+
+Then all structured-consensus/retrieval/uncertainty diagnostics.
+
+PRE-EXPOSED BENCHMARK
+Highlight separately:
+BENCHMARK MAE
+BENCHMARK ENERGY SCORE
+BENCHMARK NLL
+
+Explicitly state:
+independent external confirmation = NO
+pre-exposed benchmark = YES
+benchmark used for tuning = NO
+
+COMPUTE
+- GPU
+- Python
+- PyTorch/CUDA
+- selection time
+- stability time
+- confirmation-refit time
+- final-refit time
+- peak GPU memory
+
+AUDIT — explicit YES/NO
+- one inference checkpoint
+- residual_experts == 1
+- trainable evidence gate used
+- teacher used
+- distillation used
+- ensemble used
+- best seed selected
+- positive self-anchor target used
+- calibration labels used for backbone gradients before freeze
+- confirmation accessed before lock
+- confirm command count
+- confirmation used for tuning
+- benchmark used for tuning
+- temperature below 1 selected
+
+INTERPRETATION
+Without rerunning:
+
+1. Did structured consensus prevent V18.2-style collapse?
+2. Did each family retain meaningful mass?
+3. Did Radio weight decline as radio mismatch increased?
+4. Did disagreement-aware temperature correlate with difficult scans?
+5. Did Top-8 ranking improve while L=96 union recall remain high?
+6. Did confirmation coverage improve?
+7. Did the pre-exposed benchmark recover relative to V18.2?
+8. Is V18.4 scientifically justified?
+
+======================================================================
+16. FINAL RULE
+======================================================================
+
+V18.3 becomes an immutable scientific record after confirmation.
+
+Do not tune or rerun V18.3 based on confirmation or benchmark outcomes.
