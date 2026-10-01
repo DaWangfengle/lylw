@@ -1,0 +1,146 @@
+name: V18.3 verification
+
+on:
+  push:
+    branches:
+      - v18-3-structured-consensus
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile V18.3 sources
+        run: |
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_3_single.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/uji_v18_3_experiment.py
+          python -m py_compile tests/test_uji_v18_3_experiment.py
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy scipy pandas pytest
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Run V18.3 contract tests
+        run: |
+          python -m pytest -q tests/test_coherent_marked_v9.py tests/test_uji_v18_1_experiment.py tests/test_uji_v18_2_experiment.py tests/test_uji_v18_3_experiment.py
+      - name: Prepare real UJI V18.3 protocol without benchmark access
+        run: |
+          python -m fhm_dapp_tim.fhm_dapp.uji_v18_3_experiment prepare --registry /tmp/registry_v18_3.json --shard-dir /tmp/v18_3_shards
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          registry = json.loads(Path("/tmp/registry_v18_3.json").read_text())
+          assert registry["training_rows"] == 19937
+          assert registry["training_coordinate_count"] == 933
+          assert set(registry["role_shards"]) == {
+              "member_fit",
+              "early_stop",
+              "selection_refit",
+              "calibration",
+              "outer_refit",
+              "confirmation",
+          }
+          assert all(
+              value == 0
+              for value in registry["split_diagnostics"]["hull_checks"].values()
+          )
+          assert registry["evaluation_contract"][
+              "official_validation_is_pre_exposed"
+          ] is True
+          print({
+              name: (
+                  record["coordinate_count"],
+                  record["row_count"],
+              )
+              for name, record in registry["role_shards"].items()
+          })
+          PY
+      - name: Real-UJI V18.3 forward and backward smoke
+        run: |
+          python - <<'PY'
+          import torch
+          from fhm_dapp_tim.fhm_dapp import uji_v18_3_experiment as exp
+          from fhm_dapp_tim.fhm_dapp.v18_3_single import (
+              V183_CONFIG,
+              v183_predict,
+              v183_training_loss,
+          )
+
+          registry = exp.load_registry("/tmp/registry_v18_3.json")
+          shard = exp.load_role_shard(registry, "member_fit")
+          (
+              model,
+              _memory,
+              sample_anchor,
+              centered,
+              _origin,
+              neighbours,
+              neighbour_weights,
+              mapping,
+              _stats,
+          ) = exp._build_training_state(shard, device=torch.device("cpu"))
+
+          width = 2
+          phone = shard["phone_t"][:width].numpy()
+          device_id = torch.tensor(
+              [mapping[int(value)] for value in phone],
+              dtype=torch.long,
+          )
+          terms = v183_training_loss(
+              model,
+              shard["rss"][:width],
+              centered[:width],
+              torch.from_numpy(sample_anchor[:width]).long(),
+              device_id,
+              neighbours,
+              neighbour_weights,
+          )
+          assert torch.isfinite(terms["loss"])
+          terms["loss"].backward()
+
+          model.eval()
+          result = v183_predict(
+              model,
+              shard["rss"][:width],
+              posterior_temperature=1.0,
+              scale_multiplier=1.0,
+              target_coords=centered[:width],
+          )
+          assert result["union_candidate_indices"].shape == (width, 96)
+          assert result["candidate_indices"].shape == (width, 64)
+          assert result["family_weights"].shape == (width, 3)
+          assert result["within_family_weights"].shape == (width, 3, 2)
+          assert (
+              result["family_weights"]
+              >= float(V183_CONFIG["family_min_weight"]) - 1e-7
+          ).all()
+          assert (result["disagreement_temperature"] >= 1.0).all()
+          assert torch.isfinite(result["nll"]).all()
+
+          union = result["union_candidate_indices"]
+          for source_name in (
+              "retrieval_invariant_indices",
+              "retrieval_prototype_indices",
+              "retrieval_floor_indices",
+          ):
+              source = result[source_name]
+              covered = (
+                  union.unsqueeze(2) == source.unsqueeze(1)
+              ).any(dim=1)
+              assert covered.all(), source_name
+
+          print({
+              "anchors": model.n_anchors,
+              "union": result["union_candidate_indices"].shape[1],
+              "posterior": result["candidate_indices"].shape[1],
+              "family_min": float(result["family_weights"].min()),
+              "mean_temperature": float(
+                  result["disagreement_temperature"].mean()
+              ),
+              "loss": float(terms["loss"]),
+          })
+          PY
