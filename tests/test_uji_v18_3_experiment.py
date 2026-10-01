@@ -18,14 +18,12 @@ from fhm_dapp_tim.fhm_dapp.v18_3_single import (
     _bounded_pair_consensus,
     _family_disagreement,
     build_v183_model,
+    candidate_union,
+    prototype_retrieval_score,
     structured_evidence_opinions,
     validate_v183_config,
     v183_predict,
     v183_training_loss,
-)
-from fhm_dapp_tim.fhm_dapp.v18_2_single import (
-    candidate_union,
-    prototype_retrieval_score,
 )
 
 
