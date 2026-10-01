@@ -1454,6 +1454,7 @@ def calibrate_and_freeze(
     freeze_path: str | Path = DEFAULT_FREEZE,
     device_name: str = "cuda",
 ) -> dict:
+    _set_seed(SCORING_SEED)
     registry = load_registry(registry_path)
     if Path(result_path).exists() or Path(freeze_path).exists():
         raise FileExistsError("V18.3 calibration/freeze already exists")
@@ -1696,6 +1697,7 @@ def evaluate_confirmation_once(
     output: str | Path = DEFAULT_CONFIRMATION_RESULT,
     device_name: str = "cuda",
 ) -> dict:
+    _set_seed(SCORING_SEED)
     registry = load_registry(registry_path)
     freeze = load_freeze(freeze_path, registry=registry)
     checkpoint_path = Path(checkpoint_path)
@@ -1870,6 +1872,7 @@ def evaluate_preexposed_benchmark(
 ) -> dict:
     """Evaluate the already exposed official validation set descriptively."""
 
+    _set_seed(SCORING_SEED)
     registry = load_registry(registry_path)
     freeze = load_freeze(freeze_path, registry=registry)
     if Path(output).exists():
