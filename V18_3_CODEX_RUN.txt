@@ -214,7 +214,7 @@ Run:
 python -m pytest -q tests/test_coherent_marked_v9.py tests/test_uji_v18_1_experiment.py tests/test_uji_v18_2_experiment.py tests/test_uji_v18_3_experiment.py
 
 Current GitHub CI expectation:
-41 passed or more.
+42 passed or more.
 
 Do not delete, skip, xfail, or weaken scientific-contract tests.
 
@@ -225,6 +225,9 @@ Allowed pre-prepare bug fixes:
 - deterministic CUDA incompatibilities;
 - mathematically incorrect implementation exposed by tests;
 - wrong file paths.
+
+Also verify that fhm_dapp_tim/fhm_dapp/v18_3_single.py has no V18.2 runtime
+model import.  V18.2 is historical evidence only.
 
 Not allowed as a bug fix:
 - changing family floors;
