@@ -525,6 +525,7 @@ def _build_training_model(
         spatial_scale_m=scale,
         device=device,
     )
+    model.v184_n_devices = int(n_devices)
     return (
         model,
         memory,
@@ -753,7 +754,7 @@ def _fit_one_lambda(
             ).astype(np.float32)
         ),
         "spatial_scale_m": float(spatial_scale),
-        "n_devices": int(model.n_devices),
+        "n_devices": int(model.v184_n_devices),
         "memory": _cpu_memory(memory),
         "model_state": _cpu_state(model),
         "model_config": _config_json(),
@@ -817,6 +818,7 @@ def _fit_reference_for_rows(
     batch_size = int(V184_CONFIG["batch_size"])
 
     model.eval()
+    model.zero_grad(set_to_none=True)
     for start in range(0, len(row_indices), batch_size):
         stop = min(start + batch_size, len(row_indices))
         rows = row_indices[start:stop]
@@ -1070,7 +1072,6 @@ def develop(
 
     lambda_reports = []
     method_records = []
-    candidate_paths = {}
 
     started = time.perf_counter()
     for lambda_ot in map(float, V184_CONFIG["lambda_ot_grid"]):
@@ -1083,9 +1084,8 @@ def develop(
         )
         token = f"{lambda_ot:.2f}".replace(".", "p")
         checkpoint_path = model_root / f"uji_lambda_{token}.pt"
-        _save_torch_new(checkpoint_path, checkpoint)
-        checkpoint_sha = _sha256_file(checkpoint_path)
-        candidate_paths[lambda_ot] = checkpoint_path
+        if checkpoint_path.exists():
+            raise FileExistsError(checkpoint_path)
 
         model = _load_model_checkpoint(checkpoint, device=device)
         origin = checkpoint["origin"].numpy()
@@ -1099,9 +1099,6 @@ def develop(
             device=device,
         )
         checkpoint["correction_reference"] = _reference_payload(reference)
-        # Replace the just-created candidate checkpoint with the same model plus
-        # label-free fitting reference before any method selection result exists.
-        checkpoint_path.unlink()
         _save_torch_new(checkpoint_path, checkpoint)
         checkpoint_sha = _sha256_file(checkpoint_path)
 
@@ -1251,7 +1248,7 @@ def _train_fixed_epochs(
             ).astype(np.float32)
         ),
         "spatial_scale_m": float(spatial_scale),
-        "n_devices": int(model.n_devices),
+        "n_devices": int(model.v184_n_devices),
         "memory": _cpu_memory(memory),
         "model_state": _cpu_state(model),
         "model_config": _config_json(),
