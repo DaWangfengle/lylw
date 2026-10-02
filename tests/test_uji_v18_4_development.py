@@ -23,6 +23,8 @@ def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path) -> None:
     registry = prepare(registry_path=registry_path)
 
     assert registry["official_validation_opened"] is False
+    assert registry["train_path"] == "data/UJIndoorLoc/trainingData.csv"
+    assert not Path(registry["train_path"]).is_absolute()
     assert registry["training_rows"] == 19937
     assert registry["training_coordinate_groups"] == 933
     assert registry["aps"] == 520
