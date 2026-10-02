@@ -70,16 +70,45 @@ def summarize_array(array: np.ndarray) -> dict[str, Any]:
     return out
 
 
+def summarize_mat_value(value: Any, *, depth: int = 0) -> dict[str, Any]:
+    if depth > 5:
+        return {"python_type": type(value).__name__, "truncated": True}
+    if hasattr(value, "_fieldnames"):
+        fields = {}
+        for name in value._fieldnames:
+            fields[str(name)] = summarize_mat_value(
+                getattr(value, name),
+                depth=depth + 1,
+            )
+        return {
+            "python_type": type(value).__name__,
+            "field_names": [str(name) for name in value._fieldnames],
+            "fields": fields,
+        }
+    if isinstance(value, np.ndarray):
+        summary = summarize_array(value)
+        if value.dtype == object and value.size == 1:
+            item = value.reshape(-1)[0]
+            summary["singleton"] = summarize_mat_value(
+                item,
+                depth=depth + 1,
+            )
+        return summary
+    if isinstance(value, (str, bytes, int, float, np.generic)):
+        return {
+            "python_type": type(value).__name__,
+            "value": str(_scalar(value))[:200],
+        }
+    return {"python_type": type(value).__name__}
+
+
 def audit_mat(path: Path) -> dict[str, Any]:
-    payload = loadmat(path, squeeze_me=False, struct_as_record=False)
+    payload = loadmat(path, squeeze_me=True, struct_as_record=False)
     variables = {}
     for key, value in payload.items():
         if key.startswith("__"):
             continue
-        if isinstance(value, np.ndarray):
-            variables[key] = summarize_array(value)
-        else:
-            variables[key] = {"python_type": type(value).__name__}
+        variables[key] = summarize_mat_value(value)
     return {
         "format": "matlab",
         "bytes": path.stat().st_size,
