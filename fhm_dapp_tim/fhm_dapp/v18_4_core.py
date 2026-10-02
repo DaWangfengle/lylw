@@ -298,50 +298,54 @@ def _sinkhorn_regularized_cost(
     if cost.shape != (len(a), a.shape[1], b.shape[1]):
         raise ValueError("cost matrix shape mismatch")
     pair_mask = first_mask.unsqueeze(2) & second_mask.unsqueeze(1)
+
+    # Keep every intermediate finite.  Using +/-inf for padded support is
+    # algebraically convenient but creates undefined (-inf)-(-inf) branches in
+    # autograd even when the corresponding forward entries are later masked.
+    # A very negative finite sentinel is equivalent for the valid Sinkhorn
+    # system because invalid pairs are explicitly zeroed in the transport plan.
+    negative_sentinel = torch.as_tensor(
+        -1.0e6,
+        dtype=cost.dtype,
+        device=cost.device,
+    )
     log_a = torch.where(
         first_mask,
         a.clamp(min=NUMERICAL_EPS).log(),
-        torch.full_like(a, float("-inf")),
+        torch.zeros_like(a),
     )
     log_b = torch.where(
         second_mask,
         b.clamp(min=NUMERICAL_EPS).log(),
-        torch.full_like(b, float("-inf")),
+        torch.zeros_like(b),
     )
-    log_kernel = (-cost / float(epsilon_ot)).masked_fill(
-        ~pair_mask,
-        float("-inf"),
+    log_kernel = torch.where(
+        pair_mask,
+        -cost / float(epsilon_ot),
+        torch.full_like(cost, negative_sentinel),
     )
 
-    log_u = torch.where(
-        first_mask,
-        torch.zeros_like(a),
-        torch.full_like(a, float("-inf")),
-    )
-    log_v = torch.where(
-        second_mask,
-        torch.zeros_like(b),
-        torch.full_like(b, float("-inf")),
-    )
+    log_u = torch.zeros_like(a)
+    log_v = torch.zeros_like(b)
 
     for _ in range(int(iterations)):
-        log_u = log_a - torch.logsumexp(
+        next_u = log_a - torch.logsumexp(
             log_kernel + log_v.unsqueeze(1),
             dim=2,
         )
         log_u = torch.where(
             first_mask,
-            log_u,
-            torch.full_like(log_u, float("-inf")),
+            next_u,
+            torch.zeros_like(next_u),
         )
-        log_v = log_b - torch.logsumexp(
+        next_v = log_b - torch.logsumexp(
             log_kernel + log_u.unsqueeze(2),
             dim=1,
         )
         log_v = torch.where(
             second_mask,
-            log_v,
-            torch.full_like(log_v, float("-inf")),
+            next_v,
+            torch.zeros_like(next_v),
         )
 
     log_plan = (
@@ -349,10 +353,11 @@ def _sinkhorn_regularized_cost(
         + log_kernel
         + log_v.unsqueeze(1)
     )
+    plan = torch.exp(log_plan)
     plan = torch.where(
         pair_mask,
-        torch.exp(log_plan),
-        torch.zeros_like(cost),
+        plan,
+        torch.zeros_like(plan),
     )
 
     transport = (plan * cost).sum(dim=(1, 2))
