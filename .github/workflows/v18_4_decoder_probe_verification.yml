@@ -25,6 +25,8 @@ jobs:
           python -m py_compile tests/test_v18_4_decoder_probe.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_core.py
           python -m py_compile tests/test_v18_4_core.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_model.py
+          python -m py_compile tests/test_v18_4_model.py
       - name: Run V18.4 diagnostic-gate tests
         run: |
           python -m pytest -q tests/test_v18_4_decoder_probe.py tests/test_uji_v18_3_experiment.py
@@ -32,3 +34,7 @@ jobs:
       - name: Run V18.4 mathematical-core tests
         run: |
           python -m pytest -q tests/test_v18_4_core.py
+
+      - name: Run V18.4 model tests
+        run: |
+          python -m pytest -q tests/test_v18_4_model.py
