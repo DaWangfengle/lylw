@@ -90,7 +90,6 @@ V184_CONFIG: dict[str, object] = {
     "gradient_clip": 5.0,
     "maximum_epochs": 60,
     "minimum_epochs": 12,
-    "patience": 8,
     "energy_tie_margin_m": 0.05,
     "rss_offset_aug_db": 4.0,
     "rss_scale_aug": 0.08,
@@ -175,6 +174,8 @@ def validate_v184_config(
         raise ValueError("minimum_epochs must be positive")
     if int(config["maximum_epochs"]) < int(config["minimum_epochs"]):
         raise ValueError("maximum_epochs must be >= minimum_epochs")
+    if float(config["energy_tie_margin_m"]) < 0.0:
+        raise ValueError("energy_tie_margin_m cannot be negative")
 
 
 def _positive_target_width(weights: torch.Tensor) -> int:
