@@ -18,8 +18,8 @@ import pandas as pd
 from scipy.io import loadmat
 
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DATA = ROOT / "data"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DATA = REPO_ROOT / "data"
 
 
 def sha256_file(path: Path) -> str:
