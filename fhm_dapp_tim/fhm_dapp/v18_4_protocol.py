@@ -53,6 +53,14 @@ ROLE_SEEDS = {
     "TUJI1": 184404,
 }
 
+TUJI_LODO_ROLE_SEEDS = {
+    "A12": 184451,
+    "POCO": 184452,
+    "S20": 184453,
+    "S7": 184454,
+    "tabS7": 184455,
+}
+
 CoordinateKey = tuple[int, int, float, float]
 
 
