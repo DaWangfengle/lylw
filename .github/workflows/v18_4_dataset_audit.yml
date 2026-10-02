@@ -25,6 +25,8 @@ jobs:
           python -m py_compile tests/test_v18_4_datasets.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_protocol.py
           python -m py_compile tests/test_v18_4_protocol.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_capacity_audit.py
+          python -m py_compile tests/test_v18_4_capacity_audit.py
       - name: Audit repository datasets
         run: |
           python fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py --output /tmp/v18_4_dataset_audit.json
@@ -49,3 +51,12 @@ jobs:
           echo "ROLE_MANIFEST_BEGIN"
           python fhm_dapp_tim/fhm_dapp/v18_4_protocol.py
           echo "ROLE_MANIFEST_END"
+
+      - name: Run pretraining capacity-contract tests
+        run: |
+          python -m pytest -q tests/test_v18_4_capacity_audit.py
+      - name: Print candidate-capacity manifest
+        run: |
+          echo "CAPACITY_MANIFEST_BEGIN"
+          python fhm_dapp_tim/fhm_dapp/v18_4_capacity_audit.py
+          echo "CAPACITY_MANIFEST_END"
