@@ -55,6 +55,7 @@ from fhm_dapp_tim.fhm_dapp.v18_4_datasets import (
 from fhm_dapp_tim.fhm_dapp.v18_4_model import (
     CorrectionReference,
     V184_CONFIG,
+    v184_distribution,
 )
 from fhm_dapp_tim.fhm_dapp.v18_4_protocol import (
     ROLE_SEEDS,
@@ -763,8 +764,6 @@ def _evaluate_reserved_test(
             stop = min(start + batch_size, len(test.coords_m))
             rss = rss_all[start:stop].to(device)
             target = torch.from_numpy(centered[start:stop]).to(device)
-            from fhm_dapp_tim.fhm_dapp.v18_4_model import v184_distribution
-
             distribution = v184_distribution(
                 model,
                 rss,
@@ -1012,6 +1011,11 @@ def evaluate_test_once(
     for path in _test_paths(spec):
         if not path.exists():
             raise FileNotFoundError(path)
+    if str(device_name).startswith("cuda") and not torch.cuda.is_available():
+        raise RuntimeError(
+            "CUDA was requested but is unavailable; test lock not written"
+        )
+
     checkpoint_path = REPO_ROOT / str(train_freeze["checkpoint_path"])
     checkpoint = torch.load(
         checkpoint_path,
@@ -1020,6 +1024,40 @@ def evaluate_test_once(
     )
     if checkpoint["manifest_sha256"] != train_freeze["manifest_sha256"]:
         raise ValueError("external checkpoint/manifest link mismatch")
+
+    reference = _reference_from_json(checkpoint["dataset_reference"])
+    correction_reference = _reference_from_payload(
+        checkpoint["correction_reference"]
+    )
+    device = torch.device(device_name)
+    model = _load_model_checkpoint(checkpoint, device=device)
+
+    # Exercise the complete frozen posterior path on one training-derived
+    # prototype scan before the irreversible test lock. This catches device,
+    # checkpoint, radio-profiler and calibration-map failures without touching
+    # a provided test outcome.
+    preflight_rss = model.prototype_rss[:1].detach()
+    preflight = v184_distribution(
+        model,
+        preflight_rss,
+        correction_reference=correction_reference,
+        epsilon_kl=float(train_freeze["epsilon_kl"]),
+        final_temperature=float(train_freeze["posterior_temperature"]),
+        scale_multiplier=float(train_freeze["scale_multiplier"]),
+    )
+    if not bool(torch.isfinite(preflight["candidate_weights"]).all()):
+        raise RuntimeError(
+            "external frozen posterior preflight is non-finite; "
+            "test lock not written"
+        )
+    if not bool(
+        torch.isfinite(preflight["component_locations"]).all()
+        and torch.isfinite(preflight["component_scales"]).all()
+    ):
+        raise RuntimeError(
+            "external predictive component preflight is non-finite; "
+            "test lock not written"
+        )
 
     lock = {
         "protocol_version": PROTOCOL_VERSION,
@@ -1043,15 +1081,9 @@ def evaluate_test_once(
     _write_json_new(destination_lock, lock)
 
     # First semantic access to the provided test split occurs only after lock.
-    reference = _reference_from_json(checkpoint["dataset_reference"])
     test = _load_test(spec, reference)
     test_files = _file_manifest(_test_paths(spec))
 
-    device = torch.device(device_name)
-    model = _load_model_checkpoint(checkpoint, device=device)
-    correction_reference = _reference_from_payload(
-        checkpoint["correction_reference"]
-    )
     origin = checkpoint["origin"].cpu().numpy()
     metrics = _evaluate_reserved_test(
         model=model,
