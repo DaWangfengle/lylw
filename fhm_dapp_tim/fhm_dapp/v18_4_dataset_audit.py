@@ -56,7 +56,8 @@ def summarize_array(array: np.ndarray) -> dict[str, Any]:
         out["sample_values"] = [str(v) for v in values[:5]]
     elif array.dtype == object and array.size:
         samples = []
-        for item in array.reshape(-1)[:5]:
+        flat_object = array.reshape(-1)
+        for item in flat_object[:5]:
             if isinstance(item, np.ndarray):
                 samples.append(
                     {
@@ -67,6 +68,18 @@ def summarize_array(array: np.ndarray) -> dict[str, Any]:
             else:
                 samples.append(str(type(item).__name__))
         out["object_samples"] = samples
+        first = flat_object[0]
+        if hasattr(first, "_fieldnames"):
+            out["first_object_field_names"] = [
+                str(name) for name in first._fieldnames
+            ]
+            out["first_object_fields"] = {
+                str(name): summarize_mat_value(
+                    getattr(first, name),
+                    depth=1,
+                )
+                for name in first._fieldnames
+            }
     return out
 
 
