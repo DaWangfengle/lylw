@@ -120,7 +120,11 @@ def test_v184_dynamic_support_uses_mask_and_preserves_forced_positive() -> None:
         force_weights=force_weights,
         config=small,
     )
-    assert support["candidate_indices"].shape == (2, 12)
+    assert support["candidate_indices"].shape[0] == 2
+    assert support["candidate_indices"].shape[1] <= 12
+    assert support["candidate_indices"].shape[1] == int(
+        support["candidate_mask"].sum(dim=1).max()
+    )
     assert support["candidate_mask"].dtype == torch.bool
     for row in range(2):
         selected = set(
