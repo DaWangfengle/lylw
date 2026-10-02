@@ -138,7 +138,7 @@ def _dense_rss(
     missing_value: float = RSS_MISSING_VALUE,
 ) -> np.ndarray:
     rss = frame.reindex(columns=list(ap_ids), fill_value=missing_value)
-    rss = rss.apply(pd.to_numeric, errors="coerce").to_numpy(dtype=np.float32)
+    rss = rss.apply(pd.to_numeric, errors="coerce").to_numpy(\n        dtype=np.float32, copy=True\n    )
     missing = (~np.isfinite(rss)) | np.isclose(rss, float(missing_value))
     rss[missing] = np.nan
     return rss
@@ -427,7 +427,7 @@ def load_tampere(
         if len(ref.ap_ids) != rss_frame.shape[1]:
             raise ValueError("Tampere AP width differs from training")
 
-    raw_rss = rss_frame.to_numpy(dtype=np.float32)
+    raw_rss = rss_frame.to_numpy(dtype=np.float32, copy=True)
     raw_rss[
         (~np.isfinite(raw_rss))
         | np.isclose(raw_rss, RSS_MISSING_VALUE)
