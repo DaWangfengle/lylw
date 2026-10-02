@@ -1,0 +1,29 @@
+name: V18.4 dataset audit
+
+on:
+  push:
+    branches:
+      - v18-4-trust-region-posterior
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install audit dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy pandas scipy
+      - name: Compile audit
+        run: |
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py
+      - name: Audit repository datasets
+        run: |
+          python -m fhm_dapp_tim.fhm_dapp.v18_4_dataset_audit --output /tmp/v18_4_dataset_audit.json
+          echo "AUDIT_JSON_BEGIN"
+          cat /tmp/v18_4_dataset_audit.json
+          echo "AUDIT_JSON_END"
