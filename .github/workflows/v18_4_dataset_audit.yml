@@ -23,7 +23,7 @@ jobs:
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py
       - name: Audit repository datasets
         run: |
-          python -m fhm_dapp_tim.fhm_dapp.v18_4_dataset_audit --output /tmp/v18_4_dataset_audit.json
+          python fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py --output /tmp/v18_4_dataset_audit.json
           echo "AUDIT_JSON_BEGIN"
           cat /tmp/v18_4_dataset_audit.json
           echo "AUDIT_JSON_END"
