@@ -30,6 +30,7 @@ try:
     )
     from .v18_4_protocol import (
         ROLE_SEEDS,
+        TUJI_LODO_ROLE_SEEDS,
         construct_roles,
         coordinate_keys,
     )
@@ -47,6 +48,7 @@ except ImportError:
     )
     from v18_4_protocol import (
         ROLE_SEEDS,
+        TUJI_LODO_ROLE_SEEDS,
         construct_roles,
         coordinate_keys,
     )
@@ -182,10 +184,22 @@ def capacity_manifest(data_root: Path = DATA_ROOT) -> dict[str, object]:
             devices=training_devices,
             data_root=data_root,
         )[0]
-        keys = set(coordinate_keys(data))
+        roles = construct_roles(
+            data,
+            seed=TUJI_LODO_ROLE_SEEDS[held_out],
+        )
+        role_keys = {
+            "fit": set(roles.fit),
+            "selection_refit": set(roles.selection_refit),
+            "full_training": set(roles.all_groups),
+        }
         lodo[held_out] = {
             "training_devices": list(training_devices),
-            **geometry_width(keys),
+            "role_seed": int(TUJI_LODO_ROLE_SEEDS[held_out]),
+            "roles": {
+                role: geometry_width(keys)
+                for role, keys in role_keys.items()
+            },
         }
 
     manifest = {
@@ -202,8 +216,11 @@ def capacity_manifest(data_root: Path = DATA_ROOT) -> dict[str, object]:
             if not record["capacity_sufficient"]:
                 failures.append(f"{dataset_name}:{role_name}")
     for device, record in lodo.items():
-        if not record["capacity_sufficient"]:
-            failures.append(f"TUJI1:LODO:{device}")
+        for role_name, role_record in record["roles"].items():
+            if not role_record["capacity_sufficient"]:
+                failures.append(
+                    f"TUJI1:LODO:{device}:{role_name}"
+                )
     manifest["failed_capacity_contracts"] = failures
     manifest["all_capacity_contracts_pass"] = not failures
     return manifest
