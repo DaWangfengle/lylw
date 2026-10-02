@@ -290,6 +290,71 @@ def test_v184_reference_and_trust_region_prediction_are_well_formed() -> None:
     )
 
 
+
+def test_v184_final_temperature_does_not_change_trust_region_correction() -> None:
+    model, memory, *_ = _model()
+    model.eval()
+    rss = memory["prototype_rss"][:4].clone()
+    quick = copy.deepcopy(V184_CONFIG)
+    quick["radio_profile_steps"] = 1
+
+    with torch.no_grad():
+        invariant, embedding = model.retrieval_logits(rss)
+        prototype = prototype_retrieval_score(model, rss)
+        support = candidate_support(model, invariant, prototype)
+        base = base_posterior(model, rss, embedding, invariant, support)
+    raw = raw_correction_energies(
+        model,
+        rss,
+        base["probability"],
+        support,
+        config=quick,
+    )
+    reference = fit_correction_reference(
+        radio_energy_raw=raw["radio_energy_raw"],
+        geometry_energy_raw=raw["geometry_energy_raw"],
+        base_probability=base["probability"],
+        candidate_mask=base["candidate_mask"],
+        style_offset=raw["style_offset"],
+        style_scale=raw["style_scale"],
+        config=quick,
+    )
+    from fhm_dapp_tim.fhm_dapp.v18_4_model import v184_distribution
+
+    cold = v184_distribution(
+        model,
+        rss,
+        correction_reference=reference,
+        epsilon_kl=0.05,
+        final_temperature=0.75,
+        config=quick,
+    )
+    warm = v184_distribution(
+        model,
+        rss,
+        correction_reference=reference,
+        epsilon_kl=0.05,
+        final_temperature=1.50,
+        config=quick,
+    )
+    assert torch.allclose(
+        cold["corrected_probability"],
+        warm["corrected_probability"],
+        atol=1e-7,
+        rtol=1e-7,
+    )
+    assert torch.allclose(
+        cold["correction_realized_kl"],
+        warm["correction_realized_kl"],
+        atol=1e-7,
+        rtol=1e-7,
+    )
+    assert not torch.allclose(
+        cold["candidate_weights"],
+        warm["candidate_weights"],
+    )
+
+
 def test_v184_rejects_unregistered_method_hyperparameters() -> None:
     model, memory, _geometry, neighbours, weights = _model()
     target_anchor = torch.tensor([0, 1], dtype=torch.long)
