@@ -28,6 +28,8 @@ jobs:
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_model.py
           python -m py_compile tests/test_v18_4_model.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py
+          python -m py_compile tests/test_uji_v18_4_development.py
       - name: Run V18.4 diagnostic-gate tests
         run: |
           python -m pytest -q tests/test_v18_4_decoder_probe.py tests/test_uji_v18_3_experiment.py
@@ -43,3 +45,7 @@ jobs:
       - name: Run V18.4 real UJI smoke
         run: |
           python -m fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke
+
+      - name: Run V18.4 UJI development protocol tests
+        run: |
+          python -m pytest -q tests/test_uji_v18_4_development.py
