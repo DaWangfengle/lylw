@@ -1,0 +1,59 @@
+{
+  "status": "PROPOSED; NOT AUTHORIZED; NOT APPLIED",
+  "instruction_source": "C:\\Users\\LiuYan\\.codex\\attachments\\2cc77e58-6da5-4c76-aeb5-c400a0658768\\Pasted text.txt",
+  "conflicting_instruction": "Section 7: 脚本不得 train / backward / optimizer step / 修改 checkpoint",
+  "existing_prediction_call_chain": [
+    "v18_4_decoder_probe.evaluate_role",
+    "v18_3_single.v183_predict",
+    "v18_3_single.structured_evidence_opinions",
+    "coherent_marked_v9.profile_shared_affine_marked_energy"
+  ],
+  "source_locations": {
+    "radio_call": "fhm_dapp_tim/fhm_dapp/v18_3_single.py:847",
+    "Adam_construction": "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py:354",
+    "backward": "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py:381",
+    "optimizer_step": "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py:382"
+  },
+  "requested_exception": "Permit only the existing registered inference-time radio nuisance optimization on raw_offset/raw_log_scale; retain the identical frozen posterior and do not update checkpoint parameters",
+  "allowed_optimizer_tensors": [
+    "raw_offset",
+    "raw_log_scale"
+  ],
+  "tensor_scope": "Two fresh scan-length leaf tensors per inference batch; neither belongs to model parameters or state buffers",
+  "fixed_steps_per_batch": 6,
+  "fixed_learning_rate": 0.2,
+  "fixed_roles": [
+    "early_stop",
+    "calibration"
+  ],
+  "expected_inference_batches": 42,
+  "expected_nuisance_backward_and_step_calls_each": 252,
+  "unchanged_contract": [
+    "four registered decoders",
+    "Top-8 K=8",
+    "modified Weiszfeld solver",
+    "10% improvement on BOTH roles",
+    "0.25 m worsening limit",
+    "frozen posterior T=1.0",
+    "frozen scale=0.75",
+    "selected epoch=17"
+  ],
+  "required_guards": [
+    "Allow nuisance optimization only inside the exact registered radio profiler",
+    "Verify optimizer tensor identities exclude all checkpoint parameters and buffers",
+    "Require all inference query/anchor/prior inputs detached",
+    "Require no checkpoint parameter gradients",
+    "Forbid train mode on loaded model",
+    "Compare full model state bitwise before/after",
+    "Verify all allowed input file and scientific source hashes unchanged",
+    "Continue blocking confirmation, other role shards, historical outcomes and official validation",
+    "Preserve all prior failed invocation records; never overwrite existing probe outputs"
+  ],
+  "scientific_source_changes_required": false,
+  "current_completed_scientific_probe_count": 0,
+  "current_successful_prediction_count": 0,
+  "current_failed_cli_invocations": 3,
+  "rerun_scope_if_authorized": "One complete probe after correcting audit compatibility; no result-driven rerun or tuning",
+  "if_exception_denied": "Preserve failure; do not relax the existing no-backward/no-step contract, do not generate fabricated probe results",
+  "recorded_utc": "2026-10-02T06:09:53.011011+00:00"
+}

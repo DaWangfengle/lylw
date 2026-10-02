@@ -1,0 +1,15 @@
+{
+  "all_checks_passed": true,
+  "scope": "Audit helper path normalization only; no scientific source or registered rule change",
+  "root_cause": "os.fspath returned bytes for the SciPy/Qhull temporary-file path; string prefix comparison raised TypeError",
+  "fix": "os.fsdecode(os.fspath(path)) before path normalization",
+  "exit_code": 0,
+  "synthetic_checks": {
+    "bytes_temporary_file_succeeded": true,
+    "synthetic_delaunay_points": 4,
+    "synthetic_delaunay_triangles": 2
+  },
+  "real_scientific_inputs_read": 0,
+  "predictions_or_training_performed": false,
+  "verified_utc": "2026-10-02T05:56:54.567473+00:00"
+}

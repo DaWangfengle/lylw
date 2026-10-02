@@ -1,0 +1,22 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe",
+    "--device",
+    "cuda"
+  ],
+  "formal_experiment_sha": "109613f77078ce3e19302b24ac85feb90a281f7b",
+  "device": "cuda",
+  "invocation_count": 1,
+  "started_utc": "2026-10-02T05:53:13.805708+00:00",
+  "instrumentation_sha256": {
+    "sitecustomize.py": "9d0f36719c42ab491a31a34db7877ed782e04acddc139b7465075f4aab69fd07",
+    "run_probe_once.py": "f2e6b8ec9dd581a400d89a8df910cf68566b005fd2fb3665daebdbf2bb37b745"
+  },
+  "python_process_id": 16488,
+  "finished_utc": "2026-10-02T05:53:19.546809+00:00",
+  "wall_seconds": 5.740478899999289,
+  "exit_code": 1,
+  "scientific_files_unchanged": true
+}

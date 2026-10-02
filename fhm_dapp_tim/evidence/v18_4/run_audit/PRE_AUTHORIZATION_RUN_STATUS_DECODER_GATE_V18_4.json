@@ -1,0 +1,321 @@
+{
+  "status": "BLOCKED: REGISTERED RADIO INFERENCE CONFLICTS WITH NO-BACKWARD/NO-STEP INSTRUCTION",
+  "branch": "v18-4-trust-region-posterior",
+  "formal_experiment_sha": "109613f77078ce3e19302b24ac85feb90a281f7b",
+  "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "compile_passed": 2,
+  "pytest_result": ".........................                                                [100%]\n25 passed in 10.54s",
+  "cuda_environment": {
+    "cuda_available": true,
+    "torch": "2.10.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 2060"
+  },
+  "failed_cli_invocations": 3,
+  "completed_scientific_probes": 0,
+  "successful_prediction_scans": 0,
+  "preparation_issues": [
+    {
+      "type": "tool_process_startup",
+      "error": "CreateProcessWithLogonW failed: 1056",
+      "scope": "First attachment read tool process failed before execution",
+      "resolution": "Sequential read retry succeeded; scientific probe not started and no source changed"
+    }
+  ],
+  "issues": [
+    {
+      "id": "AUDIT-001",
+      "status": "FIXED",
+      "problem": "Bytes temporary-file path from SciPy/Qhull broke string prefix comparison in the audit helper",
+      "fix": "os.fsdecode(os.fspath(path)) before normalization",
+      "validation": {
+        "all_checks_passed": true,
+        "scope": "Audit helper path normalization only; no scientific source or registered rule change",
+        "root_cause": "os.fspath returned bytes for the SciPy/Qhull temporary-file path; string prefix comparison raised TypeError",
+        "fix": "os.fsdecode(os.fspath(path)) before path normalization",
+        "exit_code": 0,
+        "synthetic_checks": {
+          "bytes_temporary_file_succeeded": true,
+          "synthetic_delaunay_points": 4,
+          "synthetic_delaunay_triangles": 2
+        },
+        "real_scientific_inputs_read": 0,
+        "predictions_or_training_performed": false,
+        "verified_utc": "2026-10-02T05:56:54.567473+00:00"
+      },
+      "scientific_source_changed": false
+    },
+    {
+      "id": "AUDIT-002",
+      "status": "FIXED",
+      "problem": "Audit rejected train flag restoration during no_grad checkpoint reconstruction",
+      "fix": "Reject train(True) only on modules of the fully reconstructed frozen model",
+      "validation": {
+        "all_checks_passed": true,
+        "scope": "Checkpoint reconstruction without any role shard, decoder or prediction evaluation",
+        "root_cause": "initialize_anchor_keys runs under torch.no_grad and restores the newly constructed model initial train flag before loading frozen state; audit had rejected this nontraining restoration",
+        "fix": "Reject train(True) only for modules belonging to the fully reconstructed frozen checkpoint; verify eval mode, absent gradients and bitwise state identity",
+        "checks": {
+          "selected_epoch": 17,
+          "model_eval": true,
+          "checkpoint_state_reconstructed_bitwise": true,
+          "parameter_gradient_count": 0
+        },
+        "verified_utc": "2026-10-02T06:00:22.247330+00:00"
+      },
+      "scientific_source_changed": false
+    },
+    {
+      "id": "PROTOCOL-001",
+      "status": "AUTHORIZATION_REQUIRED",
+      "problem": "Registered radio nuisance profiler performs backward and Adam steps during inference, while Section 7 forbids them",
+      "resolution": "Proposed narrow inference-only exception, not applied",
+      "proposal": {
+        "status": "PROPOSED; NOT AUTHORIZED; NOT APPLIED",
+        "instruction_source": "C:\\Users\\LiuYan\\.codex\\attachments\\2cc77e58-6da5-4c76-aeb5-c400a0658768\\Pasted text.txt",
+        "conflicting_instruction": "Section 7: 脚本不得 train / backward / optimizer step / 修改 checkpoint",
+        "existing_prediction_call_chain": [
+          "v18_4_decoder_probe.evaluate_role",
+          "v18_3_single.v183_predict",
+          "v18_3_single.structured_evidence_opinions",
+          "coherent_marked_v9.profile_shared_affine_marked_energy"
+        ],
+        "source_locations": {
+          "radio_call": "fhm_dapp_tim/fhm_dapp/v18_3_single.py:847",
+          "Adam_construction": "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py:354",
+          "backward": "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py:381",
+          "optimizer_step": "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py:382"
+        },
+        "requested_exception": "Permit only the existing registered inference-time radio nuisance optimization on raw_offset/raw_log_scale; retain the identical frozen posterior and do not update checkpoint parameters",
+        "allowed_optimizer_tensors": [
+          "raw_offset",
+          "raw_log_scale"
+        ],
+        "tensor_scope": "Two fresh scan-length leaf tensors per inference batch; neither belongs to model parameters or state buffers",
+        "fixed_steps_per_batch": 6,
+        "fixed_learning_rate": 0.2,
+        "fixed_roles": [
+          "early_stop",
+          "calibration"
+        ],
+        "expected_inference_batches": 42,
+        "expected_nuisance_backward_and_step_calls_each": 252,
+        "unchanged_contract": [
+          "four registered decoders",
+          "Top-8 K=8",
+          "modified Weiszfeld solver",
+          "10% improvement on BOTH roles",
+          "0.25 m worsening limit",
+          "frozen posterior T=1.0",
+          "frozen scale=0.75",
+          "selected epoch=17"
+        ],
+        "required_guards": [
+          "Allow nuisance optimization only inside the exact registered radio profiler",
+          "Verify optimizer tensor identities exclude all checkpoint parameters and buffers",
+          "Require all inference query/anchor/prior inputs detached",
+          "Require no checkpoint parameter gradients",
+          "Forbid train mode on loaded model",
+          "Compare full model state bitwise before/after",
+          "Verify all allowed input file and scientific source hashes unchanged",
+          "Continue blocking confirmation, other role shards, historical outcomes and official validation",
+          "Preserve all prior failed invocation records; never overwrite existing probe outputs"
+        ],
+        "scientific_source_changes_required": false,
+        "current_completed_scientific_probe_count": 0,
+        "current_successful_prediction_count": 0,
+        "current_failed_cli_invocations": 3,
+        "rerun_scope_if_authorized": "One complete probe after correcting audit compatibility; no result-driven rerun or tuning",
+        "if_exception_denied": "Preserve failure; do not relax the existing no-backward/no-step contract, do not generate fabricated probe results",
+        "recorded_utc": "2026-10-02T06:09:53.011011+00:00"
+      }
+    }
+  ],
+  "executions": [
+    {
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe",
+        "--device",
+        "cuda"
+      ],
+      "formal_experiment_sha": "109613f77078ce3e19302b24ac85feb90a281f7b",
+      "device": "cuda",
+      "invocation_count": 1,
+      "started_utc": "2026-10-02T05:53:13.805708+00:00",
+      "instrumentation_sha256": {
+        "sitecustomize.py": "9d0f36719c42ab491a31a34db7877ed782e04acddc139b7465075f4aab69fd07",
+        "run_probe_once.py": "f2e6b8ec9dd581a400d89a8df910cf68566b005fd2fb3665daebdbf2bb37b745"
+      },
+      "python_process_id": 16488,
+      "finished_utc": "2026-10-02T05:53:19.546809+00:00",
+      "wall_seconds": 5.740478899999289,
+      "exit_code": 1,
+      "scientific_files_unchanged": true
+    },
+    {
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe",
+        "--device",
+        "cuda"
+      ],
+      "formal_experiment_sha": "109613f77078ce3e19302b24ac85feb90a281f7b",
+      "device": "cuda",
+      "invocation_count": 1,
+      "total_cli_invocations_including_pre_prediction_failure": 2,
+      "recovery_scope": "Audit bytes-path fix after model-build failure with zero role reads and predictions",
+      "started_utc": "2026-10-02T05:57:00.809550+00:00",
+      "instrumentation_sha256": {
+        "sitecustomize.py": "462fcec9d2ca32e77f64fc1cd3718ce47e4457edab03e1bcbdef3ea9efe4d546",
+        "run_probe_once.py": "32ae09b8b0b7a057cf3dacb46c7e64df3627c0d912c85559d2ffa7f5d93ac20c"
+      },
+      "python_process_id": 18744,
+      "finished_utc": "2026-10-02T05:57:08.071041+00:00",
+      "wall_seconds": 7.2529128000023775,
+      "exit_code": 1,
+      "completed_scientific_probe_count": 0,
+      "scientific_files_unchanged": true
+    },
+    {
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe",
+        "--device",
+        "cuda"
+      ],
+      "formal_experiment_sha": "109613f77078ce3e19302b24ac85feb90a281f7b",
+      "device": "cuda",
+      "invocation_count": 1,
+      "total_cli_invocations_including_pre_prediction_failure": 3,
+      "recovery_scope": "Audit compatibility corrections after model-build failures with zero role reads and predictions",
+      "started_utc": "2026-10-02T06:00:32.967608+00:00",
+      "instrumentation_sha256": {
+        "sitecustomize.py": "2f9d5dbfd5ccb35b68ea7a424ae5b514a461e8c8595e10ac5196aef84ec73e5e",
+        "run_probe_once.py": "33a01334f457caf1127ad87c42314d474f8098d78810876f4e91f0dc512739c1"
+      },
+      "python_process_id": 17940,
+      "finished_utc": "2026-10-02T06:00:39.909622+00:00",
+      "wall_seconds": 6.9491889999990235,
+      "exit_code": 1,
+      "completed_scientific_probe_count": 0,
+      "scientific_files_unchanged": true
+    }
+  ],
+  "runtime_audits": [
+    {
+      "audit_armed": true,
+      "allowed_scientific_reads": {
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\registry_v18_3.json": 1,
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\selection_freeze_v18_3.json": 1,
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_3\\selection.pt": 2
+      },
+      "denied_accesses": [],
+      "backward_calls": 0,
+      "optimizer_constructions": 0,
+      "training_mode_requests": 0,
+      "checkpoint_save_calls": 0,
+      "prediction_calls": 0,
+      "prediction_scans": 0,
+      "inference_target_coordinates_passed": false,
+      "instrumentation_changes_rng_or_predictions": false,
+      "model_state_unchanged_bitwise": false,
+      "model_load_count": 0,
+      "confirmation_lock_exists": false,
+      "confirmation_result_exists": false,
+      "torch_version": "2.10.0+cu128",
+      "cuda_version": "12.8",
+      "deterministic_algorithms": true,
+      "deterministic_warn_only": false,
+      "flash_sdpa": false,
+      "memory_efficient_sdpa": false,
+      "math_sdpa": true,
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "peak_gpu_memory_allocated_bytes": 0,
+      "finished_utc": "2026-10-02T05:53:18.901079+00:00"
+    },
+    {
+      "audit_armed": true,
+      "allowed_scientific_reads": {
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\registry_v18_3.json": 1,
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\selection_freeze_v18_3.json": 1,
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_3\\selection.pt": 2
+      },
+      "denied_accesses": [],
+      "backward_calls": 0,
+      "optimizer_constructions": 0,
+      "training_mode_requests": 1,
+      "checkpoint_save_calls": 0,
+      "prediction_calls": 0,
+      "prediction_scans": 0,
+      "inference_target_coordinates_passed": false,
+      "instrumentation_changes_rng_or_predictions": false,
+      "model_state_unchanged_bitwise": false,
+      "model_load_count": 0,
+      "confirmation_lock_exists": false,
+      "confirmation_result_exists": false,
+      "torch_version": "2.10.0+cu128",
+      "cuda_version": "12.8",
+      "deterministic_algorithms": true,
+      "deterministic_warn_only": false,
+      "flash_sdpa": false,
+      "memory_efficient_sdpa": false,
+      "math_sdpa": true,
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "peak_gpu_memory_allocated_bytes": 127375872,
+      "finished_utc": "2026-10-02T05:57:07.280135+00:00"
+    },
+    {
+      "audit_armed": true,
+      "allowed_scientific_reads": {
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\registry_v18_3.json": 1,
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\selection_freeze_v18_3.json": 1,
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_3\\selection.pt": 2,
+        "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\role_shards\\early_stop.pt": 2
+      },
+      "denied_accesses": [],
+      "backward_calls": 0,
+      "optimizer_constructions": 1,
+      "training_mode_requests": 0,
+      "model_reconstruction_mode_restore_calls": 60,
+      "checkpoint_save_calls": 0,
+      "prediction_calls": 0,
+      "prediction_scans": 0,
+      "inference_target_coordinates_passed": false,
+      "instrumentation_changes_rng_or_predictions": false,
+      "selected_epoch_verified": 17,
+      "model_state_unchanged_bitwise": true,
+      "model_load_count": 1,
+      "confirmation_lock_exists": false,
+      "confirmation_result_exists": false,
+      "torch_version": "2.10.0+cu128",
+      "cuda_version": "12.8",
+      "deterministic_algorithms": true,
+      "deterministic_warn_only": false,
+      "flash_sdpa": false,
+      "memory_efficient_sdpa": false,
+      "math_sdpa": true,
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "peak_gpu_memory_allocated_bytes": 211237888,
+      "finished_utc": "2026-10-02T06:00:39.080338+00:00"
+    }
+  ],
+  "early_stop_shard_opened_in_third_attempt": true,
+  "calibration_shard_loaded": false,
+  "confirmation_shard_opened": false,
+  "official_validation_opened": false,
+  "checkpoint_file_changed": false,
+  "scientific_sources_changed": false,
+  "checkpoint_model_state_changed_during_third_attempt": false,
+  "confirmation_consumed": false,
+  "probe_outputs_created": false,
+  "probe_outputs_pushed": false,
+  "mechanism_conclusion": null,
+  "recorded_utc": "2026-10-02T06:09:53.011556+00:00"
+}

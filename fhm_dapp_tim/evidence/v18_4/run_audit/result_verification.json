@@ -1,0 +1,22 @@
+{
+  "all_checks_passed": true,
+  "result_self_sha_verified": "fa9a5574d1239ee7b917b9c5c97154328dd106fbd3f089eca4555145bc83de22",
+  "original_output_file_sha256": {
+    "decoder_probe_v18_3.json": "0fbb06216418c679f9567f1499143116f60c8a1005728407d3532e7bc7a32514",
+    "decoder_probe_v18_3.md": "458ea620a0398ab0674d14f7870b0a20d6f00f5e68203b60900b90b72e222207"
+  },
+  "complete_report_sha256": "a4b3736719bb34b4152fb3f7ab5aec5395aadd999d90c7440568a214938a5705",
+  "mechanism_decision_independently_verified": "loss_aligned_geometric_median_supported",
+  "runtime_and_protocol_checks_passed": true,
+  "scientific_files_unchanged": true,
+  "completed_scientific_probes": 1,
+  "failed_cli_starts_preserved": 3,
+  "successful_cli_starts": 1,
+  "registered_thresholds_unchanged": true,
+  "checkpoint_parameter_gradients": 0,
+  "model_state_unchanged_bitwise": true,
+  "confirmation_accessed": false,
+  "official_validation_accessed": false,
+  "predictions_rerun_for_report": false,
+  "verified_utc": "2026-10-02T06:25:10.794200+00:00"
+}

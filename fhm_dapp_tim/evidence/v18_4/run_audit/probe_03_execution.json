@@ -1,0 +1,25 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe",
+    "--device",
+    "cuda"
+  ],
+  "formal_experiment_sha": "109613f77078ce3e19302b24ac85feb90a281f7b",
+  "device": "cuda",
+  "invocation_count": 1,
+  "total_cli_invocations_including_pre_prediction_failure": 3,
+  "recovery_scope": "Audit compatibility corrections after model-build failures with zero role reads and predictions",
+  "started_utc": "2026-10-02T06:00:32.967608+00:00",
+  "instrumentation_sha256": {
+    "sitecustomize.py": "2f9d5dbfd5ccb35b68ea7a424ae5b514a461e8c8595e10ac5196aef84ec73e5e",
+    "run_probe_once.py": "33a01334f457caf1127ad87c42314d474f8098d78810876f4e91f0dc512739c1"
+  },
+  "python_process_id": 17940,
+  "finished_utc": "2026-10-02T06:00:39.909622+00:00",
+  "wall_seconds": 6.9491889999990235,
+  "exit_code": 1,
+  "completed_scientific_probe_count": 0,
+  "scientific_files_unchanged": true
+}

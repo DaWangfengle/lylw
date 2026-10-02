@@ -1,0 +1,13 @@
+{
+  "all_checks_passed": true,
+  "scope": "Checkpoint reconstruction without any role shard, decoder or prediction evaluation",
+  "root_cause": "initialize_anchor_keys runs under torch.no_grad and restores the newly constructed model initial train flag before loading frozen state; audit had rejected this nontraining restoration",
+  "fix": "Reject train(True) only for modules belonging to the fully reconstructed frozen checkpoint; verify eval mode, absent gradients and bitwise state identity",
+  "checks": {
+    "selected_epoch": 17,
+    "model_eval": true,
+    "checkpoint_state_reconstructed_bitwise": true,
+    "parameter_gradient_count": 0
+  },
+  "verified_utc": "2026-10-02T06:00:22.247330+00:00"
+}

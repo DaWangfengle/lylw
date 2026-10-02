@@ -1,0 +1,32 @@
+{
+  "audit_armed": true,
+  "allowed_scientific_reads": {
+    "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\registry_v18_3.json": 1,
+    "d:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_3\\selection_freeze_v18_3.json": 1,
+    "d:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_3\\selection.pt": 2
+  },
+  "denied_accesses": [],
+  "backward_calls": 0,
+  "optimizer_constructions": 0,
+  "training_mode_requests": 1,
+  "checkpoint_save_calls": 0,
+  "prediction_calls": 0,
+  "prediction_scans": 0,
+  "inference_target_coordinates_passed": false,
+  "instrumentation_changes_rng_or_predictions": false,
+  "model_state_unchanged_bitwise": false,
+  "model_load_count": 0,
+  "confirmation_lock_exists": false,
+  "confirmation_result_exists": false,
+  "torch_version": "2.10.0+cu128",
+  "cuda_version": "12.8",
+  "deterministic_algorithms": true,
+  "deterministic_warn_only": false,
+  "flash_sdpa": false,
+  "memory_efficient_sdpa": false,
+  "math_sdpa": true,
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": true,
+  "peak_gpu_memory_allocated_bytes": 127375872,
+  "finished_utc": "2026-10-02T05:57:07.280135+00:00"
+}

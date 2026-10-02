@@ -1,0 +1,185 @@
+{
+  "probe_version": "v18_4_decoder_mechanism_probe_v1_20261001",
+  "scientific_status": "read-only mechanism diagnostic on already-open V18.3 roles; no training, no confirmation, no official benchmark",
+  "v18_3_registry_sha256": "2261fbf3660d7fca56a8014bae8b1165f5d2ac695373f77a7f0b75eca87568dd",
+  "v18_3_freeze_sha256": "f7a04c59148ca7560c7539c9e464fe0c1896576bee6080a325b547d8e9e8a5bf",
+  "v18_3_selection_checkpoint_sha256": "79c1b59bc2d55cbdbe1ebdbd661ee8ee6477406fc6d5e46b0f339b3100f230f2",
+  "role_shard_sha256": {
+    "early_stop": "c52b7f58c8bbe942ed217dd9d74de027c9fd08362b6875d29d8fd1059087ef69",
+    "calibration": "cb1ef90851769f157ca186cf9c3667be40b3c21a75a5e0d5386002e9e0c2d517"
+  },
+  "frozen_posterior_temperature": 1.0,
+  "frozen_scale_multiplier": 0.75,
+  "decoders": [
+    "posterior_mean",
+    "map_component",
+    "top8_mean",
+    "geometric_median"
+  ],
+  "topk_diagnostic": 8,
+  "roles": {
+    "early_stop": {
+      "decoder_metrics": {
+        "posterior_mean": {
+          "coordinate_macro_mae_m": 10.694249576397157,
+          "coordinate_macro_mae_se_m": 0.6482592238423117,
+          "row_mae_m": 10.52576989317385,
+          "row_median_error_m": 8.975502967834473,
+          "row_p75_error_m": 12.76545000076294,
+          "row_p90_error_m": 17.39701156616211,
+          "coordinate_groups": 89,
+          "rows": 2064,
+          "relative_improvement_vs_mean": 0.0
+        },
+        "map_component": {
+          "coordinate_macro_mae_m": 4.396712102247088,
+          "coordinate_macro_mae_se_m": 0.3234755593199561,
+          "row_mae_m": 4.265161218719066,
+          "row_median_error_m": 2.844665050506592,
+          "row_p75_error_m": 5.031492829322815,
+          "row_p90_error_m": 8.439651584625246,
+          "coordinate_groups": 89,
+          "rows": 2064,
+          "relative_improvement_vs_mean": 0.5888713770107916
+        },
+        "top8_mean": {
+          "coordinate_macro_mae_m": 4.355324127700891,
+          "coordinate_macro_mae_se_m": 0.36011990170483305,
+          "row_mae_m": 4.315598464329084,
+          "row_median_error_m": 3.0900202989578247,
+          "row_p75_error_m": 5.521991968154907,
+          "row_p90_error_m": 7.9960808753967285,
+          "coordinate_groups": 89,
+          "rows": 2064,
+          "relative_improvement_vs_mean": 0.5927414919029615
+        },
+        "geometric_median": {
+          "coordinate_macro_mae_m": 4.805944924943902,
+          "coordinate_macro_mae_se_m": 0.4472202573897725,
+          "row_mae_m": 4.646433345561977,
+          "row_median_error_m": 3.196715474128723,
+          "row_p75_error_m": 5.985636115074158,
+          "row_p90_error_m": 8.631081676483154,
+          "coordinate_groups": 89,
+          "rows": 2064,
+          "relative_improvement_vs_mean": 0.5506047534601298
+        }
+      },
+      "paired_vs_posterior_mean": {
+        "map_component": {
+          "mean_improvement_m": 6.297537474150069,
+          "improvement_se_m": 0.6685290080840138,
+          "fraction_coordinates_improved": 0.8876404494382022
+        },
+        "top8_mean": {
+          "mean_improvement_m": 6.338925448696265,
+          "improvement_se_m": 0.573034791965582,
+          "fraction_coordinates_improved": 0.9438202247191011
+        },
+        "geometric_median": {
+          "mean_improvement_m": 5.888304651453254,
+          "improvement_se_m": 0.5462623778265974,
+          "fraction_coordinates_improved": 0.9325842696629213
+        }
+      },
+      "posterior_diagnostics": {
+        "mean_anchor_entropy_nats": 3.7498013190058774,
+        "mean_effective_anchor_count": 42.607006243033005,
+        "mean_top1_probability": 0.09257422018319715,
+        "mean_geometric_median_displacement_from_mean_m": 8.86071396531003,
+        "p90_geometric_median_displacement_from_mean_m": 15.948901557922364
+      }
+    },
+    "calibration": {
+      "decoder_metrics": {
+        "posterior_mean": {
+          "coordinate_macro_mae_m": 12.698292080140272,
+          "coordinate_macro_mae_se_m": 0.5757719342827029,
+          "row_mae_m": 12.187034292020172,
+          "row_median_error_m": 10.488932609558105,
+          "row_p75_error_m": 15.487466812133789,
+          "row_p90_error_m": 21.37022438049317,
+          "coordinate_groups": 151,
+          "rows": 3139,
+          "relative_improvement_vs_mean": 0.0
+        },
+        "map_component": {
+          "coordinate_macro_mae_m": 8.000908601362974,
+          "coordinate_macro_mae_se_m": 0.5146337923728751,
+          "row_mae_m": 7.523208279472394,
+          "row_median_error_m": 5.162755966186523,
+          "row_p75_error_m": 9.016401290893555,
+          "row_p90_error_m": 13.830158233642578,
+          "coordinate_groups": 151,
+          "rows": 3139,
+          "relative_improvement_vs_mean": 0.3699224627321226
+        },
+        "top8_mean": {
+          "coordinate_macro_mae_m": 7.387285854642754,
+          "coordinate_macro_mae_se_m": 0.44918642022993105,
+          "row_mae_m": 6.881652840182029,
+          "row_median_error_m": 4.965750694274902,
+          "row_p75_error_m": 8.300627708435059,
+          "row_p90_error_m": 12.430021286010753,
+          "coordinate_groups": 151,
+          "rows": 3139,
+          "relative_improvement_vs_mean": 0.4182457130438639
+        },
+        "geometric_median": {
+          "coordinate_macro_mae_m": 7.475349116799058,
+          "coordinate_macro_mae_se_m": 0.45053336634108615,
+          "row_mae_m": 7.004539603771545,
+          "row_median_error_m": 5.230586051940918,
+          "row_p75_error_m": 8.545210361480713,
+          "row_p90_error_m": 12.868806838989258,
+          "coordinate_groups": 151,
+          "rows": 3139,
+          "relative_improvement_vs_mean": 0.41131066527519333
+        }
+      },
+      "paired_vs_posterior_mean": {
+        "map_component": {
+          "mean_improvement_m": 4.697383478777298,
+          "improvement_se_m": 0.6679806441226552,
+          "fraction_coordinates_improved": 0.7615894039735099
+        },
+        "top8_mean": {
+          "mean_improvement_m": 5.311006225497517,
+          "improvement_se_m": 0.6047056252913701,
+          "fraction_coordinates_improved": 0.8079470198675497
+        },
+        "geometric_median": {
+          "mean_improvement_m": 5.222942963341214,
+          "improvement_se_m": 0.551900643250541,
+          "fraction_coordinates_improved": 0.8410596026490066
+        }
+      },
+      "posterior_diagnostics": {
+        "mean_anchor_entropy_nats": 3.748924142427982,
+        "mean_effective_anchor_count": 42.57587440517458,
+        "mean_top1_probability": 0.09252175405934837,
+        "mean_geometric_median_displacement_from_mean_m": 9.755023196999455,
+        "p90_geometric_median_displacement_from_mean_m": 17.340802001953126
+      }
+    }
+  },
+  "mechanism_decision": {
+    "rule": {
+      "required_relative_mae_improvement_each_role": 0.1,
+      "maximum_allowed_role_worsening_m": 0.25,
+      "roles": [
+        "early_stop",
+        "calibration"
+      ]
+    },
+    "geometric_median_supported": true,
+    "top8_tail_contraction_supported": true,
+    "conclusion": "loss_aligned_geometric_median_supported",
+    "v18_4_implication": "Use weighted geometric median as the registered V18.4 point decoder while keeping the full posterior for NLL/ES/uncertainty."
+  },
+  "confirmation_accessed": false,
+  "official_benchmark_accessed": false,
+  "model_parameters_modified": false,
+  "training_performed": false,
+  "result_sha256": "fa9a5574d1239ee7b917b9c5c97154328dd106fbd3f089eca4555145bc83de22"
+}

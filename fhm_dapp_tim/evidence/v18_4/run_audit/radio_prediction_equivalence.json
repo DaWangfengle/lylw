@@ -1,0 +1,26 @@
+{
+  "all_checks_passed": true,
+  "scope": "Synthetic RSS only; original frozen prediction compared with user-authorized narrowly audited radio profiling",
+  "cases": [
+    {
+      "device": "cpu",
+      "all_output_tensors_bitwise_identical": true,
+      "output_tensor_count": 33,
+      "network_gradients": 0,
+      "checkpoint_state_unchanged": true,
+      "real_role_shards_loaded": 0,
+      "nuisance_steps": 6
+    },
+    {
+      "device": "cuda",
+      "all_output_tensors_bitwise_identical": true,
+      "output_tensor_count": 33,
+      "network_gradients": 0,
+      "checkpoint_state_unchanged": true,
+      "real_role_shards_loaded": 0,
+      "nuisance_steps": 6
+    }
+  ],
+  "registered_method_or_configuration_changed": false,
+  "verified_utc": "2026-10-02T06:18:12.326731+00:00"
+}

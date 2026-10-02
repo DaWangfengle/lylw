@@ -1,0 +1,26 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.v18_4_decoder_probe",
+    "--device",
+    "cuda"
+  ],
+  "formal_experiment_sha": "109613f77078ce3e19302b24ac85feb90a281f7b",
+  "device": "cuda",
+  "invocation_count": 1,
+  "total_cli_invocations_including_pre_prediction_failure": 4,
+  "recovery_scope": "Explicitly authorized radio nuisance inference after three failed starts with no complete predictions",
+  "radio_nuisance_exception_authorized": true,
+  "started_utc": "2026-10-02T06:19:13.584350+00:00",
+  "instrumentation_sha256": {
+    "sitecustomize.py": "3ad23f5e24c95646835347bd1d24162b83f845d2ca8c0664007d8bd0b177c7f5",
+    "run_probe_once.py": "d5593002f0744bbc0a689ad7a3800283392f0b7758f0668af6523219c979cacb"
+  },
+  "python_process_id": 14908,
+  "finished_utc": "2026-10-02T06:21:49.270861+00:00",
+  "wall_seconds": 155.68515560000378,
+  "exit_code": 0,
+  "completed_scientific_probe_count": 1,
+  "scientific_files_unchanged": true
+}

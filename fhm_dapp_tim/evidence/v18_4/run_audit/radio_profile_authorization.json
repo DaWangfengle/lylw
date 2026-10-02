@@ -1,0 +1,9 @@
+{
+  "user_answer": "允许仅 radio 临时参数优化（推荐）",
+  "radio_nuisance_optimization_authorized": true,
+  "scope": "Existing registered radio profiler only: raw_offset/raw_log_scale, 6 Adam backward/step iterations per inference batch; no checkpoint parameter or scientific source changes",
+  "retain_failed_invocations": true,
+  "allow_one_complete_probe_then_upload_outputs": true,
+  "confirmation_or_benchmark_access_authorized": false,
+  "recorded_utc": "2026-10-02T06:15:53.392741+00:00"
+}
