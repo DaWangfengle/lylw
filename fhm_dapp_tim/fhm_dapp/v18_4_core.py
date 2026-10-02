@@ -304,11 +304,7 @@ def _sinkhorn_regularized_cost(
     # autograd even when the corresponding forward entries are later masked.
     # A very negative finite sentinel is equivalent for the valid Sinkhorn
     # system because invalid pairs are explicitly zeroed in the transport plan.
-    negative_sentinel = torch.as_tensor(
-        -1.0e6,
-        dtype=cost.dtype,
-        device=cost.device,
-    )
+    negative_sentinel = -1.0e6
     log_a = torch.where(
         first_mask,
         a.clamp(min=NUMERICAL_EPS).log(),
