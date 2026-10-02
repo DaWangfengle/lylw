@@ -183,6 +183,31 @@ def _positive_target_width(weights: torch.Tensor) -> int:
     return int((weights > 0.0).sum(dim=1).max().item())
 
 
+def training_spatial_scale_m(
+    memory: Mapping[str, torch.Tensor],
+) -> float:
+    """Median positive same-stratum Delaunay edge length from training anchors."""
+
+    geometry = build_delaunay_geometry(
+        memory["coords"],
+        memory["building"],
+        memory["floor"],
+    )
+    indices, weights = delaunay_neighbor_targets(geometry)
+    anchor = torch.arange(len(indices), dtype=torch.long).unsqueeze(1)
+    active = (weights > 0.0) & (indices != anchor)
+    source = memory["coords"].unsqueeze(1).expand(-1, indices.shape[1], -1)
+    target = memory["coords"][indices]
+    distance = torch.linalg.vector_norm(source - target, dim=2)
+    positive = distance[active & (distance > 0.0)]
+    if positive.numel() == 0:
+        raise ValueError("training geometry has no positive non-self edge")
+    value = float(torch.median(positive).item())
+    if not math.isfinite(value) or value <= 0.0:
+        raise ValueError("training spatial scale is invalid")
+    return value
+
+
 def build_v184_model(
     *,
     memory: Mapping[str, torch.Tensor],
