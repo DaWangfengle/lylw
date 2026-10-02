@@ -17,13 +17,24 @@ jobs:
       - name: Install audit dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install numpy pandas scipy
+          python -m pip install numpy pandas scipy pytest
       - name: Compile audit
         run: |
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_datasets.py
+          python -m py_compile tests/test_v18_4_datasets.py
       - name: Audit repository datasets
         run: |
           python fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py --output /tmp/v18_4_dataset_audit.json
           echo "AUDIT_JSON_BEGIN"
           cat /tmp/v18_4_dataset_audit.json
           echo "AUDIT_JSON_END"
+
+      - name: Run canonical adapter tests on uploaded datasets
+        run: |
+          python -m pytest -q tests/test_v18_4_datasets.py
+      - name: Print canonical dataset summary
+        run: |
+          echo "CANONICAL_SUMMARY_BEGIN"
+          python fhm_dapp_tim/fhm_dapp/v18_4_datasets.py
+          echo "CANONICAL_SUMMARY_END"
