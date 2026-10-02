@@ -34,6 +34,7 @@ import math
 import os
 from pathlib import Path
 import random
+import subprocess
 import time
 from typing import Iterable, Mapping, Sequence
 
@@ -130,6 +131,39 @@ def _set_seed(seed: int) -> None:
     if torch.backends.cudnn.is_available():
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
+
+
+def _git_source_state() -> dict[str, object]:
+    """Return the exact tracked source revision; fail closed on tracked edits."""
+
+    try:
+        sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=REPO_ROOT,
+            text=True,
+        ).strip()
+        dirty = subprocess.run(
+            ["git", "diff", "--quiet", "--"],
+            cwd=REPO_ROOT,
+            check=False,
+        ).returncode != 0
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise RuntimeError("cannot resolve V18.4 source revision") from exc
+    if dirty:
+        raise RuntimeError(
+            "formal V18.4 phases require no tracked working-tree modifications"
+        )
+    if len(sha) != 40:
+        raise RuntimeError("invalid git source SHA")
+    return {"source_commit_sha": sha, "tracked_source_dirty": False}
+
+
+def _assert_source_revision(registry: Mapping[str, object]) -> None:
+    current = _git_source_state()
+    if current["source_commit_sha"] != registry.get("source_commit_sha"):
+        raise RuntimeError(
+            "current source commit differs from the V18.4 prepared registry"
+        )
 
 
 def _repo_relative(path: str | Path) -> str:
@@ -250,8 +284,10 @@ def prepare(
             "coordinate_count": int(len(group_set)),
         }
 
+    source_state = _git_source_state()
     registry = {
         "protocol_version": PROTOCOL_VERSION,
+        **source_state,
         "scientific_status": (
             "UJI is a V18.4 method-development benchmark; official "
             "validationData is pre-exposed and is not opened by this protocol"
@@ -818,6 +854,44 @@ def _load_model_checkpoint(
     return model
 
 
+def _pad_concat_support(
+    tensors: Sequence[torch.Tensor],
+    *,
+    fill_value: float | bool = 0.0,
+) -> torch.Tensor:
+    """Concatenate variable-width support batches with inert right padding."""
+
+    if not tensors:
+        raise ValueError("support tensor list cannot be empty")
+    rank = tensors[0].ndim
+    if rank not in {2, 3}:
+        raise ValueError("support tensors must be rank 2 or 3")
+    trailing = tensors[0].shape[2:] if rank == 3 else ()
+    dtype = tensors[0].dtype
+    device = tensors[0].device
+    for tensor in tensors:
+        if tensor.ndim != rank or tensor.shape[2:] != trailing:
+            raise ValueError("support tensor shapes are incompatible")
+        if tensor.dtype != dtype or tensor.device != device:
+            raise ValueError("support tensor dtype/device mismatch")
+    width = max(int(tensor.shape[1]) for tensor in tensors)
+    padded = []
+    for tensor in tensors:
+        if int(tensor.shape[1]) == width:
+            padded.append(tensor)
+            continue
+        shape = (len(tensor), width, *trailing)
+        target = torch.full(
+            shape,
+            fill_value=fill_value,
+            dtype=dtype,
+            device=device,
+        )
+        target[:, : tensor.shape[1]] = tensor
+        padded.append(target)
+    return torch.cat(padded, dim=0)
+
+
 def _fit_reference_for_rows(
     *,
     model: torch.nn.Module,
@@ -872,10 +946,10 @@ def _fit_reference_for_rows(
         scale.append(raw["style_scale"].cpu())
 
     return fit_correction_reference(
-        radio_energy_raw=torch.cat(radio),
-        geometry_energy_raw=torch.cat(geometry),
-        base_probability=torch.cat(probability),
-        candidate_mask=torch.cat(masks),
+        radio_energy_raw=_pad_concat_support(radio, fill_value=0.0),
+        geometry_energy_raw=_pad_concat_support(geometry, fill_value=0.0),
+        base_probability=_pad_concat_support(probability, fill_value=0.0),
+        candidate_mask=_pad_concat_support(masks, fill_value=False),
         style_offset=torch.cat(offset),
         style_scale=torch.cat(scale),
     )
@@ -1105,6 +1179,7 @@ def develop(
     if destination.exists():
         raise FileExistsError(destination)
     registry = load_registry(registry_path)
+    _assert_source_revision(registry)
     data, rows = _load_registered_data(registry)
     rss_all = torch.from_numpy(data.model_rss()).float()
     device = torch.device(device_name)
@@ -1194,6 +1269,7 @@ def develop(
             "external provided test accessed"
         ),
         "registry_sha256": registry["registry_sha256"],
+        "source_commit_sha": registry["source_commit_sha"],
         "official_validation_opened": False,
         "reserved_external_test_opened": False,
         "selection_rule": (
@@ -1313,10 +1389,10 @@ def _cache_corrected_distribution(
         location.append(distribution["component_locations"].detach().cpu())
         scale.append(distribution["component_scales"].detach().cpu())
     return {
-        "probability": torch.cat(probability),
-        "mask": torch.cat(mask),
-        "location": torch.cat(location),
-        "scale": torch.cat(scale),
+        "probability": _pad_concat_support(probability, fill_value=0.0),
+        "mask": _pad_concat_support(mask, fill_value=False),
+        "location": _pad_concat_support(location, fill_value=0.0),
+        "scale": _pad_concat_support(scale, fill_value=1.0),
     }
 
 
@@ -1473,6 +1549,7 @@ def calibrate_freeze(
         raise FileExistsError(freeze_path)
 
     registry = load_registry(registry_path)
+    _assert_source_revision(registry)
     development = json.loads(
         Path(development_result_path).read_text(encoding="utf-8")
     )
@@ -1569,6 +1646,7 @@ def calibrate_freeze(
     calibration = {
         "protocol_version": PROTOCOL_VERSION,
         "registry_sha256": registry["registry_sha256"],
+        "source_commit_sha": registry["source_commit_sha"],
         "development_result_sha256": development[
             "development_result_sha256"
         ],
@@ -1598,6 +1676,7 @@ def calibrate_freeze(
             "UTS/Tampere/TUJI provided tests remain reserved"
         ),
         "registry_sha256": registry["registry_sha256"],
+        "source_commit_sha": registry["source_commit_sha"],
         "development_result_sha256": development[
             "development_result_sha256"
         ],
