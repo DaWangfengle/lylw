@@ -439,7 +439,10 @@ def _select_support(
     ranked = priority + mandatory_mask.to(priority.dtype) * span
     ranked = ranked.masked_fill(~pool_mask, float("-inf"))
 
-    width = min(int(ceiling), priority.shape[1])
+    per_row_width = pool_mask.sum(dim=1).clamp(max=int(ceiling))
+    width = int(per_row_width.max().item())
+    if width <= 0:
+        raise RuntimeError("candidate support cannot be empty")
     selected = torch.topk(ranked, width, dim=1).indices
     valid = torch.gather(pool_mask, 1, selected)
     return selected, valid
