@@ -425,8 +425,21 @@ additional searched method combination.
 
 ## 15. Global method selection rule
 
-All nine method combinations are selected on the UJI V18.4 development role
-using a fixed lexicographic rule:
+Selection is deliberately staged so posterior learning and posterior
+correction remain causally separable.
+
+For each registered lambda_OT value:
+
+1. train the base posterior on the fitting role;
+2. select that run's epoch using the uncorrected base posterior only;
+3. freeze the selected checkpoint;
+4. fit radio/geometry energy scales and empirical reliability references using
+   fitting-role scans only;
+5. evaluate the three registered epsilon_KL values on development coordinates.
+
+The resulting 3 lambda_OT x 3 epsilon_KL = 9 corrected method combinations are
+then ranked on the UJI V18.4 development role using the fixed lexicographic
+rule:
 
 1. minimum coordinate-macro Energy Score;
 2. shortlist configurations within 0.05 m of the best Energy Score;
@@ -435,13 +448,18 @@ using a fixed lexicographic rule:
 5. then smaller lambda_OT;
 6. then smaller epsilon_KL.
 
+Trust-region correction never participates in epoch selection.  This preserves
+a direct causal interpretation of the OT training effect and avoids repeatedly
+profiling radio nuisance parameters at every epoch.
+
 External test outcomes never affect this selection.
 
 ## 16. Epoch selection
 
-For each trained model:
+For each lambda_OT-trained base model:
 
 - epochs before 12 are ineligible;
+- correction is disabled for epoch selection;
 - primary development statistic is coordinate-macro Energy Score;
 - shortlist epochs within 0.05 m of best eligible Energy Score;
 - select lowest GM coordinate-macro MAE in the shortlist;
@@ -456,15 +474,27 @@ development role.
 
 ## 17. Predictive calibration
 
-After model and epoch selection, the model is refit on selection_refit.
+After model and method selection, the model is refit on selection_refit using
+the frozen lambda_OT and selected epoch.
 
 Only then may its training-only calibration role choose scalar predictive
 calibration parameters:
 
-- posterior temperature;
-- Student-t scale multiplier.
+- final corrected-posterior temperature from
+  {0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 2.50, 3.00};
+- Student-t scale multiplier from
+  {0.50, 0.75, 1.00, 1.25, 1.50, 2.00}.
 
-Calibration minimizes coordinate-macro mixture NLL.
+The temperature is applied after the frozen trust-region correction:
+
+p_cal(a|x) proportional to p_corrected(a|x)^(1/T).
+
+Therefore the registered KL bound describes the structured correction before
+this separate probability-calibration map.  Calibration is not part of the
+trust-region optimization.
+
+Calibration minimizes coordinate-macro mixture NLL over the fixed 8 x 6
+surface.  The same registered grids are used for every dataset.
 
 These are dataset-specific probability calibration parameters, not method
 hyperparameters.
