@@ -357,11 +357,67 @@ def _floor_anchor_score(
     return _standardize(invariant_logits) + anchor_score, floor_logp
 
 
-def _unique_append(values: list[int], seen: set[int], value: int) -> None:
-    value = int(value)
-    if value not in seen:
-        values.append(value)
-        seen.add(value)
+def _scatter_membership(
+    indices: torch.Tensor,
+    active: torch.Tensor,
+    *,
+    anchors: int,
+) -> torch.Tensor:
+    """Return [B,A] membership, robust to repeated padded indices."""
+
+    if indices.shape != active.shape:
+        raise ValueError("membership indices/active shapes differ")
+    counts = torch.zeros(
+        len(indices),
+        int(anchors),
+        dtype=torch.int32,
+        device=indices.device,
+    )
+    counts.scatter_add_(
+        1,
+        indices,
+        active.to(dtype=counts.dtype),
+    )
+    return counts > 0
+
+
+def _select_support(
+    pool_mask: torch.Tensor,
+    mandatory_mask: torch.Tensor,
+    priority: torch.Tensor,
+    *,
+    ceiling: int,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Tensorized support selection preserving every mandatory member."""
+
+    if not (
+        pool_mask.shape == mandatory_mask.shape == priority.shape
+    ):
+        raise ValueError("support masks and priority must have equal shape")
+    mandatory_count = mandatory_mask.sum(dim=1)
+    if bool((mandatory_count > int(ceiling)).any()):
+        raise RuntimeError(
+            "mandatory support exceeds registered computational ceiling"
+        )
+
+    # Strict bonus guarantees all mandatory entries outrank optional geometry.
+    finite_priority = torch.where(
+        pool_mask,
+        priority,
+        torch.zeros_like(priority),
+    )
+    span = (
+        finite_priority.max(dim=1, keepdim=True).values
+        - finite_priority.min(dim=1, keepdim=True).values
+        + 10.0
+    )
+    ranked = priority + mandatory_mask.to(priority.dtype) * span
+    ranked = ranked.masked_fill(~pool_mask, float("-inf"))
+
+    width = min(int(ceiling), priority.shape[1])
+    selected = torch.topk(ranked, width, dim=1).indices
+    valid = torch.gather(pool_mask, 1, selected)
+    return selected, valid
 
 
 def candidate_support(
@@ -373,12 +429,11 @@ def candidate_support(
     force_weights: torch.Tensor | None = None,
     config: Mapping[str, object] = V184_CONFIG,
 ) -> dict[str, torch.Tensor]:
-    """Build dynamic masked support while preserving registered quotas.
+    """Build dynamic masked support without host/device synchronization.
 
-    Primary proposal lists are mandatory.  Positive training targets are also
-    mandatory when supplied. Geometry-neighbour expansion is opportunistic and
-    fills only remaining capacity.  Padding uses anchor index zero but has an
-    exact false validity mask.
+    The three primary proposal lists are mandatory. Positive training targets
+    are additionally mandatory when supplied. Geometry-neighbour expansion is
+    optional and is truncated only after those contracts are satisfied.
     """
 
     validate_v184_config(config)
@@ -405,106 +460,95 @@ def candidate_support(
     floor_score, floor_logp = _floor_anchor_score(model, invariant_logits)
     floor_indices = torch.topk(floor_score, floor_k, dim=1).indices
 
-    max_width = min(int(config["support_ceiling"]), anchors)
-    output_indices = torch.zeros(
+    primary_mask = torch.zeros(
         batch,
-        max_width,
-        dtype=torch.long,
-        device=invariant_logits.device,
-    )
-    output_mask = torch.zeros(
-        batch,
-        max_width,
+        anchors,
         dtype=torch.bool,
         device=invariant_logits.device,
     )
-    natural_mask = torch.zeros_like(output_mask)
-    natural_size = torch.zeros(
-        batch,
-        dtype=torch.long,
-        device=invariant_logits.device,
+    primary_mask.scatter_(1, inv_indices, True)
+    primary_mask.scatter_(1, proto_indices, True)
+    primary_mask.scatter_(1, floor_indices, True)
+
+    seed = torch.cat(
+        [
+            inv_indices[:, :seed_k],
+            proto_indices[:, :seed_k],
+        ],
+        dim=1,
+    )
+    geometry_indices = model.v184_geometry_neighbors[seed].reshape(batch, -1)
+    geometry_active = (
+        model.v184_geometry_neighbor_weights[seed] > 0.0
+    ).reshape(batch, -1)
+    geometry_mask = _scatter_membership(
+        geometry_indices,
+        geometry_active,
+        anchors=anchors,
     )
 
-    for row in range(batch):
-        mandatory: list[int] = []
-        mandatory_seen: set[int] = set()
-        for source in (
-            inv_indices[row],
-            proto_indices[row],
-            floor_indices[row],
-        ):
-            for value in source.tolist():
-                _unique_append(mandatory, mandatory_seen, value)
+    natural_pool = primary_mask | geometry_mask
 
-        # Natural geometry expansion follows strongest invariant/prototype seeds
-        # and ignores zero-weight neighbour padding.
-        natural = list(mandatory)
-        natural_seen = set(mandatory_seen)
-        seed_values = torch.cat(
-            [
-                inv_indices[row, :seed_k],
-                proto_indices[row, :seed_k],
-            ]
+    # Source-normalized priority is used only to choose among optional geometry
+    # candidates when the natural union is wider than the compute ceiling.
+    priority = torch.maximum(
+        _standardize(invariant_logits),
+        _standardize(prototype_score),
+    )
+    priority = torch.maximum(priority, _standardize(floor_score))
+    # Stable anchor-id epsilon breaks exact score ties without changing source
+    # ordering at meaningful scale.
+    anchor_tie = torch.arange(
+        anchors,
+        device=priority.device,
+        dtype=priority.dtype,
+    ).unsqueeze(0) * 1e-7
+    priority = priority + anchor_tie
+
+    natural_indices, natural_valid = _select_support(
+        natural_pool,
+        primary_mask,
+        priority,
+        ceiling=ceiling,
+    )
+    natural_size = natural_valid.sum(dim=1)
+
+    if force_indices is None:
+        final_pool = natural_pool
+        mandatory = primary_mask
+    else:
+        force_mask = _scatter_membership(
+            force_indices,
+            force_weights > 0.0,
+            anchors=anchors,
         )
-        for seed in seed_values.tolist():
-            neighbor = model.v184_geometry_neighbors[int(seed)]
-            weight = model.v184_geometry_neighbor_weights[int(seed)]
-            for value, active in zip(neighbor.tolist(), (weight > 0.0).tolist()):
-                if active and len(natural) < ceiling:
-                    _unique_append(natural, natural_seen, value)
+        final_pool = natural_pool | force_mask
+        mandatory = primary_mask | force_mask
 
-        natural_size[row] = len(natural)
-
-        final = list(mandatory)
-        final_seen = set(mandatory_seen)
-        if force_indices is not None:
-            for value, weight in zip(
-                force_indices[row].tolist(),
-                force_weights[row].tolist(),
-            ):
-                if float(weight) > 0.0:
-                    _unique_append(final, final_seen, value)
-
-        if len(final) > ceiling:
-            raise RuntimeError(
-                "mandatory primary support plus positive target exceeds "
-                "registered support ceiling"
-            )
-
-        # Preserve natural geometry expansion after all mandatory entries.
-        for value in natural:
-            if len(final) >= ceiling:
-                break
-            _unique_append(final, final_seen, value)
-
-        width = len(final)
-        output_indices[row, :width] = torch.as_tensor(
-            final,
-            dtype=torch.long,
-            device=output_indices.device,
-        )
-        output_mask[row, :width] = True
-
-        # Record which final entries belong to the natural support.  This is
-        # used only for honest retrieval diagnostics, never as a training label.
-        natural_set = set(natural)
-        natural_mask[row, :width] = torch.as_tensor(
-            [value in natural_set for value in final],
-            dtype=torch.bool,
-            device=output_indices.device,
-        )
+    candidate_indices, candidate_mask = _select_support(
+        final_pool,
+        mandatory,
+        priority,
+        ceiling=ceiling,
+    )
+    natural_membership = torch.gather(
+        natural_pool,
+        1,
+        candidate_indices,
+    ) & candidate_mask
 
     return {
-        "candidate_indices": output_indices,
-        "candidate_mask": output_mask,
-        "natural_membership_mask": natural_mask,
+        "candidate_indices": candidate_indices,
+        "candidate_mask": candidate_mask,
+        "natural_membership_mask": natural_membership,
         "natural_size": natural_size,
+        "natural_candidate_indices": natural_indices,
+        "natural_candidate_mask": natural_valid,
         "invariant_indices": inv_indices,
         "prototype_indices": proto_indices,
         "floor_indices": floor_indices,
         "floor_log_probability": floor_logp,
     }
-
 
 def base_posterior(
     model: TrustRegionAnchorModel,
