@@ -59,6 +59,7 @@ from fhm_dapp_tim.fhm_dapp.v18_4_model import (
 )
 from fhm_dapp_tim.fhm_dapp.v18_4_protocol import (
     ROLE_SEEDS,
+    TUJI_LODO_ROLE_SEEDS,
     construct_roles,
     coordinate_keys,
     row_indices_for_roles,
@@ -96,15 +97,6 @@ PROTOCOL_VERSION = "v18_4_external_reserved_v1_20261002"
 EXTERNAL_ROOT = Path(__file__).resolve().parents[1] / "evidence" / "v18_4" / "external"
 MODEL_ROOT = Path(__file__).resolve().parents[1] / "models" / "v18_4" / "external"
 TUJI_DEVICES = tuple(TUJI_DEVICE_FILES.keys())
-TUJI_LODO_ROLE_SEEDS = {
-    "A12": 184451,
-    "POCO": 184452,
-    "S20": 184453,
-    "S7": 184454,
-    "tabS7": 184455,
-}
-
-
 @dataclass(frozen=True)
 class ExternalSpec:
     slug: str
