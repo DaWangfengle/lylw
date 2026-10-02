@@ -14,4 +14,4 @@
 
 初始停止记录原样保存在 run_audit/PRE_AUTHORIZATION_RUN_STATUS_DECODER_GATE_V18_4.md/json；授权在 run_audit/radio_profile_authorization.json；验证在 run_audit/result_verification.json。
 
-当前结果与记录待提交推送；推送后停止本任务，不继续 V18.3 或实现正式 V18.4 模型。
+本状态记录形成时，结果与记录尚待推送；后续用户明确授权上传本轮全部产物，授权与首次推送审批拒绝原因见 [发布授权记录](run_audit/publication_authorization.json)。实际发布提交以 Git 历史和远端分支核验为准。推送后停止本任务，不继续 V18.3 或实现正式 V18.4 模型。

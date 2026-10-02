@@ -1,0 +1,33 @@
+{
+  "recorded_utc": "2026-10-02T06:38:55Z",
+  "authorization_source": "Direct human user message in the current conversation",
+  "user_message": "无需仅上传两份输出，将本轮的产物本地提交并推送到github",
+  "repository": "DaWangfengle/lylw",
+  "remote": "https://github.com/DaWangfengle/lylw.git",
+  "branch": "v18-4-trust-region-posterior",
+  "existing_artifact_commit": "8f18f4ec1190904b1b0c1f8285e064b74e44d27d",
+  "existing_artifact_file_count": 41,
+  "all_round_artifacts_publication_authorized": true,
+  "authorized_scope": [
+    "Original JSON and Markdown decoder probe outputs",
+    "Complete decoder diagnostic report and run status",
+    "Audit helpers, synthetic verification, failed invocation records and invocation markers",
+    "Issue resolutions and explicit user authorization records",
+    "This publication authorization record"
+  ],
+  "persistent_gitignore_exclusions": [
+    "Model weights and checkpoints",
+    "Runtime logs and caches",
+    "Python temporary files and IDE files"
+  ],
+  "prior_automatic_approval_rejection": {
+    "action": "git push origin v18-4-trust-region-posterior",
+    "push_executed": false,
+    "reason": "该 push 会把整个 V18.4 evidence 目录（约 41 个审计、授权、运行记录文件）推送到 GitHub，而用户指令仅明确授权上传两份 probe 输出；额外内部审计内容的外部披露未获具体授权。",
+    "resolution": "The user's subsequent explicit message above authorizes publishing all artifacts from this round, including audit and authorization records; retry the same normal push under this expanded authorization."
+  },
+  "scientific_outputs_changed": false,
+  "predictions_rerun": false,
+  "additional_model_training_or_confirmation_access_authorized": false,
+  "publication_status_at_record_creation": "PENDING_GIT_PUSH; verify the publication commit using Git history and the remote branch after push"
+}
