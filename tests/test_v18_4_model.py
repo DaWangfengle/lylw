@@ -7,6 +7,7 @@ import torch
 from fhm_dapp_tim.fhm_dapp.v18_4_model import (
     CorrectionReference,
     V184_CONFIG,
+    _masked_geometry_energy,
     apply_correction,
     base_posterior,
     build_v184_model,
@@ -180,6 +181,50 @@ def test_v184_training_loss_is_finite_and_backpropagates() -> None:
         if parameter.grad is not None
     )
     assert reranker_grad > 0.0
+
+
+
+def test_v184_geometry_energy_ignores_other_building_floor_coordinates() -> None:
+    probability = torch.tensor(
+        [[0.45, 0.45, 0.10]],
+        dtype=torch.float32,
+    )
+    mask = torch.ones_like(probability, dtype=torch.bool)
+    building = torch.tensor([[0, 0, 0]], dtype=torch.long)
+    floor = torch.tensor([[0, 0, 1]], dtype=torch.long)
+    locations_near = torch.tensor(
+        [[[0.0, 0.0], [10.0, 0.0], [0.1, 0.0]]],
+        dtype=torch.float32,
+    )
+    locations_far = locations_near.clone()
+    locations_far[0, 2] = torch.tensor([1000.0, 1000.0])
+
+    near = _masked_geometry_energy(
+        probability,
+        locations_near,
+        mask,
+        building,
+        floor,
+        spatial_scale_m=5.0,
+        sigma_scale=1.5,
+        margin_scale=0.5,
+    )
+    far = _masked_geometry_energy(
+        probability,
+        locations_far,
+        mask,
+        building,
+        floor,
+        spatial_scale_m=5.0,
+        sigma_scale=1.5,
+        margin_scale=0.5,
+    )
+    assert torch.allclose(
+        near[:, :2],
+        far[:, :2],
+        atol=1e-7,
+        rtol=1e-7,
+    )
 
 
 def test_v184_correction_profiler_does_not_create_model_parameter_gradients() -> None:
