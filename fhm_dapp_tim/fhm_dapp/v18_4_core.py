@@ -356,9 +356,17 @@ def _sinkhorn_regularized_cost(
     )
 
     transport = (plan * cost).sum(dim=(1, 2))
+    # Never form 0 * (-inf) on invalid padding.  torch.where evaluates
+    # both branches before selection, so masking only the final product can
+    # leave NaNs in autograd even when the forward value is finite.
+    safe_log_plan = torch.where(
+        pair_mask,
+        log_plan,
+        torch.zeros_like(log_plan),
+    )
     entropy = torch.where(
-        pair_mask & (plan > 0.0),
-        plan * (log_plan - 1.0),
+        pair_mask,
+        plan * (safe_log_plan - 1.0),
         torch.zeros_like(plan),
     ).sum(dim=(1, 2))
     return transport + float(epsilon_ot) * entropy
