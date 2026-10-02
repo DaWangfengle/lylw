@@ -138,7 +138,9 @@ def _dense_rss(
     missing_value: float = RSS_MISSING_VALUE,
 ) -> np.ndarray:
     rss = frame.reindex(columns=list(ap_ids), fill_value=missing_value)
-    rss = rss.apply(pd.to_numeric, errors="coerce").to_numpy(\n        dtype=np.float32, copy=True\n    )
+    rss = rss.apply(pd.to_numeric, errors="coerce").to_numpy(
+        dtype=np.float32, copy=True
+    )
     missing = (~np.isfinite(rss)) | np.isclose(rss, float(missing_value))
     rss[missing] = np.nan
     return rss
