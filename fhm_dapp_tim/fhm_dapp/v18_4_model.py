@@ -858,15 +858,54 @@ def _masked_geometry_energy(
     probability: torch.Tensor,
     locations: torch.Tensor,
     mask: torch.Tensor,
+    candidate_building: torch.Tensor,
+    candidate_floor: torch.Tensor,
     *,
     spatial_scale_m: torch.Tensor | float,
     sigma_scale: float,
     margin_scale: float,
 ) -> torch.Tensor:
-    """Distance-to-base-posterior-manifold energy with exact padding mask."""
+    """Same-building/floor posterior-manifold energy.
 
+    Each candidate is compared only with posterior support in its own physical
+    stratum.  The posterior is conditionally normalized within that stratum so
+    geometry measures local spatial coherence rather than silently duplicating
+    building/floor probability mass.
+    """
+
+    if candidate_building.shape != probability.shape:
+        raise ValueError("candidate_building shape mismatch")
+    if candidate_floor.shape != probability.shape:
+        raise ValueError("candidate_floor shape mismatch")
     q = probability * mask.to(probability.dtype)
     q = q / q.sum(dim=1, keepdim=True).clamp(min=1e-12)
+
+    same_stratum = (
+        candidate_building.unsqueeze(2)
+        == candidate_building.unsqueeze(1)
+    ) & (
+        candidate_floor.unsqueeze(2)
+        == candidate_floor.unsqueeze(1)
+    )
+    pair_mask = (
+        mask.unsqueeze(2)
+        & mask.unsqueeze(1)
+        & same_stratum
+    )
+    conditional_mass = torch.sum(
+        q.unsqueeze(1) * pair_mask.to(q.dtype),
+        dim=2,
+    ).clamp(min=1e-12)
+    conditional_q = (
+        q.unsqueeze(1)
+        / conditional_mass.unsqueeze(2)
+    )
+    conditional_q = torch.where(
+        pair_mask,
+        conditional_q,
+        torch.zeros_like(conditional_q),
+    )
+
     spatial_scale = torch.as_tensor(
         spatial_scale_m,
         dtype=locations.dtype,
@@ -875,16 +914,17 @@ def _masked_geometry_energy(
     sigma = spatial_scale * float(sigma_scale)
     margin = spatial_scale * float(margin_scale)
     dist2 = torch.cdist(locations, locations).square()
-    log_q = torch.where(
-        mask,
-        q.clamp(min=1e-12).log(),
-        torch.full_like(q, float("-inf")),
-    )
+
+    log_conditional = conditional_q.clamp(min=1e-30).log()
     log_support = (
-        log_q.unsqueeze(1)
+        log_conditional
         - 0.5 * dist2 / sigma.square().clamp(min=1e-12)
     )
-    # Invalid query candidates receive zero placeholder energy and stay masked.
+    log_support = torch.where(
+        pair_mask,
+        log_support,
+        torch.full_like(log_support, -1.0e6),
+    )
     soft_distance2 = (
         -2.0
         * sigma.square()
@@ -940,10 +980,14 @@ def raw_correction_energies(
         torch.zeros_like(base_probability),
     )
     locations = model.anchor_coords[indices]
+    candidate_building = model.anchor_buildings[indices]
+    candidate_floor = model.anchor_floors[indices]
     geometry_energy = _masked_geometry_energy(
         prior,
         locations,
         mask,
+        candidate_building,
+        candidate_floor,
         spatial_scale_m=model.v184_spatial_scale_m,
         sigma_scale=float(config["geometry_sigma_scale"]),
         margin_scale=float(config["geometry_margin_scale"]),
