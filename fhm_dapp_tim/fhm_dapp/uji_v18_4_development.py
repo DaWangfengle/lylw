@@ -47,6 +47,7 @@ from fhm_dapp_tim.fhm_dapp.coherent_marked_v9 import (
 )
 from fhm_dapp_tim.fhm_dapp.v18_4_core import (
     masked_softmax,
+    tail_mass_diagnostics,
     weighted_component_geometric_median,
 )
 from fhm_dapp_tim.fhm_dapp.v18_4_datasets import (
@@ -1347,6 +1348,114 @@ def _calibration_nll(
     return _coordinate_macro(row, keys)
 
 
+def _safe_correlation(first: torch.Tensor, second: torch.Tensor) -> float:
+    x = first.detach().cpu().double()
+    y = second.detach().cpu().double()
+    if len(x) < 2 or float(x.std(unbiased=False)) <= 1e-12 or float(
+        y.std(unbiased=False)
+    ) <= 1e-12:
+        return 0.0
+    return float(torch.corrcoef(torch.stack([x, y]))[0, 1])
+
+
+def _selected_calibration_metrics(
+    *,
+    cache: Mapping[str, torch.Tensor],
+    target: torch.Tensor,
+    keys: Sequence[tuple[int, int, float, float]],
+    model: torch.nn.Module,
+    temperature: float,
+    scale_multiplier: float,
+    device: torch.device,
+) -> dict[str, object]:
+    probability = cache["probability"].to(device)
+    mask = cache["mask"].to(device)
+    p = masked_softmax(
+        probability.clamp(min=1e-30).log() / float(temperature),
+        mask,
+    )
+    location = cache["location"].to(device)
+    scale = cache["scale"].to(device) * float(scale_multiplier)
+    target_device = target.to(device)
+    row_nll = _row_nll(p, location, scale, target_device, model)
+
+    randomness = common_student_t_randomness(
+        len(target),
+        draws=PREDICTIVE_DRAWS,
+        degrees_freedom=float(V184_CONFIG["student_df"]),
+        seed=SCORING_SEED,
+    )
+    randomness = {
+        key: value.to(device) if isinstance(value, torch.Tensor) else value
+        for key, value in randomness.items()
+    }
+    row_es, _first, _second = continuous_energy_score_mc(
+        p,
+        location,
+        scale,
+        target_device,
+        randomness,
+    )
+    gm = weighted_component_geometric_median(
+        p,
+        location,
+        mask=mask,
+    )
+    mean = torch.sum(p.unsqueeze(2) * location, dim=1)
+    gm_error = torch.linalg.vector_norm(gm - target_device, dim=1)
+    mean_error = torch.linalg.vector_norm(mean - target_device, dim=1)
+    entropy = _prediction_entropy(p)
+    tail = tail_mass_diagnostics(
+        p,
+        location,
+        target_coords=target_device,
+        mask=mask,
+    )
+    mean_gm_displacement = torch.linalg.vector_norm(mean - gm, dim=1)
+
+    summary: dict[str, object] = {
+        "coordinate_macro_nll": _coordinate_macro(row_nll.cpu(), keys),
+        "coordinate_macro_energy_score_m": _coordinate_macro(
+            row_es.cpu(),
+            keys,
+        ),
+        "coordinate_macro_gm_mae_m": _coordinate_macro(
+            gm_error.cpu(),
+            keys,
+        ),
+        "coordinate_macro_posterior_mean_mae_m": _coordinate_macro(
+            mean_error.cpu(),
+            keys,
+        ),
+        "mean_entropy_nats": float(entropy.double().mean()),
+        "mean_effective_anchors": float(entropy.exp().double().mean()),
+        "mean_top1_probability": float(p.max(dim=1).values.double().mean()),
+        "mean_gm_displacement_from_mean_m": float(
+            mean_gm_displacement.double().mean()
+        ),
+        "tail_mass": {},
+    }
+    for radius in (10, 20, 40):
+        summary["tail_mass"][f"truth_far_mass_{radius}m"] = float(
+            tail[f"truth_far_mass_{radius}m"].double().mean()
+        )
+        summary["tail_mass"][f"mode_far_mass_{radius}m"] = float(
+            tail[f"mode_far_mass_{radius}m"].double().mean()
+        )
+    summary["mean_gm_spatial_leverage_m"] = float(
+        tail["gm_spatial_leverage_m"].double().mean()
+    )
+    summary["corr_truth_far_mass_20m_mean_error"] = _safe_correlation(
+        tail["truth_far_mass_20m"],
+        mean_error,
+    )
+    summary["corr_mode_far_mass_20m_mean_gm_displacement"] = _safe_correlation(
+        tail["mode_far_mass_20m"],
+        mean_gm_displacement,
+    )
+    return summary
+
+
 def calibrate_freeze(
     *,
     registry_path: str | Path = DEFAULT_REGISTRY,
@@ -1447,6 +1556,16 @@ def calibrate_freeze(
             float(item["scale_multiplier"]),
         ),
     )
+    selected_metrics = _selected_calibration_metrics(
+        cache=cache,
+        target=target,
+        keys=keys,
+        model=model,
+        temperature=float(selected_calibration["temperature"]),
+        scale_multiplier=float(selected_calibration["scale_multiplier"]),
+        device=device,
+    )
+
     calibration = {
         "protocol_version": PROTOCOL_VERSION,
         "registry_sha256": registry["registry_sha256"],
@@ -1461,6 +1580,7 @@ def calibrate_freeze(
         "scale_grid": list(CALIBRATION_SCALE_GRID),
         "surface": surface,
         "selected": selected_calibration,
+        "selected_metrics": selected_metrics,
         "rows": int(len(rows["calibration"])),
         "coordinate_groups": int(len(set(keys))),
         "official_validation_opened": False,
