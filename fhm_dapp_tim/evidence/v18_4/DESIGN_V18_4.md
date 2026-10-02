@@ -645,12 +645,94 @@ evaluation.
 
 After the UJI global method law is frozen:
 
-- train/evaluate UTSIndoorLoc using the same method hyperparameters;
-- train/evaluate Tampere using the same method hyperparameters;
+- train/evaluate UTSIndoorLoc using the same global method hyperparameters;
+- train/evaluate Tampere using the same global method hyperparameters;
 - train/evaluate pooled TUJI1;
 - run five TUJI1 leave-one-device-out evaluations.
 
-Provided tests are evaluated once per frozen formal model.
+The global lambda_OT, epsilon_KL, support law, reliability law, OT definition,
+trust-region direction, architecture, and GM decoder cannot change after the
+UJI method freeze.
+
+### 21.1 Two-gate external protocol
+
+Every external protocol uses three commands:
+
+1. prepare;
+2. fit-freeze;
+3. evaluate-test.
+
+Prepare and fit-freeze access only the dataset training source. They may:
+
+- construct training-only fit/development/calibration coordinate-group roles;
+- select a dataset-specific epoch from the uncorrected base posterior on that
+  dataset's training-only development role;
+- refit on selection_refit;
+- fit correction references on selection_refit;
+- choose only the registered scalar posterior-temperature and Student-t scale
+  calibration values on the training-only calibration role.
+
+They may not alter any global method hyperparameter.
+
+The evaluate-test command is separate. Before the first semantic access to a
+provided test outcome it writes an irreversible consumption lock. If that lock
+already exists, rerun is forbidden.
+
+Before the lock is written, the implementation verifies:
+
+- required test files exist;
+- requested CUDA device is available;
+- checkpoint and manifest hashes match;
+- the frozen model can be reconstructed;
+- the correction reference can be reconstructed;
+- one complete final-posterior inference path is finite on a training-derived
+  prototype scan.
+
+Thus ordinary device/checkpoint failures cannot unnecessarily consume the
+one-shot test evaluation.
+
+### 21.2 External source compatibility
+
+External runs must use the same V18.4 method-source tree as the UJI global
+method freeze. Evidence-only commits after UJI freeze are allowed, but changes
+under the method implementation or DESIGN_V18_4.md invalidate external
+evaluation.
+
+For each individual external protocol, prepare -> fit-freeze -> evaluate-test
+must run on one unchanged execution commit. Generated untracked artifacts do
+not count as source changes.
+
+### 21.3 TUJI1 container nuance
+
+Each TUJI1 MAT file physically contains both results_train and results_test.
+Therefore reading results_train necessarily reads the MAT container bytes.
+V18.4 does not claim that the TUJI1 test files are byte-level untouched.
+
+The protected boundary is semantic outcome access:
+
+- before the test-consumption lock, only results_train is selected and used;
+- results_test is not selected, decoded into the canonical test dataset, scored,
+  or used for model/calibration decisions;
+- the first semantic results_test access occurs only after the irreversible
+  evaluate-test lock.
+
+### 21.4 TUJI1 leave-one-device-out roles
+
+The five registered held-out-device role seeds are:
+
+- A12: 184451;
+- POCO: 184452;
+- S20: 184453;
+- S7: 184454;
+- tabS7: 184455.
+
+For each LODO protocol, the AP dictionary and every learned/training-derived
+quantity are built from the other four devices' training scans only. The
+held-out device's provided test split is projected into that frozen dictionary;
+evaluation-only APs do not expand it.
+
+Provided tests are evaluated once per frozen formal model. No post-test
+retuning is permitted.
 
 UJI official validation is reported separately as a pre-exposed descriptive
 benchmark only.
