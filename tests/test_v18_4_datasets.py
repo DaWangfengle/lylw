@@ -1,13 +1,31 @@
 from __future__ import annotations
 
+import importlib.util
+from pathlib import Path
+import sys
+
 import numpy as np
 
-from fhm_dapp_tim.fhm_dapp.v18_4_datasets import (
-    load_tampere,
-    load_tuji1,
-    load_uji,
-    load_uts,
+
+MODULE_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "fhm_dapp_tim"
+    / "fhm_dapp"
+    / "v18_4_datasets.py"
 )
+SPEC = importlib.util.spec_from_file_location(
+    "v18_4_datasets_standalone",
+    MODULE_PATH,
+)
+assert SPEC is not None and SPEC.loader is not None
+DATASETS = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = DATASETS
+SPEC.loader.exec_module(DATASETS)
+
+load_tampere = DATASETS.load_tampere
+load_tuji1 = DATASETS.load_tuji1
+load_uji = DATASETS.load_uji
+load_uts = DATASETS.load_uts
 
 
 def _assert_model_scale(data) -> None:
