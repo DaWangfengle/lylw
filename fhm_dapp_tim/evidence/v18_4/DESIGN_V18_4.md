@@ -117,6 +117,18 @@ Roles are complete coordinate groups, stratified by building-floor.
 
 All same-building/floor convex-hull support coordinates remain in fit.
 
+### 4.2.1 Formal artifact/source binding
+
+The UJI formal development chain `prepare -> develop -> calibrate-freeze` is
+executed on one unchanged Git commit. The prepare registry records the exact
+40-character source commit SHA and the SHA256 of `trainingData.csv` plus each
+role's row-index hash. Later stages fail closed if the current source commit
+changes.
+
+Generated evidence/model artifacts may remain untracked during the run, but no
+tracked source modification, pull, commit, cherry-pick, or branch change is
+allowed between prepare and method freeze.
+
 ### 4.3 Dataset roles
 
 UJIIndoorLoc is the global method-development benchmark. Its official
@@ -170,7 +182,15 @@ Registered computational ceiling:
 
 L_max = 128.
 
-Padding positions always have zero posterior mass.
+L_max is a fail-closed capacity ceiling, not a fixed statistical support size.
+Within each mini-batch, tensors are padded only to that batch's maximum valid
+support width, which can be substantially below 128. When variable-width
+batches must be aggregated for fitting references or calibration, they are
+right-padded to the maximum width of that aggregation and the validity mask is
+preserved exactly.
+
+Padding positions always have zero posterior mass and cannot contribute to
+losses, energies, calibration, or diagnostics.
 
 ### 5.3 Training-positive preservation
 
