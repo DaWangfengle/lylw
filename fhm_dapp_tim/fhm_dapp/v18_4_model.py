@@ -1103,19 +1103,27 @@ def apply_correction(
     }
 
 
-def v184_predict(
+def v184_distribution(
     model: TrustRegionAnchorModel,
     rss: torch.Tensor,
     *,
     correction_reference: CorrectionReference | None = None,
     epsilon_kl: float | None = None,
-    posterior_temperature: float = 1.0,
+    final_temperature: float = 1.0,
     scale_multiplier: float = 1.0,
     config: Mapping[str, object] = V184_CONFIG,
 ) -> dict[str, torch.Tensor]:
-    """Predict from natural support; optionally apply frozen structured correction."""
+    """Return the full V18.4 predictive mixture without a point decision.
+
+    q_theta is always the uncalibrated learned base posterior.  Structured
+    correction is applied relative to that q_theta.  Dataset-specific scalar
+    temperature is a separate post-correction calibration map, so it cannot
+    alter the registered trust-region optimization.
+    """
 
     validate_v184_config(config)
+    if float(final_temperature) <= 0.0:
+        raise ValueError("final_temperature must be positive")
     if float(scale_multiplier) <= 0.0:
         raise ValueError("scale_multiplier must be positive")
 
@@ -1133,10 +1141,10 @@ def v184_predict(
         embedding,
         invariant_logits,
         support,
-        posterior_temperature=posterior_temperature,
+        posterior_temperature=1.0,
     )
     base_probability = base["probability"]
-    final_probability = base_probability
+    corrected_probability = base_probability
     correction: dict[str, torch.Tensor] | None = None
 
     if correction_reference is not None:
@@ -1157,37 +1165,32 @@ def v184_predict(
             epsilon_kl=float(epsilon_kl),
             config=config,
         )
-        final_probability = correction["posterior"]
+        corrected_probability = correction["posterior"]
     elif epsilon_kl is not None:
         raise ValueError("epsilon_kl without correction reference is undefined")
+
+    if abs(float(final_temperature) - 1.0) <= 1e-12:
+        calibrated_probability = corrected_probability
+    else:
+        log_probability = corrected_probability.clamp(min=1e-30).log()
+        calibrated_probability = masked_softmax(
+            log_probability / float(final_temperature),
+            base["candidate_mask"],
+        )
 
     component_location, component_scale = model._candidate_components(
         embedding,
         base["candidate_indices"],
     )
     component_scale = component_scale * float(scale_multiplier)
-    # Point decisions are inference outputs, not training objectives.
-    with torch.no_grad():
-        gm = weighted_component_geometric_median(
-            final_probability.detach(),
-            component_location.detach(),
-            mask=base["candidate_mask"],
-        )
-        mean = torch.sum(
-            final_probability.detach().unsqueeze(2)
-            * component_location.detach(),
-            dim=1,
-        )
 
     result = {
-        "coords": gm,
-        "geometric_median": gm,
-        "posterior_mean": mean,
         "candidate_indices": base["candidate_indices"],
         "candidate_mask": base["candidate_mask"],
         "natural_support_size": support["natural_size"],
         "base_probability": base_probability,
-        "candidate_weights": final_probability,
+        "corrected_probability": corrected_probability,
+        "candidate_weights": calibrated_probability,
         "component_locations": component_location,
         "component_scales": component_scale,
         "invariant_logits": invariant_logits,
@@ -1201,3 +1204,43 @@ def v184_predict(
             }
         )
     return result
+
+
+def v184_predict(
+    model: TrustRegionAnchorModel,
+    rss: torch.Tensor,
+    *,
+    correction_reference: CorrectionReference | None = None,
+    epsilon_kl: float | None = None,
+    final_temperature: float = 1.0,
+    scale_multiplier: float = 1.0,
+    config: Mapping[str, object] = V184_CONFIG,
+) -> dict[str, torch.Tensor]:
+    """Return full predictive mixture plus the frozen GM point decision."""
+
+    distribution = v184_distribution(
+        model,
+        rss,
+        correction_reference=correction_reference,
+        epsilon_kl=epsilon_kl,
+        final_temperature=final_temperature,
+        scale_multiplier=scale_multiplier,
+        config=config,
+    )
+    with torch.no_grad():
+        gm = weighted_component_geometric_median(
+            distribution["candidate_weights"].detach(),
+            distribution["component_locations"].detach(),
+            mask=distribution["candidate_mask"],
+        )
+        mean = torch.sum(
+            distribution["candidate_weights"].detach().unsqueeze(2)
+            * distribution["component_locations"].detach(),
+            dim=1,
+        )
+    return {
+        **distribution,
+        "coords": gm,
+        "geometric_median": gm,
+        "posterior_mean": mean,
+    }
