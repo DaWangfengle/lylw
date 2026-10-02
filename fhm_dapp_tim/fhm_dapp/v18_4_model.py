@@ -1166,15 +1166,18 @@ def v184_predict(
         base["candidate_indices"],
     )
     component_scale = component_scale * float(scale_multiplier)
-    gm = weighted_component_geometric_median(
-        final_probability,
-        component_location,
-        mask=base["candidate_mask"],
-    )
-    mean = torch.sum(
-        final_probability.unsqueeze(2) * component_location,
-        dim=1,
-    )
+    # Point decisions are inference outputs, not training objectives.
+    with torch.no_grad():
+        gm = weighted_component_geometric_median(
+            final_probability.detach(),
+            component_location.detach(),
+            mask=base["candidate_mask"],
+        )
+        mean = torch.sum(
+            final_probability.detach().unsqueeze(2)
+            * component_location.detach(),
+            dim=1,
+        )
 
     result = {
         "coords": gm,
