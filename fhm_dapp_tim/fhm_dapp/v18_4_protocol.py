@@ -321,6 +321,10 @@ def prepare_manifest(data_root: Path = DATA_ROOT) -> dict[str, object]:
         "datasets": datasets,
         "tuji1_cross_device_protocol": {
             "devices": ["A12", "POCO", "S20", "S7", "tabS7"],
+            "role_seeds": {
+                key: int(value)
+                for key, value in TUJI_LODO_ROLE_SEEDS.items()
+            },
             "rule": (
                 "five leave-one-device-out evaluations: build AP dictionary "
                 "and fit on four devices' training scans; evaluate held-out "
