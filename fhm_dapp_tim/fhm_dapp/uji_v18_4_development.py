@@ -131,6 +131,21 @@ def _set_seed(seed: int) -> None:
         torch.backends.cudnn.deterministic = True
 
 
+def _repo_relative(path: str | Path) -> str:
+    resolved = Path(path).resolve()
+    try:
+        return str(resolved.relative_to(REPO_ROOT))
+    except ValueError as exc:
+        raise ValueError(
+            f"formal V18.4 artifact must live under repository root: {resolved}"
+        ) from exc
+
+
+def _resolve_repo_path(value: str | Path) -> Path:
+    path = Path(value)
+    return path if path.is_absolute() else (REPO_ROOT / path).resolve()
+
+
 def _sha256_file(path: str | Path) -> str:
     h = hashlib.sha256()
     with Path(path).open("rb") as handle:
@@ -241,7 +256,7 @@ def prepare(
             "validationData is pre-exposed and is not opened by this protocol"
         ),
         "official_validation_opened": False,
-        "train_path": str(path),
+        "train_path": _repo_relative(path),
         "train_sha256": _sha256_file(path),
         "training_rows": int(len(data.coords_m)),
         "training_coordinate_groups": int(len(set(keys))),
@@ -264,7 +279,7 @@ def load_registry(path: str | Path = DEFAULT_REGISTRY) -> dict:
         omit="registry_sha256",
     ):
         raise ValueError("V18.4 UJI registry self-hash mismatch")
-    train = Path(registry["train_path"])
+    train = _resolve_repo_path(registry["train_path"])
     if _sha256_file(train) != registry["train_sha256"]:
         raise ValueError("UJI trainingData SHA no longer matches registry")
     if registry.get("official_validation_opened") is not False:
@@ -275,7 +290,7 @@ def load_registry(path: str | Path = DEFAULT_REGISTRY) -> dict:
 def _load_registered_data(
     registry: Mapping[str, object],
 ) -> tuple[CanonicalFingerprintData, dict[str, np.ndarray]]:
-    path = Path(str(registry["train_path"]))
+    path = _resolve_repo_path(str(registry["train_path"]))
     data, _reference = load_uji("train", data_root=path.parents[1])
     rows = {}
     for name, record in registry["roles"].items():
@@ -1163,7 +1178,7 @@ def develop(
                     "lambda_ot": float(lambda_ot),
                     "epsilon_kl": float(epsilon),
                     "selected_epoch": int(checkpoint["selected_epoch"]),
-                    "checkpoint_path": str(checkpoint_path.resolve()),
+                    "checkpoint_path": _repo_relative(checkpoint_path),
                     "checkpoint_sha256": checkpoint_sha,
                     **metrics,
                 }
