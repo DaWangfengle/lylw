@@ -207,17 +207,30 @@ Zero-weight padding never counts as a positive target.
 
 Before model implementation, repository data were statically audited.
 
-With the 80 primary proposal quota, the largest observed required capacities
-are:
+With the conservative 80 primary proposal quota before deduplication, the
+uploaded repository data were audited on the actual registered roles.
 
-- UJI full training: 80 + 18 = 98;
-- UTS full training: 80 + 19 = 99;
-- Tampere full training: 80 + 12 = 92;
-- TUJI1 full training: 80 + 15 = 95;
-- all five TUJI1 leave-one-device-out pools: at most 95.
+Full-training maxima are:
 
-Thus L_max=128 leaves at least 29 slots in every registered geometry audited
-before outcome evaluation.
+- UJI: 80 + 18 = 98;
+- UTS: 80 + 19 = 99;
+- Tampere: 80 + 12 = 92;
+- pooled TUJI1: 80 + 15 = 95.
+
+Across the roles that are actually optimized:
+
+- every fit role, including all five TUJI1 LODO fits, requires at most 95;
+- every selection_refit role requires at most 97;
+- the worst full-training audit is UTS at 99.
+
+Therefore L_max=128 leaves at least:
+
+- 33 slots on every fit role;
+- 31 slots on every selection_refit role;
+- 29 slots over every audited full-training geometry.
+
+The five TUJI1 LODO audits use their registered held-out-device-specific role
+seeds and audit fit, selection_refit, and full-training separately.
 
 If future data violate this contract, the run fails closed before training.
 
