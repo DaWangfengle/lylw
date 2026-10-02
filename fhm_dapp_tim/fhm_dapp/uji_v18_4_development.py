@@ -1053,6 +1053,31 @@ def _evaluate_corrected_grid(
     return result
 
 
+def select_method_record(
+    records: Sequence[Mapping[str, object]],
+) -> dict:
+    """Apply the frozen 9-combination lexicographic selection law."""
+
+    if not records:
+        raise ValueError("method records cannot be empty")
+    best_energy = min(float(record["energy_score_m"]) for record in records)
+    shortlist = [
+        dict(record)
+        for record in records
+        if float(record["energy_score_m"])
+        <= best_energy + ENERGY_SHORTLIST_MARGIN_M
+    ]
+    return min(
+        shortlist,
+        key=lambda record: (
+            float(record["gm_mae_m"]),
+            float(record["nll"]),
+            float(record["lambda_ot"]),
+            float(record["epsilon_kl"]),
+        ),
+    )
+
+
 def develop(
     *,
     registry_path: str | Path = DEFAULT_REGISTRY,
@@ -1144,25 +1169,7 @@ def develop(
                 }
             )
 
-    best_energy = min(
-        float(record["energy_score_m"])
-        for record in method_records
-    )
-    shortlist = [
-        record
-        for record in method_records
-        if float(record["energy_score_m"])
-        <= best_energy + ENERGY_SHORTLIST_MARGIN_M
-    ]
-    selected = min(
-        shortlist,
-        key=lambda record: (
-            float(record["gm_mae_m"]),
-            float(record["nll"]),
-            float(record["lambda_ot"]),
-            float(record["epsilon_kl"]),
-        ),
-    )
+    selected = select_method_record(method_records)
 
     payload = {
         "protocol_version": PROTOCOL_VERSION,
