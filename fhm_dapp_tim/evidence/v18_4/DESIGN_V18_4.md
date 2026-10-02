@@ -56,6 +56,36 @@ The deployed model has:
 
 Multiple training seeds are stability diagnostics only.
 
+### 3.1 Frozen learned-backbone configuration
+
+The registered learned backbone is:
+
+- d_model = 128;
+- attention heads = 4;
+- Transformer layers = 2;
+- max_visible = 64;
+- dropout = 0.10;
+- bounded maximal-invariant scan representation;
+- one summary-mode learned candidate reranker;
+- no prototype metric hidden inside neural retrieval;
+- Student-t degrees of freedom = 4;
+- minimum residual scale = 0.25 m;
+- maximum local residual = 30 m.
+
+Training uses:
+
+- batch size = 64;
+- AdamW learning rate = 3e-4;
+- weight decay = 1e-4;
+- gradient clip = 5;
+- maximum epochs = 60;
+- epochs 1--11 ineligible for selection;
+- RSS offset augmentation = 4 dB standard deviation;
+- RSS gain augmentation standard deviation = 0.08;
+- AP dropout = 0.10.
+
+These values are frozen before V18.4 UJI development outcomes are observed.
+
 ## 4. Multi-dataset scientific protocol
 
 ### 4.1 Canonical data layer
@@ -300,6 +330,18 @@ E_r_raw(a,x)
 is the profiled marked-radio energy.
 
 The radio energy is not converted into an independent posterior.
+
+The registered affine nuisance profiler uses:
+
+- 6 optimization steps;
+- nuisance learning rate = 0.20;
+- absolute normalized RSS offset bound = 0.20;
+- absolute log-gain bound = 0.25;
+- offset regularization weight = 0.10;
+- log-gain regularization weight = 0.10.
+
+Only the temporary per-scan offset/gain nuisance tensors receive gradients in
+this profiler.  Model parameters and anchor radio-memory fields are detached.
 
 ## 10. Geometry correction energy
 
