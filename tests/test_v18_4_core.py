@@ -248,6 +248,45 @@ def test_sinkhorn_has_finite_gradient_to_predicted_probability() -> None:
     assert float(logits.grad.abs().sum()) > 0.0
 
 
+
+def test_sinkhorn_padding_has_finite_gradient() -> None:
+    logits = torch.tensor(
+        [[1.0, 0.0, -1.0, -2.0]],
+        dtype=torch.float64,
+        requires_grad=True,
+    )
+    predicted_mask = torch.tensor([[True, True, True, False]])
+    probability = torch.softmax(
+        logits.masked_fill(~predicted_mask, float("-inf")),
+        dim=1,
+    )
+    coords = torch.tensor(
+        [[[0.0, 0.0], [2.0, 0.0], [8.0, 0.0], [999.0, 999.0]]],
+        dtype=torch.float64,
+    )
+    target = torch.tensor([[0.7, 0.3, 0.0]], dtype=torch.float64)
+    target_coords = torch.tensor(
+        [[[1.0, 0.0], [2.0, 0.0], [999.0, 999.0]]],
+        dtype=torch.float64,
+    )
+    target_mask = torch.tensor([[True, True, False]])
+    loss = spatial_sinkhorn_divergence(
+        probability,
+        coords,
+        target,
+        target_coords,
+        spatial_scale=2.0,
+        predicted_mask=predicted_mask,
+        target_mask=target_mask,
+        epsilon_ot=0.1,
+        iterations=60,
+    ).mean()
+    loss.backward()
+    assert logits.grad is not None
+    assert bool(torch.isfinite(logits.grad).all())
+    assert float(logits.grad[:, :3].abs().sum()) > 0.0
+
+
 def test_component_geometric_median_resists_far_low_mass() -> None:
     probability = torch.tensor(
         [[0.45, 0.45, 0.10]],
