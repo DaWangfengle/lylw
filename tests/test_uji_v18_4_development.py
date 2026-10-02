@@ -12,6 +12,7 @@ from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import (
     ENERGY_SHORTLIST_MARGIN_M,
     _canonical_sha,
     _coordinate_macro,
+    _pad_concat_support,
     load_registry,
     prepare,
     select_method_record,
@@ -23,6 +24,8 @@ def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path) -> None:
     registry = prepare(registry_path=registry_path)
 
     assert registry["official_validation_opened"] is False
+    assert len(registry["source_commit_sha"]) == 40
+    assert registry["tracked_source_dirty"] is False
     assert registry["train_path"] == "data/UJIndoorLoc/trainingData.csv"
     assert not Path(registry["train_path"]).is_absolute()
     assert registry["training_rows"] == 19937
@@ -54,6 +57,49 @@ def test_v184_registry_hash_fails_closed(tmp_path: Path) -> None:
         assert "self-hash" in str(exc)
     else:
         raise AssertionError("tampered registry must fail closed")
+
+
+
+def test_v184_variable_width_support_padding_is_inert() -> None:
+    first = torch.tensor(
+        [[0.7, 0.3], [1.0, 0.0]],
+        dtype=torch.float32,
+    )
+    second = torch.tensor(
+        [[0.5, 0.3, 0.2, 0.0]],
+        dtype=torch.float32,
+    )
+    probability = _pad_concat_support(
+        [first, second],
+        fill_value=0.0,
+    )
+    assert probability.shape == (3, 4)
+    assert torch.allclose(
+        probability.sum(dim=1),
+        torch.ones(3),
+    )
+    assert torch.all(probability[:2, 2:] == 0.0)
+
+    mask = _pad_concat_support(
+        [
+            torch.tensor([[True, True], [True, False]]),
+            torch.tensor([[True, True, True, False]]),
+        ],
+        fill_value=False,
+    )
+    assert mask.shape == (3, 4)
+    assert not bool(mask[0, 2:].any())
+    assert not bool(mask[1, 1:].any())
+
+    location = _pad_concat_support(
+        [
+            torch.zeros(2, 2, 2),
+            torch.ones(1, 4, 2),
+        ],
+        fill_value=0.0,
+    )
+    assert location.shape == (3, 4, 2)
+    assert torch.all(location[:2, 2:] == 0.0)
 
 
 def test_v184_method_selection_obeys_energy_shortlist_then_gm() -> None:
