@@ -752,6 +752,8 @@ def _evaluate_reserved_test(
     row_nll_values = []
     entropy = []
     support_size = []
+    pre_ceiling_size = []
+    truncation = []
     top1 = []
     rho = []
     realized_kl = []
@@ -826,6 +828,10 @@ def _evaluate_reserved_test(
             ent = _prediction_entropy(p)
             entropy.append(ent.cpu())
             support_size.append(mask.sum(dim=1).cpu())
+            pre_ceiling_size.append(
+                distribution["natural_pool_size_before_ceiling"].cpu()
+            )
+            truncation.append(distribution["natural_truncated"].cpu())
             top1.append(p.max(dim=1).values.cpu())
 
             rho.append(distribution["correction_rho"].cpu())
@@ -944,6 +950,12 @@ def _evaluate_reserved_test(
         "mean_top1_probability": float(torch.cat(top1).double().mean()),
         "mean_support_size": float(support.double().mean()),
         "support_size_p90": float(torch.quantile(support.double(), 0.90)),
+        "mean_natural_pool_size_before_ceiling": float(
+            torch.cat(pre_ceiling_size).double().mean()
+        ),
+        "natural_truncation_fraction": float(
+            torch.cat(truncation).double().mean()
+        ),
         "mean_between_anchor_rms_m": float(
             torch.cat(between_anchor_rms).double().mean()
         ),
