@@ -134,7 +134,7 @@ def _set_seed(seed: int) -> None:
 
 
 def _git_source_state() -> dict[str, object]:
-    """Return the exact tracked source revision; fail closed on tracked edits."""
+    """Return the exact tracked source revision; fail closed on staged or unstaged tracked edits."""
 
     try:
         sha = subprocess.check_output(
@@ -143,7 +143,7 @@ def _git_source_state() -> dict[str, object]:
             text=True,
         ).strip()
         dirty = subprocess.run(
-            ["git", "diff", "--quiet", "--"],
+            ["git", "diff", "--quiet", "HEAD", "--"],
             cwd=REPO_ROOT,
             check=False,
         ).returncode != 0
