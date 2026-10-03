@@ -183,6 +183,10 @@ def dataset_summary(data: CanonicalFingerprintData) -> dict[str, object]:
     data.validate()
     observed = np.isfinite(data.rss_dbm)
     visible_per_scan = observed.sum(axis=1)
+    observed_values = data.rss_dbm[observed]
+    clipped_to_missing_boundary = (
+        observed_values <= RSS_CLIP_MIN_DBM
+    )
     summary = {
         "dataset": data.dataset,
         "split": data.split,
@@ -194,6 +198,15 @@ def dataset_summary(data: CanonicalFingerprintData) -> dict[str, object]:
         "device_ids": sorted(map(int, np.unique(data.device))),
         "user_ids": sorted(map(int, np.unique(data.user))),
         "observed_fraction": float(observed.mean()),
+        "observed_rss_min_dbm": (
+            float(observed_values.min()) if observed_values.size else None
+        ),
+        "observed_rss_max_dbm": (
+            float(observed_values.max()) if observed_values.size else None
+        ),
+        "observed_values_at_or_below_clip_min": int(
+            clipped_to_missing_boundary.sum()
+        ),
         "visible_ap_mean": float(visible_per_scan.mean()),
         "visible_ap_min": int(visible_per_scan.min()),
         "visible_ap_max": int(visible_per_scan.max()),
