@@ -126,6 +126,12 @@ def test_v184_dynamic_support_uses_mask_and_preserves_forced_positive() -> None:
         support["candidate_mask"].sum(dim=1).max()
     )
     assert support["candidate_mask"].dtype == torch.bool
+    assert "natural_pool_size_before_ceiling" in support
+    assert "natural_truncated" in support
+    assert torch.all(
+        support["natural_pool_size_before_ceiling"]
+        >= support["natural_size"]
+    )
     for row in range(2):
         selected = set(
             support["candidate_indices"][row][
