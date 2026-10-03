@@ -67,7 +67,7 @@ Required properties:
 - all tests pass;
 - smoke status is success;
 - `official_validation_opened=false`;
-- `reserved_external_test_opened=false`;
+- `external_test_performance_used_for_v184_selection=false`;
 - finite gradients and predictions.
 
 Do not continue if any condition fails.
@@ -152,36 +152,10 @@ A valid freeze must retain:
 - the same source commit SHA as the registry;
 - linked registry/development/calibration/checkpoint SHA256 values;
 - `official_validation_opened=false`;
-- `reserved_external_test_opened=false`.
+- `external_test_performance_used_for_v184_selection=false`.
 
 ## After a successful freeze
 
-Only after all three stages succeed:
-
-```powershell
-git status --short
-git add fhm_dapp_tim/evidence/v18_4/uji_registry_v18_4.json
-git add fhm_dapp_tim/evidence/v18_4/uji_development_v18_4.json
-git add fhm_dapp_tim/evidence/v18_4/uji_calibration_v18_4.json
-git add fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json
-git add fhm_dapp_tim/models/v18_4/uji_lambda_0p10.pt
-git add fhm_dapp_tim/models/v18_4/uji_lambda_0p25.pt
-git add fhm_dapp_tim/models/v18_4/uji_lambda_0p50.pt
-git add fhm_dapp_tim/models/v18_4/uji_selection_refit.pt
-
-git commit -m "Record frozen V18.4 UJI development"
-git push
-```
-
-If model checkpoints exceed repository policy, keep the JSON evidence in Git
-and archive checkpoints separately without changing any JSON SHA256 values.
-
-## What happens next
-
-After the UJI freeze exists, UTSIndoorLoc, Tampere, pooled TUJI1, and the five
-TUJI1 leave-one-device-out protocols may be run with the frozen global
-lambda_OT / epsilon_KL / reliability / support / decoder law.
-
-Their provided test outcomes must not be opened before that freeze.
-Dataset-specific epoch selection and scalar calibration may use only each
-dataset's training-source development/calibration roles.
+Stop the experiment task after verifying the generated registry, development,
+calibration, freeze, and checkpoint hashes. Git staging/commit/push is outside
+this runbook and is handled separately by the user.
