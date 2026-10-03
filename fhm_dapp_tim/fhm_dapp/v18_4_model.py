@@ -517,6 +517,8 @@ def candidate_support(
     )
 
     natural_pool = primary_mask | geometry_mask
+    natural_pool_size_before_ceiling = natural_pool.sum(dim=1)
+    natural_truncated = natural_pool_size_before_ceiling > int(ceiling)
 
     # Source-normalized priority is used only to choose among optional geometry
     # candidates when the natural union is wider than the compute ceiling.
@@ -571,6 +573,8 @@ def candidate_support(
         "candidate_mask": candidate_mask,
         "natural_membership_mask": natural_membership,
         "natural_size": natural_size,
+        "natural_pool_size_before_ceiling": natural_pool_size_before_ceiling,
+        "natural_truncated": natural_truncated,
         "natural_candidate_indices": natural_indices,
         "natural_candidate_mask": natural_valid,
         "invariant_indices": inv_indices,
@@ -854,6 +858,12 @@ def v184_training_loss(
             target_weights,
         ).mean().detach(),
         "natural_support_size": natural["natural_size"].float().mean().detach(),
+        "natural_pool_size_before_ceiling": (
+            natural["natural_pool_size_before_ceiling"].float().mean().detach()
+        ),
+        "natural_truncation_fraction": (
+            natural["natural_truncated"].float().mean().detach()
+        ),
         "forced_support_size": forced["candidate_mask"].sum(dim=1).float().mean().detach(),
     }
 
@@ -1236,6 +1246,10 @@ def v184_distribution(
         "candidate_indices": base["candidate_indices"],
         "candidate_mask": base["candidate_mask"],
         "natural_support_size": support["natural_size"],
+        "natural_pool_size_before_ceiling": (
+            support["natural_pool_size_before_ceiling"]
+        ),
+        "natural_truncated": support["natural_truncated"],
         "base_probability": base_probability,
         "corrected_probability": corrected_probability,
         "candidate_weights": calibrated_probability,
