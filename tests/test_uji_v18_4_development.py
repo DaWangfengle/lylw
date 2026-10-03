@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import numpy as np
 import torch
@@ -12,11 +14,35 @@ from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import (
     ENERGY_SHORTLIST_MARGIN_M,
     _canonical_sha,
     _coordinate_macro,
+    _git_source_state,
     _pad_concat_support,
     load_registry,
     prepare,
     select_method_record,
 )
+
+
+def test_v184_source_state_checks_tracked_tree_against_head() -> None:
+    with patch(
+        "fhm_dapp_tim.fhm_dapp.uji_v18_4_development.subprocess.check_output",
+        return_value="a" * 40,
+    ), patch(
+        "fhm_dapp_tim.fhm_dapp.uji_v18_4_development.subprocess.run",
+        return_value=SimpleNamespace(returncode=1),
+    ) as run:
+        try:
+            _git_source_state()
+        except RuntimeError as exc:
+            assert "tracked working-tree modifications" in str(exc)
+        else:
+            raise AssertionError("tracked source difference must fail closed")
+        assert run.call_args.args[0] == [
+            "git",
+            "diff",
+            "--quiet",
+            "HEAD",
+            "--",
+        ]
 
 
 def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path) -> None:
