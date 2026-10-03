@@ -1,4 +1,4 @@
-name: V18.4 dataset audit
+name: V18.4 training-data audit
 
 on:
   push:
@@ -27,17 +27,17 @@ jobs:
           python -m py_compile tests/test_v18_4_protocol.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_capacity_audit.py
           python -m py_compile tests/test_v18_4_capacity_audit.py
-      - name: Audit repository datasets
+      - name: Audit training sources only
         run: |
           python fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py --output /tmp/v18_4_dataset_audit.json
           echo "AUDIT_JSON_BEGIN"
           cat /tmp/v18_4_dataset_audit.json
           echo "AUDIT_JSON_END"
 
-      - name: Run canonical adapter tests on uploaded datasets
+      - name: Run training-only canonical adapter tests
         run: |
           python -m pytest -q tests/test_v18_4_datasets.py
-      - name: Print canonical dataset summary
+      - name: Print training-only canonical dataset summary
         run: |
           echo "CANONICAL_SUMMARY_BEGIN"
           python fhm_dapp_tim/fhm_dapp/v18_4_datasets.py
