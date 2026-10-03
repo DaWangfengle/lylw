@@ -79,6 +79,8 @@ from fhm_dapp_tim.fhm_dapp.v18_4_protocol import (
 
 
 PROTOCOL_VERSION = "uji_v18_4_development_v1_20261002"
+UJI_OFFICIAL_VALIDATION_PREEXPOSED = True
+EXTERNAL_PROVIDED_TESTS_PREEXPOSED_FOR_ADAPTER_VALIDATION = True
 MODEL_SEED = 184411
 SCORING_SEED = 184412
 PREDICTIVE_DRAWS = 64
@@ -289,10 +291,20 @@ def prepare(
         "protocol_version": PROTOCOL_VERSION,
         **source_state,
         "scientific_status": (
-            "UJI is a V18.4 method-development benchmark; official "
-            "validationData is pre-exposed and is not opened by this protocol"
+            "UJI is the V18.4 method-development benchmark. Its official "
+            "validationData was pre-exposed by earlier work but is not used "
+            "for V18.4 method selection. External provided tests were also "
+            "pre-exposed for adapter compatibility before method freeze, but "
+            "their performance outcomes are not used for V18.4 selection."
         ),
-        "official_validation_opened": False,
+        "uji_official_validation_preexposed": (
+            UJI_OFFICIAL_VALIDATION_PREEXPOSED
+        ),
+        "uji_official_validation_used_for_v184_selection": False,
+        "external_provided_tests_preexposed_for_adapter_validation": (
+            EXTERNAL_PROVIDED_TESTS_PREEXPOSED_FOR_ADAPTER_VALIDATION
+        ),
+        "external_test_performance_used_for_v184_selection": False,
         "train_path": _repo_relative(path),
         "train_sha256": _sha256_file(path),
         "training_rows": int(len(data.coords_m)),
@@ -319,8 +331,19 @@ def load_registry(path: str | Path = DEFAULT_REGISTRY) -> dict:
     train = _resolve_repo_path(registry["train_path"])
     if _sha256_file(train) != registry["train_sha256"]:
         raise ValueError("UJI trainingData SHA no longer matches registry")
-    if registry.get("official_validation_opened") is not False:
-        raise ValueError("registry does not preserve official-validation boundary")
+    if registry.get("uji_official_validation_preexposed") is not True:
+        raise ValueError("registry must record UJI pre-exposure honestly")
+    if registry.get("uji_official_validation_used_for_v184_selection") is not False:
+        raise ValueError("UJI official validation cannot enter V18.4 selection")
+    if (
+        registry.get(
+            "external_provided_tests_preexposed_for_adapter_validation"
+        )
+        is not True
+    ):
+        raise ValueError("registry must record external adapter pre-exposure")
+    if registry.get("external_test_performance_used_for_v184_selection") is not False:
+        raise ValueError("external test performance cannot enter V18.4 selection")
     return registry
 
 
@@ -1265,13 +1288,17 @@ def develop(
     payload = {
         "protocol_version": PROTOCOL_VERSION,
         "scientific_status": (
-            "UJI trainingData development only; no official validation or "
-            "external provided test accessed"
+            "V18.4 method selection uses UJI trainingData roles only. "
+            "UJI official validation and external provided tests are "
+            "pre-exposed from earlier compatibility/version work but their "
+            "performance outcomes do not enter this selection."
         ),
         "registry_sha256": registry["registry_sha256"],
         "source_commit_sha": registry["source_commit_sha"],
-        "official_validation_opened": False,
-        "reserved_external_test_opened": False,
+        "uji_official_validation_preexposed": True,
+        "uji_official_validation_used_for_v184_selection": False,
+        "external_provided_tests_preexposed_for_adapter_validation": True,
+        "external_test_performance_used_for_v184_selection": False,
         "selection_rule": (
             "min Energy Score; <=0.05m shortlist; min GM MAE; min NLL; "
             "smaller lambda_OT; smaller epsilon_KL"
@@ -1661,8 +1688,10 @@ def calibrate_freeze(
         "selected_metrics": selected_metrics,
         "rows": int(len(rows["calibration"])),
         "coordinate_groups": int(len(set(keys))),
-        "official_validation_opened": False,
-        "reserved_external_test_opened": False,
+        "uji_official_validation_preexposed": True,
+        "uji_official_validation_used_for_v184_selection": False,
+        "external_provided_tests_preexposed_for_adapter_validation": True,
+        "external_test_performance_used_for_v184_selection": False,
         "runtime_seconds": float(time.perf_counter() - started),
     }
     calibration["calibration_result_sha256"] = _canonical_sha(calibration)
@@ -1671,9 +1700,12 @@ def calibrate_freeze(
     freeze = {
         "protocol_version": PROTOCOL_VERSION,
         "scientific_status": (
-            "V18.4 global method law frozen from UJI trainingData development; "
-            "UJI official validation remains pre-exposed and unopened here; "
-            "UTS/Tampere/TUJI provided tests remain reserved"
+            "V18.4 global method law is frozen from UJI trainingData roles "
+            "only. UJI official validation and UTS/Tampere/TUJI provided "
+            "tests were pre-exposed before freeze for earlier-version or "
+            "adapter-compatibility work, so they are not blind confirmation "
+            "sets. Their performance outcomes remain excluded from V18.4 "
+            "method selection."
         ),
         "registry_sha256": registry["registry_sha256"],
         "source_commit_sha": registry["source_commit_sha"],
@@ -1695,8 +1727,10 @@ def calibrate_freeze(
         ),
         "decoder": "posterior_weighted_component_center_geometric_median",
         "model_config": _config_json(),
-        "official_validation_opened": False,
-        "reserved_external_test_opened": False,
+        "uji_official_validation_preexposed": True,
+        "uji_official_validation_used_for_v184_selection": False,
+        "external_provided_tests_preexposed_for_adapter_validation": True,
+        "external_test_performance_used_for_v184_selection": False,
     }
     freeze["freeze_sha256"] = _canonical_sha(freeze)
     _write_json_new(freeze_path, freeze)
