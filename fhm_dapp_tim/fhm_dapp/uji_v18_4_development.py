@@ -1267,7 +1267,7 @@ def develop(
             row_indices=rows["development"],
             device=device,
         )
-        report["checkpoint_path"] = str(checkpoint_path.resolve())
+        report["checkpoint_path"] = _repo_relative(checkpoint_path)
         report["checkpoint_sha256"] = checkpoint_sha
         report["correction_reference"] = {
             "radio_energy_scale": float(reference.radio_energy_scale),
