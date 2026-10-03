@@ -464,6 +464,8 @@ def _evaluate_base(
     effective = []
     top1 = []
     support_size = []
+    pre_ceiling_size = []
+    truncation = []
 
     with torch.no_grad():
         for start in range(0, len(row_indices), int(batch_size)):
@@ -510,6 +512,12 @@ def _evaluate_base(
             support_size.append(
                 distribution["candidate_mask"].sum(dim=1).cpu()
             )
+            pre_ceiling_size.append(
+                distribution["natural_pool_size_before_ceiling"].cpu()
+            )
+            truncation.append(
+                distribution["natural_truncated"].cpu()
+            )
             if include_gm:
                 gm = weighted_component_geometric_median(
                     probability,
@@ -539,6 +547,12 @@ def _evaluate_base(
         "mean_top1_probability": float(torch.cat(top1).double().mean()),
         "mean_support_size": float(
             torch.cat(support_size).double().mean()
+        ),
+        "mean_natural_pool_size_before_ceiling": float(
+            torch.cat(pre_ceiling_size).double().mean()
+        ),
+        "natural_truncation_fraction": float(
+            torch.cat(truncation).double().mean()
         ),
         "coordinate_groups": int(len(set(keys))),
         "rows": int(len(row_indices)),
@@ -1396,6 +1410,8 @@ def _cache_corrected_distribution(
     mask = []
     location = []
     scale = []
+    pre_ceiling_size = []
+    truncation = []
     batch_size = int(V184_CONFIG["batch_size"])
     model.eval()
     for start in range(0, len(row_indices), batch_size):
@@ -1415,11 +1431,17 @@ def _cache_corrected_distribution(
         mask.append(distribution["candidate_mask"].cpu())
         location.append(distribution["component_locations"].detach().cpu())
         scale.append(distribution["component_scales"].detach().cpu())
+        pre_ceiling_size.append(
+            distribution["natural_pool_size_before_ceiling"].cpu()
+        )
+        truncation.append(distribution["natural_truncated"].cpu())
     return {
         "probability": _pad_concat_support(probability, fill_value=0.0),
         "mask": _pad_concat_support(mask, fill_value=False),
         "location": _pad_concat_support(location, fill_value=0.0),
         "scale": _pad_concat_support(scale, fill_value=1.0),
+        "natural_pool_size_before_ceiling": torch.cat(pre_ceiling_size),
+        "natural_truncated": torch.cat(truncation),
     }
 
 
@@ -1535,6 +1557,12 @@ def _selected_calibration_metrics(
         "mean_top1_probability": float(p.max(dim=1).values.double().mean()),
         "mean_gm_displacement_from_mean_m": float(
             mean_gm_displacement.double().mean()
+        ),
+        "mean_natural_pool_size_before_ceiling": float(
+            cache["natural_pool_size_before_ceiling"].double().mean()
+        ),
+        "natural_truncation_fraction": float(
+            cache["natural_truncated"].double().mean()
         ),
         "tail_mass": {},
     }
