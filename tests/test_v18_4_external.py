@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import _canonical_sha
 from fhm_dapp_tim.fhm_dapp.v18_4_external import (
@@ -32,6 +34,29 @@ def _fake_uji_freeze(path: Path) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def test_external_current_head_checks_tracked_tree_against_head() -> None:
+    with patch(
+        "fhm_dapp_tim.fhm_dapp.v18_4_external.subprocess.check_output",
+        return_value="b" * 40,
+    ), patch(
+        "fhm_dapp_tim.fhm_dapp.v18_4_external.subprocess.run",
+        return_value=SimpleNamespace(returncode=1),
+    ) as run:
+        try:
+            _current_head()
+        except RuntimeError as exc:
+            assert "tracked working-tree changes" in str(exc)
+        else:
+            raise AssertionError("tracked source difference must fail closed")
+        assert run.call_args.args[0] == [
+            "git",
+            "diff",
+            "--quiet",
+            "HEAD",
+            "--",
+        ]
 
 
 def test_external_specs_register_all_reserved_protocols() -> None:
