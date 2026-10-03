@@ -135,12 +135,18 @@ UJIIndoorLoc is the global method-development benchmark. Its official
 validation file has already been exposed by earlier versions and is descriptive
 only.
 
-UTSIndoorLoc, Tampere, and TUJI1 provided test splits are reserved from
-performance evaluation and model selection until the V18.4 method law and
-global method hyperparameters are frozen.
+UTSIndoorLoc, Tampere, and TUJI1 provided test splits were pre-exposed during
+early V18.4 adapter/schema compatibility validation: their RSS/coordinate
+content was canonicalized and summarized by CI before the formal method freeze.
 
-Their schemas have already been inspected; they are therefore described as
-reserved outcome test sets, not as completely untouched/blind files.
+Therefore they are NOT blind confirmation sets and V18.4 must never describe
+their later evaluation as first semantic access.  The protected claim is
+narrower and auditable: their performance outcomes are excluded from V18.4
+method/hyperparameter selection, and formal performance scoring is performed
+only after the UJI method law is frozen.
+
+After this audit correction, default dataset CI is training-only and no longer
+re-opens those evaluation splits.
 
 ### 4.4 TUJI1 device shift
 
@@ -687,9 +693,10 @@ Prepare and fit-freeze access only the dataset training source. They may:
 
 They may not alter any global method hyperparameter.
 
-The evaluate-test command is separate. Before the first semantic access to a
-provided test outcome it writes an irreversible consumption lock. If that lock
-already exists, rerun is forbidden.
+The evaluate-test command is separate. Because provided tests are already
+pre-exposed for adapter compatibility, the lock does not represent first
+semantic access. It represents the start of the first formal frozen-model
+performance evaluation. If that lock already exists, rerun is forbidden.
 
 Before the lock is written, the implementation verifies:
 
@@ -702,7 +709,7 @@ Before the lock is written, the implementation verifies:
   prototype scan.
 
 Thus ordinary device/checkpoint failures cannot unnecessarily consume the
-one-shot test evaluation.
+one-shot formal performance evaluation.
 
 ### 21.2 External source compatibility
 
@@ -721,13 +728,16 @@ Each TUJI1 MAT file physically contains both results_train and results_test.
 Therefore reading results_train necessarily reads the MAT container bytes.
 V18.4 does not claim that the TUJI1 test files are byte-level untouched.
 
-The protected boundary is semantic outcome access:
+The protected boundary is formal performance use, not historical semantic
+access:
 
-- before the test-consumption lock, only results_train is selected and used;
-- results_test is not selected, decoded into the canonical test dataset, scored,
-  or used for model/calibration decisions;
-- the first semantic results_test access occurs only after the irreversible
-  evaluate-test lock.
+- the TUJI results_test field was already inspected during adapter-validation
+  CI before formal method freeze;
+- formal training still selects and uses only results_train;
+- results_test is never used for model, epoch, calibration, or global
+  hyperparameter selection;
+- formal frozen-model scoring of results_test occurs only after the
+  irreversible evaluate-test performance lock.
 
 ### 21.4 TUJI1 leave-one-device-out roles
 
@@ -802,7 +812,8 @@ Do not claim:
 - exponential tilting itself is novel;
 - geometric median was numerically the best decoder in the V18.3 probe;
 - UJI official validation is blind;
-- provided UTS/Tampere/TUJI tests were never inspected at schema level;
+- provided UTS/Tampere/TUJI tests are blind or were never semantically
+  inspected before method freeze;
 - early-stop and calibration from V18.3 were independent external validations;
 - no backward operation occurred in the V18.4 decoder probe.
 
@@ -822,7 +833,7 @@ V18.4 implementation proceeds in this fixed order:
 6. UJI nine-combination method development;
 7. selection refit and scalar predictive calibration;
 8. frozen multi-dataset training;
-9. one-shot reserved test evaluations;
+9. one-shot formal performance evaluations on pre-exposed provided tests;
 10. causal ablations and final reporting without changing the frozen full model.
 
 Steps 1-3 are complete and CI-verified before the main model is implemented.
