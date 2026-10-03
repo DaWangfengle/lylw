@@ -49,7 +49,13 @@ def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path) -> None:
     registry_path = tmp_path / "registry.json"
     registry = prepare(registry_path=registry_path)
 
-    assert registry["official_validation_opened"] is False
+    assert registry["uji_official_validation_preexposed"] is True
+    assert registry["uji_official_validation_used_for_v184_selection"] is False
+    assert (
+        registry["external_provided_tests_preexposed_for_adapter_validation"]
+        is True
+    )
+    assert registry["external_test_performance_used_for_v184_selection"] is False
     assert len(registry["source_commit_sha"]) == 40
     assert registry["tracked_source_dirty"] is False
     assert registry["train_path"] == "data/UJIndoorLoc/trainingData.csv"
