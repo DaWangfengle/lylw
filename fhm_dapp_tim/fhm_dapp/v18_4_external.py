@@ -10,13 +10,19 @@ For each external protocol this module enforces two gates:
    selection and scalar calibration use only training-derived roles.
 
 2. evaluate-test:
-   the provided test outcome is accessed once, only after a dataset-specific
-   training freeze exists. An irreversible consumption lock is written before
-   semantic access to the test split.
+   the pre-exposed provided test benchmark is formally performance-evaluated
+   only after a dataset-specific training freeze exists. An irreversible
+   performance-evaluation lock is written before scoring.
 
-TUJI1 stores results_train and results_test in the same MAT containers. Reading
-training scans necessarily opens the container bytes, but the results_test
-field is not semantically accessed before the evaluate-test lock.
+The provided UTS/Tampere/TUJI evaluation splits were already pre-exposed during
+earlier adapter/schema validation, so this framework does not claim blind or
+first semantic access. It guarantees only that their performance outcomes do
+not enter V18.4 method selection and that formal scoring occurs once after
+freeze.
+
+TUJI1 stores results_train and results_test in the same MAT containers. Formal
+training uses only results_train; formal performance scoring of results_test is
+gated by the evaluation lock.
 """
 
 from __future__ import annotations
@@ -202,10 +208,17 @@ def load_uji_method_freeze(
         omit="freeze_sha256",
     ):
         raise ValueError("UJI method freeze self-hash mismatch")
-    if freeze.get("official_validation_opened") is not False:
-        raise ValueError("UJI freeze violated official-validation boundary")
-    if freeze.get("reserved_external_test_opened") is not False:
-        raise ValueError("external tests were already marked opened in UJI freeze")
+    if freeze.get("uji_official_validation_preexposed") is not True:
+        raise ValueError("UJI freeze must record validation pre-exposure")
+    if freeze.get("uji_official_validation_used_for_v184_selection") is not False:
+        raise ValueError("UJI validation cannot enter V18.4 method selection")
+    if (
+        freeze.get("external_provided_tests_preexposed_for_adapter_validation")
+        is not True
+    ):
+        raise ValueError("UJI freeze must record external adapter pre-exposure")
+    if freeze.get("external_test_performance_used_for_v184_selection") is not False:
+        raise ValueError("external test performance cannot enter V18.4 selection")
     if float(freeze["lambda_ot"]) not in {
         float(value) for value in V184_CONFIG["lambda_ot_grid"]
     }:
@@ -417,7 +430,8 @@ def prepare_external(
         "training_coordinate_groups": int(len(set(coordinate_keys(data)))),
         "aps": int(len(data.ap_ids)),
         "roles": roles,
-        "test_outcome_semantically_accessed": False,
+        "provided_test_preexposed_for_adapter_validation": True,
+        "formal_test_performance_evaluated": False,
     }
     manifest["manifest_sha256"] = _canonical_sha(manifest)
     _write_json_new(destination, manifest)
@@ -446,8 +460,10 @@ def load_external_manifest(
         path_value = REPO_ROOT / str(record["path"])
         if _sha256_file(path_value) != record["sha256"]:
             raise ValueError("external training source hash changed")
-    if manifest.get("test_outcome_semantically_accessed") is not False:
-        raise ValueError("external manifest already marks test outcome access")
+    if manifest.get("provided_test_preexposed_for_adapter_validation") is not True:
+        raise ValueError("external manifest must record adapter pre-exposure")
+    if manifest.get("formal_test_performance_evaluated") is not False:
+        raise ValueError("external manifest already marks formal performance use")
     return manifest
 
 
@@ -640,8 +656,9 @@ def fit_freeze_external(
             "selected": selected_calibration,
             **calibration_report,
         },
-        "test_outcome_semantically_accessed": False,
-        "test_consumption_lock_written": False,
+        "provided_test_preexposed_for_adapter_validation": True,
+        "formal_test_performance_evaluated": False,
+        "formal_test_performance_lock_written": False,
     }
     freeze["training_freeze_sha256"] = _canonical_sha(freeze)
     _write_json_new(destination_freeze, freeze)
@@ -669,8 +686,10 @@ def load_external_training_freeze(
     checkpoint = REPO_ROOT / str(freeze["checkpoint_path"])
     if _sha256_file(checkpoint) != freeze["checkpoint_sha256"]:
         raise ValueError("external checkpoint SHA mismatch")
-    if freeze.get("test_outcome_semantically_accessed") is not False:
-        raise ValueError("external training freeze already marks test access")
+    if freeze.get("provided_test_preexposed_for_adapter_validation") is not True:
+        raise ValueError("external training freeze must record adapter pre-exposure")
+    if freeze.get("formal_test_performance_evaluated") is not False:
+        raise ValueError("external training freeze already marks formal test use")
     return freeze
 
 
@@ -994,12 +1013,12 @@ def evaluate_test_once(
     destination_result = Path(result_path or defaults["result"])
     if destination_lock.exists():
         raise RuntimeError(
-            "external test consumption lock already exists; rerun is forbidden"
+            "external formal-performance lock already exists; rerun is forbidden"
         )
     if destination_result.exists():
         raise FileExistsError(destination_result)
 
-    # Complete every check possible before semantic test access.
+    # Complete every check possible before formal performance scoring.
     for path in _test_paths(spec):
         if not path.exists():
             raise FileNotFoundError(path)
@@ -1027,7 +1046,7 @@ def evaluate_test_once(
     # Exercise the complete frozen posterior path on one training-derived
     # prototype scan before the irreversible test lock. This catches device,
     # checkpoint, radio-profiler and calibration-map failures without touching
-    # a provided test outcome.
+    # formal performance scoring.
     preflight_rss = model.prototype_rss[:1].detach()
     preflight = v184_distribution(
         model,
@@ -1065,14 +1084,15 @@ def evaluate_test_once(
         "execution_source_commit_sha": train_freeze[
             "execution_source_commit_sha"
         ],
-        "test_outcome_semantic_access_started": True,
+        "provided_test_preexposed_for_adapter_validation": True,
+        "formal_test_performance_evaluation_started": True,
         "started_utc": datetime.now(timezone.utc).isoformat(),
         "rerun_after_lock_forbidden": True,
     }
     lock["lock_sha256"] = _canonical_sha(lock)
     _write_json_new(destination_lock, lock)
 
-    # First semantic access to the provided test split occurs only after lock.
+    # Formal performance scoring occurs only after the irreversible lock.
     test = _load_test(spec, reference)
     test_files = _file_manifest(_test_paths(spec))
 
@@ -1114,6 +1134,8 @@ def evaluate_test_once(
                 "posterior_weighted_component_center_geometric_median"
             ),
         },
+        "provided_test_preexposed_for_adapter_validation": True,
+        "formal_test_performance_evaluated": True,
         "no_post_test_retuning_permitted": True,
     }
     result["result_sha256"] = _canonical_sha(result)
