@@ -115,8 +115,17 @@ def summarize_mat_value(value: Any, *, depth: int = 0) -> dict[str, Any]:
     return {"python_type": type(value).__name__}
 
 
-def audit_mat(path: Path) -> dict[str, Any]:
-    payload = loadmat(path, squeeze_me=True, struct_as_record=False)
+def audit_mat(
+    path: Path,
+    *,
+    variable_names: list[str] | None = None,
+) -> dict[str, Any]:
+    payload = loadmat(
+        path,
+        squeeze_me=True,
+        struct_as_record=False,
+        variable_names=variable_names,
+    )
     variables = {}
     for key, value in payload.items():
         if key.startswith("__"):
@@ -175,6 +184,50 @@ def audit_csv(path: Path) -> dict[str, Any]:
     return report
 
 
+TRAINING_ONLY_FILES: dict[str, tuple[str, ...]] = {
+    "UJIndoorLoc": ("trainingData.csv",),
+    "UTSIndoorLoc": ("UTS_training.csv",),
+    "Tampere": ("Training_rss.csv", "Training_coordinates.csv"),
+    "TUJI1": (
+        "Formatted_data_A12.mat",
+        "Formatted_data_POCO.mat",
+        "Formatted_data_S20.mat",
+        "Formatted_data_S7.mat",
+        "Formatted_data_tabS7.mat",
+    ),
+}
+
+
+def audit_training_tree(data_root: Path) -> dict[str, Any]:
+    """Audit training sources only; TUJI MAT loads results_train only."""
+
+    datasets: dict[str, Any] = {}
+    for dataset, names in TRAINING_ONLY_FILES.items():
+        directory = data_root / dataset
+        files: dict[str, Any] = {}
+        for name in names:
+            path = directory / name
+            if not path.exists():
+                raise FileNotFoundError(path)
+            suffix = path.suffix.lower()
+            if suffix == ".csv":
+                files[name] = audit_csv(path)
+            elif suffix == ".mat":
+                files[name] = audit_mat(
+                    path,
+                    variable_names=["results_train"],
+                )
+            else:
+                raise ValueError(f"unsupported training source: {path}")
+        datasets[dataset] = {"files": files}
+    return {
+        "audit_version": "v18_4_multidataset_training_only_audit_v2",
+        "audit_scope": "training_only",
+        "data_root": str(data_root),
+        "datasets": datasets,
+    }
+
+
 def audit_tree(data_root: Path) -> dict[str, Any]:
     datasets = {}
     for directory in sorted(p for p in data_root.iterdir() if p.is_dir()):
@@ -203,8 +256,20 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-root", default=str(DEFAULT_DATA))
     parser.add_argument("--output")
+    parser.add_argument(
+        "--include-preexposed-evaluation",
+        action="store_true",
+        help=(
+            "explicit historical compatibility audit; formal preparation "
+            "must leave this disabled"
+        ),
+    )
     args = parser.parse_args()
-    report = audit_tree(Path(args.data_root))
+    report = (
+        audit_tree(Path(args.data_root))
+        if args.include_preexposed_evaluation
+        else audit_training_tree(Path(args.data_root))
+    )
     encoded = json.dumps(report, indent=2, sort_keys=True, allow_nan=False)
     if args.output:
         destination = Path(args.output)
