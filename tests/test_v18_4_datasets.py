@@ -22,6 +22,21 @@ DATASETS = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = DATASETS
 SPEC.loader.exec_module(DATASETS)
 
+AUDIT_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "fhm_dapp_tim"
+    / "fhm_dapp"
+    / "v18_4_dataset_audit.py"
+)
+AUDIT_SPEC = importlib.util.spec_from_file_location(
+    "v18_4_dataset_audit_standalone",
+    AUDIT_PATH,
+)
+assert AUDIT_SPEC is not None and AUDIT_SPEC.loader is not None
+AUDIT = importlib.util.module_from_spec(AUDIT_SPEC)
+sys.modules[AUDIT_SPEC.name] = AUDIT
+AUDIT_SPEC.loader.exec_module(AUDIT)
+
 load_tampere = DATASETS.load_tampere
 load_tuji1 = DATASETS.load_tuji1
 load_uji = DATASETS.load_uji
@@ -111,3 +126,23 @@ def test_default_dataset_summary_is_training_only() -> None:
     for dataset, splits in summary.items():
         assert set(splits) == {"train"}, dataset
 
+
+def test_default_dataset_audit_is_training_only() -> None:
+    report = AUDIT.audit_training_tree(DATASETS.DATA_ROOT)
+    assert report["audit_scope"] == "training_only"
+
+    assert set(report["datasets"]["UJIndoorLoc"]["files"]) == {
+        "trainingData.csv"
+    }
+    assert set(report["datasets"]["UTSIndoorLoc"]["files"]) == {
+        "UTS_training.csv"
+    }
+    assert set(report["datasets"]["Tampere"]["files"]) == {
+        "Training_rss.csv",
+        "Training_coordinates.csv",
+    }
+
+    tuji_files = report["datasets"]["TUJI1"]["files"]
+    assert set(tuji_files) == set(DATASETS.TUJI_DEVICE_FILES.values())
+    for record in tuji_files.values():
+        assert set(record["variables"]) == {"results_train"}
