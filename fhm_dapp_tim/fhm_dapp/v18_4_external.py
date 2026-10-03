@@ -1,6 +1,6 @@
 """Reserved external evaluation framework for V18.4.
 
-The global method law (lambda_OT, epsilon_KL, support/reliability/decoder law)
+The global method law (lambda_spatial, epsilon_KL, support/reliability/decoder law)
 must first be frozen by UJI training-only development.
 
 For each external protocol this module enforces two gates:
@@ -44,7 +44,6 @@ from fhm_dapp_tim.fhm_dapp.coherent_marked_v9 import (
     continuous_energy_score_mc,
 )
 from fhm_dapp_tim.fhm_dapp.v18_4_core import (
-    masked_softmax,
     tail_mass_diagnostics,
     weighted_component_geometric_median,
 )
@@ -99,7 +98,7 @@ from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import (
 )
 
 
-PROTOCOL_VERSION = "v18_4_external_reserved_v1_20261002"
+PROTOCOL_VERSION = "v18_4_external_reserved_v2_20261004"
 EXTERNAL_ROOT = Path(__file__).resolve().parents[1] / "evidence" / "v18_4" / "external"
 MODEL_ROOT = Path(__file__).resolve().parents[1] / "models" / "v18_4" / "external"
 TUJI_DEVICES = tuple(TUJI_DEVICE_FILES.keys())
@@ -219,10 +218,10 @@ def load_uji_method_freeze(
         raise ValueError("UJI freeze must record external adapter pre-exposure")
     if freeze.get("external_test_performance_used_for_v184_selection") is not False:
         raise ValueError("external test performance cannot enter V18.4 selection")
-    if float(freeze["lambda_ot"]) not in {
-        float(value) for value in V184_CONFIG["lambda_ot_grid"]
+    if float(freeze["lambda_spatial"]) not in {
+        float(value) for value in V184_CONFIG["lambda_spatial_grid"]
     }:
-        raise ValueError("UJI freeze lambda_OT is outside registered grid")
+        raise ValueError("UJI freeze lambda_spatial is outside registered grid")
     if float(freeze["epsilon_kl"]) not in {
         float(value) for value in V184_CONFIG["epsilon_kl_grid"]
     }:
@@ -422,7 +421,7 @@ def prepare_external(
         "execution_source_commit_sha": current,
         "uji_method_source_commit_sha": freeze["source_commit_sha"],
         "uji_method_freeze_sha256": freeze["freeze_sha256"],
-        "lambda_ot": float(freeze["lambda_ot"]),
+        "lambda_spatial": float(freeze["lambda_spatial"]),
         "epsilon_kl": float(freeze["epsilon_kl"]),
         "reference": _reference_payload_json(reference),
         "training_files": _file_manifest(_training_paths(spec)),
@@ -478,19 +477,18 @@ def _calibrate_external(
     calibration_rows: np.ndarray,
     device: torch.device,
 ) -> tuple[dict[str, object], dict[str, object]]:
-    cache = _cache_corrected_distribution(
-        model=model,
-        reference=reference,
-        epsilon_kl=float(epsilon_kl),
-        rss_all=rss_all,
-        row_indices=calibration_rows,
-        device=device,
-    )
     target = torch.from_numpy(centered[calibration_rows].astype(np.float32))
     keys = _coordinate_group_ids(data, calibration_rows)
 
     surface = []
+    temperature_caches = {}
     for temperature in CALIBRATION_TEMPERATURE_GRID:
+        cache = _cache_corrected_distribution(
+            model=model, reference=reference, epsilon_kl=float(epsilon_kl),
+            rss_all=rss_all, row_indices=calibration_rows, device=device,
+            final_temperature=float(temperature),
+        )
+        temperature_caches[float(temperature)] = cache
         for scale_multiplier in CALIBRATION_SCALE_GRID:
             surface.append(
                 {
@@ -520,7 +518,7 @@ def _calibrate_external(
         ),
     )
     metrics = _selected_calibration_metrics(
-        cache=cache,
+        cache=temperature_caches[float(selected["temperature"])],
         target=target,
         keys=keys,
         model=model,
@@ -530,6 +528,8 @@ def _calibrate_external(
     )
     return selected, {
         "temperature_grid": list(CALIBRATION_TEMPERATURE_GRID),
+        "calibration_order": "base q -> temperature q_T -> reliability-bounded trust correction -> final posterior",
+        "correction_reference_fit_temperature": 1.0,
         "scale_grid": list(CALIBRATION_SCALE_GRID),
         "surface": surface,
         "selected_metrics": metrics,
@@ -566,11 +566,11 @@ def fit_freeze_external(
     rows = _rows_from_manifest(manifest)
     rss_all = torch.from_numpy(data.model_rss()).float()
     device = torch.device(device_name)
-    lambda_ot = float(manifest["lambda_ot"])
+    lambda_spatial = float(manifest["lambda_spatial"])
     epsilon_kl = float(manifest["epsilon_kl"])
 
     candidate, epoch_report = _fit_one_lambda(
-        lambda_ot=lambda_ot,
+        lambda_spatial=lambda_spatial,
         data=data,
         rows=rows,
         rss_all=rss_all,
@@ -582,7 +582,7 @@ def fit_freeze_external(
         data=data,
         training_rows=rows["selection_refit"],
         rss_all=rss_all,
-        lambda_ot=lambda_ot,
+        lambda_spatial=lambda_spatial,
         epochs=selected_epoch,
         device=device,
     )
@@ -642,7 +642,7 @@ def fit_freeze_external(
         "manifest_sha256": manifest["manifest_sha256"],
         "checkpoint_path": _repo_relative(destination_checkpoint),
         "checkpoint_sha256": checkpoint_sha,
-        "lambda_ot": lambda_ot,
+        "lambda_spatial": lambda_spatial,
         "epsilon_kl": epsilon_kl,
         "selected_epoch": selected_epoch,
         "posterior_temperature": float(
@@ -1135,7 +1135,7 @@ def evaluate_test_once(
         "evaluation_reference_metadata": test.metadata,
         "metrics": metrics,
         "method": {
-            "lambda_ot": float(train_freeze["lambda_ot"]),
+            "lambda_spatial": float(train_freeze["lambda_spatial"]),
             "epsilon_kl": float(train_freeze["epsilon_kl"]),
             "selected_epoch": int(train_freeze["selected_epoch"]),
             "posterior_temperature": float(

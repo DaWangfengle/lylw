@@ -7,7 +7,7 @@ mathematical contracts for:
 - robust training-derived energy scaling;
 - empirical-CDF reliability;
 - KL-bounded exponential posterior correction;
-- debiased entropic spatial transport;
+- exact half-energy-distance spatial supervision;
 - component-center weighted geometric median.
 
 No function learns an evidence gate or uses evaluation labels.
@@ -20,7 +20,6 @@ import math
 import torch
 
 
-DEFAULT_SINKHORN_ITERATIONS = 40
 DEFAULT_TRUST_BISECTION_ITERATIONS = 40
 NUMERICAL_EPS = 1e-12
 
@@ -55,13 +54,33 @@ def normalize_probability(
     if mask.shape != probability.shape:
         raise ValueError("mask shape mismatch")
     mask = mask.bool()
-    if bool((probability < 0.0).any()):
-        raise ValueError("probability cannot be negative")
     value = torch.where(mask, probability, torch.zeros_like(probability))
+    if not bool(torch.isfinite(value).all()) or bool((value < 0.0).any()):
+        raise ValueError("valid probability must be finite and nonnegative")
     total = value.sum(dim=1, keepdim=True)
     if bool((total <= 0.0).any()):
         raise ValueError("every probability row needs positive valid mass")
     return value / total
+
+
+def temperature_base_posterior(
+    probability: torch.Tensor,
+    mask: torch.Tensor,
+    *,
+    temperature: float,
+) -> torch.Tensor:
+    """Calibrate an already normalized learned base posterior before tilting."""
+    if not math.isfinite(float(temperature)) or float(temperature) <= 0.0:
+        raise ValueError("temperature must be finite and positive")
+    normalize_probability(probability, mask)  # Validate only; log normalization is shift-invariant.
+    if float(temperature) == 1.0:
+        return torch.where(mask, probability, torch.zeros_like(probability))
+    log_q = torch.where(
+        probability > 0.0,
+        probability.clamp(min=torch.finfo(probability.dtype).tiny).log(),
+        torch.full_like(probability, float("-inf")),
+    )
+    return masked_softmax(log_q / float(temperature), mask)
 
 
 def robust_energy_scale(
@@ -166,7 +185,8 @@ def _tilted_posterior(
     q = normalize_probability(base_probability, mask)
     log_q = torch.where(
         mask,
-        q.clamp(min=NUMERICAL_EPS).log(),
+        torch.where(q > 0.0, q.clamp(min=torch.finfo(q.dtype).tiny).log(),
+                    torch.full_like(q, float("-inf"))),
         torch.full_like(q, float("-inf")),
     )
     while rho.ndim < q.ndim:
@@ -184,13 +204,14 @@ def kl_p_to_q(
 
     p = normalize_probability(p, mask)
     q = normalize_probability(q, mask)
-    log_p = p.clamp(min=NUMERICAL_EPS).log()
-    log_q = q.clamp(min=NUMERICAL_EPS).log()
+    log_p = p.clamp(min=torch.finfo(p.dtype).tiny).log()
+    log_q = q.clamp(min=torch.finfo(q.dtype).tiny).log()
     term = torch.where(
         mask,
         p * (log_p - log_q),
         torch.zeros_like(p),
     )
+    term = torch.where(mask & (p > 0.0) & (q == 0.0), torch.full_like(term, float("inf")), term)
     return term.sum(dim=1)
 
 
@@ -198,57 +219,113 @@ def trust_region_posterior_correction(
     base_probability: torch.Tensor,
     correction_energy: torch.Tensor,
     *,
-    epsilon_kl: float,
+    epsilon_kl: torch.Tensor | float,
     mask: torch.Tensor | None = None,
     bisection_iterations: int = DEFAULT_TRUST_BISECTION_ITERATIONS,
 ) -> dict[str, torch.Tensor]:
-    """Apply the maximum correction in rho in [0,1] satisfying KL(p||q).
+    """Maximum rho in [0,1] under a scalar or [batch] KL(p||q) budget.
 
-    The operation is deterministic and has no learned routing parameters.
+    Bisection uses float64 arithmetic. Zero-budget rows preserve an already
+    normalized input bitwise, including exact zero padding. Returned KL is
+    evaluated on the actual returned posterior, after any dtype conversion.
     """
-
     if base_probability.shape != correction_energy.shape:
         raise ValueError("base probability and energy shape mismatch")
-    if float(epsilon_kl) < 0.0:
-        raise ValueError("epsilon_kl cannot be negative")
+    if int(bisection_iterations) <= 0:
+        raise ValueError("bisection_iterations must be positive")
     if mask is None:
         mask = torch.ones_like(base_probability, dtype=torch.bool)
     mask = mask.bool()
-    q = normalize_probability(base_probability, mask)
+    q_input = torch.where(mask, base_probability, torch.zeros_like(base_probability))
+    q = normalize_probability(q_input.double(), mask)
+    energy = torch.where(mask, correction_energy, torch.zeros_like(correction_energy)).double()
+    if not bool(torch.isfinite(energy).all()):
+        raise ValueError("valid correction energy must be finite")
+    budget = torch.as_tensor(epsilon_kl, device=q.device, dtype=torch.float64)
+    if budget.ndim == 0:
+        budget = budget.expand(len(q))
+    elif budget.shape != (len(q),):
+        raise ValueError("epsilon_kl must be scalar or one value per row")
+    if not bool(torch.isfinite(budget).all()) or bool((budget < 0.0).any()):
+        raise ValueError("epsilon_kl must be finite and nonnegative")
 
-    zero_rho = torch.zeros(len(q), device=q.device, dtype=q.dtype)
-    one_rho = torch.ones_like(zero_rho)
-    full = _tilted_posterior(q, correction_energy, one_rho, mask)
-    full_kl = kl_p_to_q(full, q, mask)
-
-    if float(epsilon_kl) == 0.0:
-        return {
-            "posterior": q,
-            "rho": zero_rho,
-            "realized_kl": torch.zeros_like(full_kl),
-            "full_correction_kl": full_kl,
-        }
-
-    feasible_full = full_kl <= float(epsilon_kl) + 1e-10
-    low = torch.zeros_like(zero_rho)
-    high = torch.ones_like(zero_rho)
-
+    zero = torch.zeros(len(q), device=q.device, dtype=q.dtype)
+    one = torch.ones_like(zero)
+    full = _tilted_posterior(q, energy, one, mask)
+    full_kl = kl_p_to_q(full, q, mask).clamp(min=0.0)
+    low, high = zero, one
     for _ in range(int(bisection_iterations)):
         mid = 0.5 * (low + high)
-        candidate = _tilted_posterior(q, correction_energy, mid, mask)
-        divergence = kl_p_to_q(candidate, q, mask)
-        feasible = divergence <= float(epsilon_kl)
+        candidate = _tilted_posterior(q, energy, mid, mask)
+        feasible = kl_p_to_q(candidate, q, mask) <= budget
         low = torch.where(feasible, mid, low)
         high = torch.where(feasible, high, mid)
-
-    rho = torch.where(feasible_full, one_rho, low)
-    posterior = _tilted_posterior(q, correction_energy, rho, mask)
-    realized = kl_p_to_q(posterior, q, mask)
+    rho = torch.where(full_kl <= budget, one, low)
+    rho = torch.where(budget == 0.0, zero, rho)
+    posterior = _tilted_posterior(q, energy, rho, mask).to(base_probability.dtype)
+    near_unit_mass = (q_input.double().sum(dim=1) - 1.0).abs() <= (
+        4.0 * torch.finfo(base_probability.dtype).eps
+    )
+    identity = torch.where(near_unit_mass.unsqueeze(1), q_input, q.to(base_probability.dtype))
+    posterior = torch.where((budget == 0.0).unsqueeze(1), identity, posterior)
+    realized = kl_p_to_q(posterior.double(), q, mask).clamp(min=0.0)
+    realized = torch.where(budget == 0.0, zero, realized)
     return {
         "posterior": posterior,
         "rho": rho,
         "realized_kl": realized,
         "full_correction_kl": full_kl,
+        "epsilon_kl_max": budget.max(),
+        "epsilon_kl_effective": budget,
+    }
+
+
+def reliability_bounded_posterior_correction(
+    base_probability: torch.Tensor,
+    radio_energy: torch.Tensor,
+    geometry_energy: torch.Tensor,
+    *,
+    radio_reliability: torch.Tensor,
+    geometry_reliability: torch.Tensor,
+    epsilon_kl: float,
+    mask: torch.Tensor | None = None,
+) -> dict[str, torch.Tensor]:
+    """Separate empirical evidence direction from reliability-scaled budget."""
+    if radio_energy.shape != base_probability.shape or geometry_energy.shape != base_probability.shape:
+        raise ValueError("source energy and posterior shapes differ")
+    if not math.isfinite(float(epsilon_kl)) or float(epsilon_kl) < 0.0:
+        raise ValueError("maximum epsilon_kl must be finite and nonnegative")
+    rr = radio_reliability.to(base_probability)
+    rg = geometry_reliability.to(base_probability)
+    for reliability in (rr, rg):
+        if reliability.shape != (len(base_probability),):
+            raise ValueError("reliability must have one value per row")
+        if not bool(torch.isfinite(reliability).all()) or bool(((reliability < 0.0) | (reliability > 1.0)).any()):
+            raise ValueError("reliability must be finite and in [0,1]")
+    total = rr + rg
+    active = total > NUMERICAL_EPS
+    denominator = total.clamp(min=NUMERICAL_EPS)
+    wr = torch.where(active, rr / denominator, torch.zeros_like(rr))
+    wg = torch.where(active, rg / denominator, torch.zeros_like(rg))
+    reliability = torch.where(active, torch.maximum(rr, rg), torch.zeros_like(rr))
+    if mask is None:
+        mask = torch.ones_like(base_probability, dtype=torch.bool)
+    radio = torch.where(mask, radio_energy, torch.zeros_like(radio_energy))
+    geometry = torch.where(mask, geometry_energy, torch.zeros_like(geometry_energy))
+    direction = wr.unsqueeze(1) * radio + wg.unsqueeze(1) * geometry
+    effective = reliability.double() * float(epsilon_kl)
+    corrected = trust_region_posterior_correction(
+        base_probability, direction, epsilon_kl=effective, mask=mask,
+    )
+    return {
+        **corrected,
+        "epsilon_kl_max": effective.new_tensor(float(epsilon_kl)),
+        "trust_reliability": reliability,
+        "radio_reliability": rr,
+        "geometry_reliability": rg,
+        "radio_direction_weight": wr,
+        "geometry_direction_weight": wg,
+        "combined_energy": direction,
     }
 
 
@@ -278,102 +355,7 @@ def pairwise_spatial_cost(
     return torch.linalg.vector_norm(delta, dim=3) / scale
 
 
-def _sinkhorn_regularized_cost(
-    first_probability: torch.Tensor,
-    second_probability: torch.Tensor,
-    cost: torch.Tensor,
-    first_mask: torch.Tensor,
-    second_mask: torch.Tensor,
-    *,
-    epsilon_ot: float,
-    iterations: int,
-) -> torch.Tensor:
-    """Balanced entropy-regularized OT objective in log domain."""
-
-    if float(epsilon_ot) <= 0.0:
-        raise ValueError("epsilon_ot must be positive")
-    a = normalize_probability(first_probability, first_mask)
-    b = normalize_probability(second_probability, second_mask)
-
-    if cost.shape != (len(a), a.shape[1], b.shape[1]):
-        raise ValueError("cost matrix shape mismatch")
-    pair_mask = first_mask.unsqueeze(2) & second_mask.unsqueeze(1)
-
-    # Keep every intermediate finite.  Using +/-inf for padded support is
-    # algebraically convenient but creates undefined (-inf)-(-inf) branches in
-    # autograd even when the corresponding forward entries are later masked.
-    # A very negative finite sentinel is equivalent for the valid Sinkhorn
-    # system because invalid pairs are explicitly zeroed in the transport plan.
-    negative_sentinel = -1.0e6
-    log_a = torch.where(
-        first_mask,
-        a.clamp(min=NUMERICAL_EPS).log(),
-        torch.zeros_like(a),
-    )
-    log_b = torch.where(
-        second_mask,
-        b.clamp(min=NUMERICAL_EPS).log(),
-        torch.zeros_like(b),
-    )
-    log_kernel = torch.where(
-        pair_mask,
-        -cost / float(epsilon_ot),
-        torch.full_like(cost, negative_sentinel),
-    )
-
-    log_u = torch.zeros_like(a)
-    log_v = torch.zeros_like(b)
-
-    for _ in range(int(iterations)):
-        next_u = log_a - torch.logsumexp(
-            log_kernel + log_v.unsqueeze(1),
-            dim=2,
-        )
-        log_u = torch.where(
-            first_mask,
-            next_u,
-            torch.zeros_like(next_u),
-        )
-        next_v = log_b - torch.logsumexp(
-            log_kernel + log_u.unsqueeze(2),
-            dim=1,
-        )
-        log_v = torch.where(
-            second_mask,
-            next_v,
-            torch.zeros_like(next_v),
-        )
-
-    log_plan = (
-        log_u.unsqueeze(2)
-        + log_kernel
-        + log_v.unsqueeze(1)
-    )
-    plan = torch.exp(log_plan)
-    plan = torch.where(
-        pair_mask,
-        plan,
-        torch.zeros_like(plan),
-    )
-
-    transport = (plan * cost).sum(dim=(1, 2))
-    # Never form 0 * (-inf) on invalid padding.  torch.where evaluates
-    # both branches before selection, so masking only the final product can
-    # leave NaNs in autograd even when the forward value is finite.
-    safe_log_plan = torch.where(
-        pair_mask,
-        log_plan,
-        torch.zeros_like(log_plan),
-    )
-    entropy = torch.where(
-        pair_mask,
-        plan * (safe_log_plan - 1.0),
-        torch.zeros_like(plan),
-    ).sum(dim=(1, 2))
-    return transport + float(epsilon_ot) * entropy
-
-
-def spatial_sinkhorn_divergence(
+def spatial_energy_distance(
     predicted_probability: torch.Tensor,
     predicted_coords: torch.Tensor,
     target_probability: torch.Tensor,
@@ -382,65 +364,54 @@ def spatial_sinkhorn_divergence(
     spatial_scale: torch.Tensor | float,
     predicted_mask: torch.Tensor | None = None,
     target_mask: torch.Tensor | None = None,
-    epsilon_ot: float = 0.10,
-    iterations: int = DEFAULT_SINKHORN_ITERATIONS,
 ) -> torch.Tensor:
-    """Row-wise debiased entropic transport divergence."""
+    """Exact row-wise half energy distance on dimensionless discrete supports.
 
+    D = E_qt[d] - 0.5 E_qq[d] - 0.5 E_tt[d], d=Euclidean/s_C.
+    Float64 accumulation limits cancellation; no solver, entropy coefficient,
+    or nonnegativity clamp changes the supplied discrete objective. Padding is
+    removed before normalization and distance computation, even if it is NaN.
+    """
     if predicted_mask is None:
         predicted_mask = predicted_probability > 0.0
     if target_mask is None:
         target_mask = target_probability > 0.0
-    predicted_mask = predicted_mask.bool()
-    target_mask = target_mask.bool()
+    predicted_mask, target_mask = predicted_mask.bool(), target_mask.bool()
+    q = normalize_probability(predicted_probability.double(), predicted_mask)
+    t = normalize_probability(target_probability.double(), target_mask)
+    if predicted_coords.shape != (*q.shape, 2) or target_coords.shape != (*t.shape, 2):
+        raise ValueError("coordinate and probability support shapes differ")
+    x = torch.where(predicted_mask.unsqueeze(2), predicted_coords.double(), 0.0)
+    y = torch.where(target_mask.unsqueeze(2), target_coords.double(), 0.0)
+    if not bool(torch.isfinite(x).all() and torch.isfinite(y).all()):
+        raise ValueError("valid spatial coordinates must be finite")
+    scale = torch.as_tensor(spatial_scale, device=x.device, dtype=torch.float64)
+    if scale.ndim != 0 or not bool(torch.isfinite(scale)) or float(scale) <= 0.0:
+        raise ValueError("spatial_scale must be a finite positive scalar")
+    cross = pairwise_spatial_cost(x, y, spatial_scale=scale)
+    self_q = pairwise_spatial_cost(x, x, spatial_scale=scale)
+    self_t = pairwise_spatial_cost(y, y, spatial_scale=scale)
+    return (
+        (q.unsqueeze(2) * t.unsqueeze(1) * cross).sum(dim=(1, 2))
+        - 0.5 * (q.unsqueeze(2) * q.unsqueeze(1) * self_q).sum(dim=(1, 2))
+        - 0.5 * (t.unsqueeze(2) * t.unsqueeze(1) * self_t).sum(dim=(1, 2))
+    )
 
-    cross_cost = pairwise_spatial_cost(
-        predicted_coords,
-        target_coords,
-        spatial_scale=spatial_scale,
-    )
-    predicted_self_cost = pairwise_spatial_cost(
-        predicted_coords,
-        predicted_coords,
-        spatial_scale=spatial_scale,
-    )
-    target_self_cost = pairwise_spatial_cost(
-        target_coords,
-        target_coords,
-        spatial_scale=spatial_scale,
-    )
 
-    cross = _sinkhorn_regularized_cost(
-        predicted_probability,
-        target_probability,
-        cross_cost,
-        predicted_mask,
-        target_mask,
-        epsilon_ot=epsilon_ot,
-        iterations=iterations,
-    )
-    self_predicted = _sinkhorn_regularized_cost(
-        predicted_probability,
-        predicted_probability,
-        predicted_self_cost,
-        predicted_mask,
-        predicted_mask,
-        epsilon_ot=epsilon_ot,
-        iterations=iterations,
-    )
-    self_target = _sinkhorn_regularized_cost(
-        target_probability,
-        target_probability,
-        target_self_cost,
-        target_mask,
-        target_mask,
-        epsilon_ot=epsilon_ot,
-        iterations=iterations,
-    )
-    divergence = cross - 0.5 * self_predicted - 0.5 * self_target
-    # The true Sinkhorn divergence is nonnegative.  Clamp only numerical
-    # round-off below zero.
-    return divergence.clamp(min=0.0)
+def cap_anisotropic_residual_transform(
+    transform: torch.Tensor,
+    *,
+    max_residual_m: float,
+) -> torch.Tensor:
+    """Preserve local axes/anisotropy while capping the operator norm."""
+    if transform.shape[-2:] != (2, 2) or not bool(torch.isfinite(transform).all()):
+        raise ValueError("residual transforms must be finite [...,2,2] matrices")
+    bound = float(max_residual_m)
+    if not math.isfinite(bound) or bound <= 0.0:
+        raise ValueError("max_residual_m must be finite and positive")
+    largest = torch.linalg.svdvals(transform.double()).amax(dim=-1)
+    multiplier = torch.clamp(bound / largest.clamp(min=torch.finfo(torch.float64).tiny), max=1.0)
+    return transform * multiplier.to(transform).unsqueeze(-1).unsqueeze(-1)
 
 
 def _weighted_geometric_median_row(

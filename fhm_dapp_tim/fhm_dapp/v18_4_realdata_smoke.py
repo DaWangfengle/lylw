@@ -10,6 +10,7 @@ It never opens UJI validationData.csv or any reserved external test.
 from __future__ import annotations
 
 import json
+import argparse
 import os
 import random
 
@@ -42,8 +43,17 @@ def _set_deterministic() -> None:
     torch.use_deterministic_algorithms(True, warn_only=False)
 
 
-def main() -> None:
+def run_smoke(*, device_name: str = "cpu") -> tuple[dict, dict]:
+    """One training batch without an optimizer step, plus a development batch."""
     _set_deterministic()
+    device = torch.device(device_name)
+    if device.type == "cuda":
+        if not torch.cuda.is_available():
+            raise RuntimeError("CUDA smoke requested but CUDA is unavailable")
+        torch.cuda.manual_seed_all(SMOKE_SEED)
+        torch.backends.cuda.enable_flash_sdp(False)
+        torch.backends.cuda.enable_mem_efficient_sdp(False)
+        torch.backends.cuda.enable_math_sdp(True)
     data, _reference = load_uji("train")
     roles = construct_roles(
         data,
@@ -66,9 +76,10 @@ def main() -> None:
         fit_idx,
     )
     spatial_scale = training_spatial_scale_m(memory)
+    fit_devices = data.device[fit_idx]
     n_devices = (
-        int(data.device[data.device >= 0].max()) + 1
-        if bool(np.any(data.device >= 0))
+        int(fit_devices[fit_devices >= 0].max()) + 1
+        if bool(np.any(fit_devices >= 0))
         else 0
     )
     n_buildings = int(memory["building"].max().item()) + 1
@@ -78,28 +89,30 @@ def main() -> None:
         n_buildings=n_buildings,
         n_devices=n_devices,
         spatial_scale_m=spatial_scale,
-        device=torch.device("cpu"),
+        device=device,
     )
     model.train()
 
     train_rows = fit_idx[:8]
-    target_anchor = torch.from_numpy(sample_anchor[train_rows]).long()
+    target_anchor = torch.from_numpy(sample_anchor[train_rows]).long().to(device)
     if bool((target_anchor < 0).any()):
         raise RuntimeError("fit row has no registered anchor")
-    device_id = torch.from_numpy(data.device[train_rows]).long()
-    target = torch.from_numpy(centered[train_rows]).float()
+    device_id = torch.from_numpy(data.device[train_rows]).long().to(device)
+    target = torch.from_numpy(centered[train_rows]).float().to(device)
     result = v184_training_loss(
         model,
-        rss[train_rows],
+        rss[train_rows].to(device),
         target,
         target_anchor,
         device_id,
         neighbours,
         weights,
-        lambda_ot=0.25,
+        lambda_spatial=0.25,
     )
-    if not bool(torch.isfinite(result["loss"])):
+    if not all(bool(torch.isfinite(value).all()) for value in result.values()):
         raise RuntimeError("real-data V18.4 loss is non-finite")
+    if float(result["spatial_energy_loss"]) < -1e-10:
+        raise RuntimeError("real-data spatial energy distance is negative")
     result["loss"].backward()
 
     grad_tensors = [
@@ -116,13 +129,18 @@ def main() -> None:
     with torch.no_grad():
         prediction = v184_predict(
             model,
-            rss[dev_idx[:4]],
+            rss[dev_idx[:4]].to(device),
         )
-    if not bool(torch.isfinite(prediction["coords"]).all()):
+    if not all(bool(torch.isfinite(prediction[key]).all()) for key in (
+        "coords", "base_probability", "candidate_weights", "component_locations", "component_scales",
+    )):
         raise RuntimeError("real-data V18.4 prediction is non-finite")
+    if bool((prediction["candidate_weights"][~prediction["candidate_mask"]] != 0.).any()):
+        raise RuntimeError("real-data padding has posterior mass")
 
     payload = {
         "status": "success",
+        "device": str(device),
         "scientific_status": (
             "outcome-free smoke test using UJI training fit/development roles only"
         ),
@@ -140,9 +158,10 @@ def main() -> None:
         "parameters": int(sum(p.numel() for p in model.parameters())),
         "training_batch_rows": int(len(train_rows)),
         "loss": float(result["loss"].detach()),
+        "loss_terms": {key: float(value.detach()) for key, value in result.items()},
         "anchor_nll": float(result["anchor_nll"]),
         "coordinate_nll": float(result["coordinate_nll"]),
-        "spatial_ot_loss": float(result["spatial_ot_loss"]),
+        "spatial_energy_loss": float(result["spatial_energy_loss"]),
         "natural_recall_mass": float(result["natural_recall_mass"]),
         "natural_support_size": float(result["natural_support_size"]),
         "forced_support_size": float(result["forced_support_size"]),
@@ -150,8 +169,24 @@ def main() -> None:
             "natural_support_size"
         ].cpu().tolist(),
         "gradients_finite": True,
+        "gradient_tensor_count": len(grad_tensors),
+        "gradient_norm": float(torch.stack([value.double().square().sum() for value in grad_tensors]).sum().sqrt()),
+        "optimizer_steps": 0,
+        "base_posterior_finite": True,
         "prediction_finite": True,
     }
+    return payload, {
+        "model": model, "memory": memory, "roles": roles, "rows": rows,
+        "rss": rss, "data": data, "sample_anchor": sample_anchor,
+        "neighbours": neighbours, "weights": weights, "prediction": prediction,
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
+    args = parser.parse_args()
+    payload, _context = run_smoke(device_name=args.device)
     print(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False))
 
 

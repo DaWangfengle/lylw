@@ -1,0 +1,167 @@
+{
+  "instruction_attachment": "C:\\Users\\LiuYan\\.codex\\attachments\\bb5570a8-7bb9-4c57-9060-6e5d5613eb64\\Pasted text.txt",
+  "status": "FAIL_CLOSED_TESTS",
+  "compile": {
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "py_compile",
+      "fhm_dapp_tim/fhm_dapp/v18_4_core.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_model.py",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_external.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py",
+      "tests/test_v18_4_core.py",
+      "tests/test_v18_4_model.py",
+      "tests/test_uji_v18_4_development.py",
+      "tests/test_v18_4_external.py"
+    ],
+    "exit_code": 0,
+    "compiled_python_files": 10
+  },
+  "formal_uji_protocol_run": false,
+  "external_formal_evaluation_run": false,
+  "commands": [
+    {
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_v18_4_core.py",
+        "tests/test_v18_4_model.py",
+        "tests/test_uji_v18_4_development.py",
+        "tests/test_v18_4_external.py",
+        "tests/test_v18_4_protocol.py",
+        "tests/test_v18_4_datasets.py",
+        "tests/test_v18_4_capacity_audit.py"
+      ],
+      "started_utc": "2026-10-03T17:43:50.272618+00:00",
+      "finished_utc": "2026-10-03T17:45:09.407145+00:00",
+      "wall_seconds": 79.13043780000044,
+      "exit_code": 1,
+      "output": ".....................F.........F.................FFF.................    [100%]\n================================== FAILURES ===================================\n________________ test_anisotropic_cap_preserves_axes_and_ratio ________________\n\n    def test_anisotropic_cap_preserves_axes_and_ratio() -> None:\n        angle = .37\n        rotation = torch.tensor([[torch.cos(torch.tensor(angle)), -torch.sin(torch.tensor(angle))],\n                                 [torch.sin(torch.tensor(angle)), torch.cos(torch.tensor(angle))]], dtype=torch.float64)\n        oversized = rotation @ torch.diag(torch.tensor([300., 90.], dtype=torch.float64)) @ rotation.T\n        normal = torch.tensor([[9., 1.], [1., 3.]], dtype=torch.float64)\n        transforms = torch.stack([oversized, normal, torch.zeros_like(normal)])\n        capped = cap_anisotropic_residual_transform(transforms, max_residual_m=30.)\n>       torch.testing.assert_close(capped[0], oversized / 10., rtol=1e-12, atol=1e-12)\nE       AssertionError: Tensor-likes are not close!\nE       \nE       Mismatched elements: 4 / 4 (100.0%)\nE       Greatest absolute difference: 4.4784704300582234e-07 at index (0, 0) (up to 1e-12 allowed)\nE       Greatest relative difference: 1.6432390674182765e-08 at index (0, 1) (up to 1e-12 allowed)\n\ntests\\test_v18_4_core.py:390: AssertionError\n_______________ test_v184_zero_reliability_returns_q_T_bitwise ________________\n\n    def test_v184_zero_reliability_returns_q_T_bitwise() -> None:\n        model, memory, *_ = _model()\n        model.eval()\n        with patch('fhm_dapp_tim.fhm_dapp.v18_4_model.base_posterior', side_effect=_controlled_base), patch(\n            'fhm_dapp_tim.fhm_dapp.v18_4_model.raw_correction_energies', side_effect=_controlled_raw\n        ), patch('fhm_dapp_tim.fhm_dapp.v18_4_model.empirical_survival_reliability', side_effect=torch.zeros_like):\n>           result = v184_distribution(model, memory['prototype_rss'][:2],\n                     correction_reference=_fixed_reference(), epsilon_kl=.1, final_temperature=1.5)\n\ntests\\test_v18_4_model.py:413: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nfhm_dapp_tim\\fhm_dapp\\v18_4_model.py:1248: in v184_distribution\n    correction = apply_correction(\nfhm_dapp_tim\\fhm_dapp\\v18_4_model.py:1161: in apply_correction\n    radio_reliability = empirical_survival_reliability(\nD:\\miniminiconda\\envs\\liuyan\\Lib\\unittest\\mock.py:1139: in __call__\n    return self._mock_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nD:\\miniminiconda\\envs\\liuyan\\Lib\\unittest\\mock.py:1143: in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <MagicMock name='empirical_survival_reliability' id='1558017523536'>\nargs = (tensor([0.5000, 0.5000]), tensor([0.0000, 0.2000, 0.5000, 1.0000]))\nkwargs = {}\neffect = <built-in method zeros_like of type object at 0x00007FFC6664FA70>\n\n    def _execute_mock_call(self, /, *args, **kwargs):\n        # separate from _increment_mock_call so that awaited functions are\n        # executed separately from their call, also AsyncMock overrides this method\n    \n        effect = self.side_effect\n        if effect is not None:\n            if _is_exception(effect):\n                raise effect\n            elif not _callable(effect):\n                result = next(effect)\n                if _is_exception(result):\n                    raise result\n            else:\n>               result = effect(*args, **kwargs)\n                         ^^^^^^^^^^^^^^^^^^^^^^^\nE               TypeError: zeros_like() takes 1 positional argument but 2 were given\n\nD:\\miniminiconda\\envs\\liuyan\\Lib\\unittest\\mock.py:1204: TypeError\n________________ test_prepare_external_uts_uses_training_only _________________\n\ntmp_path = WindowsPath('C:/Users/LiuYan/AppData/Local/Temp/pytest-of-LiuYan/pytest-64/test_prepare_external_uts_uses0')\nclean_execution_fixture = None\n\n    def test_prepare_external_uts_uses_training_only(tmp_path: Path, clean_execution_fixture) -> None:\n>       uji = _fake_uji_freeze(tmp_path / \"uji_freeze.json\")\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_v18_4_external.py:116: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\ntests\\test_v18_4_external.py:41: in _fake_uji_freeze\n    \"source_commit_sha\": _current_head(),\n                         ^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def _current_head() -> str:\n        value = subprocess.check_output(\n            [\"git\", \"rev-parse\", \"HEAD\"],\n            cwd=REPO_ROOT,\n            text=True,\n        ).strip()\n        if len(value) != 40:\n            raise RuntimeError(\"invalid current Git HEAD\")\n        dirty = subprocess.run(\n            [\"git\", \"diff\", \"--quiet\", \"HEAD\", \"--\"],\n            cwd=REPO_ROOT,\n            check=False,\n        ).returncode != 0\n        if dirty:\n>           raise RuntimeError(\n                \"formal external phases require no tracked working-tree changes\"\n            )\nE           RuntimeError: formal external phases require no tracked working-tree changes\n\nfhm_dapp_tim\\fhm_dapp\\v18_4_external.py:195: RuntimeError\n---------------------------- Captured stderr call -----------------------------\nwarning: unable to access 'C:\\Users\\LiuYan/.config/git/ignore': Permission denied\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/DESIGN_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/RUNBOOK_EXTERNAL_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/RUNBOOK_UJI_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_core.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_external.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_model.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_uji_v18_4_development.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_core.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_external.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_model.py', LF will be replaced by CRLF the next time Git touches it\n______________ test_prepare_external_tampere_uses_training_only _______________\n\ntmp_path = WindowsPath('C:/Users/LiuYan/AppData/Local/Temp/pytest-of-LiuYan/pytest-64/test_prepare_external_tampere_0')\nclean_execution_fixture = None\n\n    def test_prepare_external_tampere_uses_training_only(tmp_path: Path, clean_execution_fixture) -> None:\n>       uji = _fake_uji_freeze(tmp_path / \"uji_freeze.json\")\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_v18_4_external.py:139: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\ntests\\test_v18_4_external.py:41: in _fake_uji_freeze\n    \"source_commit_sha\": _current_head(),\n                         ^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def _current_head() -> str:\n        value = subprocess.check_output(\n            [\"git\", \"rev-parse\", \"HEAD\"],\n            cwd=REPO_ROOT,\n            text=True,\n        ).strip()\n        if len(value) != 40:\n            raise RuntimeError(\"invalid current Git HEAD\")\n        dirty = subprocess.run(\n            [\"git\", \"diff\", \"--quiet\", \"HEAD\", \"--\"],\n            cwd=REPO_ROOT,\n            check=False,\n        ).returncode != 0\n        if dirty:\n>           raise RuntimeError(\n                \"formal external phases require no tracked working-tree changes\"\n            )\nE           RuntimeError: formal external phases require no tracked working-tree changes\n\nfhm_dapp_tim\\fhm_dapp\\v18_4_external.py:195: RuntimeError\n---------------------------- Captured stderr call -----------------------------\nwarning: unable to access 'C:\\Users\\LiuYan/.config/git/ignore': Permission denied\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/DESIGN_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/RUNBOOK_EXTERNAL_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/RUNBOOK_UJI_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_core.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_external.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_model.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_uji_v18_4_development.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_core.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_external.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_model.py', LF will be replaced by CRLF the next time Git touches it\n___________ test_prepare_external_tuji_lodo_excludes_heldout_device ___________\n\ntmp_path = WindowsPath('C:/Users/LiuYan/AppData/Local/Temp/pytest-of-LiuYan/pytest-64/test_prepare_external_tuji_lod0')\nclean_execution_fixture = None\n\n    def test_prepare_external_tuji_lodo_excludes_heldout_device(\n        tmp_path: Path,\n        clean_execution_fixture,\n    ) -> None:\n>       uji = _fake_uji_freeze(tmp_path / \"uji_freeze.json\")\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_v18_4_external.py:156: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\ntests\\test_v18_4_external.py:41: in _fake_uji_freeze\n    \"source_commit_sha\": _current_head(),\n                         ^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def _current_head() -> str:\n        value = subprocess.check_output(\n            [\"git\", \"rev-parse\", \"HEAD\"],\n            cwd=REPO_ROOT,\n            text=True,\n        ).strip()\n        if len(value) != 40:\n            raise RuntimeError(\"invalid current Git HEAD\")\n        dirty = subprocess.run(\n            [\"git\", \"diff\", \"--quiet\", \"HEAD\", \"--\"],\n            cwd=REPO_ROOT,\n            check=False,\n        ).returncode != 0\n        if dirty:\n>           raise RuntimeError(\n                \"formal external phases require no tracked working-tree changes\"\n            )\nE           RuntimeError: formal external phases require no tracked working-tree changes\n\nfhm_dapp_tim\\fhm_dapp\\v18_4_external.py:195: RuntimeError\n---------------------------- Captured stderr call -----------------------------\nwarning: unable to access 'C:\\Users\\LiuYan/.config/git/ignore': Permission denied\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/DESIGN_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/RUNBOOK_EXTERNAL_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/evidence/v18_4/RUNBOOK_UJI_V18_4.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_core.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_external.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_model.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_uji_v18_4_development.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_core.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_external.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/test_v18_4_model.py', LF will be replaced by CRLF the next time Git touches it\n=========================== short test summary info ===========================\nFAILED tests/test_v18_4_core.py::test_anisotropic_cap_preserves_axes_and_ratio\nFAILED tests/test_v18_4_model.py::test_v184_zero_reliability_returns_q_T_bitwise\nFAILED tests/test_v18_4_external.py::test_prepare_external_uts_uses_training_only\nFAILED tests/test_v18_4_external.py::test_prepare_external_tampere_uses_training_only\nFAILED tests/test_v18_4_external.py::test_prepare_external_tuji_lodo_excludes_heldout_device\n5 failed, 64 passed in 77.23s (0:01:17)\n",
+      "log": "fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_pytest.log"
+    }
+  ],
+  "working_branch": "v18-4-trust-region-posterior",
+  "head_sha": "b4e471868fffb2e3623a4f8471f0a95b4549543b",
+  "report_finalized_utc": "2026-10-03T17:53:54.551746+00:00",
+  "stop_condition": "Instruction section 12: any existing protocol/data-role regression test breaks.",
+  "pytest_summary": {
+    "passed": 64,
+    "failed": 5,
+    "total": 69,
+    "reported_seconds": 77.23,
+    "suite_invocations": 1
+  },
+  "failure_analysis": [
+    {
+      "test_nodes": [
+        "tests/test_v18_4_core.py::test_anisotropic_cap_preserves_axes_and_ratio"
+      ],
+      "observed_error": "Largest absolute matrix discrepancy 4.4784704300582234e-07 versus atol=1e-12.",
+      "static_diagnosis": "Rotation sine/cosine computed in float32 before float64 cast; expected divisor 10 assumes exact orthonormality.",
+      "proposed_repair": "Construct the angle in float64 before sine/cosine; retain all strict tolerances, anisotropy and bound assertions.",
+      "repair_applied": false
+    },
+    {
+      "test_nodes": [
+        "tests/test_v18_4_model.py::test_v184_zero_reliability_returns_q_T_bitwise"
+      ],
+      "observed_error": "TypeError: zeros_like() takes 1 positional argument but 2 were given",
+      "static_diagnosis": "The new mock side effect accepts one argument, but empirical reliability receives mismatch and reference.",
+      "proposed_repair": "Use a two-argument zero-reliability side effect; retain bitwise q_T identity and exact zero diagnostics.",
+      "repair_applied": false
+    },
+    {
+      "test_nodes": [
+        "tests/test_v18_4_external.py::test_prepare_external_uts_uses_training_only",
+        "tests/test_v18_4_external.py::test_prepare_external_tampere_uses_training_only",
+        "tests/test_v18_4_external.py::test_prepare_external_tuji_lodo_excludes_heldout_device"
+      ],
+      "observed_error": "RuntimeError: formal external phases require no tracked working-tree changes",
+      "static_diagnosis": "Fixture patches only the production module symbol; the synthetic freeze helper still calls the test module imported original _current_head.",
+      "proposed_repair": "Isolate the imported reference only in the three synthetic fixture tests; retain unchanged production gates and all role/source-freeze rejection assertions.",
+      "repair_applied": false
+    }
+  ],
+  "post_failure_source_or_test_fixes_applied": false,
+  "realdata_smoke": {
+    "status": "NOT_RUN",
+    "reason": "Failed regression gate; required STOP and report."
+  },
+  "revision_audit": {
+    "status": "NOT_RUN",
+    "reason": "Failed regression gate; required STOP and report.",
+    "expected_paths": [
+      "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\PRE_RUN_REVISION_AUDIT_V18_4.json",
+      "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\PRE_RUN_REVISION_AUDIT_V18_4.md"
+    ],
+    "outputs_exist": false
+  },
+  "cuda_smoke": {
+    "status": "NOT_RUN",
+    "cuda_available_pre_edit": true,
+    "device": "NVIDIA GeForce RTX 2060"
+  },
+  "formal_uji_artifact_state": [
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_registry_v18_4.json",
+      "exists": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_development_v18_4.json",
+      "exists": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_calibration_v18_4.json",
+      "exists": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_method_freeze_v18_4.json",
+      "exists": false
+    }
+  ],
+  "unresolved_scientific_concerns": [
+    "Full required regression suite has not passed.",
+    "Model-level bitwise identity assertions in the failed zero-reliability test did not execute.",
+    "Three external training-role and held-out-device assertions did not execute because fixture construction failed.",
+    "Required UJI training-only forward/backward, finite prediction, support and residual audits have not run.",
+    "Reference fitting at T=1 with deployment at q_T has no required real-data audit yet.",
+    "CUDA-specific scientific behavior has not been checked by smoke.",
+    "No accuracy, convergence or formal-run readiness claim is supported."
+  ],
+  "changed_files": [
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\v18_4_core.py",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\v18_4_model.py",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v18_4_development.py",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\v18_4_external.py",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\v18_4_realdata_smoke.py",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\v18_4_revision_audit.py",
+    "D:\\liuyanlunwen\\tests\\test_v18_4_core.py",
+    "D:\\liuyanlunwen\\tests\\test_v18_4_model.py",
+    "D:\\liuyanlunwen\\tests\\test_uji_v18_4_development.py",
+    "D:\\liuyanlunwen\\tests\\test_v18_4_external.py",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\DESIGN_V18_4.md",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\RUNBOOK_UJI_V18_4.md",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\RUNBOOK_EXTERNAL_V18_4.md",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_execution_v18_4.json",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\PRE_RUN_REVISION_EXECUTION_V18_4.md"
+  ],
+  "execution_report": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\PRE_RUN_REVISION_EXECUTION_V18_4.md",
+  "raw_log_sha256": "eaa7a690f39810c281ceddc02c21b763c80cc7db7a5f64368f00be9276737a21",
+  "compiled_python_source_sha256": {
+    "fhm_dapp_tim/fhm_dapp/v18_4_core.py": "caf660c629907cda071b3dd9494c3d247d9fa26409e2356f2e9888ee12302eae",
+    "fhm_dapp_tim/fhm_dapp/v18_4_model.py": "84689fe8eb65b78b531b78c47b1493ac694415ded82566cfb9a05cfd83c50b4a",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py": "1ecc932e3863e046f365c825805d04d91ad685b4ce325c3c3c81a6cfea1483f8",
+    "fhm_dapp_tim/fhm_dapp/v18_4_external.py": "2d4d2308c16d6c9eb8d9bfb5231242db08e9cd07ab6a6da115c9396dde971a4b",
+    "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py": "13caaad99bc0828706269a7b0c6cf0762864063c333a43aa7ae68fa32a5cdd14",
+    "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py": "af7d21873216dafafe9ee1308cc9dc9792c0b791e2a81d59787a6ad1f8f0be6f",
+    "tests/test_v18_4_core.py": "a7f587c17f4c0182566d81159beff1e2c92d1e7d840f0f68f1131e899f3e5404",
+    "tests/test_v18_4_model.py": "b5728bf1e9859ce444b4134cecb883a441c8dcd5b8c70b9a62804370cdd7bb97",
+    "tests/test_uji_v18_4_development.py": "280747ca0fed1d9db06dd20c2c198520d14b97371f561e8d22b0c94d765534e2",
+    "tests/test_v18_4_external.py": "7ffcaf6f64196c0517673cb4139bdc58a0547b5c6c20094e83413cb87c832fcd"
+  }
+}

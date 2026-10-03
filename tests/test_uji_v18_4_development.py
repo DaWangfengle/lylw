@@ -7,12 +7,16 @@ from unittest.mock import patch
 
 import numpy as np
 import torch
+import pytest
 
 from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import (
     CALIBRATION_SCALE_GRID,
     CALIBRATION_TEMPERATURE_GRID,
     ENERGY_SHORTLIST_MARGIN_M,
     _canonical_sha,
+    _assert_source_revision,
+    _cache_corrected_distribution,
+    _calibration_nll,
     _coordinate_macro,
     _git_source_state,
     _pad_concat_support,
@@ -20,6 +24,16 @@ from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import (
     prepare,
     select_method_record,
 )
+
+
+@pytest.fixture
+def clean_source_fixture():
+    # Registry fixtures exercise role/hash serialization without requiring a
+    # clean developer checkout. Production dirty/source guards are tested
+    # separately; no production guard is disabled by this fixture.
+    with patch('fhm_dapp_tim.fhm_dapp.uji_v18_4_development._git_source_state',
+               return_value={'source_commit_sha': 'f' * 40, 'tracked_source_dirty': False}):
+        yield
 
 
 def test_v184_source_state_checks_tracked_tree_against_head() -> None:
@@ -45,7 +59,7 @@ def test_v184_source_state_checks_tracked_tree_against_head() -> None:
         ]
 
 
-def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path) -> None:
+def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path, clean_source_fixture) -> None:
     registry_path = tmp_path / "registry.json"
     registry = prepare(registry_path=registry_path)
 
@@ -58,7 +72,7 @@ def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path) -> None:
     assert registry["external_test_performance_used_for_v184_selection"] is False
     assert len(registry["source_commit_sha"]) == 40
     assert registry["tracked_source_dirty"] is False
-    assert registry["train_path"] == "data/UJIndoorLoc/trainingData.csv"
+    assert Path(registry["train_path"]).as_posix() == "data/UJIndoorLoc/trainingData.csv"
     assert not Path(registry["train_path"]).is_absolute()
     assert registry["training_rows"] == 19937
     assert registry["training_coordinate_groups"] == 933
@@ -75,7 +89,7 @@ def test_v184_prepare_freezes_fresh_uji_roles(tmp_path: Path) -> None:
     assert loaded["registry_sha256"] == registry["registry_sha256"]
 
 
-def test_v184_registry_hash_fails_closed(tmp_path: Path) -> None:
+def test_v184_registry_hash_fails_closed(tmp_path: Path, clean_source_fixture) -> None:
     registry_path = tmp_path / "registry.json"
     registry = prepare(registry_path=registry_path)
     registry["aps"] = 519
@@ -138,14 +152,14 @@ def test_v184_method_selection_obeys_energy_shortlist_then_gm() -> None:
     assert ENERGY_SHORTLIST_MARGIN_M == 0.05
     records = [
         {
-            "lambda_ot": 0.10,
+            "lambda_spatial": 0.10,
             "epsilon_kl": 0.025,
             "energy_score_m": 5.000,
             "gm_mae_m": 6.0,
             "nll": 6.0,
         },
         {
-            "lambda_ot": 0.25,
+            "lambda_spatial": 0.25,
             "epsilon_kl": 0.050,
             "energy_score_m": 5.040,
             "gm_mae_m": 5.0,
@@ -153,7 +167,7 @@ def test_v184_method_selection_obeys_energy_shortlist_then_gm() -> None:
         },
         {
             # Best GM but outside the 0.05 m Energy shortlist.
-            "lambda_ot": 0.50,
+            "lambda_spatial": 0.50,
             "epsilon_kl": 0.100,
             "energy_score_m": 5.051,
             "gm_mae_m": 1.0,
@@ -161,28 +175,28 @@ def test_v184_method_selection_obeys_energy_shortlist_then_gm() -> None:
         },
     ]
     selected = select_method_record(records)
-    assert selected["lambda_ot"] == 0.25
+    assert selected["lambda_spatial"] == 0.25
     assert selected["epsilon_kl"] == 0.050
 
 
 def test_v184_method_selection_ties_prefer_smaller_registered_values() -> None:
     records = [
         {
-            "lambda_ot": 0.25,
+            "lambda_spatial": 0.25,
             "epsilon_kl": 0.050,
             "energy_score_m": 5.0,
             "gm_mae_m": 5.0,
             "nll": 5.0,
         },
         {
-            "lambda_ot": 0.10,
+            "lambda_spatial": 0.10,
             "epsilon_kl": 0.100,
             "energy_score_m": 5.0,
             "gm_mae_m": 5.0,
             "nll": 5.0,
         },
         {
-            "lambda_ot": 0.10,
+            "lambda_spatial": 0.10,
             "epsilon_kl": 0.025,
             "energy_score_m": 5.0,
             "gm_mae_m": 5.0,
@@ -190,7 +204,7 @@ def test_v184_method_selection_ties_prefer_smaller_registered_values() -> None:
         },
     ]
     selected = select_method_record(records)
-    assert selected["lambda_ot"] == 0.10
+    assert selected["lambda_spatial"] == 0.10
     assert selected["epsilon_kl"] == 0.025
 
 
@@ -224,3 +238,46 @@ def test_v184_calibration_grid_is_frozen_and_symmetric_around_one() -> None:
         1.50,
         2.00,
     )
+
+
+def test_v184_prepared_source_revision_mismatch_still_fails_closed() -> None:
+    with patch('fhm_dapp_tim.fhm_dapp.uji_v18_4_development._git_source_state',
+               return_value={'source_commit_sha': 'a' * 40, 'tracked_source_dirty': False}):
+        with pytest.raises(RuntimeError, match='differs'):
+            _assert_source_revision({'source_commit_sha': 'b' * 40})
+
+
+def test_v184_calibration_cache_retains_final_corrected_probability() -> None:
+    from fhm_dapp_tim.fhm_dapp.v18_4_core import temperature_base_posterior, reliability_bounded_posterior_correction
+    q = torch.tensor([[.70, .25, .05]], dtype=torch.float64).expand(3, -1)
+    mask = torch.ones_like(q, dtype=torch.bool)
+    q_T = temperature_base_posterior(q, mask, temperature=.75)
+    corrected = reliability_bounded_posterior_correction(q_T, torch.tensor([[5., 1., 0.]]).expand(3, -1),
+        torch.tensor([[5., 1., 0.]]).expand(3, -1), radio_reliability=torch.ones(3),
+        geometry_reliability=torch.ones(3), epsilon_kl=.05, mask=mask)
+    fake_distribution = {
+        'candidate_weights': corrected['posterior'], 'calibrated_base_probability': q_T,
+        'correction_realized_kl': corrected['realized_kl'],
+        'correction_epsilon_kl_effective': corrected['epsilon_kl_effective'], 'candidate_mask': mask,
+        'component_locations': torch.zeros(3, 3, 2, dtype=q.dtype),
+        'component_scales': torch.ones(3, 3, 2, dtype=q.dtype),
+        'natural_pool_size_before_ceiling': torch.full((3,), 3), 'natural_truncated': torch.zeros(3, dtype=torch.bool),
+    }
+    model = SimpleNamespace(eval=lambda: None,
+        student_log_prob=lambda target, location, scale: torch.tensor([[0., -2., -5.]], dtype=q.dtype).expand(3, -1))
+    with patch('fhm_dapp_tim.fhm_dapp.uji_v18_4_development.v184_distribution', return_value=fake_distribution) as distribution:
+        cache = _cache_corrected_distribution(model=model, reference=None, epsilon_kl=.05,
+            rss_all=torch.zeros(3, 2), row_indices=np.arange(3), device=torch.device('cpu'), final_temperature=.75)
+    assert distribution.call_args.kwargs['final_temperature'] == .75
+    assert distribution.call_args.kwargs['scale_multiplier'] == 1.
+    assert torch.equal(cache['probability'], corrected['posterior'])
+    assert cache['posterior_temperature'] == .75
+    target = torch.zeros(3, 2, dtype=q.dtype)
+    keys = [(0, 0, 0., 0.)] * 3
+    actual = _calibration_nll(cache=cache, target=target, keys=keys, model=model,
+             temperature=.75, scale_multiplier=1., device=torch.device('cpu'))
+    expected = -torch.logsumexp(corrected['posterior'].log() + torch.tensor([[0., -2., -5.]], dtype=q.dtype), dim=1).mean()
+    assert abs(actual - float(expected)) < 1e-12
+    with pytest.raises(ValueError, match='recomputed'):
+        _calibration_nll(cache=cache, target=target, keys=keys, model=model,
+                        temperature=1.5, scale_multiplier=1., device=torch.device('cpu'))

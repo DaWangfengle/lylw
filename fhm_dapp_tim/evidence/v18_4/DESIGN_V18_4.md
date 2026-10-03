@@ -70,7 +70,13 @@ The registered learned backbone is:
 - no prototype metric hidden inside neural retrieval;
 - Student-t degrees of freedom = 4;
 - minimum residual scale = 0.25 m;
-- maximum local residual = 30 m.
+- local anisotropic Delaunay residual transform, globally capped at 30 m.
+
+Each deterministic residual transform is multiplied by min(1, 30/sigma_max)
+before use. Its axes and singular-value ratio are preserved. The residual-head
+direction is constrained to the unit Euclidean ball, so every component-center
+displacement has Euclidean norm <=30 m (apart from tiny floating-point roundoff).
+This cap is specific to V18.4; earlier model generations retain their semantics.
 
 Training uses:
 
@@ -277,7 +283,7 @@ and the observed/self anchor has zero target weight.
 
 Geometry is built independently within each building-floor stratum.
 
-The same target is used for anchor posterior supervision and spatial OT; no new
+The same target is used for anchor posterior supervision and spatial energy distance; no new
 target-temperature hyperparameter is introduced.
 
 ## 8. Spatial posterior learning
@@ -296,22 +302,28 @@ length computed from the fitting anchor dictionary.
 This makes the cost dimensionless and adapts automatically to dataset spatial
 scale.
 
-### 8.2 Debiased entropic transport
+### 8.2 Exact spatial energy-distance posterior supervision
 
-V18.4 uses a log-domain, balanced, debiased entropic transport objective
-between the learned anchor posterior and the leave-self-out Delaunay target.
+For predicted candidate-anchor coordinates x_i, leave-self-out Delaunay target
+coordinates y_j, and normalized probabilities q_i and t_j, define
 
-The registered entropic regularization is fixed at
+d(x,y) = ||x-y||_2 / s_C.
 
-epsilon_OT = 0.10
+The training-only spatial divergence is the exact discrete half energy distance:
 
-in dimensionless cost units.
+D_spatial(q,t)
+= sum_ij q_i t_j d(x_i,y_j)
+- 0.5 sum_ik q_i q_k d(x_i,x_k)
+- 0.5 sum_jl t_j t_l d(y_j,y_l).
 
-It is not selected on external datasets.
+All three expectations are evaluated exactly on the supplied finite supports,
+with float64 accumulation. Masks remove padding before normalization and spatial
+cost computation. The loss is differentiable with respect to predicted logits.
+Identical distributions on identical coordinates yield zero up to roundoff.
 
-Sensitivity at epsilon_OT in {0.05, 0.20} may be reported on UJI development
-after the primary method law is frozen, but those values cannot replace the
-registered method by outcome shopping.
+There is no iterative transport solver, entropic regularization coefficient,
+convergence-depth hyperparameter, or nonnegativity clamp hiding a negative loss.
+The same fitting-derived spatial_scale_m and leave-self-out target are retained.
 
 ### 8.3 Training objective
 
@@ -320,7 +332,7 @@ The base model objective is
 L =
     L_anchor
   + L_coordinate
-  + lambda_OT L_OT
+  + lambda_spatial D_spatial
   + 0.25 L_invariant
   + 0.50 L_hierarchy
   + 0.05 L_domain,
@@ -329,7 +341,7 @@ where:
 
 - L_anchor is cross entropy from q_i to q_theta over forced-positive support;
 - L_coordinate is the leave-self-out expected Student-t coordinate NLL;
-- L_OT is debiased entropic spatial transport;
+- D_spatial is the exact dimensionless half energy distance defined above;
 - L_invariant supervises full-dictionary invariant retrieval;
 - L_hierarchy supervises building/floor where meaningful;
 - L_domain is used only when at least two training device classes exist.
@@ -341,11 +353,11 @@ There is no posterior-mean coordinate loss.
 There is no separate reranker auxiliary loss because the learned candidate
 posterior is itself the primary anchor posterior.
 
-### 8.4 OT coefficient development grid
+### 8.4 Spatial-supervision coefficient development grid
 
-The only registered OT strength candidates are
+The only registered spatial-supervision strength candidates are
 
-lambda_OT in {0.10, 0.25, 0.50}.
+lambda_spatial in {0.10, 0.25, 0.50}.
 
 These values are selected on UJI V18.4 development coordinates only.
 
@@ -388,7 +400,8 @@ Geometry produces a local support-consistency energy
 
 E_g_raw(a,x)
 
-from the current base posterior and candidate coordinates.
+from the temperature-calibrated base posterior q_T and candidate coordinates.
+During training-reference fitting and global method development, T=1.
 
 All geometry remains same-building/floor.
 
@@ -433,14 +446,18 @@ For each fitting scan, define source mismatch:
 
 Radio:
 m_r =
-0.5 * [1 - exp(-E_q[E_r_tilde])]
+0.5 * [1 - exp(-E_q_T[E_r_tilde])]
 + 0.25 * normalized_abs_style_offset
 + 0.25 * normalized_abs_log_gain.
 
 Geometry:
-m_g = E_q[E_g_tilde].
+m_g = E_q_T[E_g_tilde].
 
-The empirical mismatch distributions are fitted using fitting data only.
+The empirical mismatch distributions and robust energy scales are fitted on
+fitting scans with the uncalibrated training base q (T=1), then frozen. At
+deployment, nuisance profiling, geometry energy and mismatch expectations are
+computed under q_T and compared with those fixed training references. Neither
+calibration nor evaluation refits any reliability reference.
 
 For source s, reliability is the smoothed empirical survival probability
 
@@ -456,36 +473,42 @@ Reliability values are deterministic, label-free, and constrained to [0,1].
 
 Evaluation data never refit these distributions.
 
-## 13. Trust-region posterior correction
+## 13. Reliability-bounded trust-region posterior correction
 
-Define
+Separate correction direction from allowed magnitude. For empirical source
+reliabilities r_r,r_g in [0,1], the directional weights are
 
-E_c(a,x)
-=
-r_r(x) E_r_tilde(a,x)
-+
-r_g(x) E_g_tilde(a,x).
+w_r = r_r / (r_r+r_g), w_g = r_g / (r_r+r_g).
+
+When the sum is numerically zero (fixed numerical tolerance 1e-12), both
+weights and the effective budget are zero, and correction is identity.
+Otherwise:
+
+E_dir = w_r E_r_tilde + w_g E_g_tilde,
+R(x) = max(r_r(x),r_g(x)),
+epsilon_eff(x) = R(x) * epsilon_KL.
 
 For rho in [0,1]:
 
-p_rho(a|x)
-proportional to
-q_theta(a|x) exp[-rho E_c(a,x)].
+p_rho(a|x) proportional to q_T(a|x) exp[-rho E_dir(a,x)].
 
-The applied correction is
+The applied correction uses the maximum rho satisfying
 
-rho_star
-=
-max {
-  rho in [0,1] :
-  KL(p_rho || q_theta) <= epsilon_KL
-}.
+KL(p_rho || q_T) <= epsilon_eff(x).
 
-Because KL(p_rho || q_theta) is monotone nondecreasing in rho >= 0, rho_star
-is solved deterministically by scalar bisection.
+KL is monotone nondecreasing in rho for a fixed direction, so deterministic
+row-wise bisection finds the maximum feasible rho. Bisection uses float64;
+realized KL is recomputed for the actual returned posterior. Scalar KL budgets
+remain supported by the mathematical helper for compatibility.
 
-This KL direction is intentionally conservative: structured evidence can
-correct the learned posterior but cannot freely replace it.
+Uniformly lowering both reliabilities leaves the direction fixed and lowers
+the maximum budget. Increasing rho therefore cannot cancel reliability. Zero
+reliability returns q_T bitwise, and masked positions retain exactly zero mass.
+There are no learned reliability parameters or labels in this law.
+
+Diagnostics include the registered maximum epsilon_KL, row-wise epsilon_eff,
+rho, realized and full-correction KL, both reliabilities, and normalized source
+weights. The KL reference is q_T, including at non-unit calibration temperatures.
 
 ## 14. Trust-region development grid
 
@@ -493,15 +516,17 @@ The registered global KL budgets are
 
 epsilon_KL in {0.025, 0.050, 0.100}.
 
-The budget is a global scalar, not an input-dependent learned function.
+The registered maximum budget is a global scalar. Its row-wise effective
+budget is max(r_r,r_g) times that maximum, never larger; this is a fixed
+empirical law rather than a learned input-dependent parameter.
 
-It is selected jointly with lambda_OT on UJI V18.4 development coordinates.
+It is selected jointly with lambda_spatial on UJI V18.4 development coordinates.
 
 Therefore the full registered method grid contains only
 
-3 lambda_OT values x 3 epsilon_KL values = 9 method combinations.
+3 lambda_spatial values x 3 epsilon_KL values = 9 method combinations.
 
-The base no-OT/no-correction system is reported as an ablation but is not an
+The base no-spatial-supervision/no-correction system is reported as an ablation but is not an
 additional searched method combination.
 
 ## 15. Global method selection rule
@@ -509,7 +534,7 @@ additional searched method combination.
 Selection is deliberately staged so posterior learning and posterior
 correction remain causally separable.
 
-For each registered lambda_OT value:
+For each registered lambda_spatial value:
 
 1. train the base posterior on the fitting role;
 2. select that run's epoch using the uncorrected base posterior only;
@@ -518,7 +543,7 @@ For each registered lambda_OT value:
    fitting-role scans only;
 5. evaluate the three registered epsilon_KL values on development coordinates.
 
-The resulting 3 lambda_OT x 3 epsilon_KL = 9 corrected method combinations are
+The resulting 3 lambda_spatial x 3 epsilon_KL = 9 corrected method combinations are
 then ranked on the UJI V18.4 development role using the fixed lexicographic
 rule:
 
@@ -526,18 +551,18 @@ rule:
 2. shortlist configurations within 0.05 m of the best Energy Score;
 3. within the shortlist, minimum component-center GM coordinate-macro MAE;
 4. then minimum coordinate-macro mixture NLL;
-5. then smaller lambda_OT;
+5. then smaller lambda_spatial;
 6. then smaller epsilon_KL.
 
 Trust-region correction never participates in epoch selection.  This preserves
-a direct causal interpretation of the OT training effect and avoids repeatedly
+a direct causal interpretation of the spatial-supervision training effect and avoids repeatedly
 profiling radio nuisance parameters at every epoch.
 
 External test outcomes never affect this selection.
 
 ## 16. Epoch selection
 
-For each lambda_OT-trained base model:
+For each lambda_spatial-trained base model:
 
 - epochs before 12 are ineligible;
 - correction is disabled for epoch selection;
@@ -555,33 +580,36 @@ development role.
 
 ## 17. Predictive calibration
 
-After model and method selection, the model is refit on selection_refit using
-the frozen lambda_OT and selected epoch.
+After model and method selection, refit on selection_refit using frozen
+lambda_spatial and the selected epoch, and fit/freeze correction references
+on selection_refit at T=1. Only the registered training-derived calibration
+role may then choose scalar predictive calibration parameters:
 
-Only then may its training-only calibration role choose scalar predictive
-calibration parameters:
+- learned-base posterior temperature T from
+  {0.50,0.75,1.00,1.25,1.50,2.00,2.50,3.00};
+- Student-t scale multiplier from {0.50,0.75,1.00,1.25,1.50,2.00}.
 
-- final corrected-posterior temperature from
-  {0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 2.50, 3.00};
-- Student-t scale multiplier from
-  {0.50, 0.75, 1.00, 1.25, 1.50, 2.00}.
+The deployed order is:
 
-The temperature is applied after the frozen trust-region correction:
+base q -> temperature q_T -> reliability-bounded trust correction -> final posterior.
 
-p_cal(a|x) proportional to p_corrected(a|x)^(1/T).
+q_T(a|x) proportional to q(a|x)^(1/T).
 
-Therefore the registered KL bound describes the structured correction before
-this separate probability-calibration map.  Calibration is not part of the
-trust-region optimization.
+Radio profiling, geometry energy and reliability mismatches use q_T. The final
+structured posterior satisfies KL(p_final || q_T) <= epsilon_eff(x). There is
+no second posterior-temperature map after correction.
 
-Calibration minimizes coordinate-macro mixture NLL over the fixed 8 x 6
-surface.  The same registered grids are used for every dataset.
+Each candidate temperature gets its own corrected-distribution cache, obtained
+by executing this entire order; a cache/temperature mismatch fails closed.
+The six scale values reuse that temperature's final probabilities and multiply
+only Student-t component scales. Scale calibration is probability-neutral and
+leaves anchor weights, component centers and trust diagnostics unchanged.
 
-These are dataset-specific probability calibration parameters, not method
-hyperparameters.
-
-They cannot modify lambda_OT, epsilon_KL, reliability law, architecture,
-candidate quotas, or decoder.
+Calibration minimizes coordinate-macro mixture NLL over the same fixed 8 x 6
+surface on every dataset. These dataset-specific predictive calibration values
+cannot modify lambda_spatial, epsilon_KL maximum, reliability law, architecture,
+proposal quotas or GM decoder. Reference fitting is never repeated on the
+calibration or evaluation role.
 
 ## 18. Loss-aligned point decision
 
@@ -646,9 +674,9 @@ The required causal ladder is:
 
 A0. Base posterior + posterior-mean decision
 A1. Base posterior + registered GM decision
-A2. Base + spatial OT + GM
-A3. Base + spatial OT + trust-region correction + posterior mean
-A4. Full: Base + spatial OT + trust-region correction + GM
+A2. Base + spatial energy distance + GM
+A3. Base + spatial energy distance + trust-region correction + posterior mean
+A4. Full: Base + spatial energy distance + trust-region correction + GM
 
 Additional source ablations:
 
@@ -669,7 +697,7 @@ After the UJI global method law is frozen:
 - train/evaluate pooled TUJI1;
 - run five TUJI1 leave-one-device-out evaluations.
 
-The global lambda_OT, epsilon_KL, support law, reliability law, OT definition,
+The global lambda_spatial, epsilon_KL, support law, reliability law, spatial loss definition,
 trust-region direction, architecture, and GM decoder cannot change after the
 UJI method freeze.
 
@@ -828,7 +856,7 @@ V18.4 implementation proceeds in this fixed order:
 1. canonical adapters and dataset audit;
 2. grouped training-role protocol;
 3. pretraining support-capacity audit;
-4. mathematical core tests for OT, reliability, trust region and GM;
+4. mathematical core tests for spatial energy distance, reliability, trust region and GM;
 5. base single-checkpoint posterior model;
 6. UJI nine-combination method development;
 7. selection refit and scalar predictive calibration;
@@ -837,3 +865,24 @@ V18.4 implementation proceeds in this fixed order:
 10. causal ablations and final reporting without changing the frozen full model.
 
 Steps 1-3 are complete and CI-verified before the main model is implemented.
+
+## 25. Pre-run mathematical revision boundary (2026-10-04)
+
+Before formal UJI nine-combination development, revise and verify the exact
+spatial loss, reliability-scaled trust budget, calibration order and residual
+cap. Run the registered regression suite, v18_4_realdata_smoke, and the
+outcome-free v18_4_revision_audit. The audit uses only UJI training-derived
+fit/development roles and synthetic constructions, with a small CUDA smoke
+when available. It reports finite losses/gradients, KL and residual bounds,
+small-sample natural-support truncation and forced-positive preservation.
+
+The method still has exactly 9 global combinations. Active code, configuration,
+and new serialized records use lambda_spatial; epsilon_OT is absent. The UJI
+and external protocol metadata version advances to v2_20261004 so the revised
+law is distinct from the initial implementation. There were no formal V18.4
+registry/development/calibration/freeze artifacts to migrate at revision start.
+
+After PRE_RUN_REVISION_AUDIT_V18_4.json/.md and tests succeed, stop for review.
+Do not execute formal UJI prepare/develop/calibrate-freeze or external formal
+training/evaluation in this pre-run revision task. Numerical or protocol
+failures must be reported without weakening checks or silently retrying.

@@ -33,13 +33,15 @@ from fhm_dapp_tim.fhm_dapp.model import (
 from fhm_dapp_tim.fhm_dapp.train_anchor import _ap_building_owner
 from fhm_dapp_tim.fhm_dapp.v18_single import delaunay_neighbor_targets
 from fhm_dapp_tim.fhm_dapp.v18_4_core import (
+    cap_anisotropic_residual_transform,
     empirical_survival_reliability,
     fit_empirical_reference,
     masked_softmax,
     normalize_energy,
     robust_energy_scale,
-    spatial_sinkhorn_divergence,
-    trust_region_posterior_correction,
+    spatial_energy_distance,
+    reliability_bounded_posterior_correction,
+    temperature_base_posterior,
     weighted_component_geometric_median,
 )
 
@@ -71,8 +73,7 @@ V184_CONFIG: dict[str, object] = {
     "geometry_seed_k": 8,
     "support_ceiling": 128,
     # Spatial posterior supervision.
-    "epsilon_ot": 0.10,
-    "lambda_ot_grid": (0.10, 0.25, 0.50),
+    "lambda_spatial_grid": (0.10, 0.25, 0.50),
     # Structured correction.
     "epsilon_kl_grid": (0.025, 0.050, 0.100),
     "geometry_sigma_scale": 1.50,
@@ -125,6 +126,25 @@ class CorrectionReference:
 class TrustRegionAnchorModel(AnchorStudentTModel):
     """One checkpoint; no additional trainable routing or evidence gate."""
 
+    def __init__(
+        self,
+        *,
+        local_residual_transform: torch.Tensor | None = None,
+        max_residual_m: float = 30.0,
+        **kwargs,
+    ) -> None:
+        # Cap only this generation's deterministic geometry. Earlier models
+        # retain their original residual-transform and checkpoint semantics.
+        if local_residual_transform is not None:
+            local_residual_transform = cap_anisotropic_residual_transform(
+                local_residual_transform, max_residual_m=max_residual_m,
+            )
+        super().__init__(
+            local_residual_transform=local_residual_transform,
+            max_residual_m=max_residual_m,
+            **kwargs,
+        )
+
 
 def validate_v184_config(
     config: Mapping[str, object] = V184_CONFIG,
@@ -160,16 +180,20 @@ def validate_v184_config(
     ):
         if int(config[name]) <= 0:
             raise ValueError(f"{name} must be positive")
-    if float(config["epsilon_ot"]) <= 0.0:
-        raise ValueError("epsilon_ot must be positive")
     if float(config["geometry_sigma_scale"]) <= 0.0:
         raise ValueError("geometry sigma scale must be positive")
     if float(config["geometry_margin_scale"]) < 0.0:
         raise ValueError("geometry margin scale cannot be negative")
-    if any(float(value) <= 0.0 for value in config["lambda_ot_grid"]):
-        raise ValueError("lambda_ot grid values must be positive")
+    if any(float(value) <= 0.0 for value in config["lambda_spatial_grid"]):
+        raise ValueError("lambda_spatial grid values must be positive")
     if any(float(value) < 0.0 for value in config["epsilon_kl_grid"]):
         raise ValueError("epsilon_kl grid values cannot be negative")
+    if tuple(map(float, config["lambda_spatial_grid"])) != (0.10, 0.25, 0.50):
+        raise ValueError("lambda_spatial grid must retain the three registered values")
+    if tuple(map(float, config["epsilon_kl_grid"])) != (0.025, 0.050, 0.100):
+        raise ValueError("epsilon_kl grid must retain the three registered values")
+    if float(config["max_residual_m"]) != 30.0:
+        raise ValueError("V18.4 maximum local residual is registered at 30 m")
     if int(config["minimum_epochs"]) < 1:
         raise ValueError("minimum_epochs must be positive")
     if int(config["maximum_epochs"]) < int(config["minimum_epochs"]):
@@ -692,16 +716,16 @@ def v184_training_loss(
     neighbour_indices: torch.Tensor,
     neighbour_weights: torch.Tensor,
     *,
-    lambda_ot: float,
+    lambda_spatial: float,
     config: Mapping[str, object] = V184_CONFIG,
 ) -> dict[str, torch.Tensor]:
     """Train q_theta and Student-t residuals; correction is not in gradients."""
 
     validate_v184_config(config)
-    if float(lambda_ot) not in {
-        float(value) for value in config["lambda_ot_grid"]
+    if float(lambda_spatial) not in {
+        float(value) for value in config["lambda_spatial_grid"]
     }:
-        raise ValueError("lambda_ot is outside the registered V18.4 grid")
+        raise ValueError("lambda_spatial is outside the registered V18.4 grid")
 
     model_rss = model.augment_scan_style(
         rss,
@@ -782,7 +806,7 @@ def v184_training_loss(
 
     candidate_coords = model.anchor_coords[candidate_indices]
     target_coords_anchor = model.anchor_coords[target_indices]
-    ot_loss = spatial_sinkhorn_divergence(
+    spatial_loss = spatial_energy_distance(
         q_theta,
         candidate_coords,
         target_weights,
@@ -790,7 +814,6 @@ def v184_training_loss(
         spatial_scale=model.v184_spatial_scale_m,
         predicted_mask=candidate_mask,
         target_mask=target_weights > 0.0,
-        epsilon_ot=float(config["epsilon_ot"]),
     ).mean()
 
     invariant_logp = F.log_softmax(invariant_logits, dim=1)
@@ -820,7 +843,7 @@ def v184_training_loss(
     loss = (
         float(config["anchor_weight"]) * anchor_nll
         + float(config["coordinate_weight"]) * coordinate_nll
-        + float(lambda_ot) * ot_loss
+        + float(lambda_spatial) * spatial_loss
         + float(config["invariant_aux_weight"]) * invariant_aux
         + float(config["hierarchy_weight"]) * hierarchy_loss
         + float(config["domain_adversarial_weight"]) * domain_loss
@@ -832,7 +855,7 @@ def v184_training_loss(
         "loss": loss,
         "anchor_nll": anchor_nll.detach(),
         "coordinate_nll": coordinate_nll.detach(),
-        "spatial_ot_loss": ot_loss.detach(),
+        "spatial_energy_loss": spatial_loss.detach(),
         "invariant_aux_loss": invariant_aux.detach(),
         "hierarchy_loss": hierarchy_loss.detach(),
         "domain_loss": domain_loss.detach(),
@@ -1055,7 +1078,11 @@ def fit_correction_reference(
     style_scale: torch.Tensor,
     config: Mapping[str, object] = V184_CONFIG,
 ) -> CorrectionReference:
-    """Fit label-free correction scales/reliability CDFs on fitting scans."""
+    """Fit label-free scales/CDFs at T=1 on fitting scans, then freeze them.
+
+    Deployment evaluates energies and mismatches under q_T against this fixed
+    uncalibrated-training reference; calibration never refits the references.
+    """
 
     radio_scale = robust_energy_scale(
         radio_energy_raw,
@@ -1105,7 +1132,7 @@ def apply_correction(
     epsilon_kl: float,
     config: Mapping[str, object] = V184_CONFIG,
 ) -> dict[str, torch.Tensor]:
-    """Apply reliability-weighted correction inside the KL trust region."""
+    """Use normalized reliability direction and max(r_r,r_g) KL budget."""
 
     if float(epsilon_kl) not in {
         float(value) for value in config["epsilon_kl_grid"]
@@ -1139,13 +1166,12 @@ def apply_correction(
         geometry_mismatch,
         local_reference.geometry_mismatch_reference,
     )
-    combined = (
-        radio_reliability.unsqueeze(1) * radio
-        + geometry_reliability.unsqueeze(1) * geometry
-    )
-    corrected = trust_region_posterior_correction(
+    corrected = reliability_bounded_posterior_correction(
         base_probability,
-        combined,
+        radio,
+        geometry,
+        radio_reliability=radio_reliability,
+        geometry_reliability=geometry_reliability,
         epsilon_kl=float(epsilon_kl),
         mask=candidate_mask,
     )
@@ -1153,11 +1179,12 @@ def apply_correction(
         **corrected,
         "radio_energy": radio,
         "geometry_energy": geometry,
-        "combined_energy": combined,
         "radio_mismatch": radio_mismatch,
         "geometry_mismatch": geometry_mismatch,
         "radio_reliability": radio_reliability,
         "geometry_reliability": geometry_reliability,
+        "style_offset": raw["style_offset"],
+        "style_scale": raw["style_scale"],
     }
 
 
@@ -1173,10 +1200,10 @@ def v184_distribution(
 ) -> dict[str, torch.Tensor]:
     """Return the full V18.4 predictive mixture without a point decision.
 
-    q_theta is always the uncalibrated learned base posterior.  Structured
-    correction is applied relative to that q_theta.  Dataset-specific scalar
-    temperature is a separate post-correction calibration map, so it cannot
-    alter the registered trust-region optimization.
+    The uncalibrated learned q is first temperature-calibrated to q_T.
+    Energies, mismatches and KL correction all reference q_T. The final
+    posterior has no second temperature map; scale calibration is neutral
+    with respect to anchor probabilities.
     """
 
     validate_v184_config(config)
@@ -1202,7 +1229,10 @@ def v184_distribution(
         posterior_temperature=1.0,
     )
     base_probability = base["probability"]
-    corrected_probability = base_probability
+    calibrated_base_probability = temperature_base_posterior(
+        base_probability, base["candidate_mask"], temperature=final_temperature,
+    )
+    corrected_probability = calibrated_base_probability
     correction: dict[str, torch.Tensor] | None = None
 
     if correction_reference is not None:
@@ -1211,12 +1241,12 @@ def v184_distribution(
         raw = raw_correction_energies(
             model,
             rss,
-            base_probability,
+            calibrated_base_probability,
             support,
             config=config,
         )
         correction = apply_correction(
-            base_probability=base_probability,
+            base_probability=calibrated_base_probability,
             candidate_mask=base["candidate_mask"],
             raw=raw,
             reference=correction_reference,
@@ -1226,15 +1256,6 @@ def v184_distribution(
         corrected_probability = correction["posterior"]
     elif epsilon_kl is not None:
         raise ValueError("epsilon_kl without correction reference is undefined")
-
-    if abs(float(final_temperature) - 1.0) <= 1e-12:
-        calibrated_probability = corrected_probability
-    else:
-        log_probability = corrected_probability.clamp(min=1e-30).log()
-        calibrated_probability = masked_softmax(
-            log_probability / float(final_temperature),
-            base["candidate_mask"],
-        )
 
     component_location, component_scale = model._candidate_components(
         embedding,
@@ -1251,8 +1272,9 @@ def v184_distribution(
         ),
         "natural_truncated": support["natural_truncated"],
         "base_probability": base_probability,
+        "calibrated_base_probability": calibrated_base_probability,
         "corrected_probability": corrected_probability,
-        "candidate_weights": calibrated_probability,
+        "candidate_weights": corrected_probability,
         "component_locations": component_location,
         "component_scales": component_scale,
         "invariant_logits": invariant_logits,

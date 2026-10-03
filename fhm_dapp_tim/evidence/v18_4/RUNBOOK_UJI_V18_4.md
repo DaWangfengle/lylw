@@ -1,5 +1,26 @@
 # V18.4 UJI Formal Development Runbook
 
+Pre-run revision gate: the revised code, regression suite and
+`PRE_RUN_REVISION_AUDIT_V18_4.json/.md` must be reviewed before any formal
+commands below are executed. The pre-run revision task stops after tests and
+outcome-free diagnostics; it does not prepare, develop, calibrate-freeze or
+formally evaluate any dataset.
+
+The spatial objective is exact dimensionless half energy distance with
+lambda_spatial in {0.10,0.25,0.50}; there is no iterative Sinkhorn solver or
+entropic coefficient. Maximum epsilon_KL stays {0.025,0.050,0.100}, with
+row budget epsilon_eff=max(r_radio,r_geometry)*epsilon_KL. Directional source
+weights are reliabilities normalized by their sum; zero sum gives identity.
+The 9 global method combinations are unchanged.
+
+Calibration/deployment order is `q -> temperature q_T -> trust correction ->
+final posterior`. Each of the 8 candidate temperatures requires a distinct
+corrected-distribution cache; there is no post-correction temperature map.
+Radio/geometry energies, reliability mismatches and realized KL use q_T.
+References remain fitted on training q at T=1 and frozen thereafter. The 6
+Student-t scale values multiply only component scales and leave probabilities
+unchanged. Local anisotropic Delaunay residuals are globally capped at 30 m.
+
 This runbook executes the registered UJI method-development protocol for
 V18.4. It uses only `data/UJIndoorLoc/trainingData.csv`. The already exposed
 `validationData.csv` is not opened by prepare, develop, or calibrate-freeze.
@@ -21,10 +42,9 @@ succeeds. Only after freeze should they be committed as evidence.
 
 The formal method grid is fixed:
 
-- lambda_OT: 0.10, 0.25, 0.50
+- lambda_spatial: 0.10, 0.25, 0.50
 - epsilon_KL: 0.025, 0.050, 0.100
 - 9 global UJI method combinations total
-- epsilon_OT = 0.10
 - point decision = posterior-weighted component-center geometric median
 - calibration temperature grid:
   0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 2.50, 3.00
@@ -60,6 +80,7 @@ out of the repository rather than overwritten.
 ```powershell
 python -m pytest -q tests/test_v18_4_core.py tests/test_v18_4_model.py tests/test_uji_v18_4_development.py
 python -m fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke
+python -m fhm_dapp_tim.fhm_dapp.v18_4_revision_audit
 ```
 
 Required properties:
@@ -100,8 +121,8 @@ After this command, do not change Git HEAD.
 python -m fhm_dapp_tim.fhm_dapp.uji_v18_4_development develop --device cuda
 ```
 
-This trains exactly one base model for each registered lambda_OT value.
-For each lambda_OT:
+This trains exactly one base model for each registered lambda_spatial value.
+For each lambda_spatial:
 
 - training uses fit only;
 - epoch is selected using the uncorrected base posterior on development only;
@@ -114,7 +135,7 @@ The 9 combinations are selected by:
 2. retain combinations within 0.05 m of the best ES;
 3. minimum GM coordinate-macro MAE;
 4. minimum coordinate-macro mixture NLL;
-5. smaller lambda_OT;
+5. smaller lambda_spatial;
 6. smaller epsilon_KL.
 
 Expected outputs include:
@@ -135,10 +156,11 @@ python -m fhm_dapp_tim.fhm_dapp.uji_v18_4_development calibrate-freeze --device 
 
 This stage:
 
-- refits the selected lambda_OT model on selection_refit;
+- refits the selected lambda_spatial model on selection_refit;
 - uses the already selected epoch count;
 - fits correction references on selection_refit;
-- uses calibration groups only for the fixed 8 x 6 scalar calibration surface;
+- uses calibration groups only for the fixed 8 x 6 scalar calibration surface,
+  recomputing correction around q_T for each temperature;
 - records tail-dilution diagnostics for the selected calibration;
 - writes the global method freeze.
 

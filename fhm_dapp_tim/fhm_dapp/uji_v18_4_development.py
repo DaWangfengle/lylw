@@ -9,7 +9,7 @@ prepare
     Freeze UJI training-source hash and fit/development/calibration row roles.
 
 develop
-    For each registered lambda_OT:
+    For each registered lambda_spatial:
       * train on fit;
       * select epoch from the uncorrected base posterior on development;
       * fit label-free correction references on fit only;
@@ -19,7 +19,8 @@ develop
 calibrate-freeze
     Refit the selected method on selection_refit for the frozen epoch, fit the
     correction reference on selection_refit, and use calibration only for the
-    registered final-posterior temperature x Student-t scale surface.
+    registered base-posterior temperature x Student-t scale surface. Each
+    temperature precedes a fresh trust correction relative to q_T.
 
 No external/provided test split is read by any stage in this module.
 """
@@ -47,7 +48,6 @@ from fhm_dapp_tim.fhm_dapp.coherent_marked_v9 import (
     continuous_energy_score_mc,
 )
 from fhm_dapp_tim.fhm_dapp.v18_4_core import (
-    masked_softmax,
     tail_mass_diagnostics,
     weighted_component_geometric_median,
 )
@@ -78,7 +78,7 @@ from fhm_dapp_tim.fhm_dapp.v18_4_protocol import (
 )
 
 
-PROTOCOL_VERSION = "uji_v18_4_development_v1_20261002"
+PROTOCOL_VERSION = "uji_v18_4_development_v2_20261004"
 UJI_OFFICIAL_VALIDATION_PREEXPOSED = True
 EXTERNAL_PROVIDED_TESTS_PREEXPOSED_FOR_ADAPTER_VALIDATION = True
 MODEL_SEED = 184411
@@ -312,7 +312,7 @@ def prepare(
         "aps": int(len(data.ap_ids)),
         "role_seed": int(ROLE_SEEDS["UJIIndoorLoc"]),
         "roles": role_payload,
-        "lambda_ot_grid": list(map(float, V184_CONFIG["lambda_ot_grid"])),
+        "lambda_spatial_grid": list(map(float, V184_CONFIG["lambda_spatial_grid"])),
         "epsilon_kl_grid": list(map(float, V184_CONFIG["epsilon_kl_grid"])),
         "model_config": _config_json(),
     }
@@ -637,7 +637,7 @@ def _train_epoch(
     training_rows: np.ndarray,
     neighbours: torch.Tensor,
     weights: torch.Tensor,
-    lambda_ot: float,
+    lambda_spatial: float,
     device: torch.device,
     generator: torch.Generator,
 ) -> dict[str, float]:
@@ -672,7 +672,7 @@ def _train_epoch(
             device_id,
             neighbours,
             weights,
-            lambda_ot=float(lambda_ot),
+            lambda_spatial=float(lambda_spatial),
         )
         if not bool(torch.isfinite(result["loss"])):
             raise RuntimeError("non-finite V18.4 training loss")
@@ -702,13 +702,13 @@ def _train_epoch(
 
 def _fit_one_lambda(
     *,
-    lambda_ot: float,
+    lambda_spatial: float,
     data: CanonicalFingerprintData,
     rows: Mapping[str, np.ndarray],
     rss_all: torch.Tensor,
     device: torch.device,
 ) -> tuple[dict, dict]:
-    """Train one lambda_OT and choose its base epoch before correction."""
+    """Train one lambda_spatial and choose its base epoch before correction."""
 
     _set_seed(MODEL_SEED)
     (
@@ -750,7 +750,7 @@ def _fit_one_lambda(
             training_rows=rows["fit"],
             neighbours=neighbours,
             weights=weights,
-            lambda_ot=float(lambda_ot),
+            lambda_spatial=float(lambda_spatial),
             device=device,
             generator=generator,
         )
@@ -834,7 +834,7 @@ def _fit_one_lambda(
     checkpoint = {
         "protocol_version": PROTOCOL_VERSION,
         "phase": "fit_candidate",
-        "lambda_ot": float(lambda_ot),
+        "lambda_spatial": float(lambda_spatial),
         "selected_epoch": int(selected["epoch"]),
         "origin": torch.from_numpy(
             data.coords_m[rows["fit"]].mean(
@@ -849,7 +849,7 @@ def _fit_one_lambda(
         "model_config": _config_json(),
     }
     report = {
-        "lambda_ot": float(lambda_ot),
+        "lambda_spatial": float(lambda_spatial),
         "selected_epoch": int(selected["epoch"]),
         "selected_base_metrics": {
             key: value
@@ -1199,7 +1199,7 @@ def select_method_record(
         key=lambda record: (
             float(record["gm_mae_m"]),
             float(record["nll"]),
-            float(record["lambda_ot"]),
+            float(record["lambda_spatial"]),
             float(record["epsilon_kl"]),
         ),
     )
@@ -1227,15 +1227,15 @@ def develop(
     method_records = []
 
     started = time.perf_counter()
-    for lambda_ot in map(float, V184_CONFIG["lambda_ot_grid"]):
+    for lambda_spatial in map(float, V184_CONFIG["lambda_spatial_grid"]):
         checkpoint, report = _fit_one_lambda(
-            lambda_ot=lambda_ot,
+            lambda_spatial=lambda_spatial,
             data=data,
             rows=rows,
             rss_all=rss_all,
             device=device,
         )
-        token = f"{lambda_ot:.2f}".replace(".", "p")
+        token = f"{lambda_spatial:.2f}".replace(".", "p")
         checkpoint_path = model_root / f"uji_lambda_{token}.pt"
         if checkpoint_path.exists():
             raise FileExistsError(checkpoint_path)
@@ -1288,7 +1288,7 @@ def develop(
         for epsilon, metrics in grid.items():
             method_records.append(
                 {
-                    "lambda_ot": float(lambda_ot),
+                    "lambda_spatial": float(lambda_spatial),
                     "epsilon_kl": float(epsilon),
                     "selected_epoch": int(checkpoint["selected_epoch"]),
                     "checkpoint_path": _repo_relative(checkpoint_path),
@@ -1315,7 +1315,7 @@ def develop(
         "external_test_performance_used_for_v184_selection": False,
         "selection_rule": (
             "min Energy Score; <=0.05m shortlist; min GM MAE; min NLL; "
-            "smaller lambda_OT; smaller epsilon_KL"
+            "smaller lambda_spatial; smaller epsilon_KL"
         ),
         "lambda_reports": lambda_reports,
         "method_grid": method_records,
@@ -1332,7 +1332,7 @@ def _train_fixed_epochs(
     data: CanonicalFingerprintData,
     training_rows: np.ndarray,
     rss_all: torch.Tensor,
-    lambda_ot: float,
+    lambda_spatial: float,
     epochs: int,
     device: torch.device,
 ) -> tuple[dict, torch.nn.Module, np.ndarray]:
@@ -1370,7 +1370,7 @@ def _train_fixed_epochs(
             training_rows=training_rows,
             neighbours=neighbours,
             weights=weights,
-            lambda_ot=float(lambda_ot),
+            lambda_spatial=float(lambda_spatial),
             device=device,
             generator=generator,
         )
@@ -1379,7 +1379,7 @@ def _train_fixed_epochs(
     checkpoint = {
         "protocol_version": PROTOCOL_VERSION,
         "phase": "selection_refit",
-        "lambda_ot": float(lambda_ot),
+        "lambda_spatial": float(lambda_spatial),
         "selected_epoch": int(epochs),
         "origin": torch.from_numpy(
             data.coords_m[training_rows].mean(
@@ -1405,8 +1405,17 @@ def _cache_corrected_distribution(
     rss_all: torch.Tensor,
     row_indices: np.ndarray,
     device: torch.device,
-) -> dict[str, torch.Tensor]:
+    final_temperature: float = 1.0,
+) -> dict[str, torch.Tensor | float]:
+    """Cache final mixtures for one base temperature, after q_T correction.
+
+    These probabilities must never be retempered. Distinct temperatures need
+    distinct caches because profiling, geometry, reliability and KL use q_T.
+    """
     probability = []
+    calibrated_base = []
+    realized_kl = []
+    effective_epsilon = []
     mask = []
     location = []
     scale = []
@@ -1422,12 +1431,15 @@ def _cache_corrected_distribution(
             rss_all[rows].to(device),
             correction_reference=reference,
             epsilon_kl=float(epsilon_kl),
-            final_temperature=1.0,
+            final_temperature=float(final_temperature),
             scale_multiplier=1.0,
         )
         probability.append(
-            distribution["corrected_probability"].detach().cpu()
+            distribution["candidate_weights"].detach().cpu()
         )
+        calibrated_base.append(distribution["calibrated_base_probability"].detach().cpu())
+        realized_kl.append(distribution["correction_realized_kl"].detach().cpu())
+        effective_epsilon.append(distribution["correction_epsilon_kl_effective"].detach().cpu())
         mask.append(distribution["candidate_mask"].cpu())
         location.append(distribution["component_locations"].detach().cpu())
         scale.append(distribution["component_scales"].detach().cpu())
@@ -1437,12 +1449,28 @@ def _cache_corrected_distribution(
         truncation.append(distribution["natural_truncated"].cpu())
     return {
         "probability": _pad_concat_support(probability, fill_value=0.0),
+        "calibrated_base_probability": _pad_concat_support(calibrated_base, fill_value=0.0),
+        "realized_kl": torch.cat(realized_kl),
+        "epsilon_kl_effective": torch.cat(effective_epsilon),
+        "posterior_temperature": float(final_temperature),
         "mask": _pad_concat_support(mask, fill_value=False),
         "location": _pad_concat_support(location, fill_value=0.0),
         "scale": _pad_concat_support(scale, fill_value=1.0),
         "natural_pool_size_before_ceiling": torch.cat(pre_ceiling_size),
         "natural_truncated": torch.cat(truncation),
     }
+
+
+def _cached_calibration_probability(
+    cache: Mapping[str, torch.Tensor | float],
+    *,
+    temperature: float,
+    device: torch.device,
+) -> torch.Tensor:
+    """Reject a temperature/cache mismatch instead of retempering p_final."""
+    if float(cache["posterior_temperature"]) != float(temperature):
+        raise ValueError("calibration cache must be recomputed for this base temperature")
+    return cache["probability"].to(device)
 
 
 def _calibration_nll(
@@ -1455,11 +1483,8 @@ def _calibration_nll(
     scale_multiplier: float,
     device: torch.device,
 ) -> float:
-    probability = cache["probability"].to(device)
-    mask = cache["mask"].to(device)
-    calibrated = masked_softmax(
-        probability.clamp(min=1e-30).log() / float(temperature),
-        mask,
+    calibrated = _cached_calibration_probability(
+        cache, temperature=temperature, device=device,
     )
     location = cache["location"].to(device)
     scale = cache["scale"].to(device) * float(scale_multiplier)
@@ -1493,11 +1518,9 @@ def _selected_calibration_metrics(
     scale_multiplier: float,
     device: torch.device,
 ) -> dict[str, object]:
-    probability = cache["probability"].to(device)
     mask = cache["mask"].to(device)
-    p = masked_softmax(
-        probability.clamp(min=1e-30).log() / float(temperature),
-        mask,
+    p = _cached_calibration_probability(
+        cache, temperature=temperature, device=device,
     )
     location = cache["location"].to(device)
     scale = cache["scale"].to(device) * float(scale_multiplier)
@@ -1564,6 +1587,8 @@ def _selected_calibration_metrics(
         "natural_truncation_fraction": float(
             cache["natural_truncated"].double().mean()
         ),
+        "mean_realized_kl_against_q_T": float(cache["realized_kl"].double().mean()),
+        "mean_effective_epsilon_kl": float(cache["epsilon_kl_effective"].double().mean()),
         "tail_mass": {},
     }
     for radius in (10, 20, 40):
@@ -1617,7 +1642,7 @@ def calibrate_freeze(
         raise ValueError("development/registry link mismatch")
 
     selected = development["selected"]
-    lambda_ot = float(selected["lambda_ot"])
+    lambda_spatial = float(selected["lambda_spatial"])
     epsilon_kl = float(selected["epsilon_kl"])
     selected_epoch = int(selected["selected_epoch"])
 
@@ -1630,7 +1655,7 @@ def calibrate_freeze(
         data=data,
         training_rows=rows["selection_refit"],
         rss_all=rss_all,
-        lambda_ot=lambda_ot,
+        lambda_spatial=lambda_spatial,
         epochs=selected_epoch,
         device=device,
     )
@@ -1645,21 +1670,20 @@ def calibrate_freeze(
     _save_torch_new(checkpoint_path, checkpoint)
     checkpoint_sha = _sha256_file(checkpoint_path)
 
-    cache = _cache_corrected_distribution(
-        model=model,
-        reference=reference,
-        epsilon_kl=epsilon_kl,
-        rss_all=rss_all,
-        row_indices=rows["calibration"],
-        device=device,
-    )
     target = torch.from_numpy(
         centered[rows["calibration"]].astype(np.float32)
     )
     keys = _coordinate_group_ids(data, rows["calibration"])
 
     surface = []
+    temperature_caches = {}
     for temperature in CALIBRATION_TEMPERATURE_GRID:
+        cache = _cache_corrected_distribution(
+            model=model, reference=reference, epsilon_kl=epsilon_kl,
+            rss_all=rss_all, row_indices=rows["calibration"], device=device,
+            final_temperature=float(temperature),
+        )
+        temperature_caches[float(temperature)] = cache
         for scale_multiplier in CALIBRATION_SCALE_GRID:
             nll = _calibration_nll(
                 cache=cache,
@@ -1689,7 +1713,7 @@ def calibrate_freeze(
         ),
     )
     selected_metrics = _selected_calibration_metrics(
-        cache=cache,
+        cache=temperature_caches[float(selected_calibration["temperature"])],
         target=target,
         keys=keys,
         model=model,
@@ -1706,10 +1730,12 @@ def calibrate_freeze(
             "development_result_sha256"
         ],
         "selection_refit_checkpoint_sha256": checkpoint_sha,
-        "lambda_ot": lambda_ot,
+        "lambda_spatial": lambda_spatial,
         "epsilon_kl": epsilon_kl,
         "selected_epoch": selected_epoch,
         "temperature_grid": list(CALIBRATION_TEMPERATURE_GRID),
+        "calibration_order": "base q -> temperature q_T -> reliability-bounded trust correction -> final posterior",
+        "correction_reference_fit_temperature": 1.0,
         "scale_grid": list(CALIBRATION_SCALE_GRID),
         "surface": surface,
         "selected": selected_calibration,
@@ -1744,7 +1770,7 @@ def calibrate_freeze(
             "calibration_result_sha256"
         ],
         "selection_refit_checkpoint_sha256": checkpoint_sha,
-        "lambda_ot": lambda_ot,
+        "lambda_spatial": lambda_spatial,
         "epsilon_kl": epsilon_kl,
         "selected_epoch": selected_epoch,
         "posterior_temperature": float(

@@ -1,15 +1,22 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
+
+import numpy as np
+import torch
+import pytest
 
 from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import _canonical_sha
 from fhm_dapp_tim.fhm_dapp.v18_4_external import (
     TUJI_DEVICES,
     TUJI_LODO_ROLE_SEEDS,
     _current_head,
+    _method_source_compatible,
+    _calibrate_external,
     _reference_from_json,
     _reference_payload_json,
     external_specs,
@@ -19,11 +26,20 @@ from fhm_dapp_tim.fhm_dapp.v18_4_external import (
 from fhm_dapp_tim.fhm_dapp.v18_4_datasets import DatasetReference
 
 
+@pytest.fixture
+def clean_execution_fixture():
+    # Synthetic freeze/manifest metadata is isolated from working-tree edits;
+    # dirty execution and incompatible method sources remain explicit tests.
+    head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+    with patch('fhm_dapp_tim.fhm_dapp.v18_4_external._current_head', return_value=head):
+        yield
+
+
 def _fake_uji_freeze(path: Path) -> Path:
     payload = {
         "protocol_version": "test",
         "source_commit_sha": _current_head(),
-        "lambda_ot": 0.25,
+        "lambda_spatial": 0.25,
         "epsilon_kl": 0.05,
         "uji_official_validation_preexposed": True,
         "uji_official_validation_used_for_v184_selection": False,
@@ -96,7 +112,7 @@ def test_dataset_reference_json_roundtrip() -> None:
     assert restored == reference
 
 
-def test_prepare_external_uts_uses_training_only(tmp_path: Path) -> None:
+def test_prepare_external_uts_uses_training_only(tmp_path: Path, clean_execution_fixture) -> None:
     uji = _fake_uji_freeze(tmp_path / "uji_freeze.json")
     manifest_path = tmp_path / "uts_manifest.json"
     manifest = prepare_external(
@@ -119,7 +135,7 @@ def test_prepare_external_uts_uses_training_only(tmp_path: Path) -> None:
     assert loaded["manifest_sha256"] == manifest["manifest_sha256"]
 
 
-def test_prepare_external_tampere_uses_training_only(tmp_path: Path) -> None:
+def test_prepare_external_tampere_uses_training_only(tmp_path: Path, clean_execution_fixture) -> None:
     uji = _fake_uji_freeze(tmp_path / "uji_freeze.json")
     manifest = prepare_external(
         "tampere",
@@ -135,6 +151,7 @@ def test_prepare_external_tampere_uses_training_only(tmp_path: Path) -> None:
 
 def test_prepare_external_tuji_lodo_excludes_heldout_device(
     tmp_path: Path,
+    clean_execution_fixture,
 ) -> None:
     uji = _fake_uji_freeze(tmp_path / "uji_freeze.json")
     manifest = prepare_external(
@@ -152,3 +169,32 @@ def test_prepare_external_tuji_lodo_excludes_heldout_device(
     assert manifest["formal_test_performance_evaluated"] is False
     assert manifest["training_rows"] > 0
     assert manifest["aps"] > 0
+
+
+def test_external_method_source_change_still_fails_closed() -> None:
+    with patch('fhm_dapp_tim.fhm_dapp.v18_4_external.subprocess.run', return_value=SimpleNamespace(returncode=1)):
+        with pytest.raises(RuntimeError, match='changed'):
+            _method_source_compatible('a' * 40)
+
+
+def test_external_calibration_recomputes_correction_for_each_base_temperature() -> None:
+    from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import CALIBRATION_TEMPERATURE_GRID, CALIBRATION_SCALE_GRID
+    def nll(*, cache, temperature, scale_multiplier, **kwargs):
+        assert cache['posterior_temperature'] == temperature
+        return abs(temperature - 1.25) + abs(scale_multiplier - 1.)
+    def metrics(*, cache, temperature, **kwargs):
+        assert cache['posterior_temperature'] == temperature
+        return {'synthetic_cache_temperature': temperature}
+    with patch('fhm_dapp_tim.fhm_dapp.v18_4_external._cache_corrected_distribution',
+               side_effect=lambda **kwargs: {'posterior_temperature': kwargs['final_temperature']}) as caches, patch(
+        'fhm_dapp_tim.fhm_dapp.v18_4_external._calibration_nll', side_effect=nll
+    ) as scores, patch('fhm_dapp_tim.fhm_dapp.v18_4_external._selected_calibration_metrics', side_effect=metrics), patch(
+        'fhm_dapp_tim.fhm_dapp.v18_4_external._coordinate_group_ids', return_value=[(0, 0, 0., 0.)] * 2
+    ):
+        selected, report = _calibrate_external(model=None, reference=None, epsilon_kl=.05,
+            rss_all=torch.zeros(2, 3), centered=np.zeros((2, 2), dtype=np.float32), data=None,
+            calibration_rows=np.arange(2), device=torch.device('cpu'))
+    assert [call.kwargs['final_temperature'] for call in caches.call_args_list] == list(CALIBRATION_TEMPERATURE_GRID)
+    assert scores.call_count == len(CALIBRATION_TEMPERATURE_GRID) * len(CALIBRATION_SCALE_GRID) == 48
+    assert selected['temperature'] == 1.25 and selected['scale_multiplier'] == 1.
+    assert len(report['surface']) == 48

@@ -1,5 +1,26 @@
 # V18.4 Reserved External Evaluation Runbook
 
+Pre-run revision gate: the revised code, regression suite and
+`PRE_RUN_REVISION_AUDIT_V18_4.json/.md` must be reviewed before any formal
+commands below are executed. The pre-run revision task stops after tests and
+outcome-free diagnostics; it does not prepare, develop, calibrate-freeze or
+formally evaluate any dataset.
+
+The spatial objective is exact dimensionless half energy distance with
+lambda_spatial in {0.10,0.25,0.50}; there is no iterative Sinkhorn solver or
+entropic coefficient. Maximum epsilon_KL stays {0.025,0.050,0.100}, with
+row budget epsilon_eff=max(r_radio,r_geometry)*epsilon_KL. Directional source
+weights are reliabilities normalized by their sum; zero sum gives identity.
+The 9 global method combinations are unchanged.
+
+Calibration/deployment order is `q -> temperature q_T -> trust correction ->
+final posterior`. Each of the 8 candidate temperatures requires a distinct
+corrected-distribution cache; there is no post-correction temperature map.
+Radio/geometry energies, reliability mismatches and realized KL use q_T.
+References remain fitted on training q at T=1 and frozen thereafter. The 6
+Student-t scale values multiply only component scales and leave probabilities
+unchanged. Local anisotropic Delaunay residuals are globally capped at 30 m.
+
 Do not run this file until
 `fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json` exists and was
 produced by the formal UJI V18.4 run.
@@ -74,12 +95,12 @@ python -m fhm_dapp_tim.fhm_dapp.v18_4_external --protocol <PROTOCOL> fit-freeze 
 
 This:
 
-- trains with the UJI-frozen lambda_OT;
+- trains with the UJI-frozen lambda_spatial;
 - selects epoch on this dataset's training-only development role;
 - refits on selection_refit;
 - fits radio/geometry correction references on selection_refit;
 - uses the UJI-frozen epsilon_KL;
-- calibrates only posterior temperature and Student-t scale on the
+- calibrates only base-posterior temperature before trust correction and Student-t scale on the
   training-only calibration role.
 
 Outputs:
