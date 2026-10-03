@@ -63,7 +63,8 @@ This creates:
 
 `fhm_dapp_tim/evidence/v18_4/external/<PROTOCOL>_training_manifest.json`
 
-No provided test outcome is semantically accessed.
+No provided test performance is evaluated or used for selection in this stage.
+The provided test split is historically pre-exposed for adapter compatibility.
 
 ### 2. Training-only fit and freeze
 
@@ -86,9 +87,10 @@ Outputs:
 - `fhm_dapp_tim/models/v18_4/external/<PROTOCOL>_selection_refit.pt`
 - `fhm_dapp_tim/evidence/v18_4/external/<PROTOCOL>_training_freeze.json`
 
-At this point the provided test outcome is still unused.
+At this point the provided test performance is still unused by the formal
+V18.4 model-selection/calibration process.
 
-### 3. One-shot provided test
+### 3. One-shot formal performance evaluation
 
 Read the training freeze before continuing. If it is correct:
 
@@ -101,7 +103,8 @@ checkpoint, correction-reference and full-posterior checks. It then writes:
 
 `fhm_dapp_tim/evidence/v18_4/external/<PROTOCOL>_test_consumption_lock.json`
 
-Only after that lock is written does it load/score the provided test split.
+Only after that lock is written does it formally score the already pre-exposed
+provided test benchmark.
 
 Successful evaluation writes:
 
@@ -113,10 +116,10 @@ attempt crashed.
 ## TUJI1 note
 
 The TUJI1 MAT containers contain both `results_train` and `results_test`.
-Training therefore reads the container bytes. Before the test lock, however,
-the code selects and uses only `results_train`; `results_test` is not
-canonicalized or scored. This is a semantic outcome-access boundary, not a
-claim of byte-level blindness.
+Earlier adapter-validation CI already inspected `results_test`, so V18.4
+does not claim semantic or byte-level blindness. Formal training nevertheless
+uses only `results_train`, and the held-out test performance is never used
+for model/epoch/calibration/global-hyperparameter selection.
 
 For a LODO protocol, the held-out device is excluded from:
 
@@ -145,7 +148,6 @@ changes are not.
 
 ## After each successful protocol
 
-Commit the manifest, training freeze, checkpoint, test lock, and test result
-without modifying method code. If checkpoint storage policy prevents committing
-the .pt file, preserve it separately and do not alter its SHA256 recorded in
-the training freeze.
+Stop after verifying the manifest, training freeze, checkpoint hash,
+performance-evaluation lock, and result hash. Git staging/commit/push is outside
+this runbook and is handled separately by the user.
