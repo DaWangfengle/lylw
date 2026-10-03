@@ -1,0 +1,384 @@
+{
+  "status": "PASS",
+  "recorded_utc": "2026-10-03T18:07:01.115741+00:00",
+  "instruction_attachment": "C:\\Users\\LiuYan\\.codex\\attachments\\1161dea0-af76-4908-80cb-7d2b3c1091c2\\Pasted text.txt",
+  "source_revision": "1e8db29eb80442bb885edf955aab2dc9dca57d45",
+  "working_branch": "v18-4-trust-region-posterior",
+  "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "historical_failed_run_sha256": {
+    "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_RUN_REVISION_EXECUTION_V18_4.md": "7b9a24c8093695471cc73064a9780b735df2dfaade4873420e6fb5a2233efbc9",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_execution_v18_4.json": "dbf34ff40456d4bedee0a9b5130a5a263ff74e33cced6bb3b08338fbbaa9cd48",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_pytest.log": "eaa7a690f39810c281ceddc02c21b763c80cc7db7a5f64368f00be9276737a21"
+  },
+  "unchanged_source_sha256": {
+    "fhm_dapp_tim/fhm_dapp/v18_4_core.py": "caf660c629907cda071b3dd9494c3d247d9fa26409e2356f2e9888ee12302eae",
+    "fhm_dapp_tim/fhm_dapp/v18_4_model.py": "84689fe8eb65b78b531b78c47b1493ac694415ded82566cfb9a05cfd83c50b4a",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py": "1ecc932e3863e046f365c825805d04d91ad685b4ce325c3c3c81a6cfea1483f8",
+    "fhm_dapp_tim/fhm_dapp/v18_4_external.py": "2d4d2308c16d6c9eb8d9bfb5231242db08e9cd07ab6a6da115c9396dde971a4b",
+    "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py": "13caaad99bc0828706269a7b0c6cf0762864063c333a43aa7ae68fa32a5cdd14",
+    "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py": "af7d21873216dafafe9ee1308cc9dc9792c0b791e2a81d59787a6ad1f8f0be6f",
+    "fhm_dapp_tim/fhm_dapp/model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+    "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+    "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py": "5c8cf022db7ff53aafb74fc118ba87c546520371ffdd38f6eb68d4456f25850a",
+    "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+    "tests/test_uji_v18_4_development.py": "280747ca0fed1d9db06dd20c2c198520d14b97371f561e8d22b0c94d765534e2",
+    "tests/test_v18_4_protocol.py": "2381cdc928b67e2f7bd9b430035190b65f151b991016b869cf0146c5b09a68f6",
+    "tests/test_v18_4_datasets.py": "8df557fb3a57d50c78e048fbde28ad9c3366601a19dc3bf6bd468b934c76f942",
+    "tests/test_v18_4_capacity_audit.py": "d0ff9cb2a00c0ace44833d32592e2464e2febd51233475e2bb52ef3a73584cce"
+  },
+  "test_source_sha256_before_repairs": {
+    "tests/test_v18_4_core.py": "a7f587c17f4c0182566d81159beff1e2c92d1e7d840f0f68f1131e899f3e5404",
+    "tests/test_v18_4_model.py": "b5728bf1e9859ce444b4134cecb883a441c8dcd5b8c70b9a62804370cdd7bb97",
+    "tests/test_v18_4_external.py": "7ffcaf6f64196c0517673cb4139bdc58a0547b5c6c20094e83413cb87c832fcd"
+  },
+  "formal_artifacts_before": {},
+  "scientific_note": "dataset-specific scalar base-posterior calibration before the frozen reliability-bounded correction law.",
+  "temperature_semantics": "T changes q_T and can change nuisance profiling, geometry energies, mismatch, reliability, effective row budget and final correction. T is not merely an uncertainty-only scale. No new hyperparameter.",
+  "test_repairs": [
+    {
+      "file": "tests/test_v18_4_core.py",
+      "repair": "Construct rotation angle/trigonometric inputs in float64; retain strict matrix comparison, bitwise normal-transform equality and operator-norm assertions."
+    },
+    {
+      "file": "tests/test_v18_4_model.py",
+      "repair": "Use a two-argument zero-reliability mock; retain bitwise q_T identity and exact-zero budget/KL/rho assertions."
+    },
+    {
+      "file": "tests/test_v18_4_external.py",
+      "repair": "Have the synthetic freeze helper call the patched v18_4_external module symbol; keep production source-freeze checks and dedicated failure tests unchanged."
+    }
+  ],
+  "formal_uji_protocol_run": false,
+  "external_formal_evaluation_run": false,
+  "commands": [
+    {
+      "stage": "compile",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "py_compile",
+        "fhm_dapp_tim/fhm_dapp/v18_4_core.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_model.py",
+        "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_external.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py",
+        "tests/test_v18_4_core.py",
+        "tests/test_v18_4_model.py",
+        "tests/test_uji_v18_4_development.py",
+        "tests/test_v18_4_external.py"
+      ],
+      "started_utc": "2026-10-03T18:08:12.036126+00:00",
+      "finished_utc": "2026-10-03T18:08:12.179750+00:00",
+      "wall_seconds": 0.1436255999997229,
+      "exit_code": 0,
+      "output": "",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_acceptance_compile.log"
+    },
+    {
+      "stage": "pytest",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_v18_4_core.py",
+        "tests/test_v18_4_model.py",
+        "tests/test_uji_v18_4_development.py",
+        "tests/test_v18_4_external.py",
+        "tests/test_v18_4_protocol.py",
+        "tests/test_v18_4_datasets.py",
+        "tests/test_v18_4_capacity_audit.py"
+      ],
+      "started_utc": "2026-10-03T18:09:05.571248+00:00",
+      "finished_utc": "2026-10-03T18:10:17.037608+00:00",
+      "wall_seconds": 71.46629089999988,
+      "exit_code": 0,
+      "output": ".....................................................................    [100%]\n69 passed in 70.05s (0:01:10)\n",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_acceptance_pytest.log"
+    },
+    {
+      "stage": "cpu_smoke",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke",
+        "--device",
+        "cpu"
+      ],
+      "started_utc": "2026-10-03T18:11:31.456821+00:00",
+      "finished_utc": "2026-10-03T18:11:40.361485+00:00",
+      "wall_seconds": 8.905066600000282,
+      "exit_code": 0,
+      "output": "{\n  \"anchor_nll\": 3.963308334350586,\n  \"anchors\": 655,\n  \"aps\": 520,\n  \"base_posterior_finite\": true,\n  \"coordinate_nll\": 8.626402854919434,\n  \"development_coordinate_groups\": 139,\n  \"development_rows\": 2936,\n  \"development_support_sizes\": [\n    62,\n    64,\n    73,\n    54\n  ],\n  \"device\": \"cpu\",\n  \"external_provided_tests_preexposed_for_adapter_validation\": true,\n  \"external_test_performance_used_for_v184_selection\": false,\n  \"fit_coordinate_groups\": 655,\n  \"fit_rows\": 14126,\n  \"forced_support_size\": 63.125,\n  \"gradient_norm\": 11.675929428413932,\n  \"gradient_tensor_count\": 63,\n  \"gradients_finite\": true,\n  \"loss\": 15.592408941960153,\n  \"loss_terms\": {\n    \"anchor_nll\": 3.963308334350586,\n    \"coordinate_nll\": 8.626402854919434,\n    \"domain_loss\": 2.7722020149230957,\n    \"floor_recall_mass\": 0.6230161786079407,\n    \"forced_support_size\": 63.125,\n    \"hierarchy_loss\": 1.816705584526062,\n    \"invariant_aux_loss\": 5.063569068908691,\n    \"invariant_recall_mass\": 0.823188066482544,\n    \"loss\": 15.592408941960153,\n    \"natural_pool_size_before_ceiling\": 62.875,\n    \"natural_recall_mass\": 0.9529979228973389,\n    \"natural_support_size\": 62.875,\n    \"natural_truncation_fraction\": 0.0,\n    \"prototype_recall_mass\": 0.7990437150001526,\n    \"spatial_energy_loss\": 2.7593703340523117\n  },\n  \"natural_recall_mass\": 0.9529979228973389,\n  \"natural_support_size\": 62.875,\n  \"optimizer_steps\": 0,\n  \"parameters\": 614553,\n  \"prediction_finite\": true,\n  \"scientific_status\": \"outcome-free smoke test using UJI training fit/development roles only\",\n  \"spatial_energy_loss\": 2.7593703340523117,\n  \"spatial_scale_m\": 10.492310523986816,\n  \"status\": \"success\",\n  \"training_batch_rows\": 8,\n  \"uji_official_validation_preexposed\": true,\n  \"uji_official_validation_used_for_v184_selection\": false\n}\n",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_acceptance_cpu_smoke.log"
+    },
+    {
+      "stage": "cuda_smoke",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke",
+        "--device",
+        "cuda"
+      ],
+      "started_utc": "2026-10-03T18:11:49.771483+00:00",
+      "finished_utc": "2026-10-03T18:11:59.771818+00:00",
+      "wall_seconds": 10.000854199999594,
+      "exit_code": 0,
+      "output": "{\n  \"anchor_nll\": 3.9314372539520264,\n  \"anchors\": 655,\n  \"aps\": 520,\n  \"base_posterior_finite\": true,\n  \"coordinate_nll\": 8.626402854919434,\n  \"development_coordinate_groups\": 139,\n  \"development_rows\": 2936,\n  \"development_support_sizes\": [\n    62,\n    64,\n    73,\n    54\n  ],\n  \"device\": \"cuda\",\n  \"external_provided_tests_preexposed_for_adapter_validation\": true,\n  \"external_test_performance_used_for_v184_selection\": false,\n  \"fit_coordinate_groups\": 655,\n  \"fit_rows\": 14126,\n  \"forced_support_size\": 63.25,\n  \"gradient_norm\": 11.651264644764494,\n  \"gradient_tensor_count\": 63,\n  \"gradients_finite\": true,\n  \"loss\": 15.528061623329643,\n  \"loss_terms\": {\n    \"anchor_nll\": 3.9314372539520264,\n    \"coordinate_nll\": 8.626402854919434,\n    \"domain_loss\": 2.766317844390869,\n    \"floor_recall_mass\": 0.6787998676300049,\n    \"forced_support_size\": 63.25,\n    \"hierarchy_loss\": 1.7642552852630615,\n    \"invariant_aux_loss\": 5.013332366943359,\n    \"invariant_recall_mass\": 0.7458040714263916,\n    \"loss\": 15.528061623329643,\n    \"natural_pool_size_before_ceiling\": 62.625,\n    \"natural_recall_mass\": 0.875,\n    \"natural_support_size\": 62.625,\n    \"natural_truncation_fraction\": 0.0,\n    \"prototype_recall_mass\": 0.741269588470459,\n    \"spatial_energy_loss\": 2.785778562047973\n  },\n  \"natural_recall_mass\": 0.875,\n  \"natural_support_size\": 62.625,\n  \"optimizer_steps\": 0,\n  \"parameters\": 614553,\n  \"prediction_finite\": true,\n  \"scientific_status\": \"outcome-free smoke test using UJI training fit/development roles only\",\n  \"spatial_energy_loss\": 2.785778562047973,\n  \"spatial_scale_m\": 10.492310523986816,\n  \"status\": \"success\",\n  \"training_batch_rows\": 8,\n  \"uji_official_validation_preexposed\": true,\n  \"uji_official_validation_used_for_v184_selection\": false\n}\n",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_acceptance_cuda_smoke.log"
+    },
+    {
+      "stage": "revision_audit",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_revision_audit"
+      ],
+      "started_utc": "2026-10-03T18:14:05.973645+00:00",
+      "finished_utc": "2026-10-03T18:14:19.407555+00:00",
+      "wall_seconds": 13.437571700000262,
+      "exit_code": 0,
+      "output": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\v18_4_revision_audit.py:113: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at C:\\actions-runner\\_work\\pytorch\\pytorch\\pytorch\\torch\\csrc\\autograd\\generated\\python_variable_methods.cpp:837.)\n  _require(min(float(identical), float(near), float(far), float(gradient_loss)) >= -1e-10, \"negative spatial energy distance\")\n{\n  \"status\": \"PASS\",\n  \"json\": \"D:\\\\liuyanlunwen\\\\fhm_dapp_tim\\\\evidence\\\\v18_4\\\\PRE_RUN_REVISION_AUDIT_V18_4.json\",\n  \"markdown\": \"D:\\\\liuyanlunwen\\\\fhm_dapp_tim\\\\evidence\\\\v18_4\\\\PRE_RUN_REVISION_AUDIT_V18_4.md\",\n  \"devices\": [\n    \"cpu\",\n    \"cuda\"\n  ]\n}\n",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_acceptance_audit.log"
+    }
+  ],
+  "compile": {
+    "status": "PASS",
+    "compiled_module_count": 10,
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "py_compile",
+      "fhm_dapp_tim/fhm_dapp/v18_4_core.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_model.py",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_external.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py",
+      "tests/test_v18_4_core.py",
+      "tests/test_v18_4_model.py",
+      "tests/test_uji_v18_4_development.py",
+      "tests/test_v18_4_external.py"
+    ],
+    "exit_code": 0
+  },
+  "pytest": {
+    "status": "PASS",
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_v18_4_core.py",
+      "tests/test_v18_4_model.py",
+      "tests/test_uji_v18_4_development.py",
+      "tests/test_v18_4_external.py",
+      "tests/test_v18_4_protocol.py",
+      "tests/test_v18_4_datasets.py",
+      "tests/test_v18_4_capacity_audit.py"
+    ],
+    "passed": 69,
+    "failed": 0,
+    "expected_total": 69,
+    "skip_xfail_detected": false,
+    "exit_code": 0,
+    "suite_invocations": 1
+  },
+  "cpu_smoke": {
+    "status": "PASS",
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke",
+      "--device",
+      "cpu"
+    ],
+    "exit_code": 0,
+    "metrics": {
+      "anchor_nll": 3.963308334350586,
+      "anchors": 655,
+      "aps": 520,
+      "base_posterior_finite": true,
+      "coordinate_nll": 8.626402854919434,
+      "development_coordinate_groups": 139,
+      "development_rows": 2936,
+      "development_support_sizes": [
+        62,
+        64,
+        73,
+        54
+      ],
+      "device": "cpu",
+      "external_provided_tests_preexposed_for_adapter_validation": true,
+      "external_test_performance_used_for_v184_selection": false,
+      "fit_coordinate_groups": 655,
+      "fit_rows": 14126,
+      "forced_support_size": 63.125,
+      "gradient_norm": 11.675929428413932,
+      "gradient_tensor_count": 63,
+      "gradients_finite": true,
+      "loss": 15.592408941960153,
+      "loss_terms": {
+        "anchor_nll": 3.963308334350586,
+        "coordinate_nll": 8.626402854919434,
+        "domain_loss": 2.7722020149230957,
+        "floor_recall_mass": 0.6230161786079407,
+        "forced_support_size": 63.125,
+        "hierarchy_loss": 1.816705584526062,
+        "invariant_aux_loss": 5.063569068908691,
+        "invariant_recall_mass": 0.823188066482544,
+        "loss": 15.592408941960153,
+        "natural_pool_size_before_ceiling": 62.875,
+        "natural_recall_mass": 0.9529979228973389,
+        "natural_support_size": 62.875,
+        "natural_truncation_fraction": 0.0,
+        "prototype_recall_mass": 0.7990437150001526,
+        "spatial_energy_loss": 2.7593703340523117
+      },
+      "natural_recall_mass": 0.9529979228973389,
+      "natural_support_size": 62.875,
+      "optimizer_steps": 0,
+      "parameters": 614553,
+      "prediction_finite": true,
+      "scientific_status": "outcome-free smoke test using UJI training fit/development roles only",
+      "spatial_energy_loss": 2.7593703340523117,
+      "spatial_scale_m": 10.492310523986816,
+      "status": "success",
+      "training_batch_rows": 8,
+      "uji_official_validation_preexposed": true,
+      "uji_official_validation_used_for_v184_selection": false
+    },
+    "exact_zero_padding_verified_by_smoke_check": true
+  },
+  "cuda_smoke": {
+    "status": "PASS",
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke",
+      "--device",
+      "cuda"
+    ],
+    "exit_code": 0,
+    "metrics": {
+      "anchor_nll": 3.9314372539520264,
+      "anchors": 655,
+      "aps": 520,
+      "base_posterior_finite": true,
+      "coordinate_nll": 8.626402854919434,
+      "development_coordinate_groups": 139,
+      "development_rows": 2936,
+      "development_support_sizes": [
+        62,
+        64,
+        73,
+        54
+      ],
+      "device": "cuda",
+      "external_provided_tests_preexposed_for_adapter_validation": true,
+      "external_test_performance_used_for_v184_selection": false,
+      "fit_coordinate_groups": 655,
+      "fit_rows": 14126,
+      "forced_support_size": 63.25,
+      "gradient_norm": 11.651264644764494,
+      "gradient_tensor_count": 63,
+      "gradients_finite": true,
+      "loss": 15.528061623329643,
+      "loss_terms": {
+        "anchor_nll": 3.9314372539520264,
+        "coordinate_nll": 8.626402854919434,
+        "domain_loss": 2.766317844390869,
+        "floor_recall_mass": 0.6787998676300049,
+        "forced_support_size": 63.25,
+        "hierarchy_loss": 1.7642552852630615,
+        "invariant_aux_loss": 5.013332366943359,
+        "invariant_recall_mass": 0.7458040714263916,
+        "loss": 15.528061623329643,
+        "natural_pool_size_before_ceiling": 62.625,
+        "natural_recall_mass": 0.875,
+        "natural_support_size": 62.625,
+        "natural_truncation_fraction": 0.0,
+        "prototype_recall_mass": 0.741269588470459,
+        "spatial_energy_loss": 2.785778562047973
+      },
+      "natural_recall_mass": 0.875,
+      "natural_support_size": 62.625,
+      "optimizer_steps": 0,
+      "parameters": 614553,
+      "prediction_finite": true,
+      "scientific_status": "outcome-free smoke test using UJI training fit/development roles only",
+      "spatial_energy_loss": 2.785778562047973,
+      "spatial_scale_m": 10.492310523986816,
+      "status": "success",
+      "training_batch_rows": 8,
+      "uji_official_validation_preexposed": true,
+      "uji_official_validation_used_for_v184_selection": false
+    },
+    "exact_zero_padding_verified_by_smoke_check": true
+  },
+  "revision_audit": {
+    "status": "PASS",
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "fhm_dapp_tim.fhm_dapp.v18_4_revision_audit"
+    ],
+    "exit_code": 0,
+    "json": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\PRE_RUN_REVISION_AUDIT_V18_4.json",
+    "markdown": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\PRE_RUN_REVISION_AUDIT_V18_4.md",
+    "audit_report_status": "PASS",
+    "verification": {
+      "cpu": {
+        "spatial_checks": true,
+        "trust_checks": true,
+        "real_training_checks": true,
+        "residual_checks": true,
+        "support_checks": true
+      },
+      "cuda": {
+        "spatial_checks": true,
+        "trust_checks": true,
+        "real_training_checks": true,
+        "residual_checks": true,
+        "support_checks": true
+      }
+    },
+    "json_sha256": "67413b834a9ae46473c448cf4f41edde123079041873f35ff2f37e99e8efe689",
+    "markdown_sha256": "9edcc991e20f9f8725d3064c0ef64d276761b1db2d5c00213ab9166798f0e78a",
+    "artifacts_created_once_and_not_overwritten": true
+  },
+  "test_source_sha256_after_repairs": {
+    "tests/test_v18_4_core.py": "8d58a403a30e1cf5011bc746144335d8344094ea72c24c38c2743e2ecbf21385",
+    "tests/test_v18_4_model.py": "73fc16b753acf0cb1b2a66fa59cb7c2bc40213022a6f2627fedba418d36016f2",
+    "tests/test_v18_4_external.py": "8393350e8207275993c3d3bd56e7a2995dc3c917fd35be918d34f2dceac61278"
+  },
+  "finished_utc": "2026-10-03T18:18:19.740244+00:00",
+  "test_only_patch": "diff --git a/tests/test_v18_4_core.py b/tests/test_v18_4_core.py\nindex 0659d5a..0d49481 100644\n--- a/tests/test_v18_4_core.py\n+++ b/tests/test_v18_4_core.py\n@@ -380,9 +380,11 @@ def test_reliable_source_dominates_direction_without_probability_floor() -> None\n \n \n def test_anisotropic_cap_preserves_axes_and_ratio() -> None:\n-    angle = .37\n-    rotation = torch.tensor([[torch.cos(torch.tensor(angle)), -torch.sin(torch.tensor(angle))],\n-                             [torch.sin(torch.tensor(angle)), torch.cos(torch.tensor(angle))]], dtype=torch.float64)\n+    angle = torch.tensor(.37, dtype=torch.float64)\n+    rotation = torch.stack([\n+        torch.stack([torch.cos(angle), -torch.sin(angle)]),\n+        torch.stack([torch.sin(angle), torch.cos(angle)]),\n+    ])\n     oversized = rotation @ torch.diag(torch.tensor([300., 90.], dtype=torch.float64)) @ rotation.T\n     normal = torch.tensor([[9., 1.], [1., 3.]], dtype=torch.float64)\n     transforms = torch.stack([oversized, normal, torch.zeros_like(normal)])\ndiff --git a/tests/test_v18_4_external.py b/tests/test_v18_4_external.py\nindex 9b9e841..dd23ea3 100644\n--- a/tests/test_v18_4_external.py\n+++ b/tests/test_v18_4_external.py\n@@ -11,6 +11,7 @@ import torch\n import pytest\n \n from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import _canonical_sha\n+from fhm_dapp_tim.fhm_dapp import v18_4_external as external_module\n from fhm_dapp_tim.fhm_dapp.v18_4_external import (\n     TUJI_DEVICES,\n     TUJI_LODO_ROLE_SEEDS,\n@@ -38,7 +39,7 @@ def clean_execution_fixture():\n def _fake_uji_freeze(path: Path) -> Path:\n     payload = {\n         \"protocol_version\": \"test\",\n-        \"source_commit_sha\": _current_head(),\n+        \"source_commit_sha\": external_module._current_head(),\n         \"lambda_spatial\": 0.25,\n         \"epsilon_kl\": 0.05,\n         \"uji_official_validation_preexposed\": True,\ndiff --git a/tests/test_v18_4_model.py b/tests/test_v18_4_model.py\nindex b6f5b93..4d305f3 100644\n--- a/tests/test_v18_4_model.py\n+++ b/tests/test_v18_4_model.py\n@@ -409,7 +409,8 @@ def test_v184_zero_reliability_returns_q_T_bitwise() -> None:\n     model.eval()\n     with patch('fhm_dapp_tim.fhm_dapp.v18_4_model.base_posterior', side_effect=_controlled_base), patch(\n         'fhm_dapp_tim.fhm_dapp.v18_4_model.raw_correction_energies', side_effect=_controlled_raw\n-    ), patch('fhm_dapp_tim.fhm_dapp.v18_4_model.empirical_survival_reliability', side_effect=torch.zeros_like):\n+    ), patch('fhm_dapp_tim.fhm_dapp.v18_4_model.empirical_survival_reliability',\n+             side_effect=lambda mismatch, reference: torch.zeros_like(mismatch)):\n         result = v184_distribution(model, memory['prototype_rss'][:2],\n                  correction_reference=_fixed_reference(), epsilon_kl=.1, final_temperature=1.5)\n     assert torch.equal(result['candidate_weights'], result['calibrated_base_probability'])\n",
+  "changed_files": [
+    "D:\\liuyanlunwen\\tests\\test_v18_4_core.py",
+    "D:\\liuyanlunwen\\tests\\test_v18_4_model.py",
+    "D:\\liuyanlunwen\\tests\\test_v18_4_external.py",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\PRE_RUN_REVISION_AUDIT_V18_4.json",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\PRE_RUN_REVISION_AUDIT_V18_4.md",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\pre_run_revision_acceptance_v18_4.json",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\PRE_RUN_REVISION_ACCEPTANCE_V18_4.md"
+  ],
+  "historical_failed_run_preserved": true,
+  "reviewed_implementation_unchanged": true,
+  "formal_artifacts_after": {},
+  "execution_report": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\PRE_RUN_REVISION_ACCEPTANCE_V18_4.md",
+  "warnings": [
+    {
+      "stage": "revision_audit",
+      "severity": "nonfatal",
+      "message": "PyTorch scalar conversion of requires-grad loss after backward in diagnostic assertion; source unchanged."
+    }
+  ],
+  "unresolved_scientific_concerns": [
+    "Small untrained-model smoke/audit does not establish accuracy, convergence or full-dataset support sufficiency.",
+    "Real-data residual head is initially zero; nonzero residual-bound behavior is covered by the prescribed oversized synthetic tests."
+  ],
+  "stop_boundary": "Acceptance artifacts complete. Stop for scientific review; formal UJI/external protocols not run."
+}

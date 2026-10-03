@@ -11,6 +11,7 @@ import torch
 import pytest
 
 from fhm_dapp_tim.fhm_dapp.uji_v18_4_development import _canonical_sha
+from fhm_dapp_tim.fhm_dapp import v18_4_external as external_module
 from fhm_dapp_tim.fhm_dapp.v18_4_external import (
     TUJI_DEVICES,
     TUJI_LODO_ROLE_SEEDS,
@@ -38,7 +39,7 @@ def clean_execution_fixture():
 def _fake_uji_freeze(path: Path) -> Path:
     payload = {
         "protocol_version": "test",
-        "source_commit_sha": _current_head(),
+        "source_commit_sha": external_module._current_head(),
         "lambda_spatial": 0.25,
         "epsilon_kl": 0.05,
         "uji_official_validation_preexposed": True,

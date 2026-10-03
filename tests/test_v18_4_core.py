@@ -380,9 +380,11 @@ def test_reliable_source_dominates_direction_without_probability_floor() -> None
 
 
 def test_anisotropic_cap_preserves_axes_and_ratio() -> None:
-    angle = .37
-    rotation = torch.tensor([[torch.cos(torch.tensor(angle)), -torch.sin(torch.tensor(angle))],
-                             [torch.sin(torch.tensor(angle)), torch.cos(torch.tensor(angle))]], dtype=torch.float64)
+    angle = torch.tensor(.37, dtype=torch.float64)
+    rotation = torch.stack([
+        torch.stack([torch.cos(angle), -torch.sin(angle)]),
+        torch.stack([torch.sin(angle), torch.cos(angle)]),
+    ])
     oversized = rotation @ torch.diag(torch.tensor([300., 90.], dtype=torch.float64)) @ rotation.T
     normal = torch.tensor([[9., 1.], [1., 3.]], dtype=torch.float64)
     transforms = torch.stack([oversized, normal, torch.zeros_like(normal)])

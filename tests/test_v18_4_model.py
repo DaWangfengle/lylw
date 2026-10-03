@@ -409,7 +409,8 @@ def test_v184_zero_reliability_returns_q_T_bitwise() -> None:
     model.eval()
     with patch('fhm_dapp_tim.fhm_dapp.v18_4_model.base_posterior', side_effect=_controlled_base), patch(
         'fhm_dapp_tim.fhm_dapp.v18_4_model.raw_correction_energies', side_effect=_controlled_raw
-    ), patch('fhm_dapp_tim.fhm_dapp.v18_4_model.empirical_survival_reliability', side_effect=torch.zeros_like):
+    ), patch('fhm_dapp_tim.fhm_dapp.v18_4_model.empirical_survival_reliability',
+             side_effect=lambda mismatch, reference: torch.zeros_like(mismatch)):
         result = v184_distribution(model, memory['prototype_rss'][:2],
                  correction_reference=_fixed_reference(), epsilon_kl=.1, final_temperature=1.5)
     assert torch.equal(result['candidate_weights'], result['calibrated_base_probability'])
