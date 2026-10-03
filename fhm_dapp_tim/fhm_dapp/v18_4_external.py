@@ -182,7 +182,7 @@ def _current_head() -> str:
     if len(value) != 40:
         raise RuntimeError("invalid current Git HEAD")
     dirty = subprocess.run(
-        ["git", "diff", "--quiet", "--"],
+        ["git", "diff", "--quiet", "HEAD", "--"],
         cwd=REPO_ROOT,
         check=False,
     ).returncode != 0
