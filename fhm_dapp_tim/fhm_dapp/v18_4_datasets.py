@@ -637,21 +637,55 @@ def load_tuji1(
 def load_all_training_summaries(
     data_root: Path = DATA_ROOT,
 ) -> dict[str, object]:
+    """Summarize training sources only.
+
+    Earlier V18.4 adapter-validation CI intentionally inspected provided
+    evaluation splits to verify schema compatibility.  Formal preparation must
+    not repeat that access, so this default summary is training-only.
+    """
+
+    uji_train, _ = load_uji("train", data_root=data_root)
+    uts_train, _ = load_uts("train", data_root=data_root)
+    tampere_train, _ = load_tampere("train", data_root=data_root)
+    tuji_train, _ = load_tuji1("train", data_root=data_root)
+    return {
+        "UJIIndoorLoc": {"train": dataset_summary(uji_train)},
+        "UTSIndoorLoc": {"train": dataset_summary(uts_train)},
+        "Tampere": {"train": dataset_summary(tampere_train)},
+        "TUJI1": {"train": dataset_summary(tuji_train)},
+    }
+
+
+def load_preexposed_evaluation_summaries(
+    data_root: Path = DATA_ROOT,
+) -> dict[str, object]:
+    """Explicit compatibility-only summaries for already pre-exposed splits.
+
+    This helper is never called by formal preparation or default CI.  It exists
+    only to reproduce the historical adapter-compatibility inspection that
+    already occurred before the V18.4 method freeze.
+    """
+
     uji_train, uji_ref = load_uji("train", data_root=data_root)
+    del uji_train
+    uts_train, uts_ref = load_uts("train", data_root=data_root)
+    del uts_train
+    tampere_train, tampere_ref = load_tampere("train", data_root=data_root)
+    del tampere_train
+    tuji_train, tuji_ref = load_tuji1("train", data_root=data_root)
+    del tuji_train
+
     uji_eval, _ = load_uji(
         "preexposed_official",
         reference=uji_ref,
         data_root=data_root,
     )
-    uts_train, uts_ref = load_uts("train", data_root=data_root)
     uts_test, _ = load_uts("test", reference=uts_ref, data_root=data_root)
-    tampere_train, tampere_ref = load_tampere("train", data_root=data_root)
     tampere_test, _ = load_tampere(
         "test",
         reference=tampere_ref,
         data_root=data_root,
     )
-    tuji_train, tuji_ref = load_tuji1("train", data_root=data_root)
     tuji_test, _ = load_tuji1(
         "test",
         reference=tuji_ref,
@@ -659,21 +693,11 @@ def load_all_training_summaries(
     )
     return {
         "UJIIndoorLoc": {
-            "train": dataset_summary(uji_train),
             "preexposed_official": dataset_summary(uji_eval),
         },
-        "UTSIndoorLoc": {
-            "train": dataset_summary(uts_train),
-            "test": dataset_summary(uts_test),
-        },
-        "Tampere": {
-            "train": dataset_summary(tampere_train),
-            "test": dataset_summary(tampere_test),
-        },
-        "TUJI1": {
-            "train": dataset_summary(tuji_train),
-            "test": dataset_summary(tuji_test),
-        },
+        "UTSIndoorLoc": {"preexposed_test": dataset_summary(uts_test)},
+        "Tampere": {"preexposed_test": dataset_summary(tampere_test)},
+        "TUJI1": {"preexposed_test": dataset_summary(tuji_test)},
     }
 
 
