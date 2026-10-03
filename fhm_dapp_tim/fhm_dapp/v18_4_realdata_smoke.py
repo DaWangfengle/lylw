@@ -126,8 +126,10 @@ def main() -> None:
         "scientific_status": (
             "outcome-free smoke test using UJI training fit/development roles only"
         ),
-        "official_validation_opened": False,
-        "reserved_external_test_opened": False,
+        "uji_official_validation_preexposed": True,
+        "uji_official_validation_used_for_v184_selection": False,
+        "external_provided_tests_preexposed_for_adapter_validation": True,
+        "external_test_performance_used_for_v184_selection": False,
         "fit_rows": int(len(fit_idx)),
         "development_rows": int(len(dev_idx)),
         "fit_coordinate_groups": int(len(roles.fit)),
