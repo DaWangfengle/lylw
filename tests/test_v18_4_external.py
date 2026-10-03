@@ -25,8 +25,10 @@ def _fake_uji_freeze(path: Path) -> Path:
         "source_commit_sha": _current_head(),
         "lambda_ot": 0.25,
         "epsilon_kl": 0.05,
-        "official_validation_opened": False,
-        "reserved_external_test_opened": False,
+        "uji_official_validation_preexposed": True,
+        "uji_official_validation_used_for_v184_selection": False,
+        "external_provided_tests_preexposed_for_adapter_validation": True,
+        "external_test_performance_used_for_v184_selection": False,
     }
     payload["freeze_sha256"] = _canonical_sha(payload)
     path.write_text(
@@ -105,7 +107,7 @@ def test_prepare_external_uts_uses_training_only(tmp_path: Path) -> None:
     assert manifest["dataset"] == "UTSIndoorLoc"
     assert manifest["training_rows"] == 9108
     assert manifest["aps"] == 589
-    assert manifest["test_outcome_semantically_accessed"] is False
+    assert manifest["formal_test_performance_evaluated"] is False
     assert manifest["roles"]["fit"]["row_count"] > 0
     assert manifest["roles"]["development"]["row_count"] > 0
     assert manifest["roles"]["calibration"]["row_count"] > 0
@@ -127,7 +129,7 @@ def test_prepare_external_tampere_uses_training_only(tmp_path: Path) -> None:
     assert manifest["dataset"] == "Tampere"
     assert manifest["training_rows"] == 446
     assert manifest["aps"] == 489
-    assert manifest["test_outcome_semantically_accessed"] is False
+    assert manifest["formal_test_performance_evaluated"] is False
     assert len(manifest["training_files"]) == 2
 
 
@@ -147,6 +149,6 @@ def test_prepare_external_tuji_lodo_excludes_heldout_device(
     assert len(manifest["training_devices"]) == 4
     assert len(manifest["training_files"]) == 4
     assert "A12" not in manifest["reference"]["device_mapping"]
-    assert manifest["test_outcome_semantically_accessed"] is False
+    assert manifest["formal_test_performance_evaluated"] is False
     assert manifest["training_rows"] > 0
     assert manifest["aps"] > 0
