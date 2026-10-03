@@ -66,7 +66,8 @@ Required properties:
 
 - all tests pass;
 - smoke status is success;
-- `official_validation_opened=false`;
+- `uji_official_validation_used_for_v184_selection=false`;
+- `external_provided_tests_preexposed_for_adapter_validation=true`;
 - `external_test_performance_used_for_v184_selection=false`;
 - finite gradients and predictions.
 
@@ -89,7 +90,7 @@ The registry must contain:
 - fit/development/selection_refit/calibration row hashes;
 - 933 total physical coordinate groups;
 - 520 APs;
-- `official_validation_opened=false`.
+- `uji_official_validation_used_for_v184_selection=false`.
 
 After this command, do not change Git HEAD.
 
@@ -151,7 +152,7 @@ A valid freeze must retain:
 
 - the same source commit SHA as the registry;
 - linked registry/development/calibration/checkpoint SHA256 values;
-- `official_validation_opened=false`;
+- `uji_official_validation_used_for_v184_selection=false`;
 - `external_test_performance_used_for_v184_selection=false`.
 
 ## After a successful freeze
