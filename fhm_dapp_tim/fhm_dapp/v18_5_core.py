@@ -380,10 +380,10 @@ def select_joint_calibration(
     )
     final_ids = list(es_gate["retained"])
 
-    def choice_key(key: str) -> tuple[float, ... | str]:
+    def choice_key(key: str) -> tuple:
         cell = by_id[key]
         return (
-            float(cell["posterior_mean_mae"]),
+            float(cell["posterior_mean_mae_m"]),
             float(cell["epsilon_kl"]),
             abs(math.log(float(cell["temperature"]))),
             abs(math.log(float(cell["scale_multiplier"]))),
