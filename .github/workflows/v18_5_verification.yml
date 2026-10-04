@@ -34,4 +34,25 @@ jobs:
 
       - name: Run V18.5 contract tests
         run: |
-          python -m pytest -q             tests/test_v18_5_core.py             tests/test_v18_5_datasets.py             tests/test_v18_5_radio.py             tests/test_v18_5_model.py             tests/test_v18_5_protocol.py             tests/test_uji_v18_5_development.py
+          python -m pytest -q \
+            tests/test_v18_5_core.py \
+            tests/test_v18_5_datasets.py \
+            tests/test_v18_5_radio.py \
+            tests/test_v18_5_model.py \
+            tests/test_v18_5_protocol.py \
+            tests/test_uji_v18_5_development.py \
+            tests/test_v18_5_revision_audit.py
+
+      - name: Real UJI training-only CPU smoke
+        run: |
+          python -m fhm_dapp_tim.fhm_dapp.v18_5_realdata_smoke --device cpu
+
+      - name: Training-only multi-dataset audit
+        run: |
+          python -m fhm_dapp_tim.fhm_dapp.v18_5_revision_audit \
+            --skip-smoke \
+            --json /tmp/PRE_RUN_AUDIT_V18_5.json \
+            --markdown /tmp/PRE_RUN_AUDIT_V18_5.md
+          echo "V18_5_AUDIT_BEGIN"
+          cat /tmp/PRE_RUN_AUDIT_V18_5.json
+          echo "V18_5_AUDIT_END"
