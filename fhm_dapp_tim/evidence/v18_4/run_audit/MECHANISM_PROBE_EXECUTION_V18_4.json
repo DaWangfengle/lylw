@@ -1,0 +1,722 @@
+{
+  "boundary_confirmations": {
+    "correction_references_refitted": false,
+    "external_data_accessed": false,
+    "external_evaluation_run": false,
+    "method_freeze_modified": false,
+    "model_gradients_created": false,
+    "model_parameters_modified": false,
+    "network_loss_backward_invoked": false,
+    "network_optimizer_invoked": false,
+    "official_validation_accessed": false,
+    "training_performed": false,
+    "v18_5_changes": false
+  },
+  "created_utc": "2026-10-04T07:23:53.798767+00:00",
+  "current_evidence_commit_sha": "2ba86d77ce710b714441de73e0c2e77e88813736",
+  "dataset_opens": [
+    {
+      "allowed": true,
+      "flags": 32896,
+      "mode": "r",
+      "path": "d:\\liuyanlunwen\\data\\ujindoorloc\\trainingdata.csv"
+    },
+    {
+      "allowed": true,
+      "flags": 32896,
+      "mode": "r",
+      "path": "d:\\liuyanlunwen\\data\\ujindoorloc\\trainingdata.csv"
+    },
+    {
+      "allowed": true,
+      "flags": 32896,
+      "mode": "r",
+      "path": "d:\\liuyanlunwen\\data\\ujindoorloc\\trainingdata.csv"
+    }
+  ],
+  "denied_file_opens": [],
+  "environment": {
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "deterministic_algorithms": true,
+    "device": "cuda",
+    "gpu_name": "NVIDIA GeForce RTX 2060",
+    "numpy_version": "2.4.4",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "python_version": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+    "torch_version": "2.10.0+cu128"
+  },
+  "execution_record_sha256": "deac156cdb160e87f03bed7735d20a237a03d6be4dae4d1629bc2f59780d3c89",
+  "finished_utc": "2026-10-04T07:56:11.254452+00:00",
+  "frozen_source_commit_sha": "5b3a1888707e193c649007ebeb208c2a9d02ff45",
+  "gate": {
+    "compile": {
+      "command": "D:\\miniminiconda\\envs\\liuyan\\python.exe -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_mechanism_probe.py tests/test_v18_4_mechanism_probe.py",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T07:21:19.225120+00:00",
+      "output": "",
+      "runtime_seconds": 0.11134930000116583,
+      "started_utc": "2026-10-04T07:21:19.113606+00:00"
+    },
+    "gate_log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\mechanism_gate_20261004T072119.log",
+    "human_authorization": {
+      "human_reply": "允许仅 radio 临时张量 Adam（推荐）",
+      "question_item_id": "[\"request_user_input_async\",\"call_ut7zIbhQvKgZVDMMHSBB9N2C\",0]",
+      "radio_temporary_adam_allowed": true,
+      "scope": "Frozen raw_correction_energies only: two temporary offset/log_gain tensors, exactly 6 Adam steps per batch; no network optimizer, training mode, model-loss backward, parameter changes or gradients."
+    },
+    "instruction_attachment": "C:\\Users\\LiuYan\\.codex\\attachments\\71f5cfef-88a3-4e70-bb62-dc7d263c9685\\Pasted text.txt",
+    "probe_log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\mechanism_probe_20261004T072348.log",
+    "problems_and_resolutions": [
+      {
+        "problem": "Sections 6 and 17 conflict: the required frozen radio profiling uses a temporary Adam despite No optimizer.",
+        "resolution": "Asked before dependent execution; human explicitly authorized this exception. New guard allows only two nuisance leaves and six steps/backwards, rejects network training/optimizers/backward and checks model state bitwise."
+      },
+      {
+        "problem": "Static implementation review identified JSON lists versus frozen Python tuple grids in config comparison.",
+        "resolution": "Compare JSON-canonical config values, preserving every numeric grid value. Added regression coverage before first compile/test gate; no production/config modification."
+      },
+      {
+        "problem": "An exploratory metadata read used the Windows default GBK encoding and failed decoding UTF-8 Chinese text.",
+        "resolution": "Read all JSON/Markdown using explicit UTF-8. This occurred in metadata inspection; no scientific run, source change or artifact mutation."
+      },
+      {
+        "problem": "An exploratory rg command passed literal wildcard file paths unsupported by PowerShell.",
+        "resolution": "Use rg directory searches with -g patterns. No scientific execution or data/artifact changes."
+      },
+      {
+        "problem": "Git emits Permission denied for the global ignore file.",
+        "resolution": "Read-only status commands still succeeded. No global Git configuration changes and no commit/push in this task."
+      }
+    ],
+    "pytest": {
+      "accepted_tests": 69,
+      "command": "D:\\miniminiconda\\envs\\liuyan\\python.exe -m pytest -q tests/test_v18_4_core.py tests/test_v18_4_model.py tests/test_uji_v18_4_development.py tests/test_v18_4_external.py tests/test_v18_4_protocol.py tests/test_v18_4_datasets.py tests/test_v18_4_capacity_audit.py tests/test_v18_4_mechanism_probe.py",
+      "errors": 0,
+      "exit_code": 0,
+      "expected_total": 128,
+      "failed": 0,
+      "finished_utc": "2026-10-04T07:22:35.941521+00:00",
+      "new_tests": 59,
+      "output": "........................................................................ [ 56%]\n........................................................                 [100%]\n128 passed in 74.69s (0:01:14)\n",
+      "passed": 128,
+      "runtime_seconds": 76.71385849999933,
+      "skipped": 0,
+      "started_utc": "2026-10-04T07:21:19.225120+00:00",
+      "test_files": [
+        "tests/test_v18_4_core.py",
+        "tests/test_v18_4_model.py",
+        "tests/test_uji_v18_4_development.py",
+        "tests/test_v18_4_external.py",
+        "tests/test_v18_4_protocol.py",
+        "tests/test_v18_4_datasets.py",
+        "tests/test_v18_4_capacity_audit.py",
+        "tests/test_v18_4_mechanism_probe.py"
+      ],
+      "xfailed": 0,
+      "xpassed": 0
+    },
+    "tested_file_sha256": {
+      "fhm_dapp_tim/fhm_dapp/v18_4_mechanism_probe.py": "7753b856dab0d762429a80b5e0096575cfe1a2a38bf341eb9b771e48b7a1fc59",
+      "tests/test_uji_v18_4_development.py": "280747ca0fed1d9db06dd20c2c198520d14b97371f561e8d22b0c94d765534e2",
+      "tests/test_v18_4_capacity_audit.py": "d0ff9cb2a00c0ace44833d32592e2464e2febd51233475e2bb52ef3a73584cce",
+      "tests/test_v18_4_core.py": "8d58a403a30e1cf5011bc746144335d8344094ea72c24c38c2743e2ecbf21385",
+      "tests/test_v18_4_datasets.py": "8df557fb3a57d50c78e048fbde28ad9c3366601a19dc3bf6bd468b934c76f942",
+      "tests/test_v18_4_external.py": "8393350e8207275993c3d3bd56e7a2995dc3c917fd35be918d34f2dceac61278",
+      "tests/test_v18_4_mechanism_probe.py": "04f029948d586a38b9c8eb0bfc4823b87c7ab82dd00f1a039bef7d9c8f4912c5",
+      "tests/test_v18_4_model.py": "73fc16b753acf0cb1b2a66fa59cb7c2bc40213022a6f2627fedba418d36016f2",
+      "tests/test_v18_4_protocol.py": "2381cdc928b67e2f7bd9b430035190b65f151b991016b869cf0146c5b09a68f6"
+    }
+  },
+  "hard_stop_after_outputs": true,
+  "human_authorization": {
+    "human_reply": "允许仅 radio 临时张量 Adam（推荐）",
+    "question_item_id": "[\"request_user_input_async\",\"call_ut7zIbhQvKgZVDMMHSBB9N2C\",0]",
+    "radio_temporary_adam_allowed": true,
+    "scope": "Frozen raw_correction_energies only: two temporary offset/log_gain tensors, exactly 6 Adam steps per batch; no network optimizer, training mode, model-loss backward, parameter changes or gradients."
+  },
+  "integrity": {
+    "canonical_self_hash_validation": {
+      "FORMAL_UJI_EXECUTION_V18_4.json": {
+        "field": "execution_record_sha256",
+        "sha256": "d80db2d1c293dbabe320c20d862a42c6ddcd64068a432fa26fdcdb9e42b64a68",
+        "verified": true
+      },
+      "uji_calibration_v18_4.json": {
+        "field": "calibration_result_sha256",
+        "sha256": "9c2c23169a5739c7c09a438b45dfd6e7144d2ae824fe312dfe9ba65e241498b8",
+        "verified": true
+      },
+      "uji_development_v18_4.json": {
+        "field": "development_result_sha256",
+        "sha256": "f60f98971bf9b57d61f9d52dc408b5600a039acdb841086552b3a0ae98710d78",
+        "verified": true
+      },
+      "uji_method_freeze_v18_4.json": {
+        "field": "freeze_sha256",
+        "sha256": "bcf631c01e15784baa4ea822a18bba344daad7f921ecb083eef64618fefee432",
+        "verified": true
+      },
+      "uji_registry_v18_4.json": {
+        "field": "registry_sha256",
+        "sha256": "7630e6f8459b055268226ae7e83a0fe014337e0a3ef491d661d00a301e2001b0",
+        "verified": true
+      }
+    },
+    "formal_file_byte_sha256": {
+      "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.json": "b3c63ab7d650f1c7f013acd7ecf29ed599b6ffbe08399eac880fc00f3f971610",
+      "fhm_dapp_tim/evidence/v18_4/uji_calibration_v18_4.json": "77500418abd927629b5687e2639c6d77a56c7464f144fab81089899dc4076082",
+      "fhm_dapp_tim/evidence/v18_4/uji_development_v18_4.json": "8b7a30e2de836c26631d8fcda965dc6d7bbeb522c6d01ed53f3a4c25b1dc2019",
+      "fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json": "9901da1203e05af9a73ff8b7a3d6c6f75d77364b2f6d3a52d093e7d72b6c874f",
+      "fhm_dapp_tim/evidence/v18_4/uji_registry_v18_4.json": "3470b9ff247117fbe9cefcd2f8135a55a8efe440b497a4ac96e8346339c26fb3",
+      "fhm_dapp_tim/models/v18_4/uji_lambda_0p10.pt": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+      "fhm_dapp_tim/models/v18_4/uji_selection_refit.pt": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b"
+    },
+    "link_validation": [
+      {
+        "link": "development->registry",
+        "value": "7630e6f8459b055268226ae7e83a0fe014337e0a3ef491d661d00a301e2001b0",
+        "verified": true
+      },
+      {
+        "link": "calibration->registry",
+        "value": "7630e6f8459b055268226ae7e83a0fe014337e0a3ef491d661d00a301e2001b0",
+        "verified": true
+      },
+      {
+        "link": "freeze->registry",
+        "value": "7630e6f8459b055268226ae7e83a0fe014337e0a3ef491d661d00a301e2001b0",
+        "verified": true
+      },
+      {
+        "link": "calibration->development",
+        "value": "f60f98971bf9b57d61f9d52dc408b5600a039acdb841086552b3a0ae98710d78",
+        "verified": true
+      },
+      {
+        "link": "freeze->development",
+        "value": "f60f98971bf9b57d61f9d52dc408b5600a039acdb841086552b3a0ae98710d78",
+        "verified": true
+      },
+      {
+        "link": "freeze->calibration",
+        "value": "9c2c23169a5739c7c09a438b45dfd6e7144d2ae824fe312dfe9ba65e241498b8",
+        "verified": true
+      },
+      {
+        "link": "development->lambda0.10 checkpoint",
+        "value": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+        "verified": true
+      },
+      {
+        "link": "lambda0.10 report->checkpoint",
+        "value": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+        "verified": true
+      },
+      {
+        "link": "calibration->selection_refit checkpoint",
+        "value": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b",
+        "verified": true
+      },
+      {
+        "link": "freeze->selection_refit checkpoint",
+        "value": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b",
+        "verified": true
+      },
+      {
+        "link": "freeze.lambda_spatial",
+        "value": 0.1,
+        "verified": true
+      },
+      {
+        "link": "freeze.epsilon_kl",
+        "value": 0.025,
+        "verified": true
+      },
+      {
+        "link": "freeze.selected_epoch",
+        "value": 16,
+        "verified": true
+      },
+      {
+        "link": "freeze.posterior_temperature",
+        "value": 1.5,
+        "verified": true
+      },
+      {
+        "link": "freeze.scale_multiplier",
+        "value": 1.0,
+        "verified": true
+      },
+      {
+        "link": "freeze.decoder",
+        "value": "posterior_weighted_component_center_geometric_median",
+        "verified": true
+      },
+      {
+        "link": "development.selected.lambda_spatial",
+        "value": 0.1,
+        "verified": true
+      },
+      {
+        "link": "calibration.lambda_spatial",
+        "value": 0.1,
+        "verified": true
+      },
+      {
+        "link": "development.selected.epsilon_kl",
+        "value": 0.025,
+        "verified": true
+      },
+      {
+        "link": "calibration.epsilon_kl",
+        "value": 0.025,
+        "verified": true
+      },
+      {
+        "link": "development.selected.selected_epoch",
+        "value": 16,
+        "verified": true
+      },
+      {
+        "link": "calibration.selected_epoch",
+        "value": 16,
+        "verified": true
+      },
+      {
+        "link": "calibration.selected.temperature",
+        "value": 1.5,
+        "verified": true
+      },
+      {
+        "link": "calibration.selected.scale",
+        "value": 1.0,
+        "verified": true
+      },
+      {
+        "link": "registry.model_config",
+        "value": {
+          "anchor_weight": 1.0,
+          "ap_dropout": 0.1,
+          "batch_size": 64,
+          "candidate_reranker": true,
+          "candidate_reranker_mode": "summary",
+          "coordinate_weight": 1.0,
+          "d_model": 128,
+          "domain_adversarial_weight": 0.05,
+          "dropout": 0.1,
+          "energy_tie_margin_m": 0.05,
+          "epsilon_kl_grid": [
+            0.025,
+            0.05,
+            0.1
+          ],
+          "floor_retrieval_k": 16,
+          "geometry_margin_scale": 0.5,
+          "geometry_seed_k": 8,
+          "geometry_sigma_scale": 1.5,
+          "gradient_clip": 5.0,
+          "hierarchy_weight": 0.5,
+          "invariant_aux_weight": 0.25,
+          "invariant_retrieval_k": 32,
+          "lambda_spatial_grid": [
+            0.1,
+            0.25,
+            0.5
+          ],
+          "learning_rate": 0.0003,
+          "max_residual_m": 30.0,
+          "max_visible": 64,
+          "maximum_epochs": 60,
+          "min_scale_m": 0.25,
+          "minimum_epochs": 12,
+          "num_heads": 4,
+          "num_layers": 2,
+          "prototype_metric": "none",
+          "prototype_retrieval_k": 32,
+          "radio_profile_learning_rate": 0.2,
+          "radio_profile_log_scale_max": 0.25,
+          "radio_profile_log_scale_weight": 0.1,
+          "radio_profile_offset_max": 0.2,
+          "radio_profile_offset_weight": 0.1,
+          "radio_profile_steps": 6,
+          "reranker_anchor_decoder": false,
+          "residual_experts": 1,
+          "rss_offset_aug_db": 4.0,
+          "rss_scale_aug": 0.08,
+          "scan_feature_mode": "bounded_maximal_invariant",
+          "student_df": 4.0,
+          "support_ceiling": 128,
+          "weight_decay": 0.0001
+        },
+        "verified": true
+      },
+      {
+        "link": "freeze.model_config",
+        "value": {
+          "anchor_weight": 1.0,
+          "ap_dropout": 0.1,
+          "batch_size": 64,
+          "candidate_reranker": true,
+          "candidate_reranker_mode": "summary",
+          "coordinate_weight": 1.0,
+          "d_model": 128,
+          "domain_adversarial_weight": 0.05,
+          "dropout": 0.1,
+          "energy_tie_margin_m": 0.05,
+          "epsilon_kl_grid": [
+            0.025,
+            0.05,
+            0.1
+          ],
+          "floor_retrieval_k": 16,
+          "geometry_margin_scale": 0.5,
+          "geometry_seed_k": 8,
+          "geometry_sigma_scale": 1.5,
+          "gradient_clip": 5.0,
+          "hierarchy_weight": 0.5,
+          "invariant_aux_weight": 0.25,
+          "invariant_retrieval_k": 32,
+          "lambda_spatial_grid": [
+            0.1,
+            0.25,
+            0.5
+          ],
+          "learning_rate": 0.0003,
+          "max_residual_m": 30.0,
+          "max_visible": 64,
+          "maximum_epochs": 60,
+          "min_scale_m": 0.25,
+          "minimum_epochs": 12,
+          "num_heads": 4,
+          "num_layers": 2,
+          "prototype_metric": "none",
+          "prototype_retrieval_k": 32,
+          "radio_profile_learning_rate": 0.2,
+          "radio_profile_log_scale_max": 0.25,
+          "radio_profile_log_scale_weight": 0.1,
+          "radio_profile_offset_max": 0.2,
+          "radio_profile_offset_weight": 0.1,
+          "radio_profile_steps": 6,
+          "reranker_anchor_decoder": false,
+          "residual_experts": 1,
+          "rss_offset_aug_db": 4.0,
+          "rss_scale_aug": 0.08,
+          "scan_feature_mode": "bounded_maximal_invariant",
+          "student_df": 4.0,
+          "support_ceiling": 128,
+          "weight_decay": 0.0001
+        },
+        "verified": true
+      },
+      {
+        "link": "formal_execution.freeze_artifact.source",
+        "value": "5b3a1888707e193c649007ebeb208c2a9d02ff45",
+        "verified": true
+      },
+      {
+        "link": "formal_execution.freeze_artifact.self_hash",
+        "value": "bcf631c01e15784baa4ea822a18bba344daad7f921ecb083eef64618fefee432",
+        "verified": true
+      }
+    ],
+    "pre_existing_artifact_sha256": {
+      "fhm_dapp_tim/evidence/v18_4/CAPACITY_AUDIT_V18_4.md": "26cfa42595ceb62f998e335edd461ee956f99b95d71568cfe3eb11e38bb2df0e",
+      "fhm_dapp_tim/evidence/v18_4/DECODER_PROBE_REPORT_V18_4.md": "a4b3736719bb34b4152fb3f7ab5aec5395aadd999d90c7440568a214938a5705",
+      "fhm_dapp_tim/evidence/v18_4/DESIGN_GATE_V18_4.md": "2e1394d6b6b84dcaf52076cdbe74298c68750f09aa568eb5cc7e8670e4b76458",
+      "fhm_dapp_tim/evidence/v18_4/DESIGN_V18_4.md": "3bc205a9e8712ca2959cd0b6c383a4d045f8852e7a35ca688687975aa8114853",
+      "fhm_dapp_tim/evidence/v18_4/PRE_RUN_REVISION_AUDIT_V18_4.json": "67413b834a9ae46473c448cf4f41edde123079041873f35ff2f37e99e8efe689",
+      "fhm_dapp_tim/evidence/v18_4/PRE_RUN_REVISION_AUDIT_V18_4.md": "9edcc991e20f9f8725d3064c0ef64d276761b1db2d5c00213ab9166798f0e78a",
+      "fhm_dapp_tim/evidence/v18_4/RUNBOOK_EXTERNAL_V18_4.md": "2df5f4ce87a5f00faa7cd91c673e84c8a80e270113c7408148dab3f4171007df",
+      "fhm_dapp_tim/evidence/v18_4/RUNBOOK_UJI_V18_4.md": "b6d013d19afacaa7fcd71d805ad18f6383891ad4805366fedf6bcaa0c7461d3c",
+      "fhm_dapp_tim/evidence/v18_4/RUN_STATUS_DECODER_GATE_V18_4.json": "40aef841848472d3b794114622c70b2dd10eb9d455983b0015c693a38df1c991",
+      "fhm_dapp_tim/evidence/v18_4/RUN_STATUS_DECODER_GATE_V18_4.md": "809f5ddf8c55ae765671fac430fc4d98da5b685f898629ee7f846084a1293be2",
+      "fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.json": "0fbb06216418c679f9567f1499143116f60c8a1005728407d3532e7bc7a32514",
+      "fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.md": "458ea620a0398ab0674d14f7870b0a20d6f00f5e68203b60900b90b72e222207",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.json": "b3c63ab7d650f1c7f013acd7ecf29ed599b6ffbe08399eac880fc00f3f971610",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.md": "1670bdf2b41a1420c38d45b3de2d1638dabb49cac202df2c4a62b88e7d7c8548",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_PREPARE_GATE_V18_4.md": "60f946854a647a0ce486013620f99f155ec7370aedf3ad4f6940c6193b6c6016",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_AUTHORIZATION_RUN_STATUS_DECODER_GATE_V18_4.json": "ddc92cb4b26cf5e04e1be9c4dea59797850c6d067fc2d48fad637134ccadcf4b",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_AUTHORIZATION_RUN_STATUS_DECODER_GATE_V18_4.md": "4072f303db40bf9255390e5f494b02a7f10c6126866514d94494232efe3b9737",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_RUN_REVISION_ACCEPTANCE_V18_4.md": "bc7101f237e0016bb1ab33584594ed0985de861875b30a67de7e5bc4ccfb7f3f",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_RUN_REVISION_EXECUTION_V18_4.md": "7b9a24c8093695471cc73064a9780b735df2dfaade4873420e6fb5a2233efbc9",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/RADIO_PROFILING_EXCEPTION_PROPOSAL.json": "3fcca528c6381f13802cd9fba38af8c2aea5e432469af36745301f81f05208f9",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/audit_path_fix_verification.json": "16053ea46086cf5042fb119475969f8db90eb78eaea60559e385d53d000e428b",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/audit_path_selfcheck_runtime.json": "2763d7ba1d00ae2b402abb6532d0e89ccc5910cfb863fb0b9bcfa316de1b6192",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/checkpoint_reconstruction_runtime.json": "5b41e2592902e3f886e8537302d92fa2171917618b28f22d9adeb2c010ab04a4",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/checkpoint_reconstruction_verification.json": "2d81a9dceab2e4e0e47a00db79415f20ffa8fab6cb7277c0432a4aedb657c60d",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_run_state_v18_4.json": "28c149c54c4e6b11a692fd2b5e4e9212568de134027aa1b64005b07f439a15b0",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_v18_4.json": "c782f077afd32891069b3ab0487649aa930c85ac7c12ae813c904f5c887503d3",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_execution_v18_4.json": "dbf34ff40456d4bedee0a9b5130a5a263ff74e33cced6bb3b08338fbbaa9cd48",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/preflight.json": "d02d89d5fca32e6e0d0a564e8f1c7ea76c0ba8583998be7c91150e917528ce9a",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_02_execution.json": "2b71e8244f230984ff0d1a27d2cfaf004ca6856e88ff2d5f3ecbf4cc312c6bd5",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_02_runtime.json": "fd28309169dd48dc950062f86cd2688d145a634d8dc9462d82d5b7bc96e68c74",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_03_execution.json": "1e8151e45b6ce834798d12d7a8571938ff47e8b3d0d2da8148002afd0903b702",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_03_runtime.json": "5374560919eb74fde3add040940ee223b22d7bd961c7d53b80b79fc9c8cbb04e",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_04_execution.json": "5e42d79f53ea75f89a12cc7a006f44424cd757b1eeaca755fb85bc59e1a76ffb",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_04_runtime.json": "9e300cc55421d30d08e9dd25793a13b71f2b761fe50dfa7d72871192b44fd03e",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_execution.json": "3baf7185a283c89399a61cde22891daf3446bcd8983946d37a0d6eefe70f1c3f",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/probe_runtime.json": "47ab97a3f42df1871055cb0f6dc6e0e4baed6de0ab929308d8345990124d1c42",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/publication_authorization.json": "8b304ad74d4419bf4fc830accc42dc9eb07782726ef570fdfbf924dd43f265c3",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/radio_prediction_equivalence.json": "9100317a2e88e946f89342a569ba94633a25fcb963dee53d1687cee35348dfb2",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/radio_profile_authorization.json": "bc4453eca2ddcb43d12e5c9e5235127cc2030f1cad3e251bd78a197bf1a53b65",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/result_verification.json": "5afefa261eae6541e0ba0e1e32e0cc367e415f20ddb78ae9ccc28268696ed759",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_audited.json": "d44c8a55c0bd2cfd636d855e7b1b0352b8027659288f2bc4aff0ab9ac7294a7b",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_baseline.json": "d44c8a55c0bd2cfd636d855e7b1b0352b8027659288f2bc4aff0ab9ac7294a7b",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_runtime.json": "ff81a56bee793267198b0d4a6a6fec6469c84cc56e8d9d00d4ff40f565d12aa2",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_audited.json": "46e02303b7260684066fc62204ca307752230ddc5e57e43f75d1755bffb49548",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_baseline.json": "46e02303b7260684066fc62204ca307752230ddc5e57e43f75d1755bffb49548",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_runtime.json": "02e601e315464ace8e80877a188e1e5201d7e2246015d68a012e60fffc20e526",
+      "fhm_dapp_tim/evidence/v18_4/uji_calibration_v18_4.json": "77500418abd927629b5687e2639c6d77a56c7464f144fab81089899dc4076082",
+      "fhm_dapp_tim/evidence/v18_4/uji_development_v18_4.json": "8b7a30e2de836c26631d8fcda965dc6d7bbeb522c6d01ed53f3a4c25b1dc2019",
+      "fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json": "9901da1203e05af9a73ff8b7a3d6c6f75d77364b2f6d3a52d093e7d72b6c874f",
+      "fhm_dapp_tim/evidence/v18_4/uji_registry_v18_4.json": "3470b9ff247117fbe9cefcd2f8135a55a8efe440b497a4ac96e8346339c26fb3",
+      "fhm_dapp_tim/models/v18_4/uji_lambda_0p10.pt": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+      "fhm_dapp_tim/models/v18_4/uji_lambda_0p25.pt": "b2c33a03268b0f53d659189b1f98c4910635acf6b060d5dd8ebb4c10ff605fea",
+      "fhm_dapp_tim/models/v18_4/uji_lambda_0p50.pt": "716e6886e4aae5cce6dc5184e331e1941730ef7479c6d20d5e9c751c988815c9",
+      "fhm_dapp_tim/models/v18_4/uji_selection_refit.pt": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b"
+    },
+    "preserved_formal_file_sha256": {
+      "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.json": "b3c63ab7d650f1c7f013acd7ecf29ed599b6ffbe08399eac880fc00f3f971610",
+      "fhm_dapp_tim/evidence/v18_4/uji_calibration_v18_4.json": "77500418abd927629b5687e2639c6d77a56c7464f144fab81089899dc4076082",
+      "fhm_dapp_tim/evidence/v18_4/uji_development_v18_4.json": "8b7a30e2de836c26631d8fcda965dc6d7bbeb522c6d01ed53f3a4c25b1dc2019",
+      "fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json": "9901da1203e05af9a73ff8b7a3d6c6f75d77364b2f6d3a52d093e7d72b6c874f",
+      "fhm_dapp_tim/evidence/v18_4/uji_registry_v18_4.json": "3470b9ff247117fbe9cefcd2f8135a55a8efe440b497a4ac96e8346339c26fb3",
+      "fhm_dapp_tim/models/v18_4/uji_lambda_0p10.pt": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+      "fhm_dapp_tim/models/v18_4/uji_lambda_0p25.pt": "b2c33a03268b0f53d659189b1f98c4910635acf6b060d5dd8ebb4c10ff605fea",
+      "fhm_dapp_tim/models/v18_4/uji_lambda_0p50.pt": "716e6886e4aae5cce6dc5184e331e1941730ef7479c6d20d5e9c751c988815c9",
+      "fhm_dapp_tim/models/v18_4/uji_selection_refit.pt": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b"
+    },
+    "status": "PASS",
+    "verified_source_file_count": 157,
+    "verified_source_file_sha256": {
+      "fhm_dapp_tim/__init__.py": "9ef686b92b0e70b2a3f8e917c5707557d0742830e98f22c4480bbdebe3d24f12",
+      "fhm_dapp_tim/evidence/v18_1/run_audit/preflight.py": "15f31dab6b62adf28fc8af75036199122aa1b6fef24de286cc144259ca74a7fa",
+      "fhm_dapp_tim/evidence/v18_1/run_audit/report_run.py": "d7a2055bdd7374c58340207cde1752d85f3b43e181ff727bc3b280fffae12e32",
+      "fhm_dapp_tim/evidence/v18_1/run_audit/run_phase.py": "b6d406bb86fd47ed0413da573ad04194e45190ccc80c30344f63156db7eba750",
+      "fhm_dapp_tim/evidence/v18_1/run_audit/sitecustomize.py": "4091fd68de35b0a2f5ad786eb8a3c4a985e4b9bc3b8cba579dee8c669f2cb7be",
+      "fhm_dapp_tim/evidence/v18_1/run_audit/verify_run.py": "c4088f72df0fbe2a3b366339b11c7fea7ccc3602a6c493be3936a562e23ea016",
+      "fhm_dapp_tim/evidence/v18_2/run_audit/preflight.py": "2cabe03045691df0c135705fce917c6064f70789a91542cecae1ad6f90d94dfa",
+      "fhm_dapp_tim/evidence/v18_2/run_audit/qa_report.py": "db22a1442d45940f705b4fdc61a23247f3e78842ce7af87e15dfc64133ce9b7f",
+      "fhm_dapp_tim/evidence/v18_2/run_audit/report_run.py": "6ec04c86d53c12f113e26a73861da2af1b5ca135f226386057bcacb440386db1",
+      "fhm_dapp_tim/evidence/v18_2/run_audit/run_phase.py": "62695d3befe64af9ae622816cafebd574303e85cad4dab1758740f2506150c3e",
+      "fhm_dapp_tim/evidence/v18_2/run_audit/sitecustomize.py": "9f5bd2dc1f737eb3992c8184164976b46f2de04c13fad37b523a500b096d29af",
+      "fhm_dapp_tim/evidence/v18_2/run_audit/verify_run.py": "778b00cda61b4d0c081e3b86609a58afbe6442842630661d6a7d67e203bc2559",
+      "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/check_fix_proposal.py": "bcd280c87dfa1a98a32d1491a062342ab7134ccc786b01d73ee1392a0c43b385",
+      "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/preflight.py": "17821d1e13dfad337ca841cf48ca743f3b3a5f8889b5b60106cbfd13a128386f",
+      "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/run_phase.py": "34811dc9487156de355af59c764a79bf2745ac498298595a5c1907164ca02f61",
+      "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/sitecustomize.py": "04180836e54165518fd2cc2134bb572ab15651650bc9045cfd2800c863d98c74",
+      "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/verify_run.py": "34a5b2883ede42ea5b1affef9e0e54658c291632985b241d20916268cc3987d6",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/check_capacity_fix_proposal.py": "10d15d9119d657c1359a99265fb5b898939a0ce1b19722b8e9df3215b0a513a8",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/check_full_capacity.py": "b0c94c466a7a79b2cd24d7043c2f8a6a242e0510ee0008283b5d36b03593b121",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/preflight.py": "9248e9801dadb84008c06a45fc3d5160b5190f7a312bef322f700f36cdfc27aa",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/qa_report.py": "6dcf38a341edac994a00f39e82e6ed0a022290a5c18ee69b7155644dc93befa8",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/report_incomplete.py": "964f6d705418a3957f31fdddbbc01a82e82a3b4510cd39888c904d1d5f57a648",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/report_run.py": "153a1dcaf4f347d0235a771497f5551ed3e04e698e517f24d9665230a67295bf",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/run_phase.py": "d6eac8a73480c15e814c505dd110cfb80987d3e44e1de24231bbda6cf40c85e7",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/sitecustomize.py": "58eca69e6ae0110dd9dfaaa2cd6b0dab55c3c36edda1168ce233f7c3cdc96adb",
+      "fhm_dapp_tim/evidence/v18_3/run_audit/verify_run.py": "e1409e82eea54772e875b73807cafd03f5854befc211c687e7fd9bbf7ed7e8d3",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/failed_startup_run_probe_once.py": "f2e6b8ec9dd581a400d89a8df910cf68566b005fd2fb3665daebdbf2bb37b745",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/failed_startup_sitecustomize.py": "9d0f36719c42ab491a31a34db7877ed782e04acddc139b7465075f4aab69fd07",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/finalize_probe_evidence.py": "7d10dd0ce5bd3fff0fd28249d3c3477f9efce04b25e4cb3c4553b2bdc392bb0b",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/run_probe_once.py": "d5593002f0744bbc0a689ad7a3800283392f0b7758f0668af6523219c979cacb",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/second_startup_run_probe_once.py": "32ae09b8b0b7a057cf3dacb46c7e64df3627c0d912c85559d2ffa7f5d93ac20c",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/second_startup_sitecustomize.py": "462fcec9d2ca32e77f64fc1cd3718ce47e4457edab03e1bcbdef3ea9efe4d546",
+      "fhm_dapp_tim/evidence/v18_4/run_audit/sitecustomize.py": "3ad23f5e24c95646835347bd1d24162b83f845d2ca8c0664007d8bd0b177c7f5",
+      "fhm_dapp_tim/evidence/v18_single/run_audit/generate_report.py": "744d9852f6061be0756e4d089b6abc1a0fcc221b380f7144a3251527947cab3e",
+      "fhm_dapp_tim/evidence/v18_single/run_audit/run_phase.py": "4aab6696af4ab6547e686ec3a866912cca457d2cfe2c8b8696b07d91ba1e54e7",
+      "fhm_dapp_tim/evidence/v18_single/run_audit/verify_run.py": "3c33c2c784387b62db3bc42403d39a1008f8ff411be35e4e0284c98da91f39c0",
+      "fhm_dapp_tim/fhm_dapp/__init__.py": "b1c16c21a864a4bf5d543e3ed16f4fe52b1674d2107af18483846fb666dbfff0",
+      "fhm_dapp_tim/fhm_dapp/anchor.py": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+      "fhm_dapp_tim/fhm_dapp/audit_bplus_localization_bridge_v5.py": "3bf453a345d79a568f987485a1b44c182211150a62baf58a6bee80acaa845690",
+      "fhm_dapp_tim/fhm_dapp/audit_bplus_sparse50_fem_v5.py": "67f22b63ab881763bb26d83f271c9d5699ad7636a7e4a5297180b2c9e0e6a821",
+      "fhm_dapp_tim/fhm_dapp/audit_hierarchical_front_v6.py": "549f69c0373dca1633e8221683748025614924a6f358b6d0cf6186172cccfee1",
+      "fhm_dapp_tim/fhm_dapp/audit_sparse_radiomap_v5.py": "b6298da58aebc86fc82a31741c17ebdc4a06abc5f02dea7e7b79d1c436bb7c7a",
+      "fhm_dapp_tim/fhm_dapp/baselines_v44.py": "84745dc24ff541f0ae211a69bdac7979d2f76e142721e8dc986093d9fca9303c",
+      "fhm_dapp_tim/fhm_dapp/candidates.py": "0f73e850da813558a7c52b9cc20f8e4743918c62ce08dce7cb89d23535112760",
+      "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+      "fhm_dapp_tim/fhm_dapp/consensus.py": "86551de8e57b1e46085acd7eb2a42b39803beb9baf9a58d483486dc6d45d5121",
+      "fhm_dapp_tim/fhm_dapp/dapp.py": "154013a4b6fd5bf4c19abd0c94a1ac81dd0200af0a41bf6d01e479bcd8db6266",
+      "fhm_dapp_tim/fhm_dapp/data.py": "ae9a6a2628a72a86d6649a505ead7a6401a1287064e64cf4ef71e1baa02d2afc",
+      "fhm_dapp_tim/fhm_dapp/device_robust_v4.py": "ec94b90f4ba5d27a91bcbe61c427356d8389454de023834edf5c78c1839a5d62",
+      "fhm_dapp_tim/fhm_dapp/ensemble.py": "379a62415e5981555fcf37f7b134851977b316d8ac8657c4da228ec5d47c77ed",
+      "fhm_dapp_tim/fhm_dapp/evaluate_v4.py": "6330a1a4eeb8cba30e4b3fe2a52eace05f291f869ad76323092ec52fd9e87363",
+      "fhm_dapp_tim/fhm_dapp/experiment_v7.py": "11b61753e1c511e4cd181085ac7c97a42dc188c1d25b805cf3a56d572c544d3a",
+      "fhm_dapp_tim/fhm_dapp/experiment_v71.py": "51cdb2c671fa9e2738d45b7fbc6ec65e7430854e3a940095ab5f187f43b941f6",
+      "fhm_dapp_tim/fhm_dapp/final_v44.py": "a1ebddfe815abc422598318305164d1394c81630ffacb078c15ec78e6ebaf510",
+      "fhm_dapp_tim/fhm_dapp/freeze_confirmation_v43.py": "edc1d0d9ab0ad8908ddeee8e564aecb0260c4c0a1327cb93f8fa36209d3f5465",
+      "fhm_dapp_tim/fhm_dapp/marked_orbit_v10.py": "dcdba911abaa0e7f56ad32d216e0b80dbd1e331e1abc042d65fe569e9b0945cc",
+      "fhm_dapp_tim/fhm_dapp/metrics.py": "41bbb57569c6852b005ea1e13fdbd306bcb24e047dd643f022d82ff2a324d9ae",
+      "fhm_dapp_tim/fhm_dapp/minimal_v3.py": "4ddd0fd52cd95e0aa699fb5de269b68be4f8ba982984543a80564b81ae273443",
+      "fhm_dapp_tim/fhm_dapp/model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "fhm_dapp_tim/fhm_dapp/physics.py": "3445a7521713688f77bf469354041f3d6ddcd1f31d93e38a733ce57efff73ee8",
+      "fhm_dapp_tim/fhm_dapp/posterior_diagnostics_v44.py": "40171f2bedfd890cfed7c455e70443bca9a51db62f2f6503fd5422d6dcb91b17",
+      "fhm_dapp_tim/fhm_dapp/projected_ensemble.py": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+      "fhm_dapp_tim/fhm_dapp/protocol_v3.py": "4a9f0be716f3bf8dc63c4383c69db76d3fc9c491f4118939da353ea8002f74fa",
+      "fhm_dapp_tim/fhm_dapp/protocol_v4.py": "05872abbacc6a28e84d849b64775fb67459d0c686e0ce563ed413795f07de8bd",
+      "fhm_dapp_tim/fhm_dapp/train_anchor.py": "4e2b597d385f315d556cc6759d5a26a7de4392e654cc5e08dc57efb3c151f480",
+      "fhm_dapp_tim/fhm_dapp/train_anchor_v2.py": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb",
+      "fhm_dapp_tim/fhm_dapp/train_anchor_v4.py": "701e6476fd860a01e37324e42f0a9686d2675a74cded36b81f8080e0a1ea39c8",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_experiment.py": "7750a9668fefbdce1be003d0811606c5d0a9c52fbdcce50970fc7cc90c919990",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v2.py": "4faaf3ac4f184ec199f41fce0b404f492c2cadba97851580f65fd3c74588bc7a",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v3_callfix.py": "6b7ff78336e40635857090b1ec19aaab3c6631e75467142e07217e82dd8c38cc",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v4_runtime_isolation.py": "04aa7e8b1c8e35e0a5e84916bb459905f3f17899756318c0cff37b90f753c847",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v5_scoring_signature.py": "fe71d72afdb93d681e118b1389748b73ba71cd805fbeed76db9f56a471908827",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_protocol.py": "8f8b44bc558331c02edcdf1ad75552923265a9cd387fd3f561d945674475c0e9",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_common.py": "a3be6a3534d9ce03ca1775ed354d071c061abbe2eae7961b41d86c34d9473d86",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_comparator_v1.py": "b33c2f2275b83703dc118de4765db22993b829072f7e16ff9ed938f2d3a8c188",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_comparator_v2_method_order.py": "6913044a1613fd81273122ad83e0008cabf06f8eac12eed099a57d4511745b0d",
+      "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_protocol.py": "669bec55e28f361326ee86e6a58a92aa9104a3948dfa97abfafa49f816474106",
+      "fhm_dapp_tim/fhm_dapp/uji_v16_protocol.py": "422936efbacf5ff1b15e12bebe9928a21b69f0feae536e2ba666e55e0eec91f0",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_diagnose.py": "6f626e026978d1c5494d5608e041a0877f0d8797fa136ee1713a6609038f0d35",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a1.py": "51ad6d96dbcdbd7dff43f8a478c73e12a7b29c508fede674fbd63efd51485fdc",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a2.py": "5d95d7a8455e61e906588c0ea7fe23251f3bdd2b347643b82f9b2dc727543c6f",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1.py": "2b635284ca85b36774f18ccf160ba3780969de30afec59a8ccf5696e91c1c791",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1_protocol.py": "754babfea65af7ab7d251a835aa6f22879d099705e14194df0af58216b1d7880",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1_runtime_a1.py": "06c26409c993d9da3579f8fdfc43419881be5ff9166176cd5785ec3d53d1bddf",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2a.py": "5857a8cbe0b5f4a79926853c1eecb0f54fdd4a15677b35ca996c7ffec4b01b63",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2a_protocol.py": "fd3965683eee098df3782fb22559e1b667f2894faad199899f0c9c60cdd821e6",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b.py": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b_protocol.py": "7875daf3feb97503bbccc058982d602d5afc4848c27b259f9eba0e5a00b664aa",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2c.py": "6300eaed612cebde5a84c3c4ce6127b78646d036844955cb04cfa91bddfbaf1f",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2c_protocol.py": "e09b24c9838231347b7e29293de517db36e8acee1ad3bafb627a5b2838480c6d",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2d.py": "4f1ff170f2c20e2412bd82180eb8427d888e8db33dfbeeaf90711a6191bcd714",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2d_protocol.py": "2f71e3c45e28f3b2394477fb36e4a703637f124449b0b18a46365b31eeb61f69",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2e.py": "e80776c51417f4e5f30fdee78d149419320f8affbb02a0985a2138780fbfcb25",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2e_protocol.py": "75b9a2043b45f0039292b325587aaf899b87b68cce4cb1a619ad252a73b03002",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_protocol.py": "9ba17833a05b93aabc41efa73f5e077ea438888fa74250c8055f12e99ca4eecf",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_runtime_a1.py": "9edc4fd2369350912dd56461a78bd8cd9017849cb05666f67ac4182d0524aac5",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_runtime_a2.py": "1c0a9573eaa6bd4f1c0c3db7b22589a50685369bb6e554bbd2e81fe8911b2436",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+      "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_runtime_a1.py": "9a1e35725bd97b4f12b5feeefa7439eb2d9a6926a00bd4ccfdff741b2cddcc56",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_1_experiment.py": "c8d7e2ea88cc91b77ae5c74adbb411c6a8427367a28ee108a3db6704c5274225",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_2_experiment.py": "92bc0cae01c6450de1187ee9fd8a48f46b2697b27d0356f4d1ebe728d6c16ebe",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_3_experiment.py": "29467b336b4d9fe30d46100608859c87f4729ee5a0be221c5a130d948a0f77f7",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py": "1ecc932e3863e046f365c825805d04d91ad685b4ce325c3c3c81a6cfea1483f8",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_experiment.py": "171fbb9c9c1cd3422cbeba687458283863cea740d901783e6db608de947dfe57",
+      "fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5",
+      "fhm_dapp_tim/fhm_dapp/uji_v9_postlock_audit.py": "a9073aa669f37898d8ffb0ccc149c79735c2e7ba9b2baba12429a6f8e8b5b84b",
+      "fhm_dapp_tim/fhm_dapp/uji_v9_wknn_comparator_v2.py": "cc2511901448a0a870089033833752d0f7be2855c594924b2bb4e8fd8b3f0632",
+      "fhm_dapp_tim/fhm_dapp/uji_v9_wknn_protocol.py": "bfdbc194ca5bff5f7eeed3176477bb029b1a2c68ade4e03b324b6ccf7143dc2b",
+      "fhm_dapp_tim/fhm_dapp/uncertainty.py": "a02daff9565e71a0351187adc307c3a43faae82cc732a84a5dae76043e40cc2a",
+      "fhm_dapp_tim/fhm_dapp/v18_1_single.py": "39f307b96a844be8940366f6db1a8e967fd046dd419c3537efab99f743be3e20",
+      "fhm_dapp_tim/fhm_dapp/v18_2_single.py": "84db59687a6bce15ddaa6952acd8ac8bbe1afd207d89b4d75c426dcf18bd2323",
+      "fhm_dapp_tim/fhm_dapp/v18_3_single.py": "b4f1bc5359da71ce643ccd73be09249bf428314532917f041198cf11bfe0b4dd",
+      "fhm_dapp_tim/fhm_dapp/v18_4_capacity_audit.py": "05c56e247e5ad6aed9fa3d74a7ce7ba92130f38e313555b134198c977c4b4580",
+      "fhm_dapp_tim/fhm_dapp/v18_4_core.py": "caf660c629907cda071b3dd9494c3d247d9fa26409e2356f2e9888ee12302eae",
+      "fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py": "82d7e1f846b1d0a8be59730c652ffdabe0dc39054d665fa8f72652978038de71",
+      "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+      "fhm_dapp_tim/fhm_dapp/v18_4_decoder_probe.py": "670ac5523e5b3701e3daec40b223114e810f2870e306802e37a7062d8759da5b",
+      "fhm_dapp_tim/fhm_dapp/v18_4_external.py": "2d4d2308c16d6c9eb8d9bfb5231242db08e9cd07ab6a6da115c9396dde971a4b",
+      "fhm_dapp_tim/fhm_dapp/v18_4_model.py": "84689fe8eb65b78b531b78c47b1493ac694415ded82566cfb9a05cfd83c50b4a",
+      "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py": "5c8cf022db7ff53aafb74fc118ba87c546520371ffdd38f6eb68d4456f25850a",
+      "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py": "13caaad99bc0828706269a7b0c6cf0762864063c333a43aa7ae68fa32a5cdd14",
+      "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py": "af7d21873216dafafe9ee1308cc9dc9792c0b791e2a81d59787a6ad1f8f0be6f",
+      "fhm_dapp_tim/fhm_dapp/v18_single.py": "a985997202bd85a95e988d797c09dab08521ae18f9c0f557581bf42747c9977e",
+      "fhm_dapp_tim/fhm_dapp/v9_wknn_common.py": "ef7be95e8643be384462f628bbc59a9135436b4d214f06c9ae441ebd7af47a5a",
+      "tests/test_coherent_marked_v9.py": "de71f9009f1a6935228b66b529c672fb98d8db003057012e1595349099ffe761",
+      "tests/test_uji_v17_mother.py": "53b98fb79d6f0bbbbe1c986972c3f2663d326429492315018cea8850b2adb498",
+      "tests/test_uji_v17_mother_r1.py": "41a29a79e052d715d991e2baff8455b273dba8fd8bbd73ea8a69aa394fb1e3ac",
+      "tests/test_uji_v17_mother_r2a.py": "92a85ba1af1e6e5d61acf79d7e8da103af78d05ba564306db4434d13c511b137",
+      "tests/test_uji_v17_mother_r2b.py": "9efef4e9d8a2eb44bc3417275e1737c468421fa9f91c49537e5381a16b325ffc",
+      "tests/test_uji_v17_mother_r2c.py": "ca9660094bd1202df964842ba0998ec59754a9b19303074927520a6090ccaf2c",
+      "tests/test_uji_v17_mother_r2d.py": "cf88346512c0115b23bca872f6664849c0111da8f4c4c59657624a8ff2b18d3c",
+      "tests/test_uji_v17_mother_r2e.py": "11a3d541624c656cd0fa7a4df4ef64af1d110f48cd4f4327df76404bea05d804",
+      "tests/test_uji_v17_mother_r2f.py": "121c9ae6252f3b273af01cec86fa46ba11d1f19f103457d042fd4a39c88004db",
+      "tests/test_uji_v17_mother_r2f_runtime_a1.py": "c10f017bf275dbcac73bdb19161dd99b868100d610a7a74c8466e7782c78fbc8",
+      "tests/test_uji_v17_mother_r2f_runtime_a2.py": "293968910eb6828e6aec842fa5d7fb7fbc992cbebc5b985f9168817d61b976b6",
+      "tests/test_uji_v17_mother_r3.py": "034437094ca37502907f5d69736093bd869836990a983e7d92c95552bb96eeae",
+      "tests/test_uji_v17_mother_r3_runtime_a1.py": "9d6a54ff9452f41f048163a652093e978acef59df5b65ff70649719709f5d5af",
+      "tests/test_uji_v18_1_experiment.py": "b4b1b5b279b9cbff060b79457ded98418adf3288d1175eb7b805285b917c60ce",
+      "tests/test_uji_v18_2_experiment.py": "6e88f4f573bb56a77b3c6c21dc57afd9f1428a75defacf10a23352a5acabd86e",
+      "tests/test_uji_v18_3_experiment.py": "4aced6984fe5ab06ab85454aea0be892c87df0ef2f4a2af8ce24317a00718ec3",
+      "tests/test_uji_v18_4_development.py": "280747ca0fed1d9db06dd20c2c198520d14b97371f561e8d22b0c94d765534e2",
+      "tests/test_uji_v18_experiment.py": "89a7f7c3d11ff00404120a1a918ae4900b9f0a279e24e5f447bc622cc52b867a",
+      "tests/test_uji_v9_experiment.py": "9b680f7efe7c3fd79a4ec1fbfa306d809aa046099a0ee330a3cfd70b3d480b38",
+      "tests/test_uji_v9_postlock_audit.py": "680b65626598fd2ec7762baa8bb7f5b57eaf5516928cc6e53bfa8bfaa81fd3e0",
+      "tests/test_uji_v9_wknn_comparator_v2.py": "219a8e01fc1840fd49848448907f60ad42493f091e23ccd111f6ddf170c595ec",
+      "tests/test_uji_v9_wknn_protocol.py": "ad52324de55c3c61e9556ee1f53a621db1d367b039c63a8dbf5bd4873227d919",
+      "tests/test_v18_4_capacity_audit.py": "d0ff9cb2a00c0ace44833d32592e2464e2febd51233475e2bb52ef3a73584cce",
+      "tests/test_v18_4_core.py": "8d58a403a30e1cf5011bc746144335d8344094ea72c24c38c2743e2ecbf21385",
+      "tests/test_v18_4_datasets.py": "8df557fb3a57d50c78e048fbde28ad9c3366601a19dc3bf6bd468b934c76f942",
+      "tests/test_v18_4_decoder_probe.py": "3fd581c5660b024b4344fe6143c674ad4c9fa54d4320ea21bfef3db15d5c7e73",
+      "tests/test_v18_4_external.py": "8393350e8207275993c3d3bd56e7a2995dc3c917fd35be918d34f2dceac61278",
+      "tests/test_v18_4_model.py": "73fc16b753acf0cb1b2a66fa59cb7c2bc40213022a6f2627fedba418d36016f2",
+      "tests/test_v18_4_protocol.py": "2381cdc928b67e2f7bd9b430035190b65f151b991016b869cf0146c5b09a68f6"
+    }
+  },
+  "model_integrity": {
+    "calibration_T1_control": {
+      "after_sha256": "df8d7157636bcece82805af297454958b6e4ef488064767840bcd04998f584a1",
+      "all_parameter_gradients_none": true,
+      "all_parameters_and_buffers_bitwise_unchanged": true,
+      "before_sha256": "df8d7157636bcece82805af297454958b6e4ef488064767840bcd04998f584a1",
+      "radio_batches": 45,
+      "temporary_adam_initializations": 45,
+      "temporary_adam_steps": 270,
+      "temporary_nuisance_backward_calls": 270,
+      "training_mode_invoked": false
+    },
+    "calibration_frozen": {
+      "after_sha256": "df8d7157636bcece82805af297454958b6e4ef488064767840bcd04998f584a1",
+      "all_parameter_gradients_none": true,
+      "all_parameters_and_buffers_bitwise_unchanged": true,
+      "before_sha256": "df8d7157636bcece82805af297454958b6e4ef488064767840bcd04998f584a1",
+      "radio_batches": 45,
+      "temporary_adam_initializations": 45,
+      "temporary_adam_steps": 270,
+      "temporary_nuisance_backward_calls": 270,
+      "training_mode_invoked": false
+    },
+    "development_native": {
+      "after_sha256": "d7d5804c1e9179fe6ac992714477a7a9c9395499eccc9ee0cbdec6578a6dffc7",
+      "all_parameter_gradients_none": true,
+      "all_parameters_and_buffers_bitwise_unchanged": true,
+      "before_sha256": "d7d5804c1e9179fe6ac992714477a7a9c9395499eccc9ee0cbdec6578a6dffc7",
+      "radio_batches": 46,
+      "temporary_adam_initializations": 46,
+      "temporary_adam_steps": 276,
+      "temporary_nuisance_backward_calls": 276,
+      "training_mode_invoked": false
+    }
+  },
+  "output_sha256": {
+    "fhm_dapp_tim/evidence/v18_4/MECHANISM_PROBE_V18_4.json": "790b667892d4b21ec8eb062d6fc27c9cf6d63196d680d300648bf94c1a983d67",
+    "fhm_dapp_tim/evidence/v18_4/MECHANISM_PROBE_V18_4.md": "31affba0655b847e0c2fd742169a4355eb1657c765ea72db6e3577c0be90b627"
+  },
+  "postcheck": "PASS: all frozen sources and pre-existing formal/evidence/checkpoint bytes unchanged",
+  "probe_command": "D:\\miniminiconda\\envs\\liuyan\\python.exe -m fhm_dapp_tim.fhm_dapp.v18_4_mechanism_probe --device cuda",
+  "probe_exit_code": 0,
+  "probe_runtime_seconds": 1938.888369799999,
+  "problems_and_resolutions": [
+    {
+      "problem": "Sections 6 and 17 conflict: the required frozen radio profiling uses a temporary Adam despite No optimizer.",
+      "resolution": "Asked before dependent execution; human explicitly authorized this exception. New guard allows only two nuisance leaves and six steps/backwards, rejects network training/optimizers/backward and checks model state bitwise."
+    },
+    {
+      "problem": "Static implementation review identified JSON lists versus frozen Python tuple grids in config comparison.",
+      "resolution": "Compare JSON-canonical config values, preserving every numeric grid value. Added regression coverage before first compile/test gate; no production/config modification."
+    },
+    {
+      "problem": "An exploratory metadata read used the Windows default GBK encoding and failed decoding UTF-8 Chinese text.",
+      "resolution": "Read all JSON/Markdown using explicit UTF-8. This occurred in metadata inspection; no scientific run, source change or artifact mutation."
+    },
+    {
+      "problem": "An exploratory rg command passed literal wildcard file paths unsupported by PowerShell.",
+      "resolution": "Use rg directory searches with -g patterns. No scientific execution or data/artifact changes."
+    },
+    {
+      "problem": "Git emits Permission denied for the global ignore file.",
+      "resolution": "Read-only status commands still succeeded. No global Git configuration changes and no commit/push in this task."
+    }
+  ],
+  "record_type": "v18_4_read_only_mechanism_probe_v1",
+  "result_self_hash": "75bd468302f3defdcb845d27bdc176716267ba0edb3d73d04bcd76d33ccfc1aa",
+  "status": "PASS"
+}
