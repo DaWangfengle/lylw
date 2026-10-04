@@ -15,3 +15,11 @@ fhm_dapp_tim/evidence/v18_4/MECHANISM_PROBE_V18_4.json -text
 fhm_dapp_tim/evidence/v18_4/MECHANISM_PROBE_V18_4.md -text
 fhm_dapp_tim/evidence/v18_4/run_audit/MECHANISM_PROBE_EXECUTION_V18_4.json -text
 fhm_dapp_tim/evidence/v18_4/run_audit/MECHANISM_PROBE_EXECUTION_V18_4.md -text
+
+# Preserve final coupling/stratum audit outputs and the exact tested source bytes.
+fhm_dapp_tim/fhm_dapp/v18_4_coupling_stratum_probe.py -text
+tests/test_v18_4_coupling_stratum_probe.py -text
+fhm_dapp_tim/evidence/v18_4/COUPLING_STRATUM_PROBE_V18_4.json -text
+fhm_dapp_tim/evidence/v18_4/COUPLING_STRATUM_PROBE_V18_4.md -text
+fhm_dapp_tim/evidence/v18_4/run_audit/COUPLING_STRATUM_PROBE_EXECUTION_V18_4.json -text
+fhm_dapp_tim/evidence/v18_4/run_audit/COUPLING_STRATUM_PROBE_EXECUTION_V18_4.md -text
