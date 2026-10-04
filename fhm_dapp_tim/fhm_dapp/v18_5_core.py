@@ -109,6 +109,8 @@ def exact_kl_energy_projection(
 
     if base_probability.shape != energy.shape or base_probability.ndim != 2:
         raise ValueError("base_probability and energy must share [B,S] shape")
+    if not base_probability.is_floating_point() or not energy.is_floating_point():
+        raise ValueError("base probability and energy must be floating tensors")
     if mask is None:
         mask = torch.ones_like(base_probability, dtype=torch.bool)
     if mask.shape != base_probability.shape:
@@ -211,10 +213,6 @@ def exact_kl_energy_projection(
         constraint_active[row] = True
 
     posterior = torch.where(mask, posterior, torch.zeros_like(posterior))
-    realized = kl_p_to_q(posterior, q, mask).clamp_min(0.0)
-    if bool((realized > budget + 5e-10).any()):
-        raise RuntimeError("exact KL projection exceeded its row budget")
-
     expected_before = torch.sum(q * e, dim=1)
     expected_after = torch.sum(posterior * e, dim=1)
     if bool((expected_after > expected_before + 1e-10).any()):
@@ -231,10 +229,23 @@ def exact_kl_energy_projection(
     output = posterior.to(base_probability.dtype)
     if bool(identity_rows.any()):
         output = torch.where(identity_rows[:, None], q_input, output)
-        realized = torch.where(
-            identity_rows,
-            torch.zeros_like(realized),
-            realized,
+
+    # The trust-region diagnostic is evaluated on the ACTUAL returned tensor,
+    # not merely the internal float64 root.  Float32 conversion is allowed only
+    # within a dtype-scale tolerance.
+    realized = kl_p_to_q(output.double(), q, mask).clamp_min(0.0)
+    realized = torch.where(
+        identity_rows,
+        torch.zeros_like(realized),
+        realized,
+    )
+    output_tolerance = max(
+        5e-10,
+        32.0 * float(torch.finfo(base_probability.dtype).eps),
+    )
+    if bool((realized > budget + output_tolerance).any()):
+        raise RuntimeError(
+            "returned posterior exceeded its KL budget after dtype conversion"
         )
 
     return {
