@@ -1,0 +1,1541 @@
+{
+  "record_type": "descriptive_formal_uji_execution_provenance",
+  "status": "PASS",
+  "protocol_version": "uji_v18_4_development_v2_20261004",
+  "created_utc": "2026-10-04T05:59:50.940247+00:00",
+  "created_local": "2026-10-04T13:59:50.940247+08:00",
+  "local_timezone": "Asia/Shanghai",
+  "task_started_utc": "2026-10-03T18:33:36.229527+00:00",
+  "instruction_attachment": "C:\\Users\\LiuYan\\.codex\\attachments\\88c3fe42-7b5c-424c-bbec-dd66cdd3ac65\\Pasted text.txt",
+  "environment": {
+    "source_commit_sha": "5b3a1888707e193c649007ebeb208c2a9d02ff45",
+    "branch": "v18-4-trust-region-posterior",
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "python_version": "3.12.12",
+    "torch_version": "2.10.0+cu128",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "gpu_name": "NVIDIA GeForce RTX 2060",
+    "gpu_memory_bytes": 6442123264
+  },
+  "pre_run_gate": {
+    "audit_status": "PASS",
+    "audit_rerun": false,
+    "acceptance_status": "PASS",
+    "reviewed_implementation_unchanged": true,
+    "historical_failed_run_preserved": true,
+    "method_combinations": 9,
+    "validation_accessed_by_pre_run_audit": false,
+    "external_test_performance_accessed_by_pre_run_audit": false
+  },
+  "verification": {
+    "compile": {
+      "status": "PASS",
+      "exit_code": 0,
+      "compiled_module_count": 4
+    },
+    "pytest": {
+      "status": "PASS",
+      "exit_code": 0,
+      "passed": 69,
+      "failed": 0,
+      "skip_xfail_detected": false,
+      "suite_invocations": 1
+    },
+    "cpu_smoke": {
+      "status": "PASS",
+      "exit_code": 0,
+      "metrics": {
+        "anchor_nll": 3.963308334350586,
+        "anchors": 655,
+        "aps": 520,
+        "base_posterior_finite": true,
+        "coordinate_nll": 8.626402854919434,
+        "development_coordinate_groups": 139,
+        "development_rows": 2936,
+        "development_support_sizes": [
+          62,
+          64,
+          73,
+          54
+        ],
+        "device": "cpu",
+        "external_provided_tests_preexposed_for_adapter_validation": true,
+        "external_test_performance_used_for_v184_selection": false,
+        "fit_coordinate_groups": 655,
+        "fit_rows": 14126,
+        "forced_support_size": 63.125,
+        "gradient_norm": 11.675929428413932,
+        "gradient_tensor_count": 63,
+        "gradients_finite": true,
+        "loss": 15.592408941960153,
+        "loss_terms": {
+          "anchor_nll": 3.963308334350586,
+          "coordinate_nll": 8.626402854919434,
+          "domain_loss": 2.7722020149230957,
+          "floor_recall_mass": 0.6230161786079407,
+          "forced_support_size": 63.125,
+          "hierarchy_loss": 1.816705584526062,
+          "invariant_aux_loss": 5.063569068908691,
+          "invariant_recall_mass": 0.823188066482544,
+          "loss": 15.592408941960153,
+          "natural_pool_size_before_ceiling": 62.875,
+          "natural_recall_mass": 0.9529979228973389,
+          "natural_support_size": 62.875,
+          "natural_truncation_fraction": 0.0,
+          "prototype_recall_mass": 0.7990437150001526,
+          "spatial_energy_loss": 2.7593703340523117
+        },
+        "natural_recall_mass": 0.9529979228973389,
+        "natural_support_size": 62.875,
+        "optimizer_steps": 0,
+        "parameters": 614553,
+        "prediction_finite": true,
+        "scientific_status": "outcome-free smoke test using UJI training fit/development roles only",
+        "spatial_energy_loss": 2.7593703340523117,
+        "spatial_scale_m": 10.492310523986816,
+        "status": "success",
+        "training_batch_rows": 8,
+        "uji_official_validation_preexposed": true,
+        "uji_official_validation_used_for_v184_selection": false
+      },
+      "padding_exact_zero_verified_by_smoke": true
+    },
+    "cuda_smoke": {
+      "status": "PASS",
+      "exit_code": 0,
+      "metrics": {
+        "anchor_nll": 3.9314372539520264,
+        "anchors": 655,
+        "aps": 520,
+        "base_posterior_finite": true,
+        "coordinate_nll": 8.626402854919434,
+        "development_coordinate_groups": 139,
+        "development_rows": 2936,
+        "development_support_sizes": [
+          62,
+          64,
+          73,
+          54
+        ],
+        "device": "cuda",
+        "external_provided_tests_preexposed_for_adapter_validation": true,
+        "external_test_performance_used_for_v184_selection": false,
+        "fit_coordinate_groups": 655,
+        "fit_rows": 14126,
+        "forced_support_size": 63.25,
+        "gradient_norm": 11.651264644764494,
+        "gradient_tensor_count": 63,
+        "gradients_finite": true,
+        "loss": 15.528061623329643,
+        "loss_terms": {
+          "anchor_nll": 3.9314372539520264,
+          "coordinate_nll": 8.626402854919434,
+          "domain_loss": 2.766317844390869,
+          "floor_recall_mass": 0.6787998676300049,
+          "forced_support_size": 63.25,
+          "hierarchy_loss": 1.7642552852630615,
+          "invariant_aux_loss": 5.013332366943359,
+          "invariant_recall_mass": 0.7458040714263916,
+          "loss": 15.528061623329643,
+          "natural_pool_size_before_ceiling": 62.625,
+          "natural_recall_mass": 0.875,
+          "natural_support_size": 62.625,
+          "natural_truncation_fraction": 0.0,
+          "prototype_recall_mass": 0.741269588470459,
+          "spatial_energy_loss": 2.785778562047973
+        },
+        "natural_recall_mass": 0.875,
+        "natural_support_size": 62.625,
+        "optimizer_steps": 0,
+        "parameters": 614553,
+        "prediction_finite": true,
+        "scientific_status": "outcome-free smoke test using UJI training fit/development roles only",
+        "spatial_energy_loss": 2.785778562047973,
+        "spatial_scale_m": 10.492310523986816,
+        "status": "success",
+        "training_batch_rows": 8,
+        "uji_official_validation_preexposed": true,
+        "uji_official_validation_used_for_v184_selection": false
+      },
+      "padding_exact_zero_verified_by_smoke": true
+    }
+  },
+  "commands": [
+    {
+      "stage": "compile",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "py_compile",
+        "fhm_dapp_tim/fhm_dapp/v18_4_core.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_model.py",
+        "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py"
+      ],
+      "started_utc": "2026-10-03T18:35:55.813546+00:00",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\formal_uji_compile.log",
+      "exit_code": 0,
+      "pid": 16052,
+      "finished_utc": "2026-10-03T18:35:56.134964+00:00",
+      "wall_seconds": 0.31536009999945236,
+      "log_file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output": ""
+    },
+    {
+      "stage": "pytest",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_v18_4_core.py",
+        "tests/test_v18_4_model.py",
+        "tests/test_uji_v18_4_development.py",
+        "tests/test_v18_4_external.py",
+        "tests/test_v18_4_protocol.py",
+        "tests/test_v18_4_datasets.py",
+        "tests/test_v18_4_capacity_audit.py"
+      ],
+      "started_utc": "2026-10-03T18:36:37.866341+00:00",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\formal_uji_pytest.log",
+      "exit_code": 0,
+      "pid": 6200,
+      "finished_utc": "2026-10-03T18:37:48.432593+00:00",
+      "wall_seconds": 70.5581525000016,
+      "log_file_sha256": "69ef2a91be25783f59fac00b082b4766ab93876830376c9eef21cdb36597afbf",
+      "output": ".....................................................................    [100%]\n69 passed in 68.94s (0:01:08)\n"
+    },
+    {
+      "stage": "cpu_smoke",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke",
+        "--device",
+        "cpu"
+      ],
+      "started_utc": "2026-10-03T18:38:45.296501+00:00",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\formal_uji_cpu_smoke.log",
+      "exit_code": 0,
+      "pid": 12456,
+      "finished_utc": "2026-10-03T18:38:54.109736+00:00",
+      "wall_seconds": 8.814408399999593,
+      "log_file_sha256": "9087dd0f5026d799b6d5482c9b1e7d265d0a6ff99800e1ca078cd64f7d3b0527",
+      "output": "{\n  \"anchor_nll\": 3.963308334350586,\n  \"anchors\": 655,\n  \"aps\": 520,\n  \"base_posterior_finite\": true,\n  \"coordinate_nll\": 8.626402854919434,\n  \"development_coordinate_groups\": 139,\n  \"development_rows\": 2936,\n  \"development_support_sizes\": [\n    62,\n    64,\n    73,\n    54\n  ],\n  \"device\": \"cpu\",\n  \"external_provided_tests_preexposed_for_adapter_validation\": true,\n  \"external_test_performance_used_for_v184_selection\": false,\n  \"fit_coordinate_groups\": 655,\n  \"fit_rows\": 14126,\n  \"forced_support_size\": 63.125,\n  \"gradient_norm\": 11.675929428413932,\n  \"gradient_tensor_count\": 63,\n  \"gradients_finite\": true,\n  \"loss\": 15.592408941960153,\n  \"loss_terms\": {\n    \"anchor_nll\": 3.963308334350586,\n    \"coordinate_nll\": 8.626402854919434,\n    \"domain_loss\": 2.7722020149230957,\n    \"floor_recall_mass\": 0.6230161786079407,\n    \"forced_support_size\": 63.125,\n    \"hierarchy_loss\": 1.816705584526062,\n    \"invariant_aux_loss\": 5.063569068908691,\n    \"invariant_recall_mass\": 0.823188066482544,\n    \"loss\": 15.592408941960153,\n    \"natural_pool_size_before_ceiling\": 62.875,\n    \"natural_recall_mass\": 0.9529979228973389,\n    \"natural_support_size\": 62.875,\n    \"natural_truncation_fraction\": 0.0,\n    \"prototype_recall_mass\": 0.7990437150001526,\n    \"spatial_energy_loss\": 2.7593703340523117\n  },\n  \"natural_recall_mass\": 0.9529979228973389,\n  \"natural_support_size\": 62.875,\n  \"optimizer_steps\": 0,\n  \"parameters\": 614553,\n  \"prediction_finite\": true,\n  \"scientific_status\": \"outcome-free smoke test using UJI training fit/development roles only\",\n  \"spatial_energy_loss\": 2.7593703340523117,\n  \"spatial_scale_m\": 10.492310523986816,\n  \"status\": \"success\",\n  \"training_batch_rows\": 8,\n  \"uji_official_validation_preexposed\": true,\n  \"uji_official_validation_used_for_v184_selection\": false\n}\n"
+    },
+    {
+      "stage": "cuda_smoke",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.v18_4_realdata_smoke",
+        "--device",
+        "cuda"
+      ],
+      "started_utc": "2026-10-03T18:39:01.733870+00:00",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\formal_uji_cuda_smoke.log",
+      "exit_code": 0,
+      "pid": 19904,
+      "finished_utc": "2026-10-03T18:39:11.059041+00:00",
+      "wall_seconds": 9.330562799999825,
+      "log_file_sha256": "98836b62869be7b96f01859597b0634cf9bdff76b0f611bd7c30699e4170880f",
+      "output": "{\n  \"anchor_nll\": 3.9314372539520264,\n  \"anchors\": 655,\n  \"aps\": 520,\n  \"base_posterior_finite\": true,\n  \"coordinate_nll\": 8.626402854919434,\n  \"development_coordinate_groups\": 139,\n  \"development_rows\": 2936,\n  \"development_support_sizes\": [\n    62,\n    64,\n    73,\n    54\n  ],\n  \"device\": \"cuda\",\n  \"external_provided_tests_preexposed_for_adapter_validation\": true,\n  \"external_test_performance_used_for_v184_selection\": false,\n  \"fit_coordinate_groups\": 655,\n  \"fit_rows\": 14126,\n  \"forced_support_size\": 63.25,\n  \"gradient_norm\": 11.651264644764494,\n  \"gradient_tensor_count\": 63,\n  \"gradients_finite\": true,\n  \"loss\": 15.528061623329643,\n  \"loss_terms\": {\n    \"anchor_nll\": 3.9314372539520264,\n    \"coordinate_nll\": 8.626402854919434,\n    \"domain_loss\": 2.766317844390869,\n    \"floor_recall_mass\": 0.6787998676300049,\n    \"forced_support_size\": 63.25,\n    \"hierarchy_loss\": 1.7642552852630615,\n    \"invariant_aux_loss\": 5.013332366943359,\n    \"invariant_recall_mass\": 0.7458040714263916,\n    \"loss\": 15.528061623329643,\n    \"natural_pool_size_before_ceiling\": 62.625,\n    \"natural_recall_mass\": 0.875,\n    \"natural_support_size\": 62.625,\n    \"natural_truncation_fraction\": 0.0,\n    \"prototype_recall_mass\": 0.741269588470459,\n    \"spatial_energy_loss\": 2.785778562047973\n  },\n  \"natural_recall_mass\": 0.875,\n  \"natural_support_size\": 62.625,\n  \"optimizer_steps\": 0,\n  \"parameters\": 614553,\n  \"prediction_finite\": true,\n  \"scientific_status\": \"outcome-free smoke test using UJI training fit/development roles only\",\n  \"spatial_energy_loss\": 2.785778562047973,\n  \"spatial_scale_m\": 10.492310523986816,\n  \"status\": \"success\",\n  \"training_batch_rows\": 8,\n  \"uji_official_validation_preexposed\": true,\n  \"uji_official_validation_used_for_v184_selection\": false\n}\n"
+    },
+    {
+      "stage": "prepare",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.uji_v18_4_development",
+        "prepare"
+      ],
+      "started_utc": "2026-10-03T18:39:33.022273+00:00",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\formal_uji_prepare.log",
+      "exit_code": 0,
+      "pid": 5076,
+      "finished_utc": "2026-10-03T18:39:39.568342+00:00",
+      "wall_seconds": 6.545348199999353,
+      "log_file_sha256": "6334b28c980b5803cd5697c583d291abe6a83298ac538b1fd42806ae3b4c9b34"
+    },
+    {
+      "stage": "develop",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.uji_v18_4_development",
+        "develop",
+        "--device",
+        "cuda"
+      ],
+      "started_utc": "2026-10-04T04:35:02.006750+00:00",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\formal_uji_develop.log",
+      "exit_code": 0,
+      "pid": 18456,
+      "finished_utc": "2026-10-04T05:48:19.243202+00:00",
+      "wall_seconds": 4397.239447,
+      "log_file_sha256": "bc300bb3e5505c99ea8ac4d94d4068009dda6060aa8efa07b1d5ef4eeeb4af99"
+    },
+    {
+      "stage": "calibrate_freeze",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.uji_v18_4_development",
+        "calibrate-freeze",
+        "--device",
+        "cuda"
+      ],
+      "started_utc": "2026-10-04T05:49:10.697474+00:00",
+      "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\formal_uji_calibrate_freeze.log",
+      "exit_code": 0,
+      "pid": 18116,
+      "finished_utc": "2026-10-04T05:58:03.784218+00:00",
+      "wall_seconds": 533.0730819999953,
+      "log_file_sha256": "13f8899f7c4006eb5607e5601470b556f8d94fe94e4de4fc529a8dd73482533d"
+    }
+  ],
+  "initial_formal_output_paths_unused": {
+    "fhm_dapp_tim/evidence/v18_4/uji_registry_v18_4.json": true,
+    "fhm_dapp_tim/evidence/v18_4/uji_development_v18_4.json": true,
+    "fhm_dapp_tim/evidence/v18_4/uji_calibration_v18_4.json": true,
+    "fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json": true,
+    "fhm_dapp_tim/models/v18_4/uji_lambda_0p10.pt": true,
+    "fhm_dapp_tim/models/v18_4/uji_lambda_0p25.pt": true,
+    "fhm_dapp_tim/models/v18_4/uji_lambda_0p50.pt": true,
+    "fhm_dapp_tim/models/v18_4/uji_selection_refit.pt": true
+  },
+  "prepare": {
+    "registry_validation": {
+      "status": "PASS_WITH_USER_ACCEPTED_GROUP_HASH_PROVENANCE",
+      "validated_utc": "2026-10-03T18:41:19.404824+00:00",
+      "registry_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_registry_v18_4.json",
+      "registry_sha256": "7630e6f8459b055268226ae7e83a0fe014337e0a3ef491d661d00a301e2001b0",
+      "registry_file_sha256": "3470b9ff247117fbe9cefcd2f8135a55a8efe440b497a4ac96e8346339c26fb3",
+      "training_source_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+      "protocol_version": "uji_v18_4_development_v2_20261004",
+      "core_counts_roles_source_self_hash_pass": true,
+      "role_audit": {
+        "rows": {
+          "fit": 14126,
+          "development": 2936,
+          "selection_refit": 17062,
+          "calibration": 2875
+        },
+        "coordinate_groups": {
+          "fit": 655,
+          "development": 139,
+          "selection_refit": 794,
+          "calibration": 139
+        },
+        "training_strata": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "missing_strata": {
+          "fit": [],
+          "development": [],
+          "selection_refit": [],
+          "calibration": []
+        },
+        "missing_hull_support": {
+          "0:0": 0,
+          "0:1": 0,
+          "0:2": 0,
+          "0:3": 0,
+          "1:0": 0,
+          "1:1": 0,
+          "1:2": 0,
+          "1:3": 0,
+          "2:0": 0,
+          "2:1": 0,
+          "2:2": 0,
+          "2:3": 0,
+          "2:4": 0
+        },
+        "exact_union": true,
+        "pairwise_disjoint": true
+      },
+      "roles": {
+        "fit": {
+          "row_count": 14126,
+          "coordinate_count": 655,
+          "row_index_sha256": "4597c4dde162707fb0038c3b20bd6b097a65a56760477734ab7a676dfc054ea5",
+          "derived_coordinate_group_sha256": "fa9abf2a01836ae49491bb2382b066ff7a28af3eb1bcd38e18b5ce75b4909c76",
+          "registered_coordinate_group_hash_fields": {}
+        },
+        "development": {
+          "row_count": 2936,
+          "coordinate_count": 139,
+          "row_index_sha256": "25548c3b1cb9ab1ce895ff56cf4a8ca7379ce9c8a37cded84e426c3b60b1891f",
+          "derived_coordinate_group_sha256": "edc298ebdf112710c6061aa5708e2b4e26941bbdd2aad55681dd4db3be683b99",
+          "registered_coordinate_group_hash_fields": {}
+        },
+        "selection_refit": {
+          "row_count": 17062,
+          "coordinate_count": 794,
+          "row_index_sha256": "717ee05b6177db1dde486da49e3338e073ef55d1cb71262699f64771c5bdda5f",
+          "derived_coordinate_group_sha256": "cd958befea221c6b1c7dfb26f39e53122c2c3478707b9801bbf46700b326073a",
+          "registered_coordinate_group_hash_fields": {}
+        },
+        "calibration": {
+          "row_count": 2875,
+          "coordinate_count": 139,
+          "row_index_sha256": "92d806ec05b068741ca2b145d7006293fb99ac41e3b44c376d7bd87780c4598c",
+          "derived_coordinate_group_sha256": "539bcec2f1bdae46e1ee0c6e6e2aa162926f8cbc87abf2fd0f0fa4edcbe72a33",
+          "registered_coordinate_group_hash_fields": {}
+        }
+      },
+      "independent_group_hashes_in_registry_present": false,
+      "group_hash_derivation": "_canonical_sha({coordinate_keys: sorted(unique coordinate_keys(data)[role rows])}); SHA256 of canonical UTF-8 JSON; trainingData and row-index SHA256 frozen in registry.",
+      "requirement_issue": "Instruction section 5 requests recorded row/group hashes. Current frozen registry writes row_index_sha256 and coordinate_count, with no independent coordinate-group hash field. No registry/source modification or requirement bypass performed.",
+      "group_hash_provenance_location": "formal_uji_run_state_v18_4.json / registry_validation.roles; copied into final FORMAL_UJI_EXECUTION_V18_4 records"
+    },
+    "training_source": {
+      "path": "data/UJIndoorLoc/trainingData.csv",
+      "sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168"
+    },
+    "training_rows": 19937,
+    "training_coordinate_groups": 933,
+    "aps": 520,
+    "group_hash_requirement_clarification": {
+      "recorded_utc": "2026-10-04T04:35:00.727055+00:00",
+      "human_reply": "允许，继续",
+      "accepted_scope": "Keep the formal registry byte-for-byte unchanged; independently compute and verify role coordinate-group hashes in the new execution record; continue the existing formal run from develop without rerunning prepare.",
+      "source_revision_unchanged": true,
+      "registry_unchanged": true
+    },
+    "historical_prepare_gate_report": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\run_audit\\FORMAL_UJI_PREPARE_GATE_V18_4.md",
+    "registry_has_independent_group_hash_fields": false,
+    "group_hashes_verified_and_recorded_in_new_execution_record": true,
+    "prepare_invocations": 1
+  },
+  "development": {
+    "status": "PASS",
+    "validated_utc": "2026-10-04T05:48:56.659883+00:00",
+    "result_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_development_v18_4.json",
+    "self_hash": "f60f98971bf9b57d61f9d52dc408b5600a039acdb841086552b3a0ae98710d78",
+    "file_sha256": "8b7a30e2de836c26631d8fcda965dc6d7bbeb522c6d01ed53f3a4c25b1dc2019",
+    "checkpoints": {
+      "0.10": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p10.pt",
+        "sha256": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419"
+      },
+      "0.25": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p25.pt",
+        "sha256": "b2c33a03268b0f53d659189b1f98c4910635acf6b060d5dd8ebb4c10ff605fea"
+      },
+      "0.50": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p50.pt",
+        "sha256": "716e6886e4aae5cce6dc5184e331e1941730ef7479c6d20d5e9c751c988815c9"
+      }
+    },
+    "method_grid": [
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p10.pt",
+        "checkpoint_sha256": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.741260946927926,
+        "energy_score_se_m": 0.33699143675179805,
+        "epsilon_kl": 0.025,
+        "gm_mae_m": 8.096494945204615,
+        "gm_mae_se_m": 0.4765296893704759,
+        "lambda_spatial": 0.1,
+        "mean_effective_anchors": 7.859416084247324,
+        "mean_entropy_nats": 2.0146395507235617,
+        "mean_geometry_reliability": 0.43556924160234933,
+        "mean_radio_reliability": 0.55911387842179,
+        "mean_realized_kl": 0.01543356023096806,
+        "mean_rho": 0.3499866533565051,
+        "mean_top1_probability": 0.2777588582326143,
+        "nll": 6.385062537315427,
+        "nll_se": 0.13722407093798766,
+        "posterior_mean_mae_m": 7.749319970895107,
+        "rows": 2936,
+        "selected_epoch": 16
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p10.pt",
+        "checkpoint_sha256": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.75796543737373,
+        "energy_score_se_m": 0.3385974539407681,
+        "epsilon_kl": 0.05,
+        "gm_mae_m": 8.121683403963708,
+        "gm_mae_se_m": 0.4784937533325722,
+        "lambda_spatial": 0.1,
+        "mean_effective_anchors": 7.55996552848686,
+        "mean_entropy_nats": 1.97371610016524,
+        "mean_geometry_reliability": 0.43556924160234933,
+        "mean_radio_reliability": 0.55911387842179,
+        "mean_realized_kl": 0.029657690016789362,
+        "mean_rho": 0.5059766995996061,
+        "mean_top1_probability": 0.2869216163721372,
+        "nll": 6.393934305621693,
+        "nll_se": 0.1396107597994006,
+        "posterior_mean_mae_m": 7.775294571254494,
+        "rows": 2936,
+        "selected_epoch": 16
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p10.pt",
+        "checkpoint_sha256": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.778153847199482,
+        "energy_score_se_m": 0.3413054520221918,
+        "epsilon_kl": 0.1,
+        "gm_mae_m": 8.164456471944096,
+        "gm_mae_se_m": 0.48415072076039867,
+        "lambda_spatial": 0.1,
+        "mean_effective_anchors": 7.215048604261648,
+        "mean_entropy_nats": 1.9247478733514245,
+        "mean_geometry_reliability": 0.43556924160234933,
+        "mean_radio_reliability": 0.55911387842179,
+        "mean_realized_kl": 0.05153434363387647,
+        "mean_rho": 0.6816287230530661,
+        "mean_top1_probability": 0.29840925123481643,
+        "nll": 6.406791040861357,
+        "nll_se": 0.1427192354876251,
+        "posterior_mean_mae_m": 7.803144965273429,
+        "rows": 2936,
+        "selected_epoch": 16
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p25.pt",
+        "checkpoint_sha256": "b2c33a03268b0f53d659189b1f98c4910635acf6b060d5dd8ebb4c10ff605fea",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.694932992179214,
+        "energy_score_se_m": 0.32042631165094504,
+        "epsilon_kl": 0.025,
+        "gm_mae_m": 8.149363966482504,
+        "gm_mae_se_m": 0.46519309869642195,
+        "lambda_spatial": 0.25,
+        "mean_effective_anchors": 7.906277482207529,
+        "mean_entropy_nats": 2.017293060873445,
+        "mean_geometry_reliability": 0.44070219965169477,
+        "mean_radio_reliability": 0.5610829522929659,
+        "mean_realized_kl": 0.015459548578979252,
+        "mean_rho": 0.35476291563834483,
+        "mean_top1_probability": 0.27922037079529355,
+        "nll": 6.3827205817242145,
+        "nll_se": 0.13052313095473628,
+        "posterior_mean_mae_m": 7.719084441422266,
+        "rows": 2936,
+        "selected_epoch": 13
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p25.pt",
+        "checkpoint_sha256": "b2c33a03268b0f53d659189b1f98c4910635acf6b060d5dd8ebb4c10ff605fea",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.708719532012284,
+        "energy_score_se_m": 0.3228725856080899,
+        "epsilon_kl": 0.05,
+        "gm_mae_m": 8.179174380617035,
+        "gm_mae_se_m": 0.465876972792308,
+        "lambda_spatial": 0.25,
+        "mean_effective_anchors": 7.59075222807944,
+        "mean_entropy_nats": 1.9743952804349099,
+        "mean_geometry_reliability": 0.44070219965169477,
+        "mean_radio_reliability": 0.5610829522929659,
+        "mean_realized_kl": 0.029675418645986277,
+        "mean_rho": 0.5134359437871813,
+        "mean_top1_probability": 0.2886710689068145,
+        "nll": 6.3913925595537115,
+        "nll_se": 0.1326233835686993,
+        "posterior_mean_mae_m": 7.748838412036388,
+        "rows": 2936,
+        "selected_epoch": 13
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p25.pt",
+        "checkpoint_sha256": "b2c33a03268b0f53d659189b1f98c4910635acf6b060d5dd8ebb4c10ff605fea",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.717094331946084,
+        "energy_score_se_m": 0.32493650500644555,
+        "epsilon_kl": 0.1,
+        "gm_mae_m": 8.201398628437031,
+        "gm_mae_se_m": 0.46602868938801495,
+        "lambda_spatial": 0.25,
+        "mean_effective_anchors": 7.23446979582797,
+        "mean_entropy_nats": 1.92388670637757,
+        "mean_geometry_reliability": 0.44070219965169477,
+        "mean_radio_reliability": 0.5610829522929659,
+        "mean_realized_kl": 0.05108173053088691,
+        "mean_rho": 0.6900845939772567,
+        "mean_top1_probability": 0.3001896994536088,
+        "nll": 6.404190323178129,
+        "nll_se": 0.13518636326586303,
+        "posterior_mean_mae_m": 7.781472669099203,
+        "rows": 2936,
+        "selected_epoch": 13
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p50.pt",
+        "checkpoint_sha256": "716e6886e4aae5cce6dc5184e331e1941730ef7479c6d20d5e9c751c988815c9",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.742967291482145,
+        "energy_score_se_m": 0.33487425933111353,
+        "epsilon_kl": 0.025,
+        "gm_mae_m": 8.11332040103987,
+        "gm_mae_se_m": 0.4889794119426743,
+        "lambda_spatial": 0.5,
+        "mean_effective_anchors": 7.639677219965802,
+        "mean_entropy_nats": 1.9830108315402222,
+        "mean_geometry_reliability": 0.4389431217751321,
+        "mean_radio_reliability": 0.5598831979065565,
+        "mean_realized_kl": 0.015386213469744428,
+        "mean_rho": 0.36346860871962006,
+        "mean_top1_probability": 0.28594781250923834,
+        "nll": 6.51498416734391,
+        "nll_se": 0.14462436843373105,
+        "posterior_mean_mae_m": 7.665479915173906,
+        "rows": 2936,
+        "selected_epoch": 20
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p50.pt",
+        "checkpoint_sha256": "716e6886e4aae5cce6dc5184e331e1941730ef7479c6d20d5e9c751c988815c9",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.771233711117952,
+        "energy_score_se_m": 0.33647856385922387,
+        "epsilon_kl": 0.05,
+        "gm_mae_m": 8.133225521566088,
+        "gm_mae_se_m": 0.4889372683732643,
+        "lambda_spatial": 0.5,
+        "mean_effective_anchors": 7.3563543793615915,
+        "mean_entropy_nats": 1.9431526009247153,
+        "mean_geometry_reliability": 0.4389431217751321,
+        "mean_radio_reliability": 0.5598831979065565,
+        "mean_realized_kl": 0.029364160403377054,
+        "mean_rho": 0.5237569150570643,
+        "mean_top1_probability": 0.29501111830434984,
+        "nll": 6.529072336882842,
+        "nll_se": 0.14712256963914414,
+        "posterior_mean_mae_m": 7.699111853458146,
+        "rows": 2936,
+        "selected_epoch": 20
+      },
+      {
+        "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p50.pt",
+        "checkpoint_sha256": "716e6886e4aae5cce6dc5184e331e1941730ef7479c6d20d5e9c751c988815c9",
+        "coordinate_groups": 139,
+        "energy_score_m": 5.801174321304744,
+        "energy_score_se_m": 0.3399289611151673,
+        "epsilon_kl": 0.1,
+        "gm_mae_m": 8.154249057768958,
+        "gm_mae_se_m": 0.4883273600316693,
+        "lambda_spatial": 0.5,
+        "mean_effective_anchors": 7.042434477107726,
+        "mean_entropy_nats": 1.8967470971699956,
+        "mean_geometry_reliability": 0.4389431217751321,
+        "mean_radio_reliability": 0.5598831979065565,
+        "mean_realized_kl": 0.04996626517804015,
+        "mean_rho": 0.69082429151171,
+        "mean_top1_probability": 0.3063829053099437,
+        "nll": 6.546655073922849,
+        "nll_se": 0.15014190230891755,
+        "posterior_mean_mae_m": 7.739583583633986,
+        "rows": 2936,
+        "selected_epoch": 20
+      }
+    ],
+    "per_lambda": [
+      {
+        "lambda_spatial": 0.1,
+        "selected_epoch": 16,
+        "selected_base_metrics": {
+          "coordinate_groups": 139,
+          "energy_score_m": 5.721319372006315,
+          "energy_score_se_m": 0.3304582400939868,
+          "epoch": 16,
+          "gm_mae_m": 8.042430928108002,
+          "gm_mae_se_m": 0.47650038155842767,
+          "mean_effective_anchors": 8.634366438320612,
+          "mean_entropy_nats": 2.113564284848257,
+          "mean_natural_pool_size_before_ceiling": 49.69448228882834,
+          "mean_support_size": 49.69448228882834,
+          "mean_top1_probability": 0.25831937840162733,
+          "natural_truncation_fraction": 0.0,
+          "nll": 6.375870936399663,
+          "nll_se": 0.132481091920506,
+          "posterior_mean_mae_m": 7.689194088046159,
+          "rows": 2936
+        },
+        "spatial_scale_m": 10.492310523986816,
+        "parameters": 614553,
+        "anchors": 655,
+        "correction_reference": {
+          "geometry_energy_scale": 1.9320738315582275,
+          "geometry_mismatch_reference_rows": 14126,
+          "radio_energy_scale": 0.5009305477142334,
+          "radio_mismatch_reference_rows": 14126
+        }
+      },
+      {
+        "lambda_spatial": 0.25,
+        "selected_epoch": 13,
+        "selected_base_metrics": {
+          "coordinate_groups": 139,
+          "energy_score_m": 5.662792562377045,
+          "energy_score_se_m": 0.31487301283549235,
+          "epoch": 13,
+          "gm_mae_m": 8.087154984532775,
+          "gm_mae_se_m": 0.47055664952842535,
+          "mean_effective_anchors": 8.726687454478942,
+          "mean_entropy_nats": 2.1212058717775735,
+          "mean_natural_pool_size_before_ceiling": 49.47547683923706,
+          "mean_support_size": 49.47547683923706,
+          "mean_top1_probability": 0.25926627415392234,
+          "natural_truncation_fraction": 0.0,
+          "nll": 6.374424086631181,
+          "nll_se": 0.12644457633747916,
+          "posterior_mean_mae_m": 7.64211444365766,
+          "rows": 2936
+        },
+        "spatial_scale_m": 10.492310523986816,
+        "parameters": 614553,
+        "anchors": 655,
+        "correction_reference": {
+          "geometry_energy_scale": 1.9773626327514648,
+          "geometry_mismatch_reference_rows": 14126,
+          "radio_energy_scale": 0.5029149055480957,
+          "radio_mismatch_reference_rows": 14126
+        }
+      },
+      {
+        "lambda_spatial": 0.5,
+        "selected_epoch": 20,
+        "selected_base_metrics": {
+          "coordinate_groups": 139,
+          "energy_score_m": 5.721530825619802,
+          "energy_score_se_m": 0.33287091279881303,
+          "epoch": 20,
+          "gm_mae_m": 8.061117329627171,
+          "gm_mae_se_m": 0.4918614925438731,
+          "mean_effective_anchors": 8.374443747285927,
+          "mean_entropy_nats": 2.0798014528257647,
+          "mean_natural_pool_size_before_ceiling": 49.939373297002724,
+          "mean_support_size": 49.939373297002724,
+          "mean_top1_probability": 0.26662296599426816,
+          "natural_truncation_fraction": 0.0,
+          "nll": 6.492444540354844,
+          "nll_se": 0.13899645345419567,
+          "posterior_mean_mae_m": 7.594418496479903,
+          "rows": 2936
+        },
+        "spatial_scale_m": 10.492310523986816,
+        "parameters": 614553,
+        "anchors": 655,
+        "correction_reference": {
+          "geometry_energy_scale": 1.921254277229309,
+          "geometry_mismatch_reference_rows": 14126,
+          "radio_energy_scale": 0.5098869800567627,
+          "radio_mismatch_reference_rows": 14126
+        }
+      }
+    ],
+    "selected": {
+      "checkpoint_path": "fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p10.pt",
+      "checkpoint_sha256": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+      "coordinate_groups": 139,
+      "energy_score_m": 5.741260946927926,
+      "energy_score_se_m": 0.33699143675179805,
+      "epsilon_kl": 0.025,
+      "gm_mae_m": 8.096494945204615,
+      "gm_mae_se_m": 0.4765296893704759,
+      "lambda_spatial": 0.1,
+      "mean_effective_anchors": 7.859416084247324,
+      "mean_entropy_nats": 2.0146395507235617,
+      "mean_geometry_reliability": 0.43556924160234933,
+      "mean_radio_reliability": 0.55911387842179,
+      "mean_realized_kl": 0.01543356023096806,
+      "mean_rho": 0.3499866533565051,
+      "mean_top1_probability": 0.2777588582326143,
+      "nll": 6.385062537315427,
+      "nll_se": 0.13722407093798766,
+      "posterior_mean_mae_m": 7.749319970895107,
+      "rows": 2936,
+      "selected_epoch": 16
+    },
+    "runtime_seconds": 4387.245481600003,
+    "selection_law_independently_verified": true,
+    "reported_metric_tree_finite": true,
+    "exactly_3_lambdas_9_combinations": true,
+    "epoch_and_checkpoint_links_verified": true
+  },
+  "calibration_and_freeze": {
+    "status": "PASS",
+    "validated_utc": "2026-10-04T05:58:44.718309+00:00",
+    "calibration_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_calibration_v18_4.json",
+    "calibration_self_hash": "9c2c23169a5739c7c09a438b45dfd6e7144d2ae824fe312dfe9ba65e241498b8",
+    "calibration_file_sha256": "77500418abd927629b5687e2639c6d77a56c7464f144fab81089899dc4076082",
+    "freeze_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_method_freeze_v18_4.json",
+    "freeze_self_hash": "bcf631c01e15784baa4ea822a18bba344daad7f921ecb083eef64618fefee432",
+    "freeze_file_sha256": "9901da1203e05af9a73ff8b7a3d6c6f75d77364b2f6d3a52d093e7d72b6c874f",
+    "selection_refit_checkpoint_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_selection_refit.pt",
+    "selection_refit_checkpoint_sha256": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b",
+    "selected_global_method": {
+      "lambda_spatial": 0.1,
+      "epsilon_kl": 0.025,
+      "selected_epoch": 16
+    },
+    "selected_calibration": {
+      "coordinate_macro_nll": 6.059140452836212,
+      "scale_multiplier": 1.0,
+      "temperature": 1.5
+    },
+    "selected_metrics": {
+      "coordinate_macro_energy_score_m": 5.0794432681308,
+      "coordinate_macro_gm_mae_m": 7.149656005812268,
+      "coordinate_macro_nll": 6.059140452836212,
+      "coordinate_macro_posterior_mean_mae_m": 6.942730971621736,
+      "corr_mode_far_mass_20m_mean_gm_displacement": 0.664014091510244,
+      "corr_truth_far_mass_20m_mean_error": 0.6368231587068544,
+      "mean_effective_anchors": 11.667896405427353,
+      "mean_effective_epsilon_kl": 0.013292343249010003,
+      "mean_entropy_nats": 2.417949200091155,
+      "mean_gm_displacement_from_mean_m": 2.5662788588689724,
+      "mean_gm_spatial_leverage_m": 7.014042273314104,
+      "mean_natural_pool_size_before_ceiling": 49.75895652173913,
+      "mean_realized_kl_against_q_T": 0.013244586963766649,
+      "mean_top1_probability": 0.19872138546990312,
+      "natural_truncation_fraction": 0.0,
+      "tail_mass": {
+        "mode_far_mass_10m": 0.21581374954260157,
+        "mode_far_mass_20m": 0.0777453778611286,
+        "mode_far_mass_40m": 0.024190499833937874,
+        "truth_far_mass_10m": 0.32397380451040103,
+        "truth_far_mass_20m": 0.10273575902509076,
+        "truth_far_mass_40m": 0.024504325710089644
+      }
+    },
+    "surface": [
+      {
+        "coordinate_macro_nll": 6.9023438346259125,
+        "scale_multiplier": 0.5,
+        "temperature": 0.5
+      },
+      {
+        "coordinate_macro_nll": 6.453230002010532,
+        "scale_multiplier": 0.75,
+        "temperature": 0.5
+      },
+      {
+        "coordinate_macro_nll": 6.2760471176228325,
+        "scale_multiplier": 1.0,
+        "temperature": 0.5
+      },
+      {
+        "coordinate_macro_nll": 6.211968641408752,
+        "scale_multiplier": 1.25,
+        "temperature": 0.5
+      },
+      {
+        "coordinate_macro_nll": 6.206586005757544,
+        "scale_multiplier": 1.5,
+        "temperature": 0.5
+      },
+      {
+        "coordinate_macro_nll": 6.282692675640703,
+        "scale_multiplier": 2.0,
+        "temperature": 0.5
+      },
+      {
+        "coordinate_macro_nll": 6.621195193787683,
+        "scale_multiplier": 0.5,
+        "temperature": 0.75
+      },
+      {
+        "coordinate_macro_nll": 6.263866256595351,
+        "scale_multiplier": 0.75,
+        "temperature": 0.75
+      },
+      {
+        "coordinate_macro_nll": 6.14381304181672,
+        "scale_multiplier": 1.0,
+        "temperature": 0.75
+      },
+      {
+        "coordinate_macro_nll": 6.117969415155665,
+        "scale_multiplier": 1.25,
+        "temperature": 0.75
+      },
+      {
+        "coordinate_macro_nll": 6.138762630854011,
+        "scale_multiplier": 1.5,
+        "temperature": 0.75
+      },
+      {
+        "coordinate_macro_nll": 6.2469021392980535,
+        "scale_multiplier": 2.0,
+        "temperature": 0.75
+      },
+      {
+        "coordinate_macro_nll": 6.47683249244782,
+        "scale_multiplier": 0.5,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.172179485397157,
+        "scale_multiplier": 0.75,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.085455692287693,
+        "scale_multiplier": 1.0,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.081772241944872,
+        "scale_multiplier": 1.25,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.117986853426462,
+        "scale_multiplier": 1.5,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.245157629003268,
+        "scale_multiplier": 2.0,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.395850893731636,
+        "scale_multiplier": 0.5,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.127156457591331,
+        "scale_multiplier": 0.75,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.062249288608637,
+        "scale_multiplier": 1.0,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.073349294041553,
+        "scale_multiplier": 1.25,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.119996013694446,
+        "scale_multiplier": 1.5,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.260327292047396,
+        "scale_multiplier": 2.0,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.348875866273561,
+        "scale_multiplier": 0.5,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.108084054543633,
+        "scale_multiplier": 0.75,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.059140452836212,
+        "scale_multiplier": 1.0,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.080860783283373,
+        "scale_multiplier": 1.25,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.135050183565318,
+        "scale_multiplier": 1.5,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.285008851999953,
+        "scale_multiplier": 2.0,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.308122647257442,
+        "scale_multiplier": 0.5,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.109526274371066,
+        "scale_multiplier": 0.75,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.083593282982086,
+        "scale_multiplier": 1.0,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.120069529601887,
+        "scale_multiplier": 1.25,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.184586915865601,
+        "scale_multiplier": 1.5,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.347722995252033,
+        "scale_multiplier": 2.0,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.302039408590522,
+        "scale_multiplier": 0.5,
+        "temperature": 2.5
+      },
+      {
+        "coordinate_macro_nll": 6.133510575034312,
+        "scale_multiplier": 0.75,
+        "temperature": 2.5
+      },
+      {
+        "coordinate_macro_nll": 6.123755310035097,
+        "scale_multiplier": 1.0,
+        "temperature": 2.5
+      },
+      {
+        "coordinate_macro_nll": 6.170344580362669,
+        "scale_multiplier": 1.25,
+        "temperature": 2.5
+      },
+      {
+        "coordinate_macro_nll": 6.241805924180865,
+        "scale_multiplier": 1.5,
+        "temperature": 2.5
+      },
+      {
+        "coordinate_macro_nll": 6.413701825275548,
+        "scale_multiplier": 2.0,
+        "temperature": 2.5
+      },
+      {
+        "coordinate_macro_nll": 6.310578524526483,
+        "scale_multiplier": 0.5,
+        "temperature": 3.0
+      },
+      {
+        "coordinate_macro_nll": 6.164072282331707,
+        "scale_multiplier": 0.75,
+        "temperature": 3.0
+      },
+      {
+        "coordinate_macro_nll": 6.166314081674563,
+        "scale_multiplier": 1.0,
+        "temperature": 3.0
+      },
+      {
+        "coordinate_macro_nll": 6.220407635630883,
+        "scale_multiplier": 1.25,
+        "temperature": 3.0
+      },
+      {
+        "coordinate_macro_nll": 6.296980571102441,
+        "scale_multiplier": 1.5,
+        "temperature": 3.0
+      },
+      {
+        "coordinate_macro_nll": 6.475238387966893,
+        "scale_multiplier": 2.0,
+        "temperature": 3.0
+      }
+    ],
+    "best_10_calibration_rows": [
+      {
+        "coordinate_macro_nll": 6.059140452836212,
+        "scale_multiplier": 1.0,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.062249288608637,
+        "scale_multiplier": 1.0,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.073349294041553,
+        "scale_multiplier": 1.25,
+        "temperature": 1.25
+      },
+      {
+        "coordinate_macro_nll": 6.080860783283373,
+        "scale_multiplier": 1.25,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.081772241944872,
+        "scale_multiplier": 1.25,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.083593282982086,
+        "scale_multiplier": 1.0,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.085455692287693,
+        "scale_multiplier": 1.0,
+        "temperature": 1.0
+      },
+      {
+        "coordinate_macro_nll": 6.108084054543633,
+        "scale_multiplier": 0.75,
+        "temperature": 1.5
+      },
+      {
+        "coordinate_macro_nll": 6.109526274371066,
+        "scale_multiplier": 0.75,
+        "temperature": 2.0
+      },
+      {
+        "coordinate_macro_nll": 6.117969415155665,
+        "scale_multiplier": 1.25,
+        "temperature": 0.75
+      }
+    ],
+    "unit_calibration": {
+      "coordinate_macro_nll": 6.085455692287693,
+      "scale_multiplier": 1.0,
+      "temperature": 1.0
+    },
+    "selected_minus_unit_nll": -0.026315239451480288,
+    "calibration_runtime_seconds": 526.3967255000025,
+    "exactly_48_combinations": true,
+    "self_hashes_and_links_verified": true,
+    "temperature_before_correction_verified": true,
+    "scale_probability_neutrality_verified_by_accepted_source_and_tests": true,
+    "reported_metrics_finite": true,
+    "source_and_registry_unchanged": true
+  },
+  "freeze_artifact": {
+    "calibration_result_sha256": "9c2c23169a5739c7c09a438b45dfd6e7144d2ae824fe312dfe9ba65e241498b8",
+    "decoder": "posterior_weighted_component_center_geometric_median",
+    "development_result_sha256": "f60f98971bf9b57d61f9d52dc408b5600a039acdb841086552b3a0ae98710d78",
+    "epsilon_kl": 0.025,
+    "external_provided_tests_preexposed_for_adapter_validation": true,
+    "external_test_performance_used_for_v184_selection": false,
+    "freeze_sha256": "bcf631c01e15784baa4ea822a18bba344daad7f921ecb083eef64618fefee432",
+    "lambda_spatial": 0.1,
+    "model_config": {
+      "anchor_weight": 1.0,
+      "ap_dropout": 0.1,
+      "batch_size": 64,
+      "candidate_reranker": true,
+      "candidate_reranker_mode": "summary",
+      "coordinate_weight": 1.0,
+      "d_model": 128,
+      "domain_adversarial_weight": 0.05,
+      "dropout": 0.1,
+      "energy_tie_margin_m": 0.05,
+      "epsilon_kl_grid": [
+        0.025,
+        0.05,
+        0.1
+      ],
+      "floor_retrieval_k": 16,
+      "geometry_margin_scale": 0.5,
+      "geometry_seed_k": 8,
+      "geometry_sigma_scale": 1.5,
+      "gradient_clip": 5.0,
+      "hierarchy_weight": 0.5,
+      "invariant_aux_weight": 0.25,
+      "invariant_retrieval_k": 32,
+      "lambda_spatial_grid": [
+        0.1,
+        0.25,
+        0.5
+      ],
+      "learning_rate": 0.0003,
+      "max_residual_m": 30.0,
+      "max_visible": 64,
+      "maximum_epochs": 60,
+      "min_scale_m": 0.25,
+      "minimum_epochs": 12,
+      "num_heads": 4,
+      "num_layers": 2,
+      "prototype_metric": "none",
+      "prototype_retrieval_k": 32,
+      "radio_profile_learning_rate": 0.2,
+      "radio_profile_log_scale_max": 0.25,
+      "radio_profile_log_scale_weight": 0.1,
+      "radio_profile_offset_max": 0.2,
+      "radio_profile_offset_weight": 0.1,
+      "radio_profile_steps": 6,
+      "reranker_anchor_decoder": false,
+      "residual_experts": 1,
+      "rss_offset_aug_db": 4.0,
+      "rss_scale_aug": 0.08,
+      "scan_feature_mode": "bounded_maximal_invariant",
+      "student_df": 4.0,
+      "support_ceiling": 128,
+      "weight_decay": 0.0001
+    },
+    "posterior_temperature": 1.5,
+    "protocol_version": "uji_v18_4_development_v2_20261004",
+    "registry_sha256": "7630e6f8459b055268226ae7e83a0fe014337e0a3ef491d661d00a301e2001b0",
+    "scale_multiplier": 1.0,
+    "scientific_status": "V18.4 global method law is frozen from UJI trainingData roles only. UJI official validation and UTS/Tampere/TUJI provided tests were pre-exposed before freeze for earlier-version or adapter-compatibility work, so they are not blind confirmation sets. Their performance outcomes remain excluded from V18.4 method selection.",
+    "selected_epoch": 16,
+    "selection_refit_checkpoint_sha256": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b",
+    "source_commit_sha": "5b3a1888707e193c649007ebeb208c2a9d02ff45",
+    "uji_official_validation_preexposed": true,
+    "uji_official_validation_used_for_v184_selection": false
+  },
+  "formal_artifacts": [
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_registry_v18_4.json",
+      "file_sha256": "3470b9ff247117fbe9cefcd2f8135a55a8efe440b497a4ac96e8346339c26fb3",
+      "stage": "prepare",
+      "canonical_self_hash_field": "registry_sha256",
+      "canonical_self_hash": "7630e6f8459b055268226ae7e83a0fe014337e0a3ef491d661d00a301e2001b0"
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p10.pt",
+      "file_sha256": "460ce4c0a3fa22976bca164deec6ce0cbf60c4de796811acf7df22a880bf6419",
+      "stage": "develop"
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p25.pt",
+      "file_sha256": "b2c33a03268b0f53d659189b1f98c4910635acf6b060d5dd8ebb4c10ff605fea",
+      "stage": "develop"
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_lambda_0p50.pt",
+      "file_sha256": "716e6886e4aae5cce6dc5184e331e1941730ef7479c6d20d5e9c751c988815c9",
+      "stage": "develop"
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_development_v18_4.json",
+      "file_sha256": "8b7a30e2de836c26631d8fcda965dc6d7bbeb522c6d01ed53f3a4c25b1dc2019",
+      "stage": "develop",
+      "canonical_self_hash_field": "development_result_sha256",
+      "canonical_self_hash": "f60f98971bf9b57d61f9d52dc408b5600a039acdb841086552b3a0ae98710d78"
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\v18_4\\uji_selection_refit.pt",
+      "file_sha256": "e460d90876deb893466c8e8af9ac167b0f2deb145ed47e0698362ee8fc08b72b",
+      "stage": "calibrate-freeze"
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_calibration_v18_4.json",
+      "file_sha256": "77500418abd927629b5687e2639c6d77a56c7464f144fab81089899dc4076082",
+      "stage": "calibrate-freeze",
+      "canonical_self_hash_field": "calibration_result_sha256",
+      "canonical_self_hash": "9c2c23169a5739c7c09a438b45dfd6e7144d2ae824fe312dfe9ba65e241498b8"
+    },
+    {
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_4\\uji_method_freeze_v18_4.json",
+      "file_sha256": "9901da1203e05af9a73ff8b7a3d6c6f75d77364b2f6d3a52d093e7d72b6c874f",
+      "stage": "calibrate-freeze",
+      "canonical_self_hash_field": "freeze_sha256",
+      "canonical_self_hash": "bcf631c01e15784baa4ea822a18bba344daad7f921ecb083eef64618fefee432"
+    }
+  ],
+  "preserved_pre_run_artifact_sha256": {
+    "fhm_dapp_tim/evidence/v18_4/PRE_RUN_REVISION_AUDIT_V18_4.json": "67413b834a9ae46473c448cf4f41edde123079041873f35ff2f37e99e8efe689",
+    "fhm_dapp_tim/evidence/v18_4/PRE_RUN_REVISION_AUDIT_V18_4.md": "9edcc991e20f9f8725d3064c0ef64d276761b1db2d5c00213ab9166798f0e78a",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_v18_4.json": "c782f077afd32891069b3ab0487649aa930c85ac7c12ae813c904f5c887503d3",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_RUN_REVISION_ACCEPTANCE_V18_4.md": "bc7101f237e0016bb1ab33584594ed0985de861875b30a67de7e5bc4ccfb7f3f",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_RUN_REVISION_EXECUTION_V18_4.md": "7b9a24c8093695471cc73064a9780b735df2dfaade4873420e6fb5a2233efbc9",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_execution_v18_4.json": "dbf34ff40456d4bedee0a9b5130a5a263ff74e33cced6bb3b08338fbbaa9cd48"
+  },
+  "unchanged_source_file_sha256": {
+    "fhm_dapp_tim/__init__.py": "9ef686b92b0e70b2a3f8e917c5707557d0742830e98f22c4480bbdebe3d24f12",
+    "fhm_dapp_tim/evidence/v18_1/run_audit/preflight.py": "15f31dab6b62adf28fc8af75036199122aa1b6fef24de286cc144259ca74a7fa",
+    "fhm_dapp_tim/evidence/v18_1/run_audit/report_run.py": "d7a2055bdd7374c58340207cde1752d85f3b43e181ff727bc3b280fffae12e32",
+    "fhm_dapp_tim/evidence/v18_1/run_audit/run_phase.py": "b6d406bb86fd47ed0413da573ad04194e45190ccc80c30344f63156db7eba750",
+    "fhm_dapp_tim/evidence/v18_1/run_audit/sitecustomize.py": "4091fd68de35b0a2f5ad786eb8a3c4a985e4b9bc3b8cba579dee8c669f2cb7be",
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify_run.py": "c4088f72df0fbe2a3b366339b11c7fea7ccc3602a6c493be3936a562e23ea016",
+    "fhm_dapp_tim/evidence/v18_2/run_audit/preflight.py": "2cabe03045691df0c135705fce917c6064f70789a91542cecae1ad6f90d94dfa",
+    "fhm_dapp_tim/evidence/v18_2/run_audit/qa_report.py": "db22a1442d45940f705b4fdc61a23247f3e78842ce7af87e15dfc64133ce9b7f",
+    "fhm_dapp_tim/evidence/v18_2/run_audit/report_run.py": "6ec04c86d53c12f113e26a73861da2af1b5ca135f226386057bcacb440386db1",
+    "fhm_dapp_tim/evidence/v18_2/run_audit/run_phase.py": "62695d3befe64af9ae622816cafebd574303e85cad4dab1758740f2506150c3e",
+    "fhm_dapp_tim/evidence/v18_2/run_audit/sitecustomize.py": "9f5bd2dc1f737eb3992c8184164976b46f2de04c13fad37b523a500b096d29af",
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify_run.py": "778b00cda61b4d0c081e3b86609a58afbe6442842630661d6a7d67e203bc2559",
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/check_fix_proposal.py": "bcd280c87dfa1a98a32d1491a062342ab7134ccc786b01d73ee1392a0c43b385",
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/preflight.py": "17821d1e13dfad337ca841cf48ca743f3b3a5f8889b5b60106cbfd13a128386f",
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/run_phase.py": "34811dc9487156de355af59c764a79bf2745ac498298595a5c1907164ca02f61",
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/sitecustomize.py": "04180836e54165518fd2cc2134bb572ab15651650bc9045cfd2800c863d98c74",
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/verify_run.py": "34a5b2883ede42ea5b1affef9e0e54658c291632985b241d20916268cc3987d6",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/check_capacity_fix_proposal.py": "10d15d9119d657c1359a99265fb5b898939a0ce1b19722b8e9df3215b0a513a8",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/check_full_capacity.py": "b0c94c466a7a79b2cd24d7043c2f8a6a242e0510ee0008283b5d36b03593b121",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/preflight.py": "9248e9801dadb84008c06a45fc3d5160b5190f7a312bef322f700f36cdfc27aa",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/qa_report.py": "6dcf38a341edac994a00f39e82e6ed0a022290a5c18ee69b7155644dc93befa8",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/report_incomplete.py": "964f6d705418a3957f31fdddbbc01a82e82a3b4510cd39888c904d1d5f57a648",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/report_run.py": "153a1dcaf4f347d0235a771497f5551ed3e04e698e517f24d9665230a67295bf",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/run_phase.py": "d6eac8a73480c15e814c505dd110cfb80987d3e44e1de24231bbda6cf40c85e7",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/sitecustomize.py": "58eca69e6ae0110dd9dfaaa2cd6b0dab55c3c36edda1168ce233f7c3cdc96adb",
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify_run.py": "e1409e82eea54772e875b73807cafd03f5854befc211c687e7fd9bbf7ed7e8d3",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/failed_startup_run_probe_once.py": "f2e6b8ec9dd581a400d89a8df910cf68566b005fd2fb3665daebdbf2bb37b745",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/failed_startup_sitecustomize.py": "9d0f36719c42ab491a31a34db7877ed782e04acddc139b7465075f4aab69fd07",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/finalize_probe_evidence.py": "7d10dd0ce5bd3fff0fd28249d3c3477f9efce04b25e4cb3c4553b2bdc392bb0b",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/run_probe_once.py": "d5593002f0744bbc0a689ad7a3800283392f0b7758f0668af6523219c979cacb",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/second_startup_run_probe_once.py": "32ae09b8b0b7a057cf3dacb46c7e64df3627c0d912c85559d2ffa7f5d93ac20c",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/second_startup_sitecustomize.py": "462fcec9d2ca32e77f64fc1cd3718ce47e4457edab03e1bcbdef3ea9efe4d546",
+    "fhm_dapp_tim/evidence/v18_4/run_audit/sitecustomize.py": "3ad23f5e24c95646835347bd1d24162b83f845d2ca8c0664007d8bd0b177c7f5",
+    "fhm_dapp_tim/evidence/v18_single/run_audit/generate_report.py": "744d9852f6061be0756e4d089b6abc1a0fcc221b380f7144a3251527947cab3e",
+    "fhm_dapp_tim/evidence/v18_single/run_audit/run_phase.py": "4aab6696af4ab6547e686ec3a866912cca457d2cfe2c8b8696b07d91ba1e54e7",
+    "fhm_dapp_tim/evidence/v18_single/run_audit/verify_run.py": "3c33c2c784387b62db3bc42403d39a1008f8ff411be35e4e0284c98da91f39c0",
+    "fhm_dapp_tim/fhm_dapp/__init__.py": "b1c16c21a864a4bf5d543e3ed16f4fe52b1674d2107af18483846fb666dbfff0",
+    "fhm_dapp_tim/fhm_dapp/anchor.py": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+    "fhm_dapp_tim/fhm_dapp/audit_bplus_localization_bridge_v5.py": "3bf453a345d79a568f987485a1b44c182211150a62baf58a6bee80acaa845690",
+    "fhm_dapp_tim/fhm_dapp/audit_bplus_sparse50_fem_v5.py": "67f22b63ab881763bb26d83f271c9d5699ad7636a7e4a5297180b2c9e0e6a821",
+    "fhm_dapp_tim/fhm_dapp/audit_hierarchical_front_v6.py": "549f69c0373dca1633e8221683748025614924a6f358b6d0cf6186172cccfee1",
+    "fhm_dapp_tim/fhm_dapp/audit_sparse_radiomap_v5.py": "b6298da58aebc86fc82a31741c17ebdc4a06abc5f02dea7e7b79d1c436bb7c7a",
+    "fhm_dapp_tim/fhm_dapp/baselines_v44.py": "84745dc24ff541f0ae211a69bdac7979d2f76e142721e8dc986093d9fca9303c",
+    "fhm_dapp_tim/fhm_dapp/candidates.py": "0f73e850da813558a7c52b9cc20f8e4743918c62ce08dce7cb89d23535112760",
+    "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+    "fhm_dapp_tim/fhm_dapp/consensus.py": "86551de8e57b1e46085acd7eb2a42b39803beb9baf9a58d483486dc6d45d5121",
+    "fhm_dapp_tim/fhm_dapp/dapp.py": "154013a4b6fd5bf4c19abd0c94a1ac81dd0200af0a41bf6d01e479bcd8db6266",
+    "fhm_dapp_tim/fhm_dapp/data.py": "ae9a6a2628a72a86d6649a505ead7a6401a1287064e64cf4ef71e1baa02d2afc",
+    "fhm_dapp_tim/fhm_dapp/device_robust_v4.py": "ec94b90f4ba5d27a91bcbe61c427356d8389454de023834edf5c78c1839a5d62",
+    "fhm_dapp_tim/fhm_dapp/ensemble.py": "379a62415e5981555fcf37f7b134851977b316d8ac8657c4da228ec5d47c77ed",
+    "fhm_dapp_tim/fhm_dapp/evaluate_v4.py": "6330a1a4eeb8cba30e4b3fe2a52eace05f291f869ad76323092ec52fd9e87363",
+    "fhm_dapp_tim/fhm_dapp/experiment_v7.py": "11b61753e1c511e4cd181085ac7c97a42dc188c1d25b805cf3a56d572c544d3a",
+    "fhm_dapp_tim/fhm_dapp/experiment_v71.py": "51cdb2c671fa9e2738d45b7fbc6ec65e7430854e3a940095ab5f187f43b941f6",
+    "fhm_dapp_tim/fhm_dapp/final_v44.py": "a1ebddfe815abc422598318305164d1394c81630ffacb078c15ec78e6ebaf510",
+    "fhm_dapp_tim/fhm_dapp/freeze_confirmation_v43.py": "edc1d0d9ab0ad8908ddeee8e564aecb0260c4c0a1327cb93f8fa36209d3f5465",
+    "fhm_dapp_tim/fhm_dapp/marked_orbit_v10.py": "dcdba911abaa0e7f56ad32d216e0b80dbd1e331e1abc042d65fe569e9b0945cc",
+    "fhm_dapp_tim/fhm_dapp/metrics.py": "41bbb57569c6852b005ea1e13fdbd306bcb24e047dd643f022d82ff2a324d9ae",
+    "fhm_dapp_tim/fhm_dapp/minimal_v3.py": "4ddd0fd52cd95e0aa699fb5de269b68be4f8ba982984543a80564b81ae273443",
+    "fhm_dapp_tim/fhm_dapp/model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+    "fhm_dapp_tim/fhm_dapp/physics.py": "3445a7521713688f77bf469354041f3d6ddcd1f31d93e38a733ce57efff73ee8",
+    "fhm_dapp_tim/fhm_dapp/posterior_diagnostics_v44.py": "40171f2bedfd890cfed7c455e70443bca9a51db62f2f6503fd5422d6dcb91b17",
+    "fhm_dapp_tim/fhm_dapp/projected_ensemble.py": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+    "fhm_dapp_tim/fhm_dapp/protocol_v3.py": "4a9f0be716f3bf8dc63c4383c69db76d3fc9c491f4118939da353ea8002f74fa",
+    "fhm_dapp_tim/fhm_dapp/protocol_v4.py": "05872abbacc6a28e84d849b64775fb67459d0c686e0ce563ed413795f07de8bd",
+    "fhm_dapp_tim/fhm_dapp/train_anchor.py": "4e2b597d385f315d556cc6759d5a26a7de4392e654cc5e08dc57efb3c151f480",
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v2.py": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb",
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v4.py": "701e6476fd860a01e37324e42f0a9686d2675a74cded36b81f8080e0a1ea39c8",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_experiment.py": "7750a9668fefbdce1be003d0811606c5d0a9c52fbdcce50970fc7cc90c919990",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v2.py": "4faaf3ac4f184ec199f41fce0b404f492c2cadba97851580f65fd3c74588bc7a",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v3_callfix.py": "6b7ff78336e40635857090b1ec19aaab3c6631e75467142e07217e82dd8c38cc",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v4_runtime_isolation.py": "04aa7e8b1c8e35e0a5e84916bb459905f3f17899756318c0cff37b90f753c847",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v5_scoring_signature.py": "fe71d72afdb93d681e118b1389748b73ba71cd805fbeed76db9f56a471908827",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_protocol.py": "8f8b44bc558331c02edcdf1ad75552923265a9cd387fd3f561d945674475c0e9",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_common.py": "a3be6a3534d9ce03ca1775ed354d071c061abbe2eae7961b41d86c34d9473d86",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_comparator_v1.py": "b33c2f2275b83703dc118de4765db22993b829072f7e16ff9ed938f2d3a8c188",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_comparator_v2_method_order.py": "6913044a1613fd81273122ad83e0008cabf06f8eac12eed099a57d4511745b0d",
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_protocol.py": "669bec55e28f361326ee86e6a58a92aa9104a3948dfa97abfafa49f816474106",
+    "fhm_dapp_tim/fhm_dapp/uji_v16_protocol.py": "422936efbacf5ff1b15e12bebe9928a21b69f0feae536e2ba666e55e0eec91f0",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_diagnose.py": "6f626e026978d1c5494d5608e041a0877f0d8797fa136ee1713a6609038f0d35",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a1.py": "51ad6d96dbcdbd7dff43f8a478c73e12a7b29c508fede674fbd63efd51485fdc",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a2.py": "5d95d7a8455e61e906588c0ea7fe23251f3bdd2b347643b82f9b2dc727543c6f",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1.py": "2b635284ca85b36774f18ccf160ba3780969de30afec59a8ccf5696e91c1c791",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1_protocol.py": "754babfea65af7ab7d251a835aa6f22879d099705e14194df0af58216b1d7880",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1_runtime_a1.py": "06c26409c993d9da3579f8fdfc43419881be5ff9166176cd5785ec3d53d1bddf",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2a.py": "5857a8cbe0b5f4a79926853c1eecb0f54fdd4a15677b35ca996c7ffec4b01b63",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2a_protocol.py": "fd3965683eee098df3782fb22559e1b667f2894faad199899f0c9c60cdd821e6",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b.py": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b_protocol.py": "7875daf3feb97503bbccc058982d602d5afc4848c27b259f9eba0e5a00b664aa",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2c.py": "6300eaed612cebde5a84c3c4ce6127b78646d036844955cb04cfa91bddfbaf1f",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2c_protocol.py": "e09b24c9838231347b7e29293de517db36e8acee1ad3bafb627a5b2838480c6d",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2d.py": "4f1ff170f2c20e2412bd82180eb8427d888e8db33dfbeeaf90711a6191bcd714",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2d_protocol.py": "2f71e3c45e28f3b2394477fb36e4a703637f124449b0b18a46365b31eeb61f69",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2e.py": "e80776c51417f4e5f30fdee78d149419320f8affbb02a0985a2138780fbfcb25",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2e_protocol.py": "75b9a2043b45f0039292b325587aaf899b87b68cce4cb1a619ad252a73b03002",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_protocol.py": "9ba17833a05b93aabc41efa73f5e077ea438888fa74250c8055f12e99ca4eecf",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_runtime_a1.py": "9edc4fd2369350912dd56461a78bd8cd9017849cb05666f67ac4182d0524aac5",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_runtime_a2.py": "1c0a9573eaa6bd4f1c0c3db7b22589a50685369bb6e554bbd2e81fe8911b2436",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_runtime_a1.py": "9a1e35725bd97b4f12b5feeefa7439eb2d9a6926a00bd4ccfdff741b2cddcc56",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_1_experiment.py": "c8d7e2ea88cc91b77ae5c74adbb411c6a8427367a28ee108a3db6704c5274225",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_2_experiment.py": "92bc0cae01c6450de1187ee9fd8a48f46b2697b27d0356f4d1ebe728d6c16ebe",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_3_experiment.py": "29467b336b4d9fe30d46100608859c87f4729ee5a0be221c5a130d948a0f77f7",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py": "1ecc932e3863e046f365c825805d04d91ad685b4ce325c3c3c81a6cfea1483f8",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_experiment.py": "171fbb9c9c1cd3422cbeba687458283863cea740d901783e6db608de947dfe57",
+    "fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5",
+    "fhm_dapp_tim/fhm_dapp/uji_v9_postlock_audit.py": "a9073aa669f37898d8ffb0ccc149c79735c2e7ba9b2baba12429a6f8e8b5b84b",
+    "fhm_dapp_tim/fhm_dapp/uji_v9_wknn_comparator_v2.py": "cc2511901448a0a870089033833752d0f7be2855c594924b2bb4e8fd8b3f0632",
+    "fhm_dapp_tim/fhm_dapp/uji_v9_wknn_protocol.py": "bfdbc194ca5bff5f7eeed3176477bb029b1a2c68ade4e03b324b6ccf7143dc2b",
+    "fhm_dapp_tim/fhm_dapp/uncertainty.py": "a02daff9565e71a0351187adc307c3a43faae82cc732a84a5dae76043e40cc2a",
+    "fhm_dapp_tim/fhm_dapp/v18_1_single.py": "39f307b96a844be8940366f6db1a8e967fd046dd419c3537efab99f743be3e20",
+    "fhm_dapp_tim/fhm_dapp/v18_2_single.py": "84db59687a6bce15ddaa6952acd8ac8bbe1afd207d89b4d75c426dcf18bd2323",
+    "fhm_dapp_tim/fhm_dapp/v18_3_single.py": "b4f1bc5359da71ce643ccd73be09249bf428314532917f041198cf11bfe0b4dd",
+    "fhm_dapp_tim/fhm_dapp/v18_4_capacity_audit.py": "05c56e247e5ad6aed9fa3d74a7ce7ba92130f38e313555b134198c977c4b4580",
+    "fhm_dapp_tim/fhm_dapp/v18_4_core.py": "caf660c629907cda071b3dd9494c3d247d9fa26409e2356f2e9888ee12302eae",
+    "fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py": "82d7e1f846b1d0a8be59730c652ffdabe0dc39054d665fa8f72652978038de71",
+    "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+    "fhm_dapp_tim/fhm_dapp/v18_4_decoder_probe.py": "670ac5523e5b3701e3daec40b223114e810f2870e306802e37a7062d8759da5b",
+    "fhm_dapp_tim/fhm_dapp/v18_4_external.py": "2d4d2308c16d6c9eb8d9bfb5231242db08e9cd07ab6a6da115c9396dde971a4b",
+    "fhm_dapp_tim/fhm_dapp/v18_4_model.py": "84689fe8eb65b78b531b78c47b1493ac694415ded82566cfb9a05cfd83c50b4a",
+    "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py": "5c8cf022db7ff53aafb74fc118ba87c546520371ffdd38f6eb68d4456f25850a",
+    "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py": "13caaad99bc0828706269a7b0c6cf0762864063c333a43aa7ae68fa32a5cdd14",
+    "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py": "af7d21873216dafafe9ee1308cc9dc9792c0b791e2a81d59787a6ad1f8f0be6f",
+    "fhm_dapp_tim/fhm_dapp/v18_single.py": "a985997202bd85a95e988d797c09dab08521ae18f9c0f557581bf42747c9977e",
+    "fhm_dapp_tim/fhm_dapp/v9_wknn_common.py": "ef7be95e8643be384462f628bbc59a9135436b4d214f06c9ae441ebd7af47a5a",
+    "tests/test_coherent_marked_v9.py": "de71f9009f1a6935228b66b529c672fb98d8db003057012e1595349099ffe761",
+    "tests/test_uji_v17_mother.py": "53b98fb79d6f0bbbbe1c986972c3f2663d326429492315018cea8850b2adb498",
+    "tests/test_uji_v17_mother_r1.py": "41a29a79e052d715d991e2baff8455b273dba8fd8bbd73ea8a69aa394fb1e3ac",
+    "tests/test_uji_v17_mother_r2a.py": "92a85ba1af1e6e5d61acf79d7e8da103af78d05ba564306db4434d13c511b137",
+    "tests/test_uji_v17_mother_r2b.py": "9efef4e9d8a2eb44bc3417275e1737c468421fa9f91c49537e5381a16b325ffc",
+    "tests/test_uji_v17_mother_r2c.py": "ca9660094bd1202df964842ba0998ec59754a9b19303074927520a6090ccaf2c",
+    "tests/test_uji_v17_mother_r2d.py": "cf88346512c0115b23bca872f6664849c0111da8f4c4c59657624a8ff2b18d3c",
+    "tests/test_uji_v17_mother_r2e.py": "11a3d541624c656cd0fa7a4df4ef64af1d110f48cd4f4327df76404bea05d804",
+    "tests/test_uji_v17_mother_r2f.py": "121c9ae6252f3b273af01cec86fa46ba11d1f19f103457d042fd4a39c88004db",
+    "tests/test_uji_v17_mother_r2f_runtime_a1.py": "c10f017bf275dbcac73bdb19161dd99b868100d610a7a74c8466e7782c78fbc8",
+    "tests/test_uji_v17_mother_r2f_runtime_a2.py": "293968910eb6828e6aec842fa5d7fb7fbc992cbebc5b985f9168817d61b976b6",
+    "tests/test_uji_v17_mother_r3.py": "034437094ca37502907f5d69736093bd869836990a983e7d92c95552bb96eeae",
+    "tests/test_uji_v17_mother_r3_runtime_a1.py": "9d6a54ff9452f41f048163a652093e978acef59df5b65ff70649719709f5d5af",
+    "tests/test_uji_v18_1_experiment.py": "b4b1b5b279b9cbff060b79457ded98418adf3288d1175eb7b805285b917c60ce",
+    "tests/test_uji_v18_2_experiment.py": "6e88f4f573bb56a77b3c6c21dc57afd9f1428a75defacf10a23352a5acabd86e",
+    "tests/test_uji_v18_3_experiment.py": "4aced6984fe5ab06ab85454aea0be892c87df0ef2f4a2af8ce24317a00718ec3",
+    "tests/test_uji_v18_4_development.py": "280747ca0fed1d9db06dd20c2c198520d14b97371f561e8d22b0c94d765534e2",
+    "tests/test_uji_v18_experiment.py": "89a7f7c3d11ff00404120a1a918ae4900b9f0a279e24e5f447bc622cc52b867a",
+    "tests/test_uji_v9_experiment.py": "9b680f7efe7c3fd79a4ec1fbfa306d809aa046099a0ee330a3cfd70b3d480b38",
+    "tests/test_uji_v9_postlock_audit.py": "680b65626598fd2ec7762baa8bb7f5b57eaf5516928cc6e53bfa8bfaa81fd3e0",
+    "tests/test_uji_v9_wknn_comparator_v2.py": "219a8e01fc1840fd49848448907f60ad42493f091e23ccd111f6ddf170c595ec",
+    "tests/test_uji_v9_wknn_protocol.py": "ad52324de55c3c61e9556ee1f53a621db1d367b039c63a8dbf5bd4873227d919",
+    "tests/test_v18_4_capacity_audit.py": "d0ff9cb2a00c0ace44833d32592e2464e2febd51233475e2bb52ef3a73584cce",
+    "tests/test_v18_4_core.py": "8d58a403a30e1cf5011bc746144335d8344094ea72c24c38c2743e2ecbf21385",
+    "tests/test_v18_4_datasets.py": "8df557fb3a57d50c78e048fbde28ad9c3366601a19dc3bf6bd468b934c76f942",
+    "tests/test_v18_4_decoder_probe.py": "3fd581c5660b024b4344fe6143c674ad4c9fa54d4320ea21bfef3db15d5c7e73",
+    "tests/test_v18_4_external.py": "8393350e8207275993c3d3bd56e7a2995dc3c917fd35be918d34f2dceac61278",
+    "tests/test_v18_4_model.py": "73fc16b753acf0cb1b2a66fa59cb7c2bc40213022a6f2627fedba418d36016f2",
+    "tests/test_v18_4_protocol.py": "2381cdc928b67e2f7bd9b430035190b65f151b991016b869cf0146c5b09a68f6"
+  },
+  "problems_and_resolutions": [
+    {
+      "problem": "The frozen registry contains row-index hashes and coordinate counts but lacks independent coordinate-group hash fields required by instruction section 5.",
+      "action": "Stopped after prepare, preserved registry/source, independently reconstructed the groups and requested a clarification.",
+      "authorization": {
+        "recorded_utc": "2026-10-04T04:35:00.727055+00:00",
+        "human_reply": "允许，继续",
+        "accepted_scope": "Keep the formal registry byte-for-byte unchanged; independently compute and verify role coordinate-group hashes in the new execution record; continue the existing formal run from develop without rerunning prepare.",
+        "source_revision_unchanged": true,
+        "registry_unchanged": true
+      },
+      "resolution": "Recorded verified group hashes in new execution provenance; kept registry bytes/source unchanged and resumed develop without repeating prepare.",
+      "scientific_method_changed": false,
+      "historical_gate_report_preserved": true
+    },
+    {
+      "problem": "Git warned that C:\\Users\\LiuYan/.config/git/ignore was inaccessible.",
+      "resolution": "Preserved the warning in logs. Revision/cleanliness guards and all required commands succeeded. No global Git configuration changed."
+    },
+    {
+      "scope": "descriptive execution-record quality check",
+      "problem": "The checker counted the same lambda/epoch prefix across both 9-row method tables and the 3-row per-lambda base summary; each lambda has seven hits, not six.",
+      "initial_failed_check": "Traceback (most recent call last):\n  File \"<stdin>\", line 12, in <module>\nAssertionError",
+      "resolution": "Independently count data rows within each table by its own header: 9 ES rows, 9 posterior rows, 3 per-lambda rows, and 10 calibration best rows.",
+      "registered_experiment_affected": false
+    }
+  ],
+  "boundary_confirmations": {
+    "formal_uji_prepare_completed": true,
+    "formal_uji_develop_completed": true,
+    "formal_uji_calibrate_freeze_completed": true,
+    "uji_validationData_evaluated_by_this_formal_run": false,
+    "uji_official_validation_used_for_v184_selection": false,
+    "external_test_performance_used_for_v184_selection": false,
+    "formal_uts_evaluation_run": false,
+    "formal_tampere_evaluation_run": false,
+    "formal_tuji_pooled_evaluation_run": false,
+    "formal_tuji_leave_one_device_out_evaluation_run": false,
+    "post_outcome_source_model_protocol_changes": false,
+    "hyperparameter_grid_widened": false,
+    "post_outcome_method_changes": false,
+    "pre_run_revision_audit_rerun": false,
+    "historical_pre_run_artifacts_preserved": true,
+    "source_revision_and_tracked_files_unchanged": true,
+    "registry_bytes_unchanged": true,
+    "temperature_applied_before_correction": true,
+    "post_correction_temperature_applied": false,
+    "scale_changes_anchor_probabilities": false,
+    "historical_preexposure_disclosures_preserved": true,
+    "next_step": "STOP for scientific review of UJI formal artifacts"
+  },
+  "execution_record_sha256": "d80db2d1c293dbabe320c20d862a42c6ddcd64068a432fa26fdcdb9e42b64a68",
+  "execution_record_qa": {
+    "status": "PASS",
+    "validated_utc": "2026-10-04T06:04:46.365474+00:00",
+    "initial_checker_result": "FALSE_POSITIVE_METADATA_CHECKER_ASSERTION",
+    "initial_expected_prefix_count": 6,
+    "actual_prefix_counts": {
+      "| 0.1 | 16 |": 7,
+      "| 0.25 | 13 |": 7,
+      "| 0.5 | 20 |": 7
+    },
+    "initial_traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 12, in <module>\nAssertionError",
+    "cause": "The checker counted the same lambda/epoch prefix across both 9-row method tables and the 3-row per-lambda base summary; each lambda has seven hits, not six.",
+    "resolution": "Independently count data rows within each table by its own header: 9 ES rows, 9 posterior rows, 3 per-lambda rows, and 10 calibration best rows.",
+    "table_data_row_counts": {
+      "| Stage | Exit | Wall seconds | Started UTC | Finished UTC |": 7,
+      "| Role | Rows | Coordinate groups |": 4,
+      "| lambda | Epoch | epsilon_KL | ES m | ES SE m | GM MAE m | GM SE m | Mean MAE m | NLL | NLL SE |": 9,
+      "| lambda | Epoch | epsilon_KL | Entropy | Effective anchors | Top-1 | rho | Realized KL | Radio reliability | Geometry reliability |": 9,
+      "| lambda | Epoch | Base ES m | Base GM MAE m | Base NLL | Spatial scale m | Parameters | Radio energy scale | Geometry energy scale |": 3,
+      "| Temperature | Scale | Coordinate-macro NLL |": 10
+    },
+    "all_selected_metrics_copied_exactly": true,
+    "formal_artifact_bytes_and_hashes_unchanged": true,
+    "formal_stage_rerun": false,
+    "scientific_check_failed": false,
+    "source_or_method_change": false
+  },
+  "metadata_updated_utc": "2026-10-04T06:04:46.365474+00:00"
+}

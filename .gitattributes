@@ -1,0 +1,9 @@
+# Preserve exact bytes for the frozen V18.4 formal UJI evidence and its SHA256 records.
+fhm_dapp_tim/evidence/v18_4/uji_registry_v18_4.json -text
+fhm_dapp_tim/evidence/v18_4/uji_development_v18_4.json -text
+fhm_dapp_tim/evidence/v18_4/uji_calibration_v18_4.json -text
+fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json -text
+fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.json -text
+fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.md -text
+fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_PREPARE_GATE_V18_4.md -text
+fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_run_state_v18_4.json -text
