@@ -82,17 +82,15 @@ def _coordinate_keys(
 
 
 def _masked_median(values: torch.Tensor, active: torch.Tensor) -> torch.Tensor:
+    """Vectorized per-AP median; memory construction is CPU-only."""
     if values.ndim != 2 or active.shape != values.shape:
         raise ValueError("masked median expects aligned matrices")
-    out = []
-    for column in range(values.shape[1]):
-        sample = values[:, column][active[:, column]]
-        out.append(
-            torch.median(sample)
-            if sample.numel()
-            else values.new_tensor(float("nan"))
-        )
-    return torch.stack(out)
+    masked = torch.where(
+        active,
+        values,
+        torch.full_like(values, float("nan")),
+    )
+    return torch.nanmedian(masked, dim=0).values
 
 
 def _masked_mad(
@@ -100,14 +98,14 @@ def _masked_mad(
     active: torch.Tensor,
     center: torch.Tensor,
 ) -> torch.Tensor:
-    out = []
-    for column in range(values.shape[1]):
-        sample = values[:, column][active[:, column]]
-        if sample.numel():
-            out.append(torch.median((sample - center[column]).abs()))
-        else:
-            out.append(values.new_tensor(float("nan")))
-    return torch.stack(out)
+    if values.ndim != 2 or active.shape != values.shape:
+        raise ValueError("masked MAD expects aligned matrices")
+    deviation = torch.where(
+        active,
+        (values - center.unsqueeze(0)).abs(),
+        torch.full_like(values, float("nan")),
+    )
+    return torch.nanmedian(deviation, dim=0).values
 
 
 def build_v185_anchor_memory(
