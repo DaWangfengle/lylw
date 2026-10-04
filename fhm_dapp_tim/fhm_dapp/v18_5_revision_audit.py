@@ -41,6 +41,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_protocol import (
     ROLE_SEEDS,
     TUJI_LODO_ROLE_SEEDS,
     construct_roles,
+    coordinate_keys,
     row_indices_for_roles,
 )
 from fhm_dapp_tim.fhm_dapp.v18_5_realdata_smoke import run_smoke
@@ -162,6 +163,7 @@ def _audit_training_dataset(data, *, seed: int) -> dict[str, object]:
     )
     raw = data.coords_m.astype(np.float32)
 
+    keys = coordinate_keys(data)
     memories = {}
     for role in ("fit", "selection_refit"):
         origin = raw[rows[role]].mean(
@@ -184,7 +186,7 @@ def _audit_training_dataset(data, *, seed: int) -> dict[str, object]:
         memories[role] = {
             "rows": int(len(rows[role])),
             "coordinate_groups": int(
-                len({tuple(value) for value in centered[rows[role]]})
+                len({keys[int(index)] for index in rows[role].tolist()})
             ),
             "memory": diagnostics,
             "capacity": capacity,
