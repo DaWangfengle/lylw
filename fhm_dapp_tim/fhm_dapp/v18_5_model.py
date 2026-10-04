@@ -1023,12 +1023,13 @@ def v185_distribution(
     if float(epsilon_kl) > 0.0:
         if radio_reference is None:
             raise ValueError("positive epsilon requires a T-matched reference")
+        q_radio = q_t.detach()
         raw = profile_radio_nuisance(
             rss,
             observed_mask,
             base["candidate_indices"],
             radio_memory,
-            q_t,
+            q_radio,
             ap_reliability=model.v185_ap_reliability,
             degrees_freedom=float(config["student_df"]),
             steps=int(config["radio_profile_steps"]),
@@ -1044,7 +1045,7 @@ def v185_distribution(
             temperature=float(temperature),
         )
         correction = radio_trust_projection(
-            q_t,
+            q_radio,
             raw["energy"],
             compatibility,
             epsilon_kl=float(epsilon_kl),
