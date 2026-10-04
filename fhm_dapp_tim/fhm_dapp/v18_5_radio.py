@@ -231,6 +231,20 @@ def fit_temperature_radio_reference(
     return TemperatureRadioReference(references=references)
 
 
+
+def temperature_radio_reference_from_payload(
+    payload: Mapping[str, torch.Tensor],
+) -> TemperatureRadioReference:
+    """Deserialize a checkpoint payload without relaxing exact-T matching."""
+
+    references: dict[float, torch.Tensor] = {}
+    for key, value in payload.items():
+        temperature = float(key)
+        if temperature in references:
+            raise ValueError("duplicate temperature reference")
+        references[temperature] = torch.as_tensor(value).detach().cpu()
+    return TemperatureRadioReference(references=references)
+
 def radio_compatibility(
     profiled_objective: torch.Tensor,
     reference: TemperatureRadioReference,
@@ -257,4 +271,5 @@ __all__ = [
     "profile_radio_nuisance",
     "radio_compatibility",
     "support_radio_fields",
+    "temperature_radio_reference_from_payload",
 ]
