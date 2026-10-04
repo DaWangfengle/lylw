@@ -549,8 +549,10 @@ def _fit_one_lambda(
     )
     generator = torch.Generator(device="cpu")
     generator.manual_seed(MODEL_SEED)
-    eligible = []
+    shortlist = []
     trajectory = []
+    best_es = float("inf")
+    margin = float(V185_CONFIG["energy_tie_margin_m"])
     for epoch in range(1, int(V185_CONFIG["maximum_epochs"]) + 1):
         train_metrics = _train_epoch(
             state=state,
@@ -571,19 +573,22 @@ def _fit_one_lambda(
                 scoring_seed=SCORING_SEED,
             )
             record["development_base"] = metrics
-            eligible.append({
-                "epoch": epoch,
-                **metrics,
-                "state": _cpu_state(model),
-            })
+            current_es = float(metrics["energy_score_m"])
+            best_es = min(best_es, current_es)
+            if current_es <= best_es + margin:
+                shortlist.append({
+                    "epoch": epoch,
+                    **metrics,
+                    "state": _cpu_state(model),
+                })
+            shortlist = [
+                item for item in shortlist
+                if float(item["energy_score_m"]) <= best_es + margin
+            ]
         trajectory.append(record)
 
-    best_es = min(float(item["energy_score_m"]) for item in eligible)
-    margin = float(V185_CONFIG["energy_tie_margin_m"])
-    shortlist = [
-        item for item in eligible
-        if float(item["energy_score_m"]) <= best_es + margin
-    ]
+    if not shortlist:
+        raise RuntimeError("V18.5 epoch shortlist is empty")
     selected = min(
         shortlist,
         key=lambda item: (
