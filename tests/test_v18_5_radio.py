@@ -8,6 +8,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_radio import (
     marked_radio_energy,
     profile_radio_nuisance,
     radio_compatibility,
+    temperature_radio_reference_from_payload,
 )
 
 
@@ -99,3 +100,24 @@ def test_profiled_objective_is_finite_and_uses_only_temporary_variables():
     assert torch.isfinite(result["profiled_objective"]).all()
     assert result["style_offset"].requires_grad is False
     assert result["style_scale"].requires_grad is False
+
+
+def test_temperature_reference_checkpoint_roundtrip():
+    reference = fit_temperature_radio_reference({
+        0.5: torch.tensor([0.1, 0.2, 0.4]),
+        1.0: torch.tensor([0.2, 0.5, 0.7]),
+    })
+    payload = {
+        str(key): value.clone()
+        for key, value in reference.references.items()
+    }
+    restored = temperature_radio_reference_from_payload(payload)
+    for temperature in (0.5, 1.0):
+        assert torch.equal(
+            reference.references[temperature],
+            restored.references[temperature],
+        )
+    with pytest.raises(KeyError):
+        restored.for_temperature(
+            1.5, device=torch.device("cpu"), dtype=torch.float32
+        )
