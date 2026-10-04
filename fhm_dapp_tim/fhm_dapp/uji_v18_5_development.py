@@ -858,6 +858,14 @@ def _calibration_surface(
                     "es": [],
                     "nll": [],
                     "mean_error": [],
+                    "entropy": [],
+                    "effective_anchors": [],
+                    "top1": [],
+                    "compatibility": [],
+                    "realized_kl": [],
+                    "effective_budget": [],
+                    "dual_beta_finite": [],
+                    "dual_beta_infinite": [],
                 }
 
     batch_size = int(V185_CONFIG["batch_size"])
@@ -923,23 +931,41 @@ def _calibration_surface(
             posterior_by_epsilon = {}
             for epsilon in map(float, V185_CONFIG["epsilon_kl_grid"]):
                 if epsilon == 0.0:
-                    posterior_by_epsilon[epsilon] = q_t
+                    zero = torch.zeros(
+                        len(q_t), dtype=torch.float64, device=q_t.device
+                    )
+                    projection = {
+                        "posterior": q_t,
+                        "realized_kl": zero,
+                        "epsilon_kl_effective": zero,
+                        "dual_beta": zero,
+                        "dual_beta_infinite": torch.zeros(
+                            len(q_t), dtype=torch.bool, device=q_t.device
+                        ),
+                    }
                 else:
-                    posterior_by_epsilon[epsilon] = radio_trust_projection(
+                    projection = radio_trust_projection(
                         q_t,
                         raw["energy"],
                         compatibility,
                         epsilon_kl=epsilon,
                         mask=base["candidate_mask"],
-                    )["posterior"]
+                    )
+                posterior_by_epsilon[epsilon] = projection
 
-            for epsilon, probability in posterior_by_epsilon.items():
+            for epsilon, projection in posterior_by_epsilon.items():
+                probability = projection["posterior"]
                 mean = posterior_mean(
                     probability, location, base["candidate_mask"]
                 )
                 mean_error = torch.linalg.vector_norm(
                     mean - target, dim=1
                 )
+                entropy = _entropy(probability)
+                effective_anchors = entropy.exp()
+                top1 = probability.max(dim=1).values
+                finite_beta = ~projection["dual_beta_infinite"]
+                finite_beta_values = projection["dual_beta"][finite_beta]
                 for scale_multiplier in map(float, V185_CONFIG["scale_grid"]):
                     scaled = base_scale * scale_multiplier
                     es, _first, _second = continuous_energy_score_mc(
@@ -959,6 +985,34 @@ def _calibration_surface(
                     cells[cell_id]["es"].append(es.cpu())
                     cells[cell_id]["nll"].append(nll.cpu())
                     cells[cell_id]["mean_error"].append(mean_error.cpu())
+                    cells[cell_id]["entropy"].append(entropy.cpu())
+                    cells[cell_id]["effective_anchors"].append(
+                        effective_anchors.cpu()
+                    )
+                    cells[cell_id]["top1"].append(top1.cpu())
+                    cells[cell_id]["compatibility"].append(
+                        compatibility.detach().cpu()
+                    )
+                    cells[cell_id]["realized_kl"].append(
+                        projection["realized_kl"].detach().cpu()
+                    )
+                    cells[cell_id]["effective_budget"].append(
+                        projection["epsilon_kl_effective"].detach().cpu()
+                    )
+                    if finite_beta_values.numel():
+                        cells[cell_id]["dual_beta_finite"].append(
+                            finite_beta_values.detach().cpu()
+                        )
+                    cells[cell_id]["dual_beta_infinite"].append(
+                        projection["dual_beta_infinite"].detach().cpu()
+                    )
+
+    def macro_se(vector: np.ndarray) -> float:
+        return (
+            0.0
+            if len(vector) <= 1
+            else float(vector.std(ddof=1) / math.sqrt(len(vector)))
+        )
 
     selector_cells = []
     surface = []
@@ -966,6 +1020,21 @@ def _calibration_surface(
         es = torch.cat(record.pop("es"))
         nll = torch.cat(record.pop("nll"))
         mean_error = torch.cat(record.pop("mean_error"))
+        entropy = torch.cat(record.pop("entropy"))
+        effective_anchors = torch.cat(record.pop("effective_anchors"))
+        top1 = torch.cat(record.pop("top1"))
+        compatibility_values = torch.cat(record.pop("compatibility"))
+        realized_kl = torch.cat(record.pop("realized_kl")).double()
+        effective_budget = torch.cat(record.pop("effective_budget")).double()
+        beta_chunks = record.pop("dual_beta_finite")
+        finite_beta = (
+            torch.cat(beta_chunks).double()
+            if beta_chunks
+            else torch.empty(0, dtype=torch.float64)
+        )
+        beta_infinite = torch.cat(
+            record.pop("dual_beta_infinite")
+        ).bool()
         group_es = _group_arrays(es, keys, ordered_groups)
         group_nll = _group_arrays(nll, keys, ordered_groups)
         group_mean = _group_arrays(mean_error, keys, ordered_groups)
@@ -973,8 +1042,32 @@ def _calibration_surface(
             "cell_id": cell_id,
             **record,
             "energy_score_m": float(group_es.mean()),
+            "energy_score_se_m": macro_se(group_es),
             "nll": float(group_nll.mean()),
+            "nll_se": macro_se(group_nll),
             "posterior_mean_mae_m": float(group_mean.mean()),
+            "posterior_mean_mae_se_m": macro_se(group_mean),
+            "mean_entropy_nats": float(entropy.double().mean()),
+            "mean_effective_anchors": float(
+                effective_anchors.double().mean()
+            ),
+            "mean_top1_probability": float(top1.double().mean()),
+            "mean_radio_compatibility": float(
+                compatibility_values.double().mean()
+            ),
+            "mean_realized_kl": float(realized_kl.mean()),
+            "mean_effective_epsilon_kl": float(
+                effective_budget.mean()
+            ),
+            "max_kl_budget_excess": float(
+                (realized_kl - effective_budget).max()
+            ),
+            "dual_beta_infinite_fraction": float(
+                beta_infinite.double().mean()
+            ),
+            "mean_finite_dual_beta": (
+                float(finite_beta.mean()) if finite_beta.numel() else None
+            ),
         }
         surface.append(summary)
         selector_cells.append({
@@ -1008,6 +1101,24 @@ def calibrate_freeze(
         development, omit="development_result_sha256"
     ):
         raise ValueError("development result self-hash mismatch")
+    if development.get("protocol_version") != PROTOCOL_VERSION:
+        raise ValueError("development protocol version mismatch")
+    if development.get("registry_sha256") != registry["registry_sha256"]:
+        raise ValueError("development result links a different registry")
+    if development.get("source_commit_sha") != registry["source_commit_sha"]:
+        raise ValueError("development result links a different source revision")
+    selected_development = development.get("selected", {})
+    if float(selected_development.get("lambda_spatial", -1.0)) not in set(
+        map(float, V185_CONFIG["lambda_spatial_grid"])
+    ):
+        raise ValueError("development selected lambda outside registered grid")
+    selected_epoch = int(selected_development.get("selected_epoch", -1))
+    if not (
+        int(V185_CONFIG["minimum_epochs"])
+        <= selected_epoch
+        <= int(V185_CONFIG["maximum_epochs"])
+    ):
+        raise ValueError("development selected epoch outside registered range")
     for path in (refit_path, calibration_path, freeze_path):
         if Path(path).exists():
             raise FileExistsError(path)
@@ -1072,6 +1183,14 @@ def calibrate_freeze(
             "posterior_mean_mae_m": float(
                 selected_cell["posterior_mean_mae_m"]
             ),
+        },
+        "selected_metrics": {
+            key: value
+            for key, value in selected_cell.items()
+            if key not in {
+                "group_nll",
+                "group_energy_score",
+            }
         },
         "selection_law": (
             "paired NLL one-SE; paired ES one-SE; minimum posterior-mean "
