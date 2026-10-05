@@ -89,6 +89,12 @@ For anchor `a`, AP `k`:
 
 No evaluation row enters these statistics.
 
+An AP that is present in the dataset schema but is never observed inside the
+current training role receives **exactly zero radio reliability**.  Reliability
+normalization is computed only over APs actually observed in that training
+role; role-unseen APs therefore neither contribute radio energy nor rescale the
+weights of genuinely seen APs.
+
 The fallback is deterministic and has no tuned shrinkage coefficient.  The
 purpose is to make the marked likelihood well-defined for dense repeated
 anchors and singleton-heavy datasets such as Tampere.
