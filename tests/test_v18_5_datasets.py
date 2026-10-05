@@ -118,3 +118,28 @@ def test_memory_scale_is_finite_and_never_below_registered_floor():
     assert torch.isfinite(memory["rss_scale"]).all()
     assert float(memory["rss_scale"].min()) >= 0.05
     assert diagnostics["global_rss_scale"] >= 0.05
+
+
+def test_memory_diagnostics_report_role_seen_and_unseen_aps():
+    rss = torch.tensor(
+        [[-0.5, -1.0, 0.0], [-0.4, -1.0, 0.0]], dtype=torch.float32
+    )
+    observed = torch.tensor(
+        [[True, False, False], [True, False, False]], dtype=torch.bool
+    )
+    coords = np.array([[0, 0], [0, 0]], dtype=np.float32)
+    memory, _, diagnostics = build_v185_anchor_memory(
+        rss,
+        observed,
+        coords,
+        np.zeros(2, dtype=np.int64),
+        np.zeros(2, dtype=np.int64),
+        np.arange(2),
+    )
+    assert diagnostics["seen_aps"] == 1
+    assert diagnostics["role_unseen_aps"] == 2
+    assert diagnostics["seen_ap_fraction"] == 1 / 3
+    assert torch.equal(
+        memory["seen_ap_mask"],
+        torch.tensor([True, False, False]),
+    )
