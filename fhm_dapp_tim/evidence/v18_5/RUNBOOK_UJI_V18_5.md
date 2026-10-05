@@ -169,13 +169,36 @@ The freeze records:
 - posterior-mean decoder;
 - no geometry correction.
 
-## 9. Hard stop
+## 9. Read-only formal artifact audit
 
-After method freeze:
+After `calibrate-freeze` succeeds, validate the complete provenance and
+numerical graph before interpreting results:
+
+`python -m fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit`
+
+The validator must confirm:
+
+- registry self-hash, source SHA and trainingData hash;
+- exact FIT / DEVELOPMENT / SELECTION_REFIT / CALIBRATION role algebra;
+- exactly four lambda checkpoints with matching hashes;
+- checkpoint explicit-mask memory and finite model tensors;
+- exactly 192 unique calibration cells covering the registered Cartesian grid;
+- epsilon=0 identity cells;
+- returned-dtype KL budget compliance;
+- one sorted selection-refit radio reference per registered temperature;
+- registry -> development -> refit checkpoint -> calibration -> freeze hashes;
+- exact agreement between selected calibration cell and frozen T/epsilon/scale.
+
+This validator is read-only and must not access UJI validation or any external
+test split.
+
+## 10. Hard stop
+
+After method freeze and artifact-audit PASS:
 
 STOP.
 
 Do not open UJI official validation.
 
-Do not run external provided tests until the frozen artifacts have been
-scientifically reviewed.
+Do not run external provided tests until the frozen UJI artifacts and the
+scientific behavior of the selected method have been reviewed.
