@@ -621,6 +621,7 @@ def fit_freeze_external(
         "manifest_sha256": manifest["manifest_sha256"],
         "lambda_spatial": lambda_spatial,
         "selected_epoch": selected_epoch,
+        "selection_refit_rows": int(len(rows["selection_refit"])),
         "posterior_temperature": float(selected_cell["temperature"]),
         "epsilon_kl": float(selected_cell["epsilon_kl"]),
         "scale_multiplier": float(selected_cell["scale_multiplier"]),
@@ -658,6 +659,7 @@ def fit_freeze_external(
         "checkpoint_sha256": checkpoint_sha,
         "lambda_spatial": lambda_spatial,
         "selected_epoch": selected_epoch,
+        "selection_refit_rows": int(len(rows["selection_refit"])),
         "posterior_temperature": float(selected_cell["temperature"]),
         "epsilon_kl": float(selected_cell["epsilon_kl"]),
         "scale_multiplier": float(selected_cell["scale_multiplier"]),
@@ -722,6 +724,10 @@ def _load_external_checkpoint(
         raise ValueError("external checkpoint lambda mismatch")
     if int(checkpoint["selected_epoch"]) != int(freeze["selected_epoch"]):
         raise ValueError("external checkpoint epoch mismatch")
+    if int(checkpoint["selection_refit_rows"]) != int(
+        freeze["selection_refit_rows"]
+    ):
+        raise ValueError("external checkpoint selection_refit_rows mismatch")
     for key in ("posterior_temperature", "epsilon_kl", "scale_multiplier"):
         if float(checkpoint[key]) != float(freeze[key]):
             raise ValueError(f"external checkpoint {key} mismatch")
@@ -787,28 +793,13 @@ def load_external_training_freeze(
         raise ValueError("external freeze enabled geometry correction")
     calibration = freeze["calibration"]
     validate_calibration_surface(calibration["surface"])
+    selection_refit_rows = int(freeze["selection_refit_rows"])
+    if selection_refit_rows <= 0:
+        raise ValueError("external freeze selection_refit_rows must be positive")
     validate_radio_diagnostics(
         calibration["radio_diagnostics_by_temperature"],
         calibration_rows=int(calibration["rows"]),
-        selection_refit_rows=int(
-            freeze["epoch_selection"]["memory_diagnostics"].get(
-                "selection_refit_rows",
-                calibration.get("selection_refit_rows", 0),
-            )
-        )
-        if (
-            "memory_diagnostics" in freeze["epoch_selection"]
-            and (
-                "selection_refit_rows"
-                in freeze["epoch_selection"]["memory_diagnostics"]
-            )
-        )
-        else int(
-            calibration.get(
-                "selection_refit_rows",
-                freeze.get("selection_refit_rows", 0),
-            )
-        ),
+        selection_refit_rows=selection_refit_rows,
     )
     return freeze
 
