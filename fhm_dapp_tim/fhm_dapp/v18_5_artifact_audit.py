@@ -412,6 +412,190 @@ def validate_calibration_surface(
     }
 
 
+
+def _validate_quantiles(
+    payload: Mapping[str, object],
+    *,
+    name: str,
+    lower: float | None = None,
+    upper: float | None = None,
+    strictly_positive: bool = False,
+) -> None:
+    keys = ("p05", "p25", "p50", "p75", "p95")
+    values = [_finite_number(payload[key], name=f"{name}:{key}") for key in keys]
+    if values != sorted(values):
+        raise ValueError(f"{name}: quantiles are not monotone")
+    if lower is not None and values[0] < lower:
+        raise ValueError(f"{name}: quantile below lower bound")
+    if upper is not None and values[-1] > upper:
+        raise ValueError(f"{name}: quantile above upper bound")
+    if strictly_positive and values[0] <= 0.0:
+        raise ValueError(f"{name}: quantiles must be strictly positive")
+
+
+def validate_radio_diagnostics(
+    records: Sequence[Mapping[str, object]],
+    *,
+    calibration_rows: int,
+    selection_refit_rows: int,
+) -> dict[str, object]:
+    expected_temperatures = list(map(float, V185_CONFIG["temperature_grid"]))
+    if len(records) != len(expected_temperatures):
+        raise ValueError("radio diagnostics must contain exactly eight temperatures")
+    by_temperature = {float(record["temperature"]): record for record in records}
+    if set(by_temperature) != set(expected_temperatures):
+        raise ValueError("radio diagnostic temperature grid mismatch")
+    if len(by_temperature) != len(records):
+        raise ValueError("duplicate radio diagnostic temperature")
+
+    tolerance = kl_budget_tolerance(torch.float32)
+    global_max_excess = -float("inf")
+    maximum_beta = 0.0
+    for temperature in expected_temperatures:
+        record = by_temperature[temperature]
+        if int(record["rows"]) != int(calibration_rows):
+            raise ValueError("radio diagnostic calibration row count mismatch")
+        if int(record["training_reference_rows"]) != int(selection_refit_rows):
+            raise ValueError("radio diagnostic reference row count mismatch")
+        _validate_quantiles(
+            record["training_reference_objective_quantiles"],
+            name=f"T={temperature}:training_reference_objective",
+        )
+        _validate_quantiles(
+            record["calibration_profiled_objective_quantiles"],
+            name=f"T={temperature}:calibration_profiled_objective",
+        )
+        compatibility_mean = _finite_number(
+            record["compatibility_mean"],
+            name=f"T={temperature}:compatibility_mean",
+        )
+        if not 0.0 <= compatibility_mean <= 1.0:
+            raise ValueError("radio compatibility mean outside [0,1]")
+        _validate_quantiles(
+            record["compatibility_quantiles"],
+            name=f"T={temperature}:compatibility",
+            lower=0.0,
+            upper=1.0,
+        )
+        _finite_number(
+            record["mean_abs_style_offset"],
+            name=f"T={temperature}:mean_abs_style_offset",
+        )
+        _validate_quantiles(
+            record["abs_style_offset_quantiles"],
+            name=f"T={temperature}:abs_style_offset",
+            lower=0.0,
+        )
+        style_mean = _finite_number(
+            record["style_scale_mean"],
+            name=f"T={temperature}:style_scale_mean",
+        )
+        if style_mean <= 0.0:
+            raise ValueError("style scale mean must be positive")
+        _validate_quantiles(
+            record["style_scale_quantiles"],
+            name=f"T={temperature}:style_scale",
+            strictly_positive=True,
+        )
+        entropy = _finite_number(
+            record["q_temperature_entropy_mean"],
+            name=f"T={temperature}:q_temperature_entropy_mean",
+        )
+        if entropy < 0.0:
+            raise ValueError("q_T entropy cannot be negative")
+        top1 = _finite_number(
+            record["q_temperature_top1_mean"],
+            name=f"T={temperature}:q_temperature_top1_mean",
+        )
+        if not 0.0 <= top1 <= 1.0:
+            raise ValueError("q_T top1 outside [0,1]")
+
+        epsilon_records = record["epsilon_diagnostics"]
+        expected_epsilons = list(map(float, V185_CONFIG["epsilon_kl_grid"]))
+        if len(epsilon_records) != len(expected_epsilons):
+            raise ValueError("radio diagnostics require four epsilon rows")
+        by_epsilon = {
+            float(item["epsilon_kl"]): item for item in epsilon_records
+        }
+        if set(by_epsilon) != set(expected_epsilons):
+            raise ValueError("radio diagnostic epsilon grid mismatch")
+        if len(by_epsilon) != len(epsilon_records):
+            raise ValueError("duplicate radio diagnostic epsilon")
+        for epsilon in expected_epsilons:
+            item = by_epsilon[epsilon]
+            mean_budget = _finite_number(
+                item["mean_effective_budget"],
+                name=f"T={temperature},eps={epsilon}:mean_budget",
+            )
+            mean_kl = _finite_number(
+                item["mean_realized_kl"],
+                name=f"T={temperature},eps={epsilon}:mean_kl",
+            )
+            if mean_budget < -tolerance or mean_budget > epsilon + tolerance:
+                raise ValueError("radio diagnostic effective budget outside epsilon")
+            if mean_kl < -tolerance:
+                raise ValueError("radio diagnostic realized KL is negative")
+            _validate_quantiles(
+                item["effective_budget_quantiles"],
+                name=f"T={temperature},eps={epsilon}:budget",
+                lower=-tolerance,
+                upper=epsilon + tolerance,
+            )
+            _validate_quantiles(
+                item["realized_kl_quantiles"],
+                name=f"T={temperature},eps={epsilon}:realized_kl",
+                lower=-tolerance,
+            )
+            excess = _finite_number(
+                item["max_kl_budget_excess"],
+                name=f"T={temperature},eps={epsilon}:max_excess",
+            )
+            global_max_excess = max(global_max_excess, excess)
+            if excess > tolerance:
+                raise ValueError("radio diagnostic KL budget excess")
+            infinite = _finite_number(
+                item["dual_beta_infinite_fraction"],
+                name=f"T={temperature},eps={epsilon}:infinite_fraction",
+            )
+            if not 0.0 <= infinite <= 1.0:
+                raise ValueError("radio diagnostic infinite-beta fraction invalid")
+            beta_quantiles = item["finite_dual_beta_quantiles"]
+            max_beta = item["maximum_finite_dual_beta"]
+            if beta_quantiles is None:
+                if max_beta is not None:
+                    raise ValueError("finite beta maximum exists without quantiles")
+            else:
+                _validate_quantiles(
+                    beta_quantiles,
+                    name=f"T={temperature},eps={epsilon}:finite_beta",
+                    lower=0.0,
+                )
+                maximum = _finite_number(
+                    max_beta,
+                    name=f"T={temperature},eps={epsilon}:maximum_beta",
+                )
+                if maximum < float(beta_quantiles["p95"]):
+                    raise ValueError("maximum beta below p95")
+                maximum_beta = max(maximum_beta, maximum)
+            if epsilon == 0.0:
+                if abs(mean_budget) > tolerance or abs(mean_kl) > tolerance:
+                    raise ValueError("epsilon=0 radio diagnostics are not identity")
+                if infinite > tolerance:
+                    raise ValueError("epsilon=0 radio diagnostics have infinite beta")
+                if beta_quantiles is None or abs(float(beta_quantiles["p95"])) > tolerance:
+                    raise ValueError("epsilon=0 finite beta must be zero")
+
+    return {
+        "temperatures": int(len(records)),
+        "epsilon_records": int(
+            len(records) * len(V185_CONFIG["epsilon_kl_grid"])
+        ),
+        "maximum_kl_budget_excess": float(global_max_excess),
+        "maximum_finite_dual_beta": float(maximum_beta),
+        "allowed_kl_budget_tolerance": float(tolerance),
+    }
+
+
 def _validate_refit_checkpoint(
     path: Path,
     *,
@@ -503,6 +687,13 @@ def validate_calibration_and_freeze(
     if calibration.get("external_test_performance_accessed") is not False:
         raise ValueError("calibration accessed external performance")
     surface_summary = validate_calibration_surface(calibration["surface"])
+    radio_summary = validate_radio_diagnostics(
+        calibration["radio_diagnostics_by_temperature"],
+        calibration_rows=int(calibration["rows"]),
+        selection_refit_rows=int(
+            registry["roles"]["selection_refit"]["row_count"]
+        ),
+    )
 
     selection = calibration["selection"]
     selected_cell = selection["selected_cell"]
@@ -600,6 +791,7 @@ def validate_calibration_and_freeze(
         "freeze_sha256": freeze["freeze_sha256"],
         "selected_method": expected_method,
         "surface": surface_summary,
+        "radio_diagnostics": radio_summary,
         "selection_refit": checkpoint_summary,
     }
     return freeze, summary
