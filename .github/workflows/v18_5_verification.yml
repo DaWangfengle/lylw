@@ -31,6 +31,7 @@ jobs:
           python -m py_compile fhm_dapp_tim/fhm_dapp/uji_v18_5_development.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_realdata_smoke.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_revision_audit.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_external.py
 
       - name: Run V18.5 contract tests
         run: |
@@ -41,7 +42,8 @@ jobs:
             tests/test_v18_5_model.py \
             tests/test_v18_5_protocol.py \
             tests/test_uji_v18_5_development.py \
-            tests/test_v18_5_revision_audit.py
+            tests/test_v18_5_revision_audit.py \
+            tests/test_v18_5_external.py
 
       - name: Real UJI training-only CPU smoke
         run: |
