@@ -847,6 +847,26 @@ def _calibration_surface(
         seed=SCORING_SEED,
     )
     cells = {}
+    radio_by_temperature = {
+        float(temperature): {
+            "profiled_objective": [],
+            "compatibility": [],
+            "style_offset": [],
+            "style_scale": [],
+            "temperature_entropy": [],
+            "temperature_top1": [],
+            "epsilon": {
+                float(epsilon): {
+                    "effective_budget": [],
+                    "realized_kl": [],
+                    "dual_beta_finite": [],
+                    "dual_beta_infinite": [],
+                }
+                for epsilon in V185_CONFIG["epsilon_kl_grid"]
+            },
+        }
+        for temperature in V185_CONFIG["temperature_grid"]
+    }
     for temperature in map(float, V185_CONFIG["temperature_grid"]):
         for epsilon in map(float, V185_CONFIG["epsilon_kl_grid"]):
             for scale in map(float, V185_CONFIG["scale_grid"]):
@@ -928,6 +948,26 @@ def _calibration_surface(
                 reference,
                 temperature=temperature,
             )
+            temperature_store = radio_by_temperature[temperature]
+            temperature_store["profiled_objective"].append(
+                raw["profiled_objective"].detach().cpu()
+            )
+            temperature_store["compatibility"].append(
+                compatibility.detach().cpu()
+            )
+            temperature_store["style_offset"].append(
+                raw["style_offset"].detach().cpu()
+            )
+            temperature_store["style_scale"].append(
+                raw["style_scale"].detach().cpu()
+            )
+            q_t_entropy = _entropy(q_t)
+            temperature_store["temperature_entropy"].append(
+                q_t_entropy.detach().cpu()
+            )
+            temperature_store["temperature_top1"].append(
+                q_t.max(dim=1).values.detach().cpu()
+            )
             posterior_by_epsilon = {}
             for epsilon in map(float, V185_CONFIG["epsilon_kl_grid"]):
                 if epsilon == 0.0:
@@ -952,6 +992,22 @@ def _calibration_surface(
                         mask=base["candidate_mask"],
                     )
                 posterior_by_epsilon[epsilon] = projection
+                epsilon_store = temperature_store["epsilon"][epsilon]
+                epsilon_store["effective_budget"].append(
+                    projection["epsilon_kl_effective"].detach().cpu()
+                )
+                epsilon_store["realized_kl"].append(
+                    projection["realized_kl"].detach().cpu()
+                )
+                finite = ~projection["dual_beta_infinite"]
+                finite_values = projection["dual_beta"][finite]
+                if finite_values.numel():
+                    epsilon_store["dual_beta_finite"].append(
+                        finite_values.detach().cpu()
+                    )
+                epsilon_store["dual_beta_infinite"].append(
+                    projection["dual_beta_infinite"].detach().cpu()
+                )
 
             for epsilon, projection in posterior_by_epsilon.items():
                 probability = projection["posterior"]
@@ -1012,6 +1068,94 @@ def _calibration_surface(
             0.0
             if len(vector) <= 1
             else float(vector.std(ddof=1) / math.sqrt(len(vector)))
+        )
+
+    def quantiles(values: torch.Tensor) -> dict[str, float]:
+        values = values.double()
+        return {
+            "p05": float(torch.quantile(values, 0.05)),
+            "p25": float(torch.quantile(values, 0.25)),
+            "p50": float(torch.quantile(values, 0.50)),
+            "p75": float(torch.quantile(values, 0.75)),
+            "p95": float(torch.quantile(values, 0.95)),
+        }
+
+    radio_diagnostics_by_temperature = []
+    for temperature in map(float, V185_CONFIG["temperature_grid"]):
+        store = radio_by_temperature[temperature]
+        profiled = torch.cat(store["profiled_objective"]).double()
+        compatibility_values = torch.cat(store["compatibility"]).double()
+        offset = torch.cat(store["style_offset"]).double()
+        style_scale = torch.cat(store["style_scale"]).double()
+        q_entropy = torch.cat(store["temperature_entropy"]).double()
+        q_top1 = torch.cat(store["temperature_top1"]).double()
+        training_reference = reference.for_temperature(
+            temperature,
+            device=torch.device("cpu"),
+            dtype=torch.float64,
+        ).cpu().double()
+        epsilon_records = []
+        for epsilon in map(float, V185_CONFIG["epsilon_kl_grid"]):
+            epsilon_store = store["epsilon"][epsilon]
+            budget = torch.cat(
+                epsilon_store["effective_budget"]
+            ).double()
+            realized = torch.cat(
+                epsilon_store["realized_kl"]
+            ).double()
+            infinite = torch.cat(
+                epsilon_store["dual_beta_infinite"]
+            ).bool()
+            beta_chunks = epsilon_store["dual_beta_finite"]
+            beta = (
+                torch.cat(beta_chunks).double()
+                if beta_chunks
+                else torch.empty(0, dtype=torch.float64)
+            )
+            epsilon_records.append(
+                {
+                    "epsilon_kl": epsilon,
+                    "mean_effective_budget": float(budget.mean()),
+                    "effective_budget_quantiles": quantiles(budget),
+                    "mean_realized_kl": float(realized.mean()),
+                    "realized_kl_quantiles": quantiles(realized),
+                    "max_kl_budget_excess": float(
+                        (realized - budget).max()
+                    ),
+                    "dual_beta_infinite_fraction": float(
+                        infinite.double().mean()
+                    ),
+                    "finite_dual_beta_quantiles": (
+                        quantiles(beta) if beta.numel() else None
+                    ),
+                    "maximum_finite_dual_beta": (
+                        float(beta.max()) if beta.numel() else None
+                    ),
+                }
+            )
+        radio_diagnostics_by_temperature.append(
+            {
+                "temperature": temperature,
+                "rows": int(len(profiled)),
+                "training_reference_rows": int(len(training_reference)),
+                "training_reference_objective_quantiles": quantiles(
+                    training_reference
+                ),
+                "calibration_profiled_objective_quantiles": quantiles(
+                    profiled
+                ),
+                "compatibility_mean": float(compatibility_values.mean()),
+                "compatibility_quantiles": quantiles(
+                    compatibility_values
+                ),
+                "mean_abs_style_offset": float(offset.abs().mean()),
+                "abs_style_offset_quantiles": quantiles(offset.abs()),
+                "style_scale_mean": float(style_scale.mean()),
+                "style_scale_quantiles": quantiles(style_scale),
+                "q_temperature_entropy_mean": float(q_entropy.mean()),
+                "q_temperature_top1_mean": float(q_top1.mean()),
+                "epsilon_diagnostics": epsilon_records,
+            }
         )
 
     selector_cells = []
@@ -1081,6 +1225,9 @@ def _calibration_surface(
     return {
         "surface": surface,
         "selection": selected,
+        "radio_diagnostics_by_temperature": (
+            radio_diagnostics_by_temperature
+        ),
         "coordinate_groups": int(len(ordered_groups)),
         "rows": int(len(row_indices)),
     }
