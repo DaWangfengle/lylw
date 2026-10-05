@@ -665,6 +665,9 @@ def fit_freeze_external(
             "rows": int(calibration["rows"]),
             "coordinate_groups": int(calibration["coordinate_groups"]),
             "surface": calibration["surface"],
+            "radio_diagnostics_by_temperature": calibration[
+                "radio_diagnostics_by_temperature"
+            ],
             "selection": calibration["selection"],
             "selected_metrics": {
                 key: value
@@ -780,6 +783,12 @@ def load_external_training_freeze(
         raise ValueError("external freeze enabled geometry correction")
     if len(freeze["calibration"]["surface"]) != 192:
         raise ValueError("external freeze does not contain 192 calibration cells")
+    if len(
+        freeze["calibration"]["radio_diagnostics_by_temperature"]
+    ) != len(V185_CONFIG["temperature_grid"]):
+        raise ValueError(
+            "external freeze does not contain one radio diagnostic per T"
+        )
     return freeze
 
 
