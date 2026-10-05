@@ -1242,7 +1242,8 @@ def evaluate_test_once(
     if correction is not None and bool(
         (
             correction["realized_kl"]
-            > correction["epsilon_kl_effective"] + 5e-6
+            > correction["epsilon_kl_effective"]
+            + correction["kl_budget_tolerance"]
         ).any()
     ):
         raise RuntimeError(
