@@ -5,6 +5,7 @@ import torch
 
 from fhm_dapp_tim.fhm_dapp.v18_5_core import (
     exact_kl_energy_projection,
+    kl_budget_tolerance,
     paired_one_se_set,
     posterior_mean,
     select_joint_calibration,
@@ -141,3 +142,18 @@ def test_joint_selector_uses_parsimony_after_two_one_se_gates():
     ]
     result = select_joint_calibration(cells)
     assert result["selected_cell_id"] == "simple"
+
+
+def test_kl_budget_tolerance_tracks_return_dtype():
+    assert kl_budget_tolerance(torch.float32) > 1e-6
+    assert kl_budget_tolerance(torch.float64) == 5e-10
+    q = torch.tensor([[0.9, 0.1]], dtype=torch.float32)
+    e = torch.tensor([[1.0, 0.0]], dtype=torch.float32)
+    result = exact_kl_energy_projection(q, e, epsilon_kl=0.2)
+    assert float(result["kl_budget_tolerance"]) == kl_budget_tolerance(
+        torch.float32
+    )
+    assert float(result["realized_kl"][0]) <= (
+        float(result["epsilon_kl_effective"][0])
+        + float(result["kl_budget_tolerance"])
+    )
