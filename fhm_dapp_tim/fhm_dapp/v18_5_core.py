@@ -33,6 +33,16 @@ DEFAULT_BRACKET_DOUBLINGS = 80
 NUMERICAL_TOLERANCE = 1e-12
 
 
+def kl_budget_tolerance(dtype: torch.dtype) -> float:
+    """Tolerance for KL budget checks on the actual returned dtype."""
+
+    try:
+        eps = float(torch.finfo(dtype).eps)
+    except TypeError as exc:
+        raise ValueError("KL budget tolerance requires a floating dtype") from exc
+    return max(5e-10, 32.0 * eps)
+
+
 def kl_p_to_q(
     p: torch.Tensor,
     q: torch.Tensor,
@@ -239,10 +249,7 @@ def exact_kl_energy_projection(
         torch.zeros_like(realized),
         realized,
     )
-    output_tolerance = max(
-        5e-10,
-        32.0 * float(torch.finfo(base_probability.dtype).eps),
-    )
+    output_tolerance = kl_budget_tolerance(base_probability.dtype)
     if bool((realized > budget + output_tolerance).any()):
         raise RuntimeError(
             "returned posterior exceeded its KL budget after dtype conversion"
@@ -254,6 +261,7 @@ def exact_kl_energy_projection(
         "dual_beta_infinite": beta_infinite,
         "realized_kl": realized,
         "epsilon_kl_effective": budget,
+        "kl_budget_tolerance": budget.new_tensor(output_tolerance),
         "limiting_kl": limiting_kl,
         "constraint_active": constraint_active,
         "minimum_energy_mass": minimum_energy_mass,
@@ -419,6 +427,7 @@ __all__ = [
     "empirical_survival_reliability",
     "exact_kl_energy_projection",
     "fit_empirical_reference",
+    "kl_budget_tolerance",
     "kl_p_to_q",
     "masked_softmax",
     "paired_one_se_set",
