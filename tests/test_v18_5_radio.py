@@ -9,6 +9,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_radio import (
     profile_radio_nuisance,
     radio_compatibility,
     temperature_radio_reference_from_payload,
+    training_seen_ap_reliability,
 )
 
 
@@ -121,3 +122,55 @@ def test_temperature_reference_checkpoint_roundtrip():
         restored.for_temperature(
             1.5, device=torch.device("cpu"), dtype=torch.float32
         )
+
+
+def test_seen_only_radio_reliability_zeroes_unseen_and_normalizes_seen_subset():
+    memory = {
+        "detection_prob": torch.tensor(
+            [[0.9, 0.3, 0.25], [0.2, 0.8, 0.25]], dtype=torch.float32
+        ),
+        "rss_center": torch.tensor(
+            [[-0.8, -0.2, 0.0], [-0.1, 0.7, 0.0]], dtype=torch.float32
+        ),
+        "rss_scale": torch.tensor(
+            [[0.2, 0.2, 0.15], [0.2, 0.2, 0.15]], dtype=torch.float32
+        ),
+        "seen_ap_mask": torch.tensor([True, True, False]),
+    }
+    result = training_seen_ap_reliability(memory)
+    assert result.shape == (3,)
+    assert float(result[2]) == 0.0
+    assert torch.all(result[:2] > 0.0)
+
+
+def test_unseen_training_ap_has_no_radio_effect_even_if_query_observes_it():
+    memory = {
+        "detection_prob": torch.tensor(
+            [[0.9, 0.25], [0.4, 0.25]], dtype=torch.float32
+        ),
+        "rss_center": torch.tensor(
+            [[-0.8, 0.0], [-0.1, 0.0]], dtype=torch.float32
+        ),
+        "rss_scale": torch.tensor(
+            [[0.2, 0.15], [0.25, 0.15]], dtype=torch.float32
+        ),
+        "seen_ap_mask": torch.tensor([True, False]),
+    }
+    reliability = training_seen_ap_reliability(memory)
+    indices = torch.tensor([[0, 1]], dtype=torch.long)
+    observed = torch.tensor([[True, True]])
+    first = marked_radio_energy(
+        torch.tensor([[-0.6, -1.0]]),
+        observed,
+        indices,
+        memory,
+        ap_reliability=reliability,
+    )
+    second = marked_radio_energy(
+        torch.tensor([[-0.6, 0.95]]),
+        observed,
+        indices,
+        memory,
+        ap_reliability=reliability,
+    )
+    assert torch.allclose(first, second, atol=1e-7, rtol=0)
