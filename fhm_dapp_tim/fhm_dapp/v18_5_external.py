@@ -41,6 +41,10 @@ from fhm_dapp_tim.fhm_dapp.v18_4_datasets import (
     REPO_ROOT,
     TUJI_DEVICE_FILES,
 )
+from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
+    validate_calibration_surface,
+    validate_radio_diagnostics,
+)
 from fhm_dapp_tim.fhm_dapp.v18_5_datasets import (
     DATA_ROOT,
     CanonicalFingerprintData,
@@ -781,14 +785,31 @@ def load_external_training_freeze(
         raise ValueError("external correction differs from V18.5")
     if freeze.get("geometry_posterior_correction") is not False:
         raise ValueError("external freeze enabled geometry correction")
-    if len(freeze["calibration"]["surface"]) != 192:
-        raise ValueError("external freeze does not contain 192 calibration cells")
-    if len(
-        freeze["calibration"]["radio_diagnostics_by_temperature"]
-    ) != len(V185_CONFIG["temperature_grid"]):
-        raise ValueError(
-            "external freeze does not contain one radio diagnostic per T"
+    calibration = freeze["calibration"]
+    validate_calibration_surface(calibration["surface"])
+    validate_radio_diagnostics(
+        calibration["radio_diagnostics_by_temperature"],
+        calibration_rows=int(calibration["rows"]),
+        selection_refit_rows=int(
+            freeze["epoch_selection"]["memory_diagnostics"].get(
+                "selection_refit_rows",
+                calibration.get("selection_refit_rows", 0),
+            )
         )
+        if (
+            "memory_diagnostics" in freeze["epoch_selection"]
+            and (
+                "selection_refit_rows"
+                in freeze["epoch_selection"]["memory_diagnostics"]
+            )
+        )
+        else int(
+            calibration.get(
+                "selection_refit_rows",
+                freeze.get("selection_refit_rows", 0),
+            )
+        ),
+    )
     return freeze
 
 
