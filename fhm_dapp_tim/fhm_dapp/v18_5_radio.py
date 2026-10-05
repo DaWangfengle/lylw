@@ -13,7 +13,10 @@ from typing import Mapping
 
 import torch
 
-from fhm_dapp_tim.fhm_dapp.dapp import robust_hurdle_anchor_energy
+from fhm_dapp_tim.fhm_dapp.dapp import (
+    anchor_ap_reliability,
+    robust_hurdle_anchor_energy,
+)
 from fhm_dapp_tim.fhm_dapp.v18_5_core import (
     empirical_survival_reliability,
     fit_empirical_reference,
@@ -52,6 +55,46 @@ class TemperatureRadioReference:
                 f"no radio compatibility reference registered for T={key}"
             )
         return self.references[key].to(device=device, dtype=dtype)
+
+
+
+def training_seen_ap_reliability(
+    memory: Mapping[str, torch.Tensor],
+) -> torch.Tensor:
+    """Estimate AP reliability only on APs observed in the training role.
+
+    V18.5 AP dictionaries are inherited from the dataset training schema, but
+    a particular FIT/selection-refit role can contain columns that are never
+    observed.  Such columns must contribute exactly zero radio evidence and
+    must not distort the normalization of genuinely seen AP reliabilities.
+    """
+
+    required = {
+        "detection_prob",
+        "rss_center",
+        "rss_scale",
+        "seen_ap_mask",
+    }
+    missing = required - set(memory)
+    if missing:
+        raise KeyError(f"radio memory misses fields: {sorted(missing)}")
+    seen = memory["seen_ap_mask"].bool()
+    if seen.ndim != 1:
+        raise ValueError("seen_ap_mask must be one-dimensional")
+    if memory["detection_prob"].shape[1] != len(seen):
+        raise ValueError("seen_ap_mask width mismatch")
+    output = torch.zeros(
+        len(seen),
+        dtype=memory["rss_center"].dtype,
+        device=memory["rss_center"].device,
+    )
+    if bool(seen.any()):
+        output[seen] = anchor_ap_reliability(
+            memory["detection_prob"][:, seen],
+            memory["rss_center"][:, seen],
+            memory["rss_scale"][:, seen],
+        ).to(output)
+    return output
 
 
 def support_radio_fields(
@@ -271,5 +314,6 @@ __all__ = [
     "profile_radio_nuisance",
     "radio_compatibility",
     "support_radio_fields",
+    "training_seen_ap_reliability",
     "temperature_radio_reference_from_payload",
 ]
