@@ -16,7 +16,6 @@ from torch import nn
 import torch.nn.functional as F
 
 from fhm_dapp_tim.fhm_dapp.coherent_marked_v9 import build_delaunay_geometry
-from fhm_dapp_tim.fhm_dapp.dapp import anchor_ap_reliability
 from fhm_dapp_tim.fhm_dapp.model import (
     AnchorStudentTModel,
     SparseAPSetEncoder,
@@ -37,6 +36,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_radio import (
     TemperatureRadioReference,
     profile_radio_nuisance,
     radio_compatibility,
+    training_seen_ap_reliability,
 )
 
 
@@ -789,11 +789,7 @@ def build_v185_model(
     )
     model.register_buffer(
         "v185_ap_reliability",
-        anchor_ap_reliability(
-            memory["detection_prob"].float(),
-            memory["rss_center"].float(),
-            memory["rss_scale"].float(),
-        ).to(device),
+        training_seen_ap_reliability(memory).to(device),
         persistent=False,
     )
     model.register_buffer(
