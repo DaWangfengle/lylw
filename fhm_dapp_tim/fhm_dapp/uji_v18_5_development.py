@@ -1144,6 +1144,9 @@ def calibrate_freeze(
     refit_checkpoint = {
         "protocol_version": PROTOCOL_VERSION,
         "phase": "selection_refit",
+        "source_commit_sha": registry["source_commit_sha"],
+        "registry_sha256": registry["registry_sha256"],
+        "development_result_sha256": development["development_result_sha256"],
         "lambda_spatial": float(selected["lambda_spatial"]),
         "selected_epoch": int(selected["selected_epoch"]),
         "origin": torch.from_numpy(state["origin"]),
