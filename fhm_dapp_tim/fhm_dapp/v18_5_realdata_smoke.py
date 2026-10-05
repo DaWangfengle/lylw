@@ -203,7 +203,8 @@ def run_smoke(device_name: str = "cpu") -> dict[str, object]:
     if bool(
         (
             correction["realized_kl"]
-            > correction["epsilon_kl_effective"] + 5e-10
+            > correction["epsilon_kl_effective"]
+            + correction["kl_budget_tolerance"]
         ).any()
     ):
         raise RuntimeError("smoke KL budget violation")
