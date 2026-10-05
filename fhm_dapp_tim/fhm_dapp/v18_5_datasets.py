@@ -256,8 +256,12 @@ def build_v185_anchor_memory(
         "seen_ap_mask": (ap_count > 0).bool(),
     }
     total = max(1, observed_scale_cells)
+    seen_ap_count = int((ap_count > 0).sum())
     diagnostics = {
         "anchors": int(len(anchor_keys)),
+        "seen_aps": seen_ap_count,
+        "role_unseen_aps": int(len(ap_count) - seen_ap_count),
+        "seen_ap_fraction": float(seen_ap_count / max(1, len(ap_count))),
         "singleton_anchors": int(sum(value == 1 for value in counts)),
         "singleton_anchor_fraction": float(
             sum(value == 1 for value in counts) / len(anchor_keys)
