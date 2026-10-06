@@ -37,7 +37,7 @@ import torch
 
 from fhm_dapp_tim.fhm_dapp.coherent_marked_v9 import common_student_t_randomness
 from fhm_dapp_tim.fhm_dapp.v18_5_datasets import load_uji, model_input
-from fhm_dapp_tim.fhm_dapp.v18_5_model import V185_CONFIG
+from fhm_dapp_tim.fhm_dapp.v18_5_model import V185_CONFIG, v185_distribution
 from fhm_dapp_tim.fhm_dapp.uji_v18_5_development import (
     DEFAULT_DEVELOPMENT as V185_DEVELOPMENT,
     DEFAULT_FREEZE as V185_FREEZE,
@@ -646,6 +646,12 @@ def evaluate(
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable")
 
+    inherited_model, _inherited_neighbors, _inherited_weights = (
+        _load_checkpoint(INHERITED_MEMBER, device=device)
+    )
+    inherited_model.eval()
+    inputs = model_input(data)
+
     caches = []
     for index in range(1, int(V19_R0_CONFIG["member_count"]) + 1):
         path = _member_cache(index)
@@ -692,6 +698,12 @@ def evaluate(
             "consensus_top1": [],
         }
         for E in V19_R0_CONFIG["member_prefixes"]
+    }
+    inherited_original = {
+        "posterior_mean_error": [],
+        "predictive_spatial_median_error": [],
+        "energy_score": [],
+        "nll": [],
     }
     inherited_dense = {
         "posterior_mean_error": [],
@@ -756,6 +768,33 @@ def evaluate(
                 == top1_panel[pair_index[1]]
             ).float().mean(dim=0).cpu()
         )
+
+        data_rows = development_rows[start:stop]
+        with torch.no_grad():
+            original = v185_distribution(
+                inherited_model,
+                inputs.rss[data_rows].to(device),
+                inputs.observed_mask[data_rows].to(device),
+                radio_memory={
+                    "detection_prob": inherited_model.anchor_detection_prob,
+                    "rss_center": inherited_model.anchor_rss_center,
+                    "rss_scale": inherited_model.anchor_rss_scale,
+                },
+                radio_reference=None,
+                temperature=1.0,
+                epsilon_kl=0.0,
+                scale_multiplier=1.0,
+            )
+            original_score = predictive_actions_and_scores(
+                original["probability"],
+                original["component_location"],
+                original["component_scale"],
+                target,
+                local_randomness,
+                degrees_freedom=float(V19_R0_CONFIG["student_df"]),
+            )
+        for name in inherited_original:
+            inherited_original[name].append(original_score[name].cpu())
 
         dense_score = predictive_actions_and_scores(
             caches[0]["probability"][start:stop].to(device),
@@ -828,6 +867,13 @@ def evaluate(
                 ).values.cpu()
             )
 
+    inherited_original_scored = {
+        name: torch.cat(values)
+        for name, values in inherited_original.items()
+    }
+    inherited_original_metrics, inherited_original_vectors = _metric_payload(
+        inherited_original_scored, keys
+    )
     inherited_scored = {
         name: torch.cat(values)
         for name, values in inherited_dense.items()
@@ -916,6 +962,20 @@ def evaluate(
             ),
         }
 
+    dense_vs_original = {
+        "posterior_mean_mae": _paired(
+            inherited_vectors["posterior_mean_mae"],
+            inherited_original_vectors["posterior_mean_mae"],
+        ),
+        "predictive_spatial_median_mae": _paired(
+            inherited_vectors["predictive_spatial_median_mae"],
+            inherited_original_vectors["predictive_spatial_median_mae"],
+        ),
+        "energy_score": _paired(
+            inherited_vectors["energy_score"],
+            inherited_original_vectors["energy_score"],
+        ),
+    }
     e1 = profiles["1"]
     e1_vs_dense = {
         "posterior_mean_mae": _paired(
@@ -944,7 +1004,9 @@ def evaluate(
         "inherited_v18_5_development_reference": registry[
             "v18_5_development_reference"
         ],
+        "inherited_member_original_v18_5_support": inherited_original_metrics,
         "inherited_member_dense_all_anchor": inherited_metrics,
+        "dense_all_anchor_minus_original_v18_5_support": dense_vs_original,
         "individual_member_dense_posterior_mean": individual_member_metrics,
         "member_diversity": diversity,
         "E1_top192_consensus": e1,
