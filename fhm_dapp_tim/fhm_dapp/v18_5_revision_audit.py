@@ -254,7 +254,14 @@ def _formal_artifact_absence() -> dict[str, bool]:
         model_root / "uji_lambda_0p50.pt",
         model_root / "uji_selection_refit.pt",
     ]
-    result = {str(path.relative_to(ROOT)): not path.exists() for path in paths}
+    checked = []
+    for path in paths:
+        checked.append(path)
+        checked.append(path.with_name(path.name + ".tmp"))
+    result = {
+        str(path.relative_to(ROOT)): not path.exists()
+        for path in checked
+    }
     if not all(result.values()):
         present = sorted(key for key, absent in result.items() if not absent)
         raise RuntimeError(
