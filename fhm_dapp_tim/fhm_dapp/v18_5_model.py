@@ -142,7 +142,10 @@ class V185SparseAPSetEncoder(SparseAPSetEncoder):
             raise ValueError("rss must be [batch,n_aps]")
         if observed_mask.shape != rss.shape or observed_mask.dtype != torch.bool:
             raise ValueError("observed_mask must be bool with rss shape")
-        visible = observed_mask
+        # APs absent from the role that built this model are not learned
+        # features.  Ignore them rather than routing them through an untrained
+        # unknown-AP embedding at development/calibration/test time.
+        visible = observed_mask & self.seen_ap_mask.unsqueeze(0)
         if self.training and float(ap_dropout) > 0.0:
             visible = visible & (torch.rand_like(rss) >= float(ap_dropout))
 
@@ -325,7 +328,10 @@ class V185AnchorModel(AnchorStudentTModel):
         coarse_logits: torch.Tensor,
     ) -> torch.Tensor:
         query = rss.float()
-        query_mask = observed_mask.float().unsqueeze(1)
+        effective_observed = (
+            observed_mask & self.seen_ap_mask.unsqueeze(0)
+        )
+        query_mask = effective_observed.float().unsqueeze(1)
         query_values = query.unsqueeze(1)
 
         probability = self.anchor_detection_prob[candidate_indices].clamp(
@@ -466,8 +472,8 @@ def prototype_retrieval_score_v185(
     prototype = model.prototype_rss.float()
     prototype_mask = model.v185_prototype_observed_mask
     q = rss.float()
-    qm = observed_mask
-    pm = prototype_mask
+    qm = observed_mask & model.seen_ap_mask.unsqueeze(0)
+    pm = prototype_mask & model.seen_ap_mask.unsqueeze(0)
 
     qm_f = qm.float()
     pm_f = pm.float()
