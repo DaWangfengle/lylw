@@ -146,6 +146,10 @@ def validate_registry(
             raise ValueError(f"registry {key} differs from V18.5 design")
 
     acceptance_path = REPO_ROOT / str(registry["pre_run_acceptance_path"])
+    if _sha256_file(acceptance_path) != registry.get(
+        "pre_run_acceptance_file_sha256"
+    ):
+        raise ValueError("pre-run acceptance file byte hash mismatch")
     acceptance = _load_json(acceptance_path)
     if acceptance.get("acceptance_sha256") != _canonical_sha(
         acceptance, omit="acceptance_sha256"
