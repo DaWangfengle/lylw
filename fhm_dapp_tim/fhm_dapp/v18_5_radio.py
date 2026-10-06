@@ -200,60 +200,65 @@ def profile_radio_nuisance(
         None if ap_reliability is None else ap_reliability.detach()
     )
 
-    raw_offset = torch.zeros(
-        len(query), dtype=query.dtype, device=query.device, requires_grad=True
-    )
-    raw_log_gain = torch.zeros_like(raw_offset, requires_grad=True)
-    optimizer = torch.optim.Adam(
-        [raw_offset, raw_log_gain],
-        lr=float(learning_rate),
-    )
+    # The profiler is an inference-time inner optimization.  It must remain
+    # functional even when the caller wraps model inference in torch.no_grad().
+    # All network/data tensors above are detached, so enabling grad here creates
+    # a graph only for the two temporary nuisance variables.
+    with torch.enable_grad():
+        raw_offset = torch.zeros(
+            len(query), dtype=query.dtype, device=query.device, requires_grad=True
+        )
+        raw_log_gain = torch.zeros_like(raw_offset, requires_grad=True)
+        optimizer = torch.optim.Adam(
+            [raw_offset, raw_log_gain],
+            lr=float(learning_rate),
+        )
 
-    def nuisance() -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        offset = float(offset_max) * torch.tanh(raw_offset)
-        log_gain = float(log_scale_max) * torch.tanh(raw_log_gain)
-        return offset, log_gain, torch.exp(log_gain)
+        def nuisance() -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+            offset = float(offset_max) * torch.tanh(raw_offset)
+            log_gain = float(log_scale_max) * torch.tanh(raw_log_gain)
+            return offset, log_gain, torch.exp(log_gain)
 
-    for _ in range(int(steps)):
-        optimizer.zero_grad(set_to_none=True)
-        offset, log_gain, gain = nuisance()
-        energy = marked_radio_energy(
-            query,
-            observed,
-            indices,
-            fields,
-            ap_reliability=reliability,
-            degrees_freedom=degrees_freedom,
-            style_offset=offset,
-            style_scale=gain,
-        )
-        expected = torch.sum(prior * energy, dim=1)
-        objective = (
-            expected
-            + float(offset_weight) * offset.square()
-            + float(log_scale_weight) * log_gain.square()
-        )
-        objective.mean().backward()
-        optimizer.step()
+        for _ in range(int(steps)):
+            optimizer.zero_grad(set_to_none=True)
+            offset, log_gain, gain = nuisance()
+            energy = marked_radio_energy(
+                query,
+                observed,
+                indices,
+                fields,
+                ap_reliability=reliability,
+                degrees_freedom=degrees_freedom,
+                style_offset=offset,
+                style_scale=gain,
+            )
+            expected = torch.sum(prior * energy, dim=1)
+            objective = (
+                expected
+                + float(offset_weight) * offset.square()
+                + float(log_scale_weight) * log_gain.square()
+            )
+            objective.mean().backward()
+            optimizer.step()
 
-    with torch.no_grad():
-        offset, log_gain, gain = nuisance()
-        energy = marked_radio_energy(
-            query,
-            observed,
-            indices,
-            fields,
-            ap_reliability=reliability,
-            degrees_freedom=degrees_freedom,
-            style_offset=offset,
-            style_scale=gain,
-        )
-        expected = torch.sum(prior * energy, dim=1)
-        objective = (
-            expected
-            + float(offset_weight) * offset.square()
-            + float(log_scale_weight) * log_gain.square()
-        )
+        with torch.no_grad():
+            offset, log_gain, gain = nuisance()
+            energy = marked_radio_energy(
+                query,
+                observed,
+                indices,
+                fields,
+                ap_reliability=reliability,
+                degrees_freedom=degrees_freedom,
+                style_offset=offset,
+                style_scale=gain,
+            )
+            expected = torch.sum(prior * energy, dim=1)
+            objective = (
+                expected
+                + float(offset_weight) * offset.square()
+                + float(log_scale_weight) * log_gain.square()
+            )
     return {
         "energy": energy.detach(),
         "style_offset": offset.detach(),
