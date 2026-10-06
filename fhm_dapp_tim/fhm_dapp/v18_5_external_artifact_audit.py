@@ -19,6 +19,7 @@ import torch
 from fhm_dapp_tim.fhm_dapp.v18_4_datasets import REPO_ROOT
 from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     validate_calibration_surface,
+    validate_joint_selection,
     validate_radio_diagnostics,
 )
 from fhm_dapp_tim.fhm_dapp.v18_5_core import kl_budget_tolerance
@@ -86,117 +87,12 @@ def _cell_key(cell: Mapping[str, object]) -> tuple[float, float, float]:
     )
 
 
-def _choice_key(cell: Mapping[str, object]) -> tuple:
-    return (
-        float(cell["posterior_mean_mae_m"]),
-        float(cell["epsilon_kl"]),
-        abs(math.log(float(cell["temperature"]))),
-        abs(math.log(float(cell["scale_multiplier"]))),
-        float(cell["temperature"]),
-        float(cell["scale_multiplier"]),
-        str(cell["cell_id"]),
-    )
-
-
-def _validate_one_se_gate(
-    gate: Mapping[str, object],
-    *,
-    allowed_ids: set[str],
-    name: str,
-) -> set[str]:
-    records = dict(gate["records"])
-    if set(records) != allowed_ids:
-        raise ValueError(f"{name}: gate record IDs mismatch")
-    best = str(gate["best"])
-    if best not in allowed_ids:
-        raise ValueError(f"{name}: best cell is outside allowed set")
-    retained = set(map(str, gate["retained"]))
-    derived = {
-        key for key, record in records.items()
-        if bool(record["retained"])
-    }
-    if retained != derived:
-        raise ValueError(f"{name}: retained list/record flags disagree")
-    if best not in retained:
-        raise ValueError(f"{name}: best cell must be retained")
-    for key, record in records.items():
-        mean_difference = _finite(
-            record["mean_difference_vs_best"],
-            name=f"{name}:{key}:mean_difference",
-        )
-        paired_se = _finite(
-            record["paired_se"],
-            name=f"{name}:{key}:paired_se",
-        )
-        _finite(record["mean_loss"], name=f"{name}:{key}:mean_loss")
-        if paired_se < 0.0:
-            raise ValueError(f"{name}: paired SE is negative")
-        expected_keep = mean_difference <= paired_se + 1e-12
-        if bool(record["retained"]) != expected_keep:
-            raise ValueError(f"{name}: retained decision violates one-SE law")
-    best_record = records[best]
-    if abs(float(best_record["mean_difference_vs_best"])) > 1e-12:
-        raise ValueError(f"{name}: best cell has nonzero mean difference")
-    if abs(float(best_record["paired_se"])) > 1e-12:
-        raise ValueError(f"{name}: best cell has nonzero paired SE")
-    return retained
-
-
 def validate_selection(
     calibration: Mapping[str, object],
 ) -> dict[str, object]:
-    surface = list(calibration["surface"])
-    by_id = {str(cell["cell_id"]): cell for cell in surface}
-    if len(by_id) != len(surface):
-        raise ValueError("external calibration cell_id values are not unique")
-    selection = calibration["selection"]
+    """Compatibility wrapper around the shared UJI/external selector audit."""
 
-    nll_retained = _validate_one_se_gate(
-        selection["nll_one_se"],
-        allowed_ids=set(by_id),
-        name="NLL one-SE",
-    )
-    if str(selection["raw_nll_best"]) != str(
-        selection["nll_one_se"]["best"]
-    ):
-        raise ValueError("raw NLL best/gate best mismatch")
-
-    es_gate = selection["es_one_se"]
-    es_retained = _validate_one_se_gate(
-        es_gate,
-        allowed_ids=nll_retained,
-        name="ES one-SE",
-    )
-    if str(selection["raw_es_best_within_nll_set"]) != str(es_gate["best"]):
-        raise ValueError("raw ES best/gate best mismatch")
-
-    selected_id = str(selection["selected_cell_id"])
-    if selected_id not in es_retained:
-        raise ValueError("selected calibration cell is outside ES one-SE set")
-    expected_selected = min(es_retained, key=lambda key: _choice_key(by_id[key]))
-    if selected_id != expected_selected:
-        raise ValueError("selected calibration cell violates final tie-break law")
-
-    selected_cell = selection["selected_cell"]
-    if str(selected_cell["cell_id"]) != selected_id:
-        raise ValueError("selected calibration cell payload ID mismatch")
-    surface_cell = by_id[selected_id]
-    if _cell_key(selected_cell) != _cell_key(surface_cell):
-        raise ValueError("selected calibration parameters mismatch surface")
-    for metric in ("nll", "energy_score_m", "posterior_mean_mae_m"):
-        if abs(float(selected_cell[metric]) - float(surface_cell[metric])) > 1e-12:
-            raise ValueError(f"selected calibration {metric} mismatch surface")
-
-    return {
-        "nll_one_se_size": int(len(nll_retained)),
-        "es_one_se_size": int(len(es_retained)),
-        "selected_cell_id": selected_id,
-        "selected_parameters": {
-            "temperature": float(surface_cell["temperature"]),
-            "epsilon_kl": float(surface_cell["epsilon_kl"]),
-            "scale_multiplier": float(surface_cell["scale_multiplier"]),
-        },
-    }
+    return validate_joint_selection(calibration)
 
 
 def _validate_checkpoint(
