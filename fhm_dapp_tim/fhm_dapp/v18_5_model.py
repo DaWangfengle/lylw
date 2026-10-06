@@ -145,7 +145,7 @@ class V185SparseAPSetEncoder(SparseAPSetEncoder):
         # APs absent from the role that built this model are not learned
         # features.  Ignore them rather than routing them through an untrained
         # unknown-AP embedding at development/calibration/test time.
-        visible = observed_mask & self.seen_ap_mask.unsqueeze(0)
+        visible = observed_mask & self.encoder.seen_ap_mask.unsqueeze(0)
         if self.training and float(ap_dropout) > 0.0:
             visible = visible & (torch.rand_like(rss) >= float(ap_dropout))
 
@@ -329,7 +329,7 @@ class V185AnchorModel(AnchorStudentTModel):
     ) -> torch.Tensor:
         query = rss.float()
         effective_observed = (
-            observed_mask & self.seen_ap_mask.unsqueeze(0)
+            observed_mask & self.encoder.seen_ap_mask.unsqueeze(0)
         )
         query_mask = effective_observed.float().unsqueeze(1)
         query_values = query.unsqueeze(1)
@@ -472,8 +472,8 @@ def prototype_retrieval_score_v185(
     prototype = model.prototype_rss.float()
     prototype_mask = model.v185_prototype_observed_mask
     q = rss.float()
-    qm = observed_mask & model.seen_ap_mask.unsqueeze(0)
-    pm = prototype_mask & model.seen_ap_mask.unsqueeze(0)
+    qm = observed_mask & model.encoder.seen_ap_mask.unsqueeze(0)
+    pm = prototype_mask & model.encoder.seen_ap_mask.unsqueeze(0)
 
     qm_f = qm.float()
     pm_f = pm.float()
