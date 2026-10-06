@@ -1,0 +1,86 @@
+{
+  "cells": [
+    {
+      "decision_paired": {
+        "candidate_minus_reference_m": 0.08229458792184934,
+        "ci95_high_m": 0.5438899542606207,
+        "ci95_low_m": -0.379300778416922,
+        "coordinate_groups": 139,
+        "fraction_groups_candidate_better": 0.4460431654676259,
+        "se_m": 0.2355078399687609
+      },
+      "energy_score_m": 5.34612570670843,
+      "epsilon_kl": 0.0,
+      "name": "base",
+      "nll": 6.231538337760777,
+      "posterior_mean_mae_m": 7.284262822467484,
+      "posterior_mean_mae_se_m": 0.49302961124416816,
+      "predictive_spatial_median_mae_m": 7.366557410389334,
+      "predictive_spatial_median_mae_se_m": 0.6120044221651243,
+      "row_posterior_mean_mae_m": 6.839910143701017,
+      "row_predictive_spatial_median_mae_m": 6.827460660119885,
+      "scale_multiplier": 1.0,
+      "temperature": 1.0
+    },
+    {
+      "decision_paired": {
+        "candidate_minus_reference_m": -0.05215219768441817,
+        "ci95_high_m": 0.4533642935279141,
+        "ci95_low_m": -0.5576686888967504,
+        "coordinate_groups": 139,
+        "fraction_groups_candidate_better": 0.4460431654676259,
+        "se_m": 0.2579165771491491
+      },
+      "energy_score_m": 5.419779309985588,
+      "epsilon_kl": 0.0,
+      "name": "calibration_only",
+      "nll": 6.185489075300989,
+      "posterior_mean_mae_m": 7.384087002235231,
+      "posterior_mean_mae_se_m": 0.49045621241472326,
+      "predictive_spatial_median_mae_m": 7.331934804550813,
+      "predictive_spatial_median_mae_se_m": 0.6073553988786463,
+      "row_posterior_mean_mae_m": 6.94284454360476,
+      "row_predictive_spatial_median_mae_m": 6.781607420725841,
+      "scale_multiplier": 1.25,
+      "temperature": 1.25
+    },
+    {
+      "decision_paired": {
+        "candidate_minus_reference_m": 0.06613434850525371,
+        "ci95_high_m": 0.4470953340990639,
+        "ci95_low_m": -0.3148266370885564,
+        "coordinate_groups": 139,
+        "fraction_groups_candidate_better": 0.4028776978417266,
+        "se_m": 0.19436784979276028
+      },
+      "energy_score_m": 5.360941840798418,
+      "epsilon_kl": 0.1,
+      "name": "selected_final",
+      "nll": 6.186082869882585,
+      "posterior_mean_mae_m": 7.166466770489509,
+      "posterior_mean_mae_se_m": 0.44784386706728935,
+      "predictive_spatial_median_mae_m": 7.232601118994762,
+      "predictive_spatial_median_mae_se_m": 0.5092043176031906,
+      "row_posterior_mean_mae_m": 6.778908826082483,
+      "row_predictive_spatial_median_mae_m": 6.786429308488222,
+      "scale_multiplier": 1.25,
+      "temperature": 1.25
+    }
+  ],
+  "coordinate_groups": 139,
+  "external_test_performance_accessed": false,
+  "no_model_mutation": true,
+  "no_training": true,
+  "predictive_draws_per_stream": 64,
+  "primary_question": "Does the full Student-t predictive spatial median materially reduce Euclidean MAE relative to the posterior mean?",
+  "probe_sha256": "6194488728c2dd999a508c1f94cae2f9eaeff8108e19461903c3ae93320b6970",
+  "probe_version": "v18_5_predictive_decision_probe_v1",
+  "rows": 2905,
+  "scientific_status": "post-formal read-only development diagnostic; not independent confirmation and not a V18.5 method change",
+  "scoring_seed": 185512,
+  "uji_validation_accessed": false,
+  "v18_5_calibration_sha256": "e3170281c239bbb4023b271b5231b5516a44cb4b1bccaca4f066f3196559c6c2",
+  "v18_5_checkpoint_sha256": "ec9cc9ed94c05f15a07515c3d2c7d55de5b497c788ee5fc15dacf689c1d4b3c2",
+  "v18_5_freeze_sha256": "20a5a0b81c44d97fbb937b21bf852285c676ccd8f1370ef031ca03bb65e8e427",
+  "v18_5_registry_sha256": "3ba80eb59ed6f48f9b71186cf98c155a88d192ba8a5cbd751dd051e0febf93fb"
+}
