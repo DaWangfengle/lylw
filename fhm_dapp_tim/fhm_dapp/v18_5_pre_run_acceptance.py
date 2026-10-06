@@ -64,6 +64,7 @@ AUXILIARY_VERIFICATION_PATHS = (
     "fhm_dapp_tim/fhm_dapp/v18_5_revision_audit.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_artifact_audit.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_external_artifact_audit.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py",
     ".github/workflows/v18_5_verification.yml",
 )
 
