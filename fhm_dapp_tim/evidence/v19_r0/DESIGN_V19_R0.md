@@ -71,11 +71,14 @@ design decision.
 
 The experiment must also report:
 
-1. frozen V18.5 member 1 evaluated densely over all anchors;
-2. E=1 Top-192 consensus;
-3. paired E={2,4,8,16} minus E=1 coordinate-group differences;
-4. Top-192 retained posterior mass;
-5. member-weight entropy and maximum member weight.
+1. frozen V18.5 member 1 under its original <=128 support law;
+2. the same frozen member evaluated densely over all anchors;
+3. E=1 Top-192 consensus;
+4. paired original -> dense and dense -> Top-192 effects;
+5. paired E={2,4,8,16} minus E=1 coordinate-group differences;
+6. Top-192 retained posterior mass;
+7. member-weight entropy and maximum member weight;
+8. individual-member dense MAE and panel disagreement diagnostics.
 
 These controls separate:
 - dense/wider support effects;
