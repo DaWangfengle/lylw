@@ -111,6 +111,9 @@ Outputs:
 - `evidence/v18_5/external/<protocol>_training_freeze.json`
 
 The freeze contains the complete 192-cell surface and correction diagnostics.
+It also records a self-hashed **fit environment** fingerprint (Python/package
+versions, CUDA/cuDNN, GPU properties and deterministic settings).  This is
+reproducibility evidence only; it is not a selection variable.
 
 ### 4.3 mandatory training-freeze artifact audit
 
@@ -184,9 +187,14 @@ Before test semantic access the command must validate:
 - KL-budget compliance;
 - requested device availability.
 
-Only if all preflight checks pass does it write:
+Only if all preflight checks pass does it capture a self-hashed **evaluation
+environment** fingerprint and write it into:
 
 `evidence/v18_5/external/<protocol>_test_consumption_lock.json`
+
+The evaluation environment may differ from the fit environment.  That
+difference is recorded, not optimized over, and cannot change the frozen
+method.
 
 After the lock is written, formal test loading/scoring begins.
 
