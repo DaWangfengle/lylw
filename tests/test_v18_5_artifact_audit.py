@@ -239,3 +239,30 @@ def test_joint_selection_artifact_validator_rejects_final_choice_tamper():
     payload["selection"]["selected_cell"] = dict(wrong)
     with pytest.raises(ValueError, match="parsimony"):
         validate_joint_selection(payload)
+
+
+def test_joint_selection_artifact_validator_rejects_surface_best_tamper():
+    payload = _selection_payload()
+    # Make one non-selected cell strictly better in NLL without changing
+    # the stored one-SE gate.  The audit must re-derive the raw best.
+    target = next(
+        cell for cell in payload["surface"]
+        if cell["temperature"] == 3.0
+        and cell["epsilon_kl"] == 0.1
+        and cell["scale_multiplier"] == 2.0
+    )
+    target["nll"] = 0.5
+    with pytest.raises(ValueError, match="surface minimum|mean loss"):
+        validate_joint_selection(payload)
+
+
+def test_joint_selection_artifact_validator_rejects_mean_difference_tamper():
+    payload = _selection_payload()
+    gate = payload["selection"]["nll_one_se"]
+    key = next(
+        key for key in gate["records"]
+        if key != gate["best"]
+    )
+    gate["records"][key]["mean_difference_vs_best"] = 0.25
+    with pytest.raises(ValueError, match="mean difference"):
+        validate_joint_selection(payload)
