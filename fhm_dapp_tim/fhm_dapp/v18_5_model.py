@@ -334,9 +334,10 @@ class V185AnchorModel(AnchorStudentTModel):
         query_mask = effective_observed.float().unsqueeze(1)
         query_values = query.unsqueeze(1)
 
+        seen = self.encoder.seen_ap_mask.to(rss.device).view(1, 1, -1)
         probability = self.anchor_detection_prob[candidate_indices].clamp(
             min=0.02, max=0.98
-        )
+        ) * seen.to(self.anchor_detection_prob.dtype)
         center = self.anchor_rss_center[candidate_indices]
         scale = self.anchor_rss_scale[candidate_indices]
         intersection = (query_mask * probability).sum(dim=2)
