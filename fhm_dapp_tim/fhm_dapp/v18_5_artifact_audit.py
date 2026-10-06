@@ -221,6 +221,74 @@ def _validate_fit_checkpoint(
     }
 
 
+def _rederive_lambda_epoch_selection(
+    report: Mapping[str, object],
+) -> tuple[int, dict[str, object], set[int]]:
+    minimum = int(V185_CONFIG["minimum_epochs"])
+    maximum = int(V185_CONFIG["maximum_epochs"])
+    eligible = []
+    for record in report["trajectory"]:
+        epoch = int(record["epoch"])
+        metrics = record.get("development_base")
+        if epoch < minimum:
+            if metrics is not None:
+                raise ValueError("ineligible epoch contains development metrics")
+            continue
+        if metrics is None:
+            raise ValueError("eligible epoch is missing development metrics")
+        if epoch > maximum:
+            raise ValueError("trajectory exceeds registered maximum epoch")
+        eligible.append((epoch, metrics))
+    if [epoch for epoch, _ in eligible] != list(range(minimum, maximum + 1)):
+        raise ValueError("eligible development epoch sequence mismatch")
+
+    best_es = min(float(metrics["energy_score_m"]) for _, metrics in eligible)
+    margin = float(V185_CONFIG["energy_tie_margin_m"])
+    shortlist = [
+        (epoch, metrics)
+        for epoch, metrics in eligible
+        if float(metrics["energy_score_m"]) <= best_es + margin
+    ]
+    selected_epoch, selected_metrics = min(
+        shortlist,
+        key=lambda item: (
+            float(item[1]["nll"]),
+            float(item[1]["posterior_mean_mae_m"]),
+            int(item[0]),
+        ),
+    )
+    return (
+        int(selected_epoch),
+        dict(selected_metrics),
+        {int(epoch) for epoch, _ in shortlist},
+    )
+
+
+def _rederive_global_lambda(
+    reports: Sequence[Mapping[str, object]],
+) -> float:
+    best_es = min(
+        float(report["selected_base_metrics"]["energy_score_m"])
+        for report in reports
+    )
+    margin = float(V185_CONFIG["energy_tie_margin_m"])
+    shortlist = [
+        report
+        for report in reports
+        if float(report["selected_base_metrics"]["energy_score_m"])
+        <= best_es + margin
+    ]
+    selected = min(
+        shortlist,
+        key=lambda report: (
+            float(report["selected_base_metrics"]["nll"]),
+            float(report["selected_base_metrics"]["posterior_mean_mae_m"]),
+            float(report["lambda_spatial"]),
+        ),
+    )
+    return float(selected["lambda_spatial"])
+
+
 def validate_development(
     development_path: str | Path,
     *,
@@ -274,7 +342,45 @@ def validate_development(
             range(1, int(V185_CONFIG["maximum_epochs"]) + 1)
         ):
             raise ValueError("development trajectory epoch sequence mismatch")
+        derived_epoch, derived_metrics, derived_shortlist = (
+            _rederive_lambda_epoch_selection(report)
+        )
+        if epoch != derived_epoch:
+            raise ValueError(
+                f"lambda={lam}: selected epoch violates registered selector"
+            )
+        recorded_shortlist = {
+            int(item["epoch"]) for item in report["eligible_epoch_shortlist"]
+        }
+        if recorded_shortlist != derived_shortlist:
+            raise ValueError(
+                f"lambda={lam}: eligible epoch shortlist mismatch"
+            )
         metrics = report["selected_base_metrics"]
+        for metric_name in (
+            "energy_score_m",
+            "energy_score_se_m",
+            "nll",
+            "nll_se",
+            "posterior_mean_mae_m",
+            "posterior_mean_mae_se_m",
+            "mean_entropy_nats",
+            "mean_effective_anchors",
+            "mean_top1_probability",
+            "rows",
+            "coordinate_groups",
+        ):
+            actual = metrics[metric_name]
+            expected = derived_metrics[metric_name]
+            if isinstance(expected, int):
+                if int(actual) != int(expected):
+                    raise ValueError(
+                        f"lambda={lam}: selected {metric_name} mismatch trajectory"
+                    )
+            elif abs(float(actual) - float(expected)) > 1e-12:
+                raise ValueError(
+                    f"lambda={lam}: selected {metric_name} mismatch trajectory"
+                )
         for key in (
             "energy_score_m",
             "energy_score_se_m",
@@ -307,10 +413,26 @@ def validate_development(
     selected_epoch = int(selected["selected_epoch"])
     if selected_lambda not in report_by_lambda:
         raise ValueError("development selected unregistered lambda")
+    derived_lambda = _rederive_global_lambda(reports)
+    if selected_lambda != derived_lambda:
+        raise ValueError(
+            "development selected lambda violates registered global selector"
+        )
     if selected_epoch != int(
         report_by_lambda[selected_lambda]["selected_epoch"]
     ):
         raise ValueError("development selected epoch/report mismatch")
+    selected_metrics = selected["base_metrics"]
+    report_metrics = report_by_lambda[selected_lambda]["selected_base_metrics"]
+    for key in (
+        "energy_score_m",
+        "nll",
+        "posterior_mean_mae_m",
+    ):
+        if abs(float(selected_metrics[key]) - float(report_metrics[key])) > 1e-12:
+            raise ValueError(
+                f"development selected base metric {key} mismatches lambda report"
+            )
 
     return development, {
         "development_result_sha256": development[
