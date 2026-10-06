@@ -193,3 +193,24 @@ def test_profile_radio_nuisance_works_inside_outer_no_grad():
     assert torch.isfinite(result["profiled_objective"]).all()
     assert result["profiled_objective"].requires_grad is False
     assert result["energy"].requires_grad is False
+
+
+def test_zero_reliability_unseen_ap_cannot_change_marked_radio_energy():
+    indices = torch.tensor([[0, 1]], dtype=torch.long)
+    reliability = torch.tensor([1.0, 0.0], dtype=torch.float32)
+
+    first = marked_radio_energy(
+        torch.tensor([[-0.8, -1.0]], dtype=torch.float32),
+        torch.tensor([[True, False]]),
+        indices,
+        _memory(),
+        ap_reliability=reliability,
+    )
+    second = marked_radio_energy(
+        torch.tensor([[-0.8, 1.0]], dtype=torch.float32),
+        torch.tensor([[True, True]]),
+        indices,
+        _memory(),
+        ap_reliability=reliability,
+    )
+    assert torch.allclose(first, second, atol=1e-7, rtol=0)
