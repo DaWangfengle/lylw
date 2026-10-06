@@ -79,6 +79,19 @@ also use `-1` as an inert numeric fill without changing semantics.
 This contract applies to the encoder, augmentation, prototype proposal,
 candidate evidence and radio likelihood.
 
+
+The AP dictionary may be inherited from the dataset training schema, but a
+specific FIT or SELECTION_REFIT role can contain AP columns that are never
+observed in that role.  Such **role-unseen APs are not learned evidence**:
+
+- the Sparse-AP encoder excludes them from visibility/ranking;
+- prototype retrieval excludes them from query/prototype overlap;
+- candidate-reranker marked features exclude their detection/center/scale;
+- generative radio evidence assigns them exactly zero AP reliability.
+
+This prevents development/calibration/test-only AP appearances from entering
+through an untrained unknown-AP embedding or smoothed anchor statistics.
+
 ## 4. Count-aware marked radio memory
 
 For anchor `a`, AP `k`:
