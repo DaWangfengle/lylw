@@ -311,6 +311,7 @@ def test_external_result_chain_binds_evaluation_environment(tmp_path: Path):
 def test_external_result_chain_rejects_environment_link_tamper(tmp_path: Path):
     freeze_path, lock_path, result_path, result = _write_result_chain(tmp_path)
     result["evaluation_environment_sha256"] = "0" * 64
+    result.pop("result_sha256", None)
     result["result_sha256"] = audit.external._canonical_sha(result)
     result_path.write_text(json.dumps(result), encoding="utf-8")
     with patch.object(
