@@ -130,6 +130,53 @@ def _fake_acceptance_payload(source_sha: str):
             "files": {},
             "verification_sha256": "test",
         },
+        "environment": {
+            "python": {
+                "version": "test",
+                "implementation": "CPython",
+                "executable": "python",
+            },
+            "platform": {
+                "system": "test",
+                "release": "test",
+                "machine": "test",
+                "platform": "test",
+            },
+            "packages": {
+                "numpy": "test",
+                "pandas": "test",
+                "scipy": "test",
+                "torch": "test",
+            },
+            "torch": {
+                "default_dtype": "torch.float32",
+                "cuda_build": "test",
+                "cudnn_version": 1,
+                "cuda_available": True,
+                "cuda_device_count": 1,
+                "cuda_devices": [{
+                    "index": 0,
+                    "name": "test-gpu",
+                    "compute_capability": [8, 0],
+                    "total_memory_bytes": 1,
+                }],
+                "deterministic_algorithms_enabled": True,
+                "cudnn_available": True,
+                "cudnn_deterministic": True,
+                "cudnn_benchmark": False,
+                "scaled_dot_product_attention": {
+                    "flash_enabled": False,
+                    "memory_efficient_enabled": False,
+                    "math_enabled": True,
+                },
+            },
+            "determinism": {
+                "cublas_workspace_config": ":4096:8",
+                "model_seed": driver.MODEL_SEED,
+                "scoring_seed": driver.SCORING_SEED,
+                "predictive_draws": driver.PREDICTIVE_DRAWS,
+            },
+        },
         "compile": {"modules": [], "count": 0},
         "tests": {"passed": 1, "no_skip_xfail": True},
         "smoke": {
@@ -148,6 +195,9 @@ def _fake_acceptance_payload(source_sha: str):
         "formal_v185_training_executed": False,
         "formal_v185_test_scoring_executed": False,
     }
+    payload["environment_sha256"] = driver._canonical_sha(
+        payload["environment"]
+    )
     payload["acceptance_sha256"] = driver._canonical_sha(payload)
     return payload
 
@@ -221,4 +271,45 @@ def test_formal_driver_rejects_acceptance_without_cuda_pass(tmp_path: Path):
         return_value={"source_commit_sha": source, "tracked_source_dirty": False},
     ):
         with pytest.raises(ValueError, match="CUDA"):
+            driver.load_pre_run_acceptance(path)
+
+
+def test_formal_driver_rejects_tampered_acceptance_environment(tmp_path: Path):
+    source = "a" * 40
+    path = tmp_path / "acceptance.json"
+    payload = _fake_acceptance_payload(source)
+    payload["environment"]["determinism"]["model_seed"] += 1
+    payload["acceptance_sha256"] = driver._canonical_sha(
+        payload, omit="acceptance_sha256"
+    )
+    _write_acceptance(path, payload)
+    with patch.object(
+        driver,
+        "_git_source_state",
+        return_value={"source_commit_sha": source, "tracked_source_dirty": False},
+    ):
+        with pytest.raises(ValueError, match="environment hash"):
+            driver.load_pre_run_acceptance(path)
+
+
+def test_formal_driver_rejects_wrong_accepted_seed_even_with_valid_hash(
+    tmp_path: Path,
+):
+    source = "a" * 40
+    path = tmp_path / "acceptance.json"
+    payload = _fake_acceptance_payload(source)
+    payload["environment"]["determinism"]["model_seed"] += 1
+    payload["environment_sha256"] = driver._canonical_sha(
+        payload["environment"]
+    )
+    payload["acceptance_sha256"] = driver._canonical_sha(
+        payload, omit="acceptance_sha256"
+    )
+    _write_acceptance(path, payload)
+    with patch.object(
+        driver,
+        "_git_source_state",
+        return_value={"source_commit_sha": source, "tracked_source_dirty": False},
+    ):
+        with pytest.raises(ValueError, match="model seed"):
             driver.load_pre_run_acceptance(path)

@@ -1,0 +1,175 @@
+{
+  "record_type": "V18.5 Git publication preparation and remote history integration",
+  "human_authorization": "将本轮的产物本地提交并推送到github",
+  "recorded_at_shanghai": "2026-10-06T16:53:58.552274+08:00",
+  "branch": "v18-5-joint-radio-calibration",
+  "artifact_commit_sha": "fdd02b6d66c76482384861305b2cc190f3ce4379",
+  "remote_merge_parent_sha": "5b4051aa8f1e8ef656dde047cbb8aa2f4a94f187",
+  "historical_execution_source_sha": "2e84fac20b8a98bcaaeff6783ca1e3b63a8a5407",
+  "remote_commit_count_since_fork": 21,
+  "remote_changed_files": [
+    ".github/workflows/v18_5_verification.yml",
+    "fhm_dapp_tim/evidence/v18_5/RUNBOOK_EXTERNAL_V18_5.md",
+    "fhm_dapp_tim/evidence/v18_5/RUNBOOK_UJI_V18_5.md",
+    "fhm_dapp_tim/fhm_dapp/uji_v18_5_development.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_artifact_audit.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_contract.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_environment.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_external.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_external_artifact_audit.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_realdata_smoke.py",
+    "tests/test_uji_v18_5_development.py",
+    "tests/test_v18_5_external.py",
+    "tests/test_v18_5_external_artifact_audit.py",
+    "tests/test_v18_5_pre_run_acceptance.py"
+  ],
+  "historical_acceptance_missing_new_fields": [
+    "environment",
+    "environment_sha256"
+  ],
+  "historical_registry_missing_new_fields": [
+    "pre_run_acceptance_file_sha256",
+    "pre_run_environment",
+    "pre_run_environment_sha256"
+  ],
+  "working_tree_unresolved_conflicts": [],
+  "phase": "Before the merge commit and second normal push",
+  "historical_formal_execution": {
+    "source_commit_sha": "2e84fac20b8a98bcaaeff6783ca1e3b63a8a5407",
+    "original_artifact_audit": "PASS",
+    "original_pytest_passed": 104,
+    "formal_stages_reexecuted": false,
+    "formal_outputs_rewritten": false
+  },
+  "artifact_upload_plan": {
+    "original_json_markdown_files": 19,
+    "files": [
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.json",
+        "file_sha256": "9b2c7d36727d26a372e87bf84458e3df055a5ccbba6e5d9d6a5e16a78c6bc251",
+        "bytes": 51322
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.md",
+        "file_sha256": "9e089e48fbc2dbff8f11a42ccb5ec34e3eaee5f2bc692d6bc17b3b608291af2c",
+        "bytes": 602
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_RESTART_V18_5.json",
+        "file_sha256": "7765cbc6faf727a9f06ce38e8b3b98413744b6838c0d7056254854491b81a733",
+        "bytes": 348148
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_RESTART_V18_5.md",
+        "file_sha256": "e48da390372d6155b5bb1353fd0c4d60cfc2c526dce51f8ed6516c4fc492e745",
+        "bytes": 42053
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_V18_5.json",
+        "file_sha256": "8c8e4aa129fe0a19032bcb976e41925a39902bbdf11c9998dba8e47c4037f1e3",
+        "bytes": 8041
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_V18_5.md",
+        "file_sha256": "f9b899d6a29d518ab33de280ef4d6e28d945816c606dbafa1d02973344f0d54f",
+        "bytes": 2733
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_report_formatter_schema_V18_5.json",
+        "file_sha256": "6eb15345fd8a86aea5acfe6d2b21f52183ebf119c364fe960b209edd443e5017",
+        "bytes": 1190
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage0_acceptance_20261006T055942748916Z.json",
+        "file_sha256": "404991cae743b8971c675071139489aa2cb1fe3471722101d8082db8279969f9",
+        "bytes": 725
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage0_acceptance_restart_20261006T060555836985Z.json",
+        "file_sha256": "8bafbb73e2ab4f61d686ab6c673ce6e5efaf4e73ab05fb68b0541ac211c763bc",
+        "bytes": 743
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage1_prepare_20261006T060721936316Z.json",
+        "file_sha256": "767eb6ae02840b30482c05bc3f5c4f697571ba1fae5a3cb9c459cbf7f10b9665",
+        "bytes": 709
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage2_develop_20261006T060900984510Z.json",
+        "file_sha256": "d7199d83b43b08e39da756184b77c3e559c1b3da1c0d93c966ee6becf918282f",
+        "bytes": 739
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage3_calibrate_freeze_20261006T072143697196Z.json",
+        "file_sha256": "be85a138a96c5d9e36043ddd188ed3e52d98205debc4bae30bfe7bf243685de4",
+        "bytes": 766
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage4_artifact_audit_20261006T082337271893Z.json",
+        "file_sha256": "708a2444fc3a35a35ac9160227d425b47b2d8d52fc5bba21492625f292d9382f",
+        "bytes": 707
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/WINDOWS_ACCEPTANCE_REPAIR_V18_5.json",
+        "file_sha256": "84fc17fd7f07f610a4a52beb5bab4f319b757ad5230384badf926b9814974b9e",
+        "bytes": 2141
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/run_audit/WINDOWS_ACCEPTANCE_REPAIR_V18_5.md",
+        "file_sha256": "f90f7dbf061496e9c6b6a942227248e9f301cfd3f69bdad9b64e169b2938628a",
+        "bytes": 1183
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/uji_calibration_v18_5.json",
+        "file_sha256": "313a7e0cff14bb0aee70030527df49fa06cc4c8a65569002074bba04a724c1cb",
+        "bytes": 1737607
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/uji_development_v18_5.json",
+        "file_sha256": "59dab320819914144dc226418cbc097f5fd602973cb79c5fd2de1e2d6871e4db",
+        "bytes": 278319
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/uji_method_freeze_v18_5.json",
+        "file_sha256": "958bf49d9d88e0ce6f0873482e8501025f16e8cd9cbbb318f37d390c7307c130",
+        "bytes": 1062
+      },
+      {
+        "path": "fhm_dapp_tim/evidence/v18_5/uji_registry_v18_5.json",
+        "file_sha256": "2d72c8a1358548f687ffb2e1001b3bf0be9147a6627465d655c32fa65feea4cd",
+        "bytes": 537692
+      }
+    ],
+    "byte_preservation": ".gitattributes disables EOL conversion for these result and audit paths",
+    "model_files_ignored": 5,
+    "model_weights_included": false,
+    "raw_log_cache_temporary_files_included": false
+  },
+  "first_push_attempt": {
+    "exit_code": 1,
+    "output": "To https://github.com/DaWangfengle/lylw.git\n ! [rejected]        v18-5-joint-radio-calibration -> v18-5-joint-radio-calibration (fetch first)\nerror: failed to push some refs to 'https://github.com/DaWangfengle/lylw.git'\nhint: Updates were rejected because the remote contains work that you do not\nhint: have locally. This is usually caused by another repository pushing to\nhint: the same ref. If you want to integrate the remote changes, use\nhint: 'git pull' before pushing again.\nhint: See the 'Note about fast-forwards' in 'git push --help' for details.\n",
+    "reason": "Remote branch advanced independently; fetch and a merge preserve both histories."
+  },
+  "merge_validation": {
+    "unit_test_module": "tests/test_v18_5_pre_run_acceptance.py",
+    "first_attempt": {
+      "passed": 12,
+      "fixture_setup_errors": 4,
+      "reason": "Workspace tmp parent directory was absent.",
+      "output": ".......E.E....EE                                                         [100%]\r\n=================================== ERRORS ====================================\r\n_ ERROR at setup of test_external_artifact_absence_checks_all_eight_protocols _\r\n\r\nself = WindowsPath('D:/liuyanlunwen/tmp/v185_git_merge_20261006T085137718')\r\nmode = 448, parents = False, exist_ok = False\r\n\r\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\r\n        \"\"\"\r\n        Create a new directory at this given path.\r\n        \"\"\"\r\n        try:\r\n>           os.mkdir(self, mode)\r\nE           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\\\liuyanlunwen\\\\tmp\\\\v185_git_merge_20261006T085137718'\r\n\r\nD:\\miniminiconda\\envs\\liuyan\\Lib\\pathlib.py:1311: FileNotFoundError\r\n___ ERROR at setup of test_external_artifact_absence_rejects_stale_partial ____\r\n\r\nself = WindowsPath('D:/liuyanlunwen/tmp/v185_git_merge_20261006T085137718')\r\nmode = 448, parents = False, exist_ok = False\r\n\r\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\r\n        \"\"\"\r\n        Create a new directory at this given path.\r\n        \"\"\"\r\n        try:\r\n>           os.mkdir(self, mode)\r\nE           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\\\liuyanlunwen\\\\tmp\\\\v185_git_merge_20261006T085137718'\r\n\r\nD:\\miniminiconda\\envs\\liuyan\\Lib\\pathlib.py:1311: FileNotFoundError\r\n______ ERROR at setup of test_acceptance_write_is_atomic_and_write_once _______\r\n\r\nself = WindowsPath('D:/liuyanlunwen/tmp/v185_git_merge_20261006T085137718')\r\nmode = 448, parents = False, exist_ok = False\r\n\r\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\r\n        \"\"\"\r\n        Create a new directory at this given path.\r\n        \"\"\"\r\n        try:\r\n>           os.mkdir(self, mode)\r\nE           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\\\liuyanlunwen\\\\tmp\\\\v185_git_merge_20261006T085137718'\r\n\r\nD:\\miniminiconda\\envs\\liuyan\\Lib\\pathlib.py:1311: FileNotFoundError\r\n________ ERROR at setup of test_acceptance_write_rejects_stale_partial ________\r\n\r\nself = WindowsPath('D:/liuyanlunwen/tmp/v185_git_merge_20261006T085137718')\r\nmode = 448, parents = False, exist_ok = False\r\n\r\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\r\n        \"\"\"\r\n        Create a new directory at this given path.\r\n        \"\"\"\r\n        try:\r\n>           os.mkdir(self, mode)\r\nE           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\\\liuyanlunwen\\\\tmp\\\\v185_git_merge_20261006T085137718'\r\n\r\nD:\\miniminiconda\\envs\\liuyan\\Lib\\pathlib.py:1311: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nERROR tests/test_v18_5_pre_run_acceptance.py::test_external_artifact_absence_checks_all_eight_protocols\r\nERROR tests/test_v18_5_pre_run_acceptance.py::test_external_artifact_absence_rejects_stale_partial\r\nERROR tests/test_v18_5_pre_run_acceptance.py::test_acceptance_write_is_atomic_and_write_once\r\nERROR tests/test_v18_5_pre_run_acceptance.py::test_acceptance_write_rejects_stale_partial\r\n12 passed, 4 errors in 7.07s\r\n"
+    },
+    "correction": "Created the workspace tmp parent and used a new, verified path beneath it.",
+    "second_attempt": {
+      "exit_code": 0,
+      "passed": 16,
+      "failed": 0,
+      "output": "................                                                         [100%]\r\n16 passed in 5.76s\r\n"
+    },
+    "test_source_edited_for_temporary_directory_fix": false,
+    "formal_acceptance_or_smoke_or_experiment_rerun": false
+  },
+  "schema_scope": "The original acceptance and registry predate the remote environment and acceptance-byte provenance fields. Their historical audit PASS belongs to execution source 2e84fac. Review these immutable artifacts with that recorded source version; remote schema additions are not backfilled into historical results.",
+  "publication_history_policy": "Merge both parents; retain the exact historical execution source commit and all 21 remote commits. Normal push only.",
+  "final_push_receipt": "The eventual merge commit and GitHub branch head provide the final publication receipt; this file records preparation."
+}

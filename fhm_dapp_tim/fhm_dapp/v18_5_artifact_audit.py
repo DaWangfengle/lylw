@@ -146,6 +146,10 @@ def validate_registry(
             raise ValueError(f"registry {key} differs from V18.5 design")
 
     acceptance_path = REPO_ROOT / str(registry["pre_run_acceptance_path"])
+    if _sha256_file(acceptance_path) != registry.get(
+        "pre_run_acceptance_file_sha256"
+    ):
+        raise ValueError("pre-run acceptance file byte hash mismatch")
     acceptance = _load_json(acceptance_path)
     if acceptance.get("acceptance_sha256") != _canonical_sha(
         acceptance, omit="acceptance_sha256"
@@ -167,6 +171,17 @@ def validate_registry(
         "contract_sha256"
     ) != registry.get("method_contract_sha256"):
         raise ValueError("acceptance method contract differs from registry")
+    environment = acceptance.get("environment")
+    if not isinstance(environment, Mapping):
+        raise ValueError("linked acceptance environment is missing")
+    if acceptance.get("environment_sha256") != _canonical_sha(environment):
+        raise ValueError("linked acceptance environment self-hash mismatch")
+    if registry.get("pre_run_environment_sha256") != acceptance.get(
+        "environment_sha256"
+    ):
+        raise ValueError("registry accepted-environment hash mismatch")
+    if registry.get("pre_run_environment") != environment:
+        raise ValueError("registry accepted-environment payload mismatch")
     current_contract = method_contract(repo_root=REPO_ROOT)
     if current_contract["contract_sha256"] != registry.get(
         "method_contract_sha256"

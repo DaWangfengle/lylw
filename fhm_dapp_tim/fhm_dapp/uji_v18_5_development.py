@@ -190,6 +190,28 @@ def load_pre_run_acceptance(
     if dict(smoke.get("cuda", {})).get("status") != "success":
         raise ValueError("V18.5 acceptance CUDA smoke did not succeed")
 
+    environment = payload.get("environment")
+    if not isinstance(environment, Mapping):
+        raise ValueError("V18.5 acceptance environment is missing")
+    if payload.get("environment_sha256") != _canonical_sha(environment):
+        raise ValueError("V18.5 acceptance environment hash mismatch")
+    torch_environment = dict(environment.get("torch", {}))
+    if torch_environment.get("cuda_available") is not True:
+        raise ValueError("V18.5 acceptance environment has no CUDA")
+    if int(torch_environment.get("cuda_device_count", 0)) < 1:
+        raise ValueError("V18.5 acceptance recorded no CUDA device")
+    if torch_environment.get("deterministic_algorithms_enabled") is not True:
+        raise ValueError("V18.5 acceptance was not deterministic")
+    determinism = dict(environment.get("determinism", {}))
+    if determinism.get("cublas_workspace_config") != ":4096:8":
+        raise ValueError("V18.5 acceptance CUBLAS determinism mismatch")
+    if int(determinism.get("model_seed", -1)) != MODEL_SEED:
+        raise ValueError("V18.5 acceptance model seed mismatch")
+    if int(determinism.get("scoring_seed", -1)) != SCORING_SEED:
+        raise ValueError("V18.5 acceptance scoring seed mismatch")
+    if int(determinism.get("predictive_draws", -1)) != PREDICTIVE_DRAWS:
+        raise ValueError("V18.5 acceptance predictive-draw count mismatch")
+
     revision = payload.get("revision_audit", {})
     if revision.get("status") != "PASS":
         raise ValueError("V18.5 acceptance revision audit did not PASS")
@@ -323,9 +345,12 @@ def prepare(
         **_git_source_state(),
         "pre_run_acceptance_path": _repo_relative(acceptance_path),
         "pre_run_acceptance_sha256": acceptance["acceptance_sha256"],
+        "pre_run_acceptance_file_sha256": _sha256_file(acceptance_path),
         "method_contract_sha256": acceptance["method_contract"][
             "contract_sha256"
         ],
+        "pre_run_environment": acceptance["environment"],
+        "pre_run_environment_sha256": acceptance["environment_sha256"],
         "train_path": _repo_relative(path),
         "train_sha256": _sha256_file(path),
         "training_rows": int(len(data.coords_m)),
@@ -369,11 +394,21 @@ def load_registry(path: str | Path = DEFAULT_REGISTRY) -> dict:
     ]:
         raise RuntimeError("method contract differs from prepared registry")
     acceptance_path = REPO_ROOT / str(registry["pre_run_acceptance_path"])
+    if _sha256_file(acceptance_path) != registry.get(
+        "pre_run_acceptance_file_sha256"
+    ):
+        raise ValueError("pre-run acceptance file byte hash mismatch")
     acceptance = load_pre_run_acceptance(acceptance_path)
     if acceptance["acceptance_sha256"] != registry[
         "pre_run_acceptance_sha256"
     ]:
         raise ValueError("registry links a different pre-run acceptance")
+    if acceptance["environment_sha256"] != registry.get(
+        "pre_run_environment_sha256"
+    ):
+        raise ValueError("registry links a different accepted environment")
+    if acceptance["environment"] != registry.get("pre_run_environment"):
+        raise ValueError("registry accepted-environment payload mismatch")
     return registry
 
 

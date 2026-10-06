@@ -119,6 +119,7 @@ def _validate_checkpoint(
         ],
         "uji_method_freeze_sha256": manifest["uji_method_freeze_sha256"],
         "manifest_sha256": manifest["manifest_sha256"],
+        "fit_environment_sha256": freeze["fit_environment_sha256"],
     }
     for key, value in expected.items():
         if checkpoint.get(key) != value:
@@ -274,6 +275,22 @@ def validate_external_training_chain(
         raise ValueError("external correction mismatch")
     if freeze.get("geometry_posterior_correction") is not False:
         raise ValueError("external geometry correction must be disabled")
+    fit_environment = freeze.get("fit_environment")
+    if not isinstance(fit_environment, Mapping):
+        raise ValueError("external fit environment is missing")
+    if freeze.get("fit_environment_sha256") != external._canonical_sha(
+        fit_environment
+    ):
+        raise ValueError("external fit environment hash mismatch")
+    if fit_environment["torch"]["deterministic_algorithms_enabled"] is not True:
+        raise ValueError("external fit environment was not deterministic")
+    determinism = dict(fit_environment.get("determinism", {}))
+    if int(determinism.get("model_seed", -1)) != external.MODEL_SEED:
+        raise ValueError("external fit environment model seed mismatch")
+    if int(determinism.get("scoring_seed", -1)) != external.SCORING_SEED:
+        raise ValueError("external fit environment scoring seed mismatch")
+    if int(determinism.get("predictive_draws", -1)) != external.PREDICTIVE_DRAWS:
+        raise ValueError("external fit environment predictive draws mismatch")
     if freeze.get("formal_test_performance_evaluated") is not False:
         raise ValueError("training freeze already records test evaluation")
     if freeze.get("formal_test_performance_lock_written") is not False:
@@ -332,6 +349,7 @@ def validate_external_training_chain(
         "manifest_sha256": manifest["manifest_sha256"],
         "training_freeze_sha256": freeze["training_freeze_sha256"],
         "checkpoint_sha256": freeze["checkpoint_sha256"],
+        "fit_environment_sha256": freeze["fit_environment_sha256"],
         "roles": roles,
         "surface": surface_summary,
         "radio_diagnostics": radio_summary,
@@ -446,6 +464,29 @@ def validate_external_result_chain(
         lock, omit="lock_sha256"
     ):
         raise ValueError("external test lock self-hash mismatch")
+    evaluation_environment = lock.get("evaluation_environment")
+    if not isinstance(evaluation_environment, Mapping):
+        raise ValueError("external test lock environment is missing")
+    if lock.get("evaluation_environment_sha256") != external._canonical_sha(
+        evaluation_environment
+    ):
+        raise ValueError("external test lock environment hash mismatch")
+    if (
+        evaluation_environment["torch"][
+            "deterministic_algorithms_enabled"
+        ]
+        is not True
+    ):
+        raise ValueError("external evaluation environment was not deterministic")
+    evaluation_determinism = dict(
+        evaluation_environment.get("determinism", {})
+    )
+    if int(evaluation_determinism.get("model_seed", -1)) != external.MODEL_SEED:
+        raise ValueError("external evaluation model seed mismatch")
+    if int(evaluation_determinism.get("scoring_seed", -1)) != external.SCORING_SEED:
+        raise ValueError("external evaluation scoring seed mismatch")
+    if int(evaluation_determinism.get("predictive_draws", -1)) != external.PREDICTIVE_DRAWS:
+        raise ValueError("external evaluation predictive draws mismatch")
     if result.get("result_sha256") != external._canonical_sha(
         result, omit="result_sha256"
     ):
@@ -475,6 +516,11 @@ def validate_external_result_chain(
         ("uji_method_freeze_sha256", freeze["uji_method_freeze_sha256"]),
         ("test_consumption_lock_sha256", lock["lock_sha256"]),
         ("checkpoint_sha256", freeze["checkpoint_sha256"]),
+        (
+            "evaluation_environment_sha256",
+            lock["evaluation_environment_sha256"],
+        ),
+        ("evaluation_device", lock["evaluation_device"]),
     ):
         if result.get(key) != expected:
             raise ValueError(f"external result {key} mismatch")
@@ -518,6 +564,9 @@ def validate_external_result_chain(
         "slug": slug,
         "training_chain": training_summary,
         "lock_sha256": lock["lock_sha256"],
+        "evaluation_environment_sha256": lock[
+            "evaluation_environment_sha256"
+        ],
         "result_sha256": result["result_sha256"],
         "metrics": metric_summary,
         "post_test_retuning_permitted": False,

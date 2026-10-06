@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from unittest.mock import patch
 
@@ -111,3 +112,44 @@ def test_acceptance_compile_targets_cover_method_contract_python_files():
         if path.endswith(".py")
     }
     assert required_python.issubset(compiled)
+
+
+def test_environment_fingerprint_is_json_serializable_and_records_determinism():
+    acceptance._set_seed(acceptance.MODEL_SEED)
+    environment = acceptance._environment_fingerprint()
+    json.dumps(environment, sort_keys=True, allow_nan=False)
+    assert environment["torch"]["deterministic_algorithms_enabled"] is True
+    assert environment["determinism"]["cublas_workspace_config"] == ":4096:8"
+    assert environment["determinism"]["model_seed"] == acceptance.MODEL_SEED
+    assert environment["determinism"]["scoring_seed"] == acceptance.SCORING_SEED
+    assert (
+        environment["determinism"]["predictive_draws"]
+        == acceptance.PREDICTIVE_DRAWS
+    )
+    assert set(environment["packages"]) == {
+        "numpy", "pandas", "scipy", "torch"
+    }
+    if environment["torch"]["cuda_available"]:
+        assert environment["torch"]["cuda_device_count"] >= 1
+        assert len(environment["torch"]["cuda_devices"]) == (
+            environment["torch"]["cuda_device_count"]
+        )
+
+
+def test_acceptance_write_is_atomic_and_write_once(tmp_path: Path):
+    path = tmp_path / "acceptance.json"
+    acceptance._write_new(path, "{\"ok\": true}\n")
+    assert path.read_text(encoding="utf-8") == "{\"ok\": true}\n"
+    assert not path.with_name(path.name + ".tmp").exists()
+    with pytest.raises(FileExistsError):
+        acceptance._write_new(path, "again")
+
+
+def test_acceptance_write_rejects_stale_partial(tmp_path: Path):
+    path = tmp_path / "acceptance.json"
+    partial = path.with_name(path.name + ".tmp")
+    partial.write_text("partial", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="stale partial acceptance"):
+        acceptance._write_new(path, "new")
+    assert not path.exists()
+    assert partial.exists()

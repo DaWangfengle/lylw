@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import py_compile
 import re
@@ -27,10 +28,17 @@ from fhm_dapp_tim.fhm_dapp.v18_5_contract import (
     METHOD_CONTRACT_PATHS,
     method_contract,
 )
+from fhm_dapp_tim.fhm_dapp.v18_5_environment import environment_fingerprint
 from fhm_dapp_tim.fhm_dapp.v18_5_realdata_smoke import run_smoke
 from fhm_dapp_tim.fhm_dapp.v18_5_revision_audit import (
     _formal_artifact_absence,
     run_audit,
+)
+from fhm_dapp_tim.fhm_dapp.uji_v18_5_development import (
+    MODEL_SEED,
+    PREDICTIVE_DRAWS,
+    SCORING_SEED,
+    _set_seed,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -228,6 +236,13 @@ def _external_artifact_absence() -> dict[str, bool]:
     return result
 
 
+def _environment_fingerprint() -> dict[str, object]:
+    return environment_fingerprint(
+        model_seed=MODEL_SEED,
+        scoring_seed=SCORING_SEED,
+        predictive_draws=PREDICTIVE_DRAWS,
+    )
+
 def _smoke(*, require_cuda: bool) -> dict[str, object]:
     cpu = run_smoke("cpu")
     if cpu.get("status") != "success":
@@ -251,6 +266,7 @@ def _smoke(*, require_cuda: bool) -> dict[str, object]:
 
 
 def run_acceptance(*, require_cuda: bool = False) -> dict[str, object]:
+    _set_seed(MODEL_SEED)
     start_git = _git_state()
     method = _method_contract()
     verification = _verification_contract()
@@ -263,6 +279,11 @@ def run_acceptance(*, require_cuda: bool = False) -> dict[str, object]:
     revision = run_audit(include_smoke=False)
     if revision.get("status") != "PASS":
         raise RuntimeError("V18.5 revision audit did not PASS")
+    environment = _environment_fingerprint()
+    if environment["torch"]["deterministic_algorithms_enabled"] is not True:
+        raise RuntimeError("deterministic algorithms are not enabled")
+    if environment["determinism"]["cublas_workspace_config"] != ":4096:8":
+        raise RuntimeError("unexpected CUBLAS workspace configuration")
 
     # No verification step is allowed to create or alter formal outputs.
     uji_absence_after = _formal_artifact_absence()
@@ -284,6 +305,8 @@ def run_acceptance(*, require_cuda: bool = False) -> dict[str, object]:
         "git": start_git,
         "method_contract": method,
         "verification_contract": verification,
+        "environment": environment,
+        "environment_sha256": _canonical_sha(environment),
         "compile": {
             "modules": compiled,
             "count": int(len(compiled)),
@@ -314,6 +337,10 @@ def _markdown(payload: dict[str, object]) -> str:
         "",
         f"- Source commit: `{payload['git']['source_commit_sha']}`",
         f"- Method contract SHA256: `{payload['method_contract']['contract_sha256']}`",
+        f"- Environment SHA256: `{payload['environment_sha256']}`",
+        f"- PyTorch: {payload['environment']['packages']['torch']}",
+        f"- CUDA build: {payload['environment']['torch']['cuda_build']}",
+        f"- CUDA devices: {payload['environment']['torch']['cuda_device_count']}",
         f"- Compiled modules: {payload['compile']['count']}",
         f"- Contract tests: {payload['tests']['passed']} passed; no skip/xfail",
         f"- CPU smoke: {smoke['cpu']['status']}",
@@ -330,10 +357,26 @@ def _markdown(payload: dict[str, object]) -> str:
 
 
 def _write_new(path: Path, content: str) -> None:
+    """Atomically write one acceptance artifact and never overwrite it."""
+
+    temporary = path.with_name(path.name + ".tmp")
     if path.exists():
         raise FileExistsError(path)
+    if temporary.exists():
+        raise RuntimeError(f"stale partial acceptance artifact: {temporary}")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+    try:
+        with temporary.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+        if path.exists():
+            raise FileExistsError(path)
+        os.replace(temporary, path)
+    except BaseException:
+        if temporary.exists():
+            temporary.unlink()
+        raise
 
 
 def main() -> None:
@@ -345,8 +388,19 @@ def main() -> None:
 
     json_path = Path(args.json)
     markdown_path = Path(args.markdown)
-    if json_path.exists() or markdown_path.exists():
+    outputs = (json_path, markdown_path)
+    if any(path.exists() for path in outputs):
         raise FileExistsError("V18.5 acceptance outputs are write-once")
+    stale = [
+        path.with_name(path.name + ".tmp")
+        for path in outputs
+        if path.with_name(path.name + ".tmp").exists()
+    ]
+    if stale:
+        raise RuntimeError(
+            "stale partial V18.5 acceptance output(s): "
+            + ", ".join(map(str, stale))
+        )
 
     payload = run_acceptance(require_cuda=bool(args.require_cuda))
     _write_new(

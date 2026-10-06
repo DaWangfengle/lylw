@@ -180,6 +180,7 @@ def test_uji_freeze_validation_rejects_geometry_correction(
 
 def test_evaluate_writes_lock_before_test_loader(tmp_path: Path):
     events: list[str] = []
+    written: dict[str, dict] = {}
     source = tmp_path / "test.csv"
     source.write_text("placeholder", encoding="utf-8")
     lock_path = tmp_path / "lock.json"
@@ -224,8 +225,10 @@ def test_evaluate_writes_lock_before_test_loader(tmp_path: Path):
     def write_new(path, payload):
         if Path(path) == lock_path:
             events.append("lock")
+            written["lock"] = payload
         elif Path(path) == result_path:
             events.append("result")
+            written["result"] = payload
 
     def load_test(*args, **kwargs):
         events.append("test_load")
@@ -272,6 +275,21 @@ def test_evaluate_writes_lock_before_test_loader(tmp_path: Path):
     assert events.index("lock") < events.index("test_load")
     assert events.index("test_load") < events.index("result")
     assert result["formal_test_performance_evaluated"] is True
+    lock = written["lock"]
+    assert lock["evaluation_environment_sha256"] == external._canonical_sha(
+        lock["evaluation_environment"]
+    )
+    assert (
+        lock["evaluation_environment"]["torch"][
+            "deterministic_algorithms_enabled"
+        ]
+        is True
+    )
+    assert (
+        written["result"]["evaluation_environment_sha256"]
+        == lock["evaluation_environment_sha256"]
+    )
+    assert written["result"]["evaluation_device"] == lock["evaluation_device"]
 
 
 def test_external_source_contains_no_geometry_or_gm_deployment():
