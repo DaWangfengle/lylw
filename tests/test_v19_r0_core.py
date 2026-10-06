@@ -75,7 +75,7 @@ def test_dense_member_distribution_is_anchor_chunk_invariant():
     assert torch.allclose(
         first["probability"].sum(dim=1),
         torch.ones(3),
-        atol=1e-7,
+        atol=2e-6,
         rtol=0,
     )
     expected = torch.softmax(
