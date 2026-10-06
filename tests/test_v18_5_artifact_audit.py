@@ -9,6 +9,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     validate_epoch_selection_report,
     validate_joint_selection,
     validate_radio_diagnostics,
+    validate_training_trajectory,
 )
 from fhm_dapp_tim.fhm_dapp.v18_5_core import select_joint_calibration
 from fhm_dapp_tim.fhm_dapp.v18_5_model import V185_CONFIG
@@ -301,10 +302,40 @@ def _epoch_metrics(es, nll, mae):
     }
 
 
+def _train_metrics(lam):
+    anchor = 3.0
+    coordinate = 8.0
+    spatial = 1.2
+    invariant = 4.0
+    hierarchy = 1.4
+    domain = 2.0
+    loss = (
+        float(V185_CONFIG["anchor_weight"]) * anchor
+        + float(V185_CONFIG["coordinate_weight"]) * coordinate
+        + float(lam) * spatial
+        + float(V185_CONFIG["invariant_aux_weight"]) * invariant
+        + float(V185_CONFIG["hierarchy_weight"]) * hierarchy
+        + float(V185_CONFIG["domain_adversarial_weight"]) * domain
+    )
+    return {
+        "loss": loss,
+        "anchor_nll": anchor,
+        "coordinate_nll": coordinate,
+        "spatial_energy_loss": spatial,
+        "spatial_contribution": float(lam) * spatial,
+        "invariant_aux_loss": invariant,
+        "hierarchy_loss": hierarchy,
+        "domain_loss": domain,
+        "natural_recall_mass": 0.9,
+        "natural_support_size": 50.0,
+        "forced_support_size": 52.0,
+    }
+
+
 def _lambda_report(lam, chosen_epoch, chosen_metrics):
     trajectory = []
     for epoch in range(1, int(V185_CONFIG["maximum_epochs"]) + 1):
-        record = {"epoch": epoch, "train": {"loss": 1.0}}
+        record = {"epoch": epoch, "train": _train_metrics(lam)}
         if epoch >= int(V185_CONFIG["minimum_epochs"]):
             record["development_base"] = _epoch_metrics(5.30, 6.5, 8.0)
         trajectory.append(record)
@@ -393,4 +424,41 @@ def test_shared_epoch_selection_validator_rejects_tampered_shortlist():
     with pytest.raises(ValueError, match="shortlist"):
         validate_epoch_selection_report(
             report, expected_lambda=0.1
+        )
+
+
+def test_training_trajectory_audit_reconstructs_registered_objective():
+    records = [_train_metrics(0.25) for _ in range(3)]
+    summary = validate_training_trajectory(
+        records,
+        expected_epochs=3,
+        lambda_spatial=0.25,
+    )
+    assert summary["epochs"] == 3
+    assert summary["minimum_natural_recall_mass"] == 0.9
+
+
+def test_training_trajectory_audit_rejects_objective_tamper():
+    records = [_train_metrics(0.25) for _ in range(2)]
+    records[1] = dict(records[1])
+    records[1]["loss"] += 0.1
+    with pytest.raises(ValueError, match="objective decomposition"):
+        validate_training_trajectory(
+            records,
+            expected_epochs=2,
+            lambda_spatial=0.25,
+        )
+
+
+def test_training_trajectory_audit_rejects_support_ceiling_violation():
+    records = [_train_metrics(0.1)]
+    records[0] = dict(records[0])
+    records[0]["forced_support_size"] = (
+        float(V185_CONFIG["support_ceiling"]) + 1.0
+    )
+    with pytest.raises(ValueError, match="support ceiling"):
+        validate_training_trajectory(
+            records,
+            expected_epochs=1,
+            lambda_spatial=0.1,
         )
