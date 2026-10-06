@@ -4,8 +4,10 @@ import pytest
 
 from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     validate_calibration_surface,
+    validate_joint_selection,
     validate_radio_diagnostics,
 )
+from fhm_dapp_tim.fhm_dapp.v18_5_core import select_joint_calibration
 from fhm_dapp_tim.fhm_dapp.v18_5_model import V185_CONFIG
 
 
@@ -173,3 +175,67 @@ def test_radio_diagnostic_validator_rejects_epsilon_zero_nonidentity():
             calibration_rows=3,
             selection_refit_rows=5,
         )
+
+
+
+def _selection_payload():
+    surface = []
+    selector_cells = []
+    for temperature in map(float, V185_CONFIG["temperature_grid"]):
+        for epsilon in map(float, V185_CONFIG["epsilon_kl_grid"]):
+            for scale in map(float, V185_CONFIG["scale_grid"]):
+                cell_id = f"T={temperature:.2f}|E={epsilon:.3f}|S={scale:.2f}"
+                summary = {
+                    "cell_id": cell_id,
+                    "temperature": temperature,
+                    "epsilon_kl": epsilon,
+                    "scale_multiplier": scale,
+                    "nll": 1.0,
+                    "energy_score_m": 2.0,
+                    "posterior_mean_mae_m": 3.0,
+                }
+                surface.append(summary)
+                selector_cells.append({
+                    **summary,
+                    "group_nll": [1.0, 1.0, 1.0],
+                    "group_energy_score": [2.0, 2.0, 2.0],
+                })
+    return {
+        "surface": surface,
+        "selection": select_joint_calibration(selector_cells),
+    }
+
+
+def test_joint_selection_artifact_validator_accepts_registered_parsimony():
+    payload = _selection_payload()
+    summary = validate_joint_selection(payload)
+    assert summary["nll_one_se_size"] == 192
+    assert summary["es_one_se_size"] == 192
+    assert summary["selected_parameters"] == {
+        "temperature": 1.0,
+        "epsilon_kl": 0.0,
+        "scale_multiplier": 1.0,
+    }
+
+
+def test_joint_selection_artifact_validator_rejects_retained_flag_tamper():
+    payload = _selection_payload()
+    gate = payload["selection"]["nll_one_se"]
+    key = next(iter(gate["records"]))
+    gate["records"][key]["retained"] = False
+    with pytest.raises(ValueError, match="retained"):
+        validate_joint_selection(payload)
+
+
+def test_joint_selection_artifact_validator_rejects_final_choice_tamper():
+    payload = _selection_payload()
+    wrong = next(
+        cell for cell in payload["surface"]
+        if cell["temperature"] == 3.0
+        and cell["epsilon_kl"] == 0.1
+        and cell["scale_multiplier"] == 2.0
+    )
+    payload["selection"]["selected_cell_id"] = wrong["cell_id"]
+    payload["selection"]["selected_cell"] = dict(wrong)
+    with pytest.raises(ValueError, match="parsimony"):
+        validate_joint_selection(payload)
