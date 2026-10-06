@@ -89,13 +89,16 @@ def dense_member_distribution(
     *,
     anchor_chunk: int | None = None,
 ) -> dict[str, torch.Tensor]:
-    """Evaluate one V18.5 member on the complete anchor dictionary.
+    """Evaluate one member as a full-anchor invariant posterior.
 
-    V18.5 used a <=128 proposal set before its learned candidate reranker.
-    V19-R0 deliberately removes that inference bottleneck for the accuracy
-    recovery experiment. The already-trained reranker is evaluated on every
-    anchor identity in deterministic chunks; the mathematical posterior is
-    therefore independent of the chunk size.
+    This deliberately mirrors the scientifically important V17 full-support
+    construction: the wide member law is formed from full-anchor neural
+    retrieval logits and does NOT extrapolate the learned V18.5 candidate
+    reranker beyond the candidate distribution on which it was trained.
+
+    The V18.5 reranker remains present in the separately scored original
+    <=128-support control. Here anchor_chunk affects only component
+    materialization and therefore cannot change the posterior.
     """
 
     if rss.ndim != 2 or observed_mask.shape != rss.shape:
@@ -109,6 +112,8 @@ def dense_member_distribution(
         rss, observed_mask
     )
     anchors = int(model.n_anchors)
+    if invariant_logits.shape != (len(rss), anchors):
+        raise RuntimeError("full-anchor invariant logits have wrong shape")
     width = (
         int(V19_R0_CONFIG["reranker_anchor_chunk"])
         if anchor_chunk is None
@@ -117,7 +122,6 @@ def dense_member_distribution(
     if width <= 0:
         raise ValueError("anchor_chunk must be positive")
 
-    logits_parts: list[torch.Tensor] = []
     location_parts: list[torch.Tensor] = []
     scale_parts: list[torch.Tensor] = []
     for start in range(0, anchors, width):
@@ -125,23 +129,14 @@ def dense_member_distribution(
         index = torch.arange(
             start, stop, device=rss.device, dtype=torch.long
         ).unsqueeze(0).expand(len(rss), -1)
-        coarse = invariant_logits[:, start:stop]
-        logits_parts.append(
-            model.rerank_candidate_logits_v185(
-                rss, observed_mask, embedding, index, coarse
-            )
-        )
         location, scale = model._components(embedding, index)
         location_parts.append(location)
         scale_parts.append(scale)
 
-    dense_logits = torch.cat(logits_parts, dim=1)
     location = torch.cat(location_parts, dim=1)
     scale = torch.cat(scale_parts, dim=1)
-    probability = torch.softmax(dense_logits, dim=1)
+    probability = torch.softmax(invariant_logits, dim=1)
 
-    if dense_logits.shape != (len(rss), anchors):
-        raise RuntimeError("dense member logits have wrong shape")
     if location.shape != (len(rss), anchors, 2):
         raise RuntimeError("dense member locations have wrong shape")
     if scale.shape != location.shape:
@@ -167,7 +162,8 @@ def dense_member_distribution(
         "component_location": location,
         "component_scale": scale,
         "embedding": embedding,
-        "dense_logits": dense_logits,
+        "dense_logits": invariant_logits,
+        "candidate_reranker_applied": False,
     }
 
 
