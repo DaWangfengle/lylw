@@ -78,6 +78,13 @@ def test_dense_member_distribution_is_anchor_chunk_invariant():
         atol=1e-7,
         rtol=0,
     )
+    expected = torch.softmax(
+        torch.tensor([[0.2, 1.1, -0.4, 0.7, 0.0]]), dim=1
+    ).expand(3, -1)
+    assert torch.allclose(
+        first["probability"], expected, atol=0, rtol=0
+    )
+    assert first["candidate_reranker_applied"] is False
 
 
 def test_member_top_l_matches_v17_radial_second_moment():
