@@ -346,14 +346,22 @@ def _validate_one_se_gate(
     gate: Mapping[str, object],
     *,
     allowed_ids: set[str],
+    expected_loss_by_id: Mapping[str, float],
     name: str,
 ) -> set[str]:
     records = dict(gate["records"])
     if set(records) != allowed_ids:
         raise ValueError(f"{name}: gate record IDs mismatch")
+    if set(expected_loss_by_id) != allowed_ids:
+        raise ValueError(f"{name}: expected-loss IDs mismatch")
+    expected_best = min(
+        allowed_ids,
+        key=lambda key: (float(expected_loss_by_id[key]), key),
+    )
     best = str(gate["best"])
-    if best not in allowed_ids:
-        raise ValueError(f"{name}: best cell outside allowed set")
+    if best != expected_best:
+        raise ValueError(f"{name}: best cell does not match surface minimum")
+
     retained = set(map(str, gate["retained"]))
     derived = {
         key for key, record in records.items()
@@ -363,17 +371,27 @@ def _validate_one_se_gate(
         raise ValueError(f"{name}: retained list/flags disagree")
     if best not in retained:
         raise ValueError(f"{name}: best cell not retained")
+
+    best_loss = float(expected_loss_by_id[best])
     for key, record in records.items():
+        mean_loss = _finite_number(
+            record["mean_loss"], name=f"{name}:{key}:mean_loss"
+        )
+        expected_loss = float(expected_loss_by_id[key])
+        if abs(mean_loss - expected_loss) > 1e-12:
+            raise ValueError(f"{name}: recorded mean loss mismatches surface")
         mean_difference = _finite_number(
             record["mean_difference_vs_best"],
             name=f"{name}:{key}:mean_difference",
         )
+        expected_difference = expected_loss - best_loss
+        if abs(mean_difference - expected_difference) > 1e-12:
+            raise ValueError(
+                f"{name}: mean difference mismatches surface losses"
+            )
         paired_se = _finite_number(
             record["paired_se"],
             name=f"{name}:{key}:paired_se",
-        )
-        _finite_number(
-            record["mean_loss"], name=f"{name}:{key}:mean_loss"
         )
         if paired_se < 0.0:
             raise ValueError(f"{name}: negative paired SE")
@@ -399,6 +417,9 @@ def validate_joint_selection(
     nll_retained = _validate_one_se_gate(
         selection["nll_one_se"],
         allowed_ids=set(by_id),
+        expected_loss_by_id={
+            key: float(cell["nll"]) for key, cell in by_id.items()
+        },
         name="NLL one-SE",
     )
     if str(selection["raw_nll_best"]) != str(
@@ -408,6 +429,10 @@ def validate_joint_selection(
     es_retained = _validate_one_se_gate(
         selection["es_one_se"],
         allowed_ids=nll_retained,
+        expected_loss_by_id={
+            key: float(by_id[key]["energy_score_m"])
+            for key in nll_retained
+        },
         name="ES one-SE",
     )
     if str(selection["raw_es_best_within_nll_set"]) != str(
