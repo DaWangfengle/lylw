@@ -233,6 +233,9 @@ def prepare(
         "member_prefixes": list(
             map(int, V19_R0_CONFIG["member_prefixes"])
         ),
+        "wide_member_posterior": (
+            "full_anchor_invariant_logits_no_candidate_reranker"
+        ),
         "member_top_l": int(V19_R0_CONFIG["member_top_l"]),
         "consensus_top_k": int(V19_R0_CONFIG["consensus_top_k"]),
         "consensus_alpha": float(V19_R0_CONFIG["consensus_alpha"]),
@@ -516,6 +519,8 @@ def cache_member(
         ]["row_index_sha256"],
         "development_rows": int(len(development_rows)),
         "anchor_count": int(model.n_anchors),
+        "wide_member_posterior": registry["wide_member_posterior"],
+        "candidate_reranker_applied": False,
         "origin": torch.from_numpy(origin.copy()),
         "target_centered": torch.from_numpy(
             centered[development_rows].copy()
@@ -668,6 +673,12 @@ def evaluate(
             "development_role"
         ]["row_index_sha256"]:
             raise ValueError(f"member {index} cache row mismatch")
+        if cache.get("wide_member_posterior") != registry[
+            "wide_member_posterior"
+        ]:
+            raise ValueError(f"member {index} wide-posterior contract mismatch")
+        if cache.get("candidate_reranker_applied") is not False:
+            raise ValueError(f"member {index} wide cache used candidate reranker")
         caches.append(cache)
 
     anchor_counts = {int(cache["anchor_count"]) for cache in caches}
@@ -1028,6 +1039,8 @@ def evaluate(
         "E1_top192_minus_dense_all_anchor": e1_vs_dense,
         "profiles": profiles,
         "paired_vs_E1": paired_vs_e1,
+        "wide_member_posterior": registry["wide_member_posterior"],
+        "candidate_reranker_applied_on_wide_path": False,
         "member_cache_sha256": {
             str(index): _sha256_file(_member_cache(index))
             for index in range(
