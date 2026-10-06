@@ -37,7 +37,8 @@ V19_R0_CONFIG: dict[str, object] = {
     "fixed_epochs": 27,
     "student_df": 4.0,
     "predictive_draws": 64,
-    "member_seed_start": 19301,
+    "inherited_member_seed": 185511,
+    "new_member_seed_start": 19301,
     "scoring_seed": 19931,
     "reranker_anchor_chunk": 96,
 }
@@ -74,8 +75,10 @@ def member_seeds(
     config: Mapping[str, object] = V19_R0_CONFIG,
 ) -> tuple[int, ...]:
     validate_v19_r0_config(config)
-    start = int(config["member_seed_start"])
-    return tuple(range(start, start + int(config["member_count"])))
+    inherited = int(config["inherited_member_seed"])
+    start = int(config["new_member_seed_start"])
+    fresh = tuple(range(start, start + int(config["member_count"]) - 1))
+    return (inherited, *fresh)
 
 
 @torch.no_grad()
