@@ -22,6 +22,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     validate_epoch_selection_report,
     validate_joint_selection,
     validate_radio_diagnostics,
+    validate_training_trajectory,
 )
 from fhm_dapp_tim.fhm_dapp.v18_5_core import kl_budget_tolerance
 from fhm_dapp_tim.fhm_dapp.v18_5_model import V185_CONFIG
@@ -130,6 +131,11 @@ def _validate_checkpoint(
         freeze["selection_refit_rows"]
     ):
         raise ValueError("external checkpoint selection-refit row mismatch")
+    trajectory_summary = validate_training_trajectory(
+        checkpoint["refit_trajectory"],
+        expected_epochs=int(checkpoint["selected_epoch"]),
+        lambda_spatial=float(checkpoint["lambda_spatial"]),
+    )
 
     memory = checkpoint["memory"]
     required = {
@@ -183,6 +189,7 @@ def _validate_checkpoint(
         "temperature_references": int(len(references)),
         "selection_refit_rows": expected_rows,
         "memory_diagnostics": checkpoint["memory_diagnostics"],
+        "training_trajectory": trajectory_summary,
     }
 
 
