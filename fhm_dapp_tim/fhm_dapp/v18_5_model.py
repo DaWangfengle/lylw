@@ -349,7 +349,7 @@ class V185AnchorModel(AnchorStudentTModel):
         anchor_coverage = intersection / anchor_count
 
         present_log_support = (
-            query_mask * probability.log()
+            query_mask * probability.clamp_min(1e-12).log()
         ).sum(dim=2) / query_count
         present_support = present_log_support.exp()
         missing_conflict = (
