@@ -671,6 +671,10 @@ def fit_freeze_external(
             "rows": int(calibration["rows"]),
             "coordinate_groups": int(calibration["coordinate_groups"]),
             "surface": calibration["surface"],
+            "selection_group_order": calibration[
+                "selection_group_order"
+            ],
+            "selection_vectors": calibration["selection_vectors"],
             "radio_diagnostics_by_temperature": calibration[
                 "radio_diagnostics_by_temperature"
             ],
