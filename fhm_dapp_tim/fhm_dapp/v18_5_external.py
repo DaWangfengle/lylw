@@ -54,6 +54,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_datasets import (
     load_uts,
     model_input,
 )
+from fhm_dapp_tim.fhm_dapp.v18_5_environment import environment_fingerprint
 from fhm_dapp_tim.fhm_dapp.v18_5_model import (
     V185_CONFIG,
     build_v185_model,
@@ -71,6 +72,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_radio import (
 )
 from fhm_dapp_tim.fhm_dapp.uji_v18_5_development import (
     DEFAULT_FREEZE as DEFAULT_UJI_FREEZE,
+    MODEL_SEED,
     PREDICTIVE_DRAWS,
     PROTOCOL_VERSION as UJI_PROTOCOL_VERSION,
     SCORING_SEED,
@@ -86,6 +88,7 @@ from fhm_dapp_tim.fhm_dapp.uji_v18_5_development import (
     _repo_relative,
     _row_nll,
     _save_torch_new,
+    _set_seed,
     _sha256_file,
     _sha256_indices,
     _train_fixed_epochs,
@@ -601,6 +604,14 @@ def fit_freeze_external(
     if len(calibration["surface"]) != 192:
         raise RuntimeError("external calibration did not produce 192 cells")
     selected_cell = calibration["selection"]["selected_cell"]
+    fit_environment = environment_fingerprint(
+        model_seed=MODEL_SEED,
+        scoring_seed=SCORING_SEED,
+        predictive_draws=PREDICTIVE_DRAWS,
+    )
+    if fit_environment["torch"]["deterministic_algorithms_enabled"] is not True:
+        raise RuntimeError("external fit environment is not deterministic")
+    fit_environment_sha256 = _canonical_sha(fit_environment)
 
     checkpoint = {
         "protocol_version": PROTOCOL_VERSION,
@@ -619,6 +630,8 @@ def fit_freeze_external(
             "uji_method_freeze_sha256"
         ],
         "manifest_sha256": manifest["manifest_sha256"],
+        "fit_device": str(device),
+        "fit_environment_sha256": fit_environment_sha256,
         "lambda_spatial": lambda_spatial,
         "selected_epoch": selected_epoch,
         "selection_refit_rows": int(len(rows["selection_refit"])),
@@ -655,6 +668,9 @@ def fit_freeze_external(
         ],
         "uji_method_freeze_sha256": manifest["uji_method_freeze_sha256"],
         "manifest_sha256": manifest["manifest_sha256"],
+        "fit_device": str(device),
+        "fit_environment": fit_environment,
+        "fit_environment_sha256": fit_environment_sha256,
         "checkpoint_path": _repo_relative(checkpoint_destination),
         "checkpoint_sha256": checkpoint_sha,
         "lambda_spatial": lambda_spatial,
@@ -714,6 +730,7 @@ def _load_external_checkpoint(
         "manifest_sha256",
         "uji_method_freeze_sha256",
         "execution_source_commit_sha",
+        "fit_environment_sha256",
     ):
         expected = freeze[
             "manifest_sha256"
@@ -795,6 +812,15 @@ def load_external_training_freeze(
         raise ValueError("external correction differs from V18.5")
     if freeze.get("geometry_posterior_correction") is not False:
         raise ValueError("external freeze enabled geometry correction")
+    fit_environment = freeze.get("fit_environment")
+    if not isinstance(fit_environment, Mapping):
+        raise ValueError("external freeze fit environment is missing")
+    if freeze.get("fit_environment_sha256") != _canonical_sha(
+        fit_environment
+    ):
+        raise ValueError("external freeze fit environment hash mismatch")
+    if fit_environment["torch"]["deterministic_algorithms_enabled"] is not True:
+        raise ValueError("external fit environment was not deterministic")
     calibration = freeze["calibration"]
     validate_calibration_surface(calibration["surface"])
     selection_refit_rows = int(freeze["selection_refit_rows"])
@@ -1199,6 +1225,7 @@ def evaluate_test_once(
     result_path: str | Path | None = None,
     device_name: str = "cuda",
 ) -> dict[str, object]:
+    _set_seed(MODEL_SEED)
     spec = _spec(slug)
     defaults = _default_paths(spec.slug)
     freeze = load_external_training_freeze(
@@ -1275,6 +1302,25 @@ def evaluate_test_once(
             "external preflight violates KL budget; lock not written"
         )
 
+    evaluation_environment = environment_fingerprint(
+        model_seed=MODEL_SEED,
+        scoring_seed=SCORING_SEED,
+        predictive_draws=PREDICTIVE_DRAWS,
+    )
+    if (
+        evaluation_environment["torch"][
+            "deterministic_algorithms_enabled"
+        ]
+        is not True
+    ):
+        raise RuntimeError(
+            "external evaluation environment is not deterministic; "
+            "lock not written"
+        )
+    evaluation_environment_sha256 = _canonical_sha(
+        evaluation_environment
+    )
+
     lock = {
         "protocol_version": PROTOCOL_VERSION,
         "slug": spec.slug,
@@ -1283,6 +1329,9 @@ def evaluate_test_once(
         "training_freeze_sha256": freeze["training_freeze_sha256"],
         "uji_method_freeze_sha256": freeze["uji_method_freeze_sha256"],
         "checkpoint_sha256": freeze["checkpoint_sha256"],
+        "evaluation_device": str(device),
+        "evaluation_environment": evaluation_environment,
+        "evaluation_environment_sha256": evaluation_environment_sha256,
         "execution_source_commit_sha": _current_head(),
         "provided_test_historically_preexposed_for_adapter_validation": True,
         "formal_test_performance_evaluation_started": True,
@@ -1314,6 +1363,8 @@ def evaluate_test_once(
         "uji_method_freeze_sha256": freeze["uji_method_freeze_sha256"],
         "test_consumption_lock_sha256": lock["lock_sha256"],
         "checkpoint_sha256": freeze["checkpoint_sha256"],
+        "evaluation_device": str(device),
+        "evaluation_environment_sha256": evaluation_environment_sha256,
         "test_files": test_files,
         "evaluation_reference_metadata": test.metadata,
         "metrics": metrics,
