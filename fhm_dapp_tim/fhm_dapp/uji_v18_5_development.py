@@ -38,6 +38,7 @@ from fhm_dapp_tim.fhm_dapp.coherent_marked_v9 import (
     common_student_t_randomness,
     continuous_energy_score_mc,
 )
+from fhm_dapp_tim.fhm_dapp.v18_5_contract import method_contract
 from fhm_dapp_tim.fhm_dapp.v18_5_core import (
     posterior_mean,
     radio_trust_projection,
@@ -85,6 +86,7 @@ REPO_ROOT = ROOT.parent
 DEFAULT_TRAIN = DATA_ROOT / "UJIndoorLoc" / "trainingData.csv"
 DEFAULT_EVIDENCE = ROOT / "evidence" / "v18_5"
 DEFAULT_MODELS = ROOT / "models" / "v18_5"
+DEFAULT_ACCEPTANCE = DEFAULT_EVIDENCE / "PRE_RUN_ACCEPTANCE_V18_5.json"
 DEFAULT_REGISTRY = DEFAULT_EVIDENCE / "uji_registry_v18_5.json"
 DEFAULT_DEVELOPMENT = DEFAULT_EVIDENCE / "uji_development_v18_5.json"
 DEFAULT_REFIT = DEFAULT_MODELS / "uji_selection_refit.pt"
@@ -143,6 +145,63 @@ def _canonical_sha(payload: Mapping[str, object], *, omit: str | None = None) ->
         value, sort_keys=True, separators=(",", ":"), allow_nan=False
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def load_pre_run_acceptance(
+    path: str | Path = DEFAULT_ACCEPTANCE,
+) -> dict[str, object]:
+    """Validate the mandatory outcome-free acceptance on the exact HEAD."""
+
+    acceptance_path = Path(path)
+    if not acceptance_path.is_file():
+        raise FileNotFoundError(acceptance_path)
+    payload = json.loads(acceptance_path.read_text(encoding="utf-8"))
+    if payload.get("acceptance_sha256") != _canonical_sha(
+        payload, omit="acceptance_sha256"
+    ):
+        raise ValueError("V18.5 pre-run acceptance self-hash mismatch")
+    if payload.get("status") != "PASS":
+        raise ValueError("V18.5 pre-run acceptance did not PASS")
+    if payload.get("scientific_status") != "OUTCOME_FREE_PRE_RUN_ACCEPTED":
+        raise ValueError("unexpected V18.5 pre-run scientific status")
+
+    current = _git_source_state()
+    git_record = payload.get("git", {})
+    if git_record.get("source_commit_sha") != current["source_commit_sha"]:
+        raise RuntimeError(
+            "pre-run acceptance was produced on a different source revision"
+        )
+    if git_record.get("tracked_source_dirty") is not False:
+        raise ValueError("pre-run acceptance did not record clean tracked source")
+
+    current_contract = method_contract(repo_root=REPO_ROOT)
+    if payload.get("method_contract") != current_contract:
+        raise RuntimeError(
+            "current V18.5 method contract differs from accepted contract"
+        )
+
+    smoke = payload.get("smoke", {})
+    if smoke.get("cuda_required") is not True:
+        raise ValueError("formal V18.5 acceptance must require CUDA")
+    if smoke.get("cuda_available") is not True:
+        raise ValueError("formal V18.5 acceptance did not have CUDA")
+    if dict(smoke.get("cpu", {})).get("status") != "success":
+        raise ValueError("V18.5 acceptance CPU smoke did not succeed")
+    if dict(smoke.get("cuda", {})).get("status") != "success":
+        raise ValueError("V18.5 acceptance CUDA smoke did not succeed")
+
+    revision = payload.get("revision_audit", {})
+    if revision.get("status") != "PASS":
+        raise ValueError("V18.5 acceptance revision audit did not PASS")
+    if payload.get("official_uji_validation_accessed") is not False:
+        raise ValueError("UJI validation was accessed before formal prepare")
+    if payload.get("external_test_performance_accessed") is not False:
+        raise ValueError("external test performance entered pre-run acceptance")
+    if payload.get("formal_v185_training_executed") is not False:
+        raise ValueError("formal V18.5 training occurred before prepare")
+    if payload.get("formal_v185_test_scoring_executed") is not False:
+        raise ValueError("formal V18.5 test scoring occurred before prepare")
+    return payload
 
 
 def _sha256_indices(indices: Sequence[int] | np.ndarray) -> str:
@@ -234,8 +293,10 @@ def _config_json() -> dict[str, object]:
 def prepare(
     *,
     train_path: str | Path = DEFAULT_TRAIN,
+    acceptance_path: str | Path = DEFAULT_ACCEPTANCE,
     registry_path: str | Path = DEFAULT_REGISTRY,
 ) -> dict:
+    acceptance = load_pre_run_acceptance(acceptance_path)
     path = Path(train_path).resolve()
     if path.name != "trainingData.csv":
         raise ValueError("V18.5 UJI prepare accepts trainingData.csv only")
@@ -260,6 +321,11 @@ def prepare(
         "protocol_version": PROTOCOL_VERSION,
         "role_protocol_version": ROLE_PROTOCOL_VERSION,
         **_git_source_state(),
+        "pre_run_acceptance_path": _repo_relative(acceptance_path),
+        "pre_run_acceptance_sha256": acceptance["acceptance_sha256"],
+        "method_contract_sha256": acceptance["method_contract"][
+            "contract_sha256"
+        ],
         "train_path": _repo_relative(path),
         "train_sha256": _sha256_file(path),
         "training_rows": int(len(data.coords_m)),
@@ -297,6 +363,17 @@ def load_registry(path: str | Path = DEFAULT_REGISTRY) -> dict:
     current = _git_source_state()
     if current["source_commit_sha"] != registry["source_commit_sha"]:
         raise RuntimeError("source revision differs from prepared registry")
+    current_contract = method_contract(repo_root=REPO_ROOT)
+    if registry.get("method_contract_sha256") != current_contract[
+        "contract_sha256"
+    ]:
+        raise RuntimeError("method contract differs from prepared registry")
+    acceptance_path = REPO_ROOT / str(registry["pre_run_acceptance_path"])
+    acceptance = load_pre_run_acceptance(acceptance_path)
+    if acceptance["acceptance_sha256"] != registry[
+        "pre_run_acceptance_sha256"
+    ]:
+        raise ValueError("registry links a different pre-run acceptance")
     return registry
 
 
@@ -1426,7 +1503,10 @@ def calibrate_freeze(
 def main() -> None:
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("prepare")
+    prepare_parser = sub.add_parser("prepare")
+    prepare_parser.add_argument(
+        "--acceptance", default=str(DEFAULT_ACCEPTANCE)
+    )
     develop_parser = sub.add_parser("develop")
     develop_parser.add_argument("--device", default="cuda")
     calibrate_parser = sub.add_parser("calibrate-freeze")
@@ -1434,7 +1514,11 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.command == "prepare":
-        print(json.dumps(prepare(), indent=2, sort_keys=True))
+        print(json.dumps(
+            prepare(acceptance_path=args.acceptance),
+            indent=2,
+            sort_keys=True,
+        ))
     elif args.command == "develop":
         print(json.dumps(
             develop(device_name=args.device), indent=2, sort_keys=True
