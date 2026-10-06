@@ -44,7 +44,8 @@ Members 2-16:
 - no member-specific model selection.
 
 Inference for every member:
-- evaluate the learned candidate reranker over the complete anchor dictionary;
+- form a full-anchor posterior from the supervised invariant/retrieval logits;
+- do not extrapolate the candidate reranker outside its trained candidate distribution;
 - retain Top-L=192 member posterior mass;
 - compute V17 radial predictive scale;
 - member reliability proportional to inverse radial variance.
@@ -81,7 +82,8 @@ The experiment must also report:
 8. individual-member dense MAE and panel disagreement diagnostics.
 
 These controls separate:
-- dense/wider support effects;
+- the original V18.5 candidate-reranked <=128 support law;
+- full-anchor invariant/wider-support effects;
 - point-decision effects;
 - true multi-member effects.
 
