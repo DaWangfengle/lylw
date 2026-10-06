@@ -155,23 +155,59 @@ def _repo_relative(path: str | Path) -> str:
     return str(Path(path).resolve().relative_to(REPO_ROOT))
 
 
+def _atomic_temp_path(destination: Path) -> Path:
+    return destination.with_name(destination.name + ".tmp")
+
+
 def _write_json_new(path: str | Path, payload: dict) -> None:
+    """Write one canonical JSON artifact without exposing a partial file."""
+
     destination = Path(path)
+    temporary = _atomic_temp_path(destination)
     if destination.exists():
         raise FileExistsError(destination)
+    if temporary.exists():
+        raise RuntimeError(f"stale partial artifact exists: {temporary}")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(
-        json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n",
-        encoding="utf-8",
+    serialized = (
+        json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n"
     )
+    try:
+        with temporary.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(serialized)
+            handle.flush()
+            os.fsync(handle.fileno())
+        if destination.exists():
+            raise FileExistsError(destination)
+        os.replace(temporary, destination)
+    except BaseException:
+        if temporary.exists():
+            temporary.unlink()
+        raise
 
 
 def _save_torch_new(path: str | Path, payload: dict) -> None:
+    """Write one canonical checkpoint atomically and never overwrite it."""
+
     destination = Path(path)
+    temporary = _atomic_temp_path(destination)
     if destination.exists():
         raise FileExistsError(destination)
+    if temporary.exists():
+        raise RuntimeError(f"stale partial artifact exists: {temporary}")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    torch.save(payload, destination)
+    try:
+        with temporary.open("wb") as handle:
+            torch.save(payload, handle)
+            handle.flush()
+            os.fsync(handle.fileno())
+        if destination.exists():
+            raise FileExistsError(destination)
+        os.replace(temporary, destination)
+    except BaseException:
+        if temporary.exists():
+            temporary.unlink()
+        raise
 
 
 def _cpu_state(model: torch.nn.Module) -> dict[str, torch.Tensor]:
