@@ -242,16 +242,24 @@ def _training_dataset_audit(data_root: Path) -> dict[str, object]:
 
 
 def _formal_artifact_absence() -> dict[str, bool]:
+    model_root = ROOT / "models" / "v18_5"
     paths = [
         DEFAULT_EVIDENCE / "uji_registry_v18_5.json",
         DEFAULT_EVIDENCE / "uji_development_v18_5.json",
         DEFAULT_EVIDENCE / "uji_calibration_v18_5.json",
         DEFAULT_EVIDENCE / "uji_method_freeze_v18_5.json",
-        ROOT / "models" / "v18_5" / "uji_selection_refit.pt",
+        model_root / "uji_lambda_0p00.pt",
+        model_root / "uji_lambda_0p10.pt",
+        model_root / "uji_lambda_0p25.pt",
+        model_root / "uji_lambda_0p50.pt",
+        model_root / "uji_selection_refit.pt",
     ]
     result = {str(path.relative_to(ROOT)): not path.exists() for path in paths}
     if not all(result.values()):
-        raise RuntimeError("formal V18.5 artifact already exists")
+        present = sorted(key for key, absent in result.items() if not absent)
+        raise RuntimeError(
+            "formal V18.5 artifact already exists: " + ", ".join(present)
+        )
     return result
 
 
