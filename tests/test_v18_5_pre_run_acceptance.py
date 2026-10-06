@@ -45,7 +45,7 @@ def test_external_artifact_absence_checks_all_eight_protocols(tmp_path: Path):
         acceptance, "EVIDENCE_ROOT", evidence
     ), patch.object(acceptance, "REPO_ROOT", tmp_path):
         result = acceptance._external_artifact_absence()
-        assert len(result) == 8 * 5
+        assert len(result) == 8 * 5 * 2
         target = (
             evidence
             / "external"
@@ -62,3 +62,21 @@ def test_acceptance_contract_hash_includes_runner_itself():
         "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py"
         in acceptance.AUXILIARY_VERIFICATION_PATHS
     )
+
+
+def test_external_artifact_absence_rejects_stale_partial(tmp_path: Path):
+    package = tmp_path / "fhm_dapp_tim"
+    evidence = package / "evidence" / "v18_5"
+    models = package / "models" / "v18_5"
+    with patch.object(acceptance, "PACKAGE_ROOT", package), patch.object(
+        acceptance, "EVIDENCE_ROOT", evidence
+    ), patch.object(acceptance, "REPO_ROOT", tmp_path):
+        partial = (
+            models
+            / "external"
+            / "uts_selection_refit.pt.tmp"
+        )
+        partial.parent.mkdir(parents=True, exist_ok=True)
+        partial.write_bytes(b"partial")
+        with pytest.raises(RuntimeError, match="stale formal"):
+            acceptance._external_artifact_absence()
