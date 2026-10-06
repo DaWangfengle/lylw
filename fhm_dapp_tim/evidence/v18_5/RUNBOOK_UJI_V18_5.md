@@ -26,7 +26,11 @@ It must PASS and create the write-once records:
 The acceptance gate must confirm, in one execution:
 
 - clean tracked source and a frozen method-contract hash;
-- compilation of every V18.5 implementation/audit module;
+- an environment fingerprint covering Python, NumPy/pandas/SciPy/PyTorch,
+  CUDA build, cuDNN, GPU model/capability/memory and deterministic flags;
+- the registered model/scoring seeds, predictive draw count and
+  `CUBLAS_WORKSPACE_CONFIG=:4096:8`;
+- compilation of every method-contract and verification Python module;
 - every discovered V18.5 contract test passes with no skip/xfail;
 - CPU smoke PASS;
 - CUDA smoke PASS;
@@ -57,6 +61,8 @@ Expected artifact:
 The registry freezes:
 
 - source SHA;
+- pre-run acceptance SHA and method-contract SHA;
+- the accepted execution-environment payload and its SHA;
 - training source hash;
 - fresh V18.5 grouped-coordinate roles;
 - lambda grid;
