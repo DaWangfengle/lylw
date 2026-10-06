@@ -134,3 +134,22 @@ def test_environment_fingerprint_is_json_serializable_and_records_determinism():
         assert len(environment["torch"]["cuda_devices"]) == (
             environment["torch"]["cuda_device_count"]
         )
+
+
+def test_acceptance_write_is_atomic_and_write_once(tmp_path: Path):
+    path = tmp_path / "acceptance.json"
+    acceptance._write_new(path, "{\"ok\": true}\n")
+    assert path.read_text(encoding="utf-8") == "{\"ok\": true}\n"
+    assert not path.with_name(path.name + ".tmp").exists()
+    with pytest.raises(FileExistsError):
+        acceptance._write_new(path, "again")
+
+
+def test_acceptance_write_rejects_stale_partial(tmp_path: Path):
+    path = tmp_path / "acceptance.json"
+    partial = path.with_name(path.name + ".tmp")
+    partial.write_text("partial", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="stale partial acceptance"):
+        acceptance._write_new(path, "new")
+    assert not path.exists()
+    assert partial.exists()
