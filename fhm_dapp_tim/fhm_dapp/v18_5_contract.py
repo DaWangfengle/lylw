@@ -15,6 +15,14 @@ from typing import Sequence
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 METHOD_CONTRACT_PATHS: tuple[str, ...] = (
+    # Shared numerical/model/data primitives that V18.5 directly imports.
+    "fhm_dapp_tim/fhm_dapp/model.py",
+    "fhm_dapp_tim/fhm_dapp/dapp.py",
+    "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py",
+    "fhm_dapp_tim/fhm_dapp/v18_single.py",
+    "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py",
+    "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py",
+    # V18.5 method/protocol implementation.
     "fhm_dapp_tim/fhm_dapp/v18_5_contract.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_core.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_datasets.py",
