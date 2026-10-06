@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from unittest.mock import patch
 
@@ -111,3 +112,25 @@ def test_acceptance_compile_targets_cover_method_contract_python_files():
         if path.endswith(".py")
     }
     assert required_python.issubset(compiled)
+
+
+def test_environment_fingerprint_is_json_serializable_and_records_determinism():
+    acceptance._set_seed(acceptance.MODEL_SEED)
+    environment = acceptance._environment_fingerprint()
+    json.dumps(environment, sort_keys=True, allow_nan=False)
+    assert environment["torch"]["deterministic_algorithms_enabled"] is True
+    assert environment["determinism"]["cublas_workspace_config"] == ":4096:8"
+    assert environment["determinism"]["model_seed"] == acceptance.MODEL_SEED
+    assert environment["determinism"]["scoring_seed"] == acceptance.SCORING_SEED
+    assert (
+        environment["determinism"]["predictive_draws"]
+        == acceptance.PREDICTIVE_DRAWS
+    )
+    assert set(environment["packages"]) == {
+        "numpy", "pandas", "scipy", "torch"
+    }
+    if environment["torch"]["cuda_available"]:
+        assert environment["torch"]["cuda_device_count"] >= 1
+        assert len(environment["torch"]["cuda_devices"]) == (
+            environment["torch"]["cuda_device_count"]
+        )
