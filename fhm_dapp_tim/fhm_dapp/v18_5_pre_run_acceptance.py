@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import py_compile
 import re
@@ -356,10 +357,26 @@ def _markdown(payload: dict[str, object]) -> str:
 
 
 def _write_new(path: Path, content: str) -> None:
+    """Atomically write one acceptance artifact and never overwrite it."""
+
+    temporary = path.with_name(path.name + ".tmp")
     if path.exists():
         raise FileExistsError(path)
+    if temporary.exists():
+        raise RuntimeError(f"stale partial acceptance artifact: {temporary}")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+    try:
+        with temporary.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+        if path.exists():
+            raise FileExistsError(path)
+        os.replace(temporary, path)
+    except BaseException:
+        if temporary.exists():
+            temporary.unlink()
+        raise
 
 
 def main() -> None:
@@ -371,8 +388,19 @@ def main() -> None:
 
     json_path = Path(args.json)
     markdown_path = Path(args.markdown)
-    if json_path.exists() or markdown_path.exists():
+    outputs = (json_path, markdown_path)
+    if any(path.exists() for path in outputs):
         raise FileExistsError("V18.5 acceptance outputs are write-once")
+    stale = [
+        path.with_name(path.name + ".tmp")
+        for path in outputs
+        if path.with_name(path.name + ".tmp").exists()
+    ]
+    if stale:
+        raise RuntimeError(
+            "stale partial V18.5 acceptance output(s): "
+            + ", ".join(map(str, stale))
+        )
 
     payload = run_acceptance(require_cuda=bool(args.require_cuda))
     _write_new(
