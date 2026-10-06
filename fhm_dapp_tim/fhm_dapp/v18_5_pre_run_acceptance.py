@@ -157,7 +157,7 @@ def _test_targets() -> list[str]:
         paths.append(uji)
     if not paths:
         raise RuntimeError("no V18.5 contract tests found")
-    return [str(path.relative_to(REPO_ROOT)) for path in paths]
+    return [path.relative_to(REPO_ROOT).as_posix() for path in paths]
 
 
 def _parse_pytest_output(output: str) -> dict[str, object]:
