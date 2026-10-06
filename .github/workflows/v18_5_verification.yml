@@ -23,6 +23,12 @@ jobs:
 
       - name: Compile V18.5 implementation
         run: |
+          python -m py_compile fhm_dapp_tim/fhm_dapp/model.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/dapp.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_single.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_datasets.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_4_protocol.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_contract.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_core.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_datasets.py
