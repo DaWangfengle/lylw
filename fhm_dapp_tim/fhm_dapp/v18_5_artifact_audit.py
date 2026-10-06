@@ -264,6 +264,74 @@ def _rederive_lambda_epoch_selection(
     )
 
 
+def validate_epoch_selection_report(
+    report: Mapping[str, object],
+    *,
+    expected_lambda: float,
+) -> dict[str, object]:
+    """Re-derive one fixed-lambda epoch decision from its full trajectory."""
+
+    if float(report["lambda_spatial"]) != float(expected_lambda):
+        raise ValueError("epoch-selection report lambda mismatch")
+    trajectory = report["trajectory"]
+    maximum = int(V185_CONFIG["maximum_epochs"])
+    if len(trajectory) != maximum:
+        raise ValueError("epoch-selection trajectory length mismatch")
+    if [int(item["epoch"]) for item in trajectory] != list(
+        range(1, maximum + 1)
+    ):
+        raise ValueError("epoch-selection trajectory sequence mismatch")
+
+    derived_epoch, derived_metrics, derived_shortlist = (
+        _rederive_lambda_epoch_selection(report)
+    )
+    recorded_epoch = int(report["selected_epoch"])
+    if recorded_epoch != derived_epoch:
+        raise ValueError("selected epoch violates registered selector")
+    recorded_shortlist = {
+        int(item["epoch"]) for item in report["eligible_epoch_shortlist"]
+    }
+    if recorded_shortlist != derived_shortlist:
+        raise ValueError("eligible epoch shortlist mismatch")
+
+    recorded_metrics = report["selected_base_metrics"]
+    for key, expected in derived_metrics.items():
+        if key == "state":
+            continue
+        if key not in recorded_metrics:
+            raise ValueError(f"selected base metrics missing {key}")
+        actual = recorded_metrics[key]
+        if isinstance(expected, bool):
+            if bool(actual) != expected:
+                raise ValueError(f"selected base metric {key} mismatch")
+        elif isinstance(expected, int):
+            if int(actual) != expected:
+                raise ValueError(f"selected base metric {key} mismatch")
+        elif isinstance(expected, (float, np.floating)):
+            if abs(float(actual) - float(expected)) > 1e-12:
+                raise ValueError(f"selected base metric {key} mismatch")
+        elif actual != expected:
+            raise ValueError(f"selected base metric {key} mismatch")
+    for key in (
+        "energy_score_m",
+        "energy_score_se_m",
+        "nll",
+        "nll_se",
+        "posterior_mean_mae_m",
+        "posterior_mean_mae_se_m",
+        "mean_entropy_nats",
+        "mean_effective_anchors",
+        "mean_top1_probability",
+    ):
+        _finite_number(recorded_metrics[key], name=f"epoch-selection:{key}")
+    return {
+        "lambda_spatial": float(expected_lambda),
+        "selected_epoch": int(derived_epoch),
+        "shortlist_epochs": sorted(derived_shortlist),
+        "selected_base_metrics": dict(recorded_metrics),
+    }
+
+
 def _rederive_global_lambda(
     reports: Sequence[Mapping[str, object]],
 ) -> float:
