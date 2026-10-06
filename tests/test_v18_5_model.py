@@ -146,3 +146,46 @@ def test_epsilon_zero_distribution_is_identity_path_without_radio_reference():
     )
     assert result["posterior_mean"].shape == (2, 2)
     assert torch.isfinite(result["posterior_mean"]).all()
+
+
+def test_role_unseen_ap_is_ignored_by_encoder_and_prototype_proposal():
+    model, *_rest = _state()
+    model.eval()
+    model.seen_ap_mask[2] = False
+    model.encoder.seen_ap_mask[2] = False
+
+    first = torch.tensor([[-0.8, -0.4, -1.0]], dtype=torch.float32)
+    second = torch.tensor([[-0.8, -0.4, 1.0]], dtype=torch.float32)
+    observed = torch.ones_like(first, dtype=torch.bool)
+
+    with torch.no_grad():
+        embedding_a = model.encoder(first, observed)
+        embedding_b = model.encoder(second, observed)
+        proposal_a = prototype_retrieval_score_v185(model, first, observed)
+        proposal_b = prototype_retrieval_score_v185(model, second, observed)
+
+    assert torch.allclose(embedding_a, embedding_b, atol=1e-7, rtol=0)
+    assert torch.allclose(proposal_a, proposal_b, atol=1e-7, rtol=0)
+
+
+def test_role_unseen_ap_is_ignored_by_candidate_reranker_features():
+    model, *_rest = _state()
+    model.eval()
+    model.seen_ap_mask[2] = False
+    model.encoder.seen_ap_mask[2] = False
+
+    first = torch.tensor([[-0.8, -0.4, -1.0]], dtype=torch.float32)
+    second = torch.tensor([[-0.8, -0.4, 1.0]], dtype=torch.float32)
+    observed = torch.ones_like(first, dtype=torch.bool)
+    candidates = torch.tensor([[0, 1, 2, 3]], dtype=torch.long)
+    coarse = torch.tensor([[0.4, 0.3, 0.2, 0.1]], dtype=torch.float32)
+
+    with torch.no_grad():
+        embedding = model.encoder(first, observed)
+        features_a = model.candidate_evidence_features_v185(
+            first, observed, embedding, candidates, coarse
+        )
+        features_b = model.candidate_evidence_features_v185(
+            second, observed, embedding, candidates, coarse
+        )
+    assert torch.allclose(features_a, features_b, atol=1e-7, rtol=0)
