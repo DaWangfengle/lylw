@@ -219,9 +219,13 @@ def _external_artifact_absence() -> dict[str, bool]:
         for suffix in suffixes:
             paths.append(evidence / f"{slug}{suffix}")
         paths.append(models / f"{slug}_selection_refit.pt")
+    checked: list[Path] = []
+    for path in paths:
+        checked.append(path)
+        checked.append(path.with_name(path.name + ".tmp"))
     result = {
         str(path.relative_to(REPO_ROOT)): not path.exists()
-        for path in paths
+        for path in checked
     }
     present = sorted(key for key, absent in result.items() if not absent)
     if present:
