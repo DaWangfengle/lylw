@@ -829,6 +829,70 @@ def validate_joint_selection(
     }
 
 
+def validate_selected_metrics_summary(
+    calibration: Mapping[str, object],
+) -> dict[str, object]:
+    """Verify the convenience selected_metrics record against the surface."""
+
+    selection = calibration["selection"]
+    selected_id = str(selection["selected_cell_id"])
+    surface_by_id = {
+        str(cell["cell_id"]): cell for cell in calibration["surface"]
+    }
+    if selected_id not in surface_by_id:
+        raise ValueError("selected_metrics references absent surface cell")
+    expected = surface_by_id[selected_id]
+    summary = calibration["selected_metrics"]
+    if not isinstance(summary, Mapping):
+        raise ValueError("selected_metrics must be a mapping")
+    for key, actual in summary.items():
+        if key not in expected:
+            raise ValueError(f"selected_metrics contains unknown field {key}")
+        target = expected[key]
+        if target is None:
+            if actual is not None:
+                raise ValueError(f"selected_metrics {key} mismatch")
+        elif isinstance(target, bool):
+            if bool(actual) != target:
+                raise ValueError(f"selected_metrics {key} mismatch")
+        elif isinstance(target, str):
+            if str(actual) != target:
+                raise ValueError(f"selected_metrics {key} mismatch")
+        elif isinstance(target, (int, np.integer)):
+            if int(actual) != int(target):
+                raise ValueError(f"selected_metrics {key} mismatch")
+        else:
+            if abs(float(actual) - float(target)) > 1e-12:
+                raise ValueError(f"selected_metrics {key} mismatch")
+    required = {
+        "cell_id",
+        "temperature",
+        "epsilon_kl",
+        "scale_multiplier",
+        "energy_score_m",
+        "energy_score_se_m",
+        "nll",
+        "nll_se",
+        "posterior_mean_mae_m",
+        "posterior_mean_mae_se_m",
+        "mean_entropy_nats",
+        "mean_effective_anchors",
+        "mean_top1_probability",
+        "mean_radio_compatibility",
+        "mean_realized_kl",
+        "mean_effective_epsilon_kl",
+        "max_kl_budget_excess",
+        "dual_beta_infinite_fraction",
+        "mean_finite_dual_beta",
+    }
+    if not required.issubset(summary):
+        missing = sorted(required - set(summary))
+        raise ValueError(
+            "selected_metrics missing registered fields: " + ", ".join(missing)
+        )
+    return dict(summary)
+
+
 def validate_calibration_surface(
     surface: Sequence[Mapping[str, object]],
 ) -> dict[str, object]:
@@ -1193,6 +1257,7 @@ def validate_calibration_and_freeze(
         raise ValueError("calibration accessed external performance")
     surface_summary = validate_calibration_surface(calibration["surface"])
     selection_summary = validate_joint_selection(calibration)
+    selected_metrics_summary = validate_selected_metrics_summary(calibration)
     radio_summary = validate_radio_diagnostics(
         calibration["radio_diagnostics_by_temperature"],
         calibration_rows=int(calibration["rows"]),
@@ -1298,6 +1363,7 @@ def validate_calibration_and_freeze(
         "selected_method": expected_method,
         "surface": surface_summary,
         "selection": selection_summary,
+        "selected_metrics": selected_metrics_summary,
         "radio_diagnostics": radio_summary,
         "selection_refit": checkpoint_summary,
     }
