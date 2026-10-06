@@ -151,7 +151,6 @@ def test_epsilon_zero_distribution_is_identity_path_without_radio_reference():
 def test_role_unseen_ap_is_ignored_by_encoder_and_prototype_proposal():
     model, *_rest = _state()
     model.eval()
-    model.seen_ap_mask[2] = False
     model.encoder.seen_ap_mask[2] = False
 
     first = torch.tensor([[-0.8, -0.4, -1.0]], dtype=torch.float32)
@@ -171,7 +170,6 @@ def test_role_unseen_ap_is_ignored_by_encoder_and_prototype_proposal():
 def test_role_unseen_ap_is_ignored_by_candidate_reranker_features():
     model, *_rest = _state()
     model.eval()
-    model.seen_ap_mask[2] = False
     model.encoder.seen_ap_mask[2] = False
 
     first = torch.tensor([[-0.8, -0.4, -1.0]], dtype=torch.float32)
