@@ -14,13 +14,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
+import platform
 import py_compile
 import re
 import subprocess
 import sys
 from typing import Sequence
 
+import numpy as np
+import pandas as pd
+import scipy
 import torch
 
 from fhm_dapp_tim.fhm_dapp.v18_5_contract import (
@@ -31,6 +36,12 @@ from fhm_dapp_tim.fhm_dapp.v18_5_realdata_smoke import run_smoke
 from fhm_dapp_tim.fhm_dapp.v18_5_revision_audit import (
     _formal_artifact_absence,
     run_audit,
+)
+from fhm_dapp_tim.fhm_dapp.uji_v18_5_development import (
+    MODEL_SEED,
+    PREDICTIVE_DRAWS,
+    SCORING_SEED,
+    _set_seed,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -228,6 +239,79 @@ def _external_artifact_absence() -> dict[str, bool]:
     return result
 
 
+def _environment_fingerprint() -> dict[str, object]:
+    """Record the accepted execution environment without making it portable law."""
+
+    cuda_available = bool(torch.cuda.is_available())
+    devices: list[dict[str, object]] = []
+    if cuda_available:
+        for index in range(torch.cuda.device_count()):
+            properties = torch.cuda.get_device_properties(index)
+            devices.append({
+                "index": int(index),
+                "name": str(properties.name),
+                "compute_capability": [
+                    int(properties.major),
+                    int(properties.minor),
+                ],
+                "total_memory_bytes": int(properties.total_memory),
+            })
+
+    sdp: dict[str, bool | None] = {}
+    for name, attribute in (
+        ("flash_enabled", "flash_sdp_enabled"),
+        ("memory_efficient_enabled", "mem_efficient_sdp_enabled"),
+        ("math_enabled", "math_sdp_enabled"),
+    ):
+        function = getattr(torch.backends.cuda, attribute, None)
+        sdp[name] = bool(function()) if callable(function) else None
+
+    return {
+        "python": {
+            "version": sys.version,
+            "implementation": platform.python_implementation(),
+            "executable": sys.executable,
+        },
+        "platform": {
+            "system": platform.system(),
+            "release": platform.release(),
+            "machine": platform.machine(),
+            "platform": platform.platform(),
+        },
+        "packages": {
+            "numpy": np.__version__,
+            "pandas": pd.__version__,
+            "scipy": scipy.__version__,
+            "torch": torch.__version__,
+        },
+        "torch": {
+            "default_dtype": str(torch.get_default_dtype()),
+            "cuda_build": torch.version.cuda,
+            "cudnn_version": torch.backends.cudnn.version(),
+            "cuda_available": cuda_available,
+            "cuda_device_count": int(torch.cuda.device_count())
+            if cuda_available
+            else 0,
+            "cuda_devices": devices,
+            "deterministic_algorithms_enabled": bool(
+                torch.are_deterministic_algorithms_enabled()
+            ),
+            "cudnn_available": bool(torch.backends.cudnn.is_available()),
+            "cudnn_deterministic": bool(torch.backends.cudnn.deterministic),
+            "cudnn_benchmark": bool(torch.backends.cudnn.benchmark),
+            "scaled_dot_product_attention": sdp,
+        },
+        "determinism": {
+            "cublas_workspace_config": os.environ.get(
+                "CUBLAS_WORKSPACE_CONFIG"
+            ),
+            "model_seed": int(MODEL_SEED),
+            "scoring_seed": int(SCORING_SEED),
+            "predictive_draws": int(PREDICTIVE_DRAWS),
+        },
+    }
+
+
 def _smoke(*, require_cuda: bool) -> dict[str, object]:
     cpu = run_smoke("cpu")
     if cpu.get("status") != "success":
@@ -251,6 +335,7 @@ def _smoke(*, require_cuda: bool) -> dict[str, object]:
 
 
 def run_acceptance(*, require_cuda: bool = False) -> dict[str, object]:
+    _set_seed(MODEL_SEED)
     start_git = _git_state()
     method = _method_contract()
     verification = _verification_contract()
@@ -263,6 +348,11 @@ def run_acceptance(*, require_cuda: bool = False) -> dict[str, object]:
     revision = run_audit(include_smoke=False)
     if revision.get("status") != "PASS":
         raise RuntimeError("V18.5 revision audit did not PASS")
+    environment = _environment_fingerprint()
+    if environment["torch"]["deterministic_algorithms_enabled"] is not True:
+        raise RuntimeError("deterministic algorithms are not enabled")
+    if environment["determinism"]["cublas_workspace_config"] != ":4096:8":
+        raise RuntimeError("unexpected CUBLAS workspace configuration")
 
     # No verification step is allowed to create or alter formal outputs.
     uji_absence_after = _formal_artifact_absence()
@@ -284,6 +374,8 @@ def run_acceptance(*, require_cuda: bool = False) -> dict[str, object]:
         "git": start_git,
         "method_contract": method,
         "verification_contract": verification,
+        "environment": environment,
+        "environment_sha256": _canonical_sha(environment),
         "compile": {
             "modules": compiled,
             "count": int(len(compiled)),
@@ -314,6 +406,10 @@ def _markdown(payload: dict[str, object]) -> str:
         "",
         f"- Source commit: `{payload['git']['source_commit_sha']}`",
         f"- Method contract SHA256: `{payload['method_contract']['contract_sha256']}`",
+        f"- Environment SHA256: `{payload['environment_sha256']}`",
+        f"- PyTorch: {payload['environment']['packages']['torch']}",
+        f"- CUDA build: {payload['environment']['torch']['cuda_build']}",
+        f"- CUDA devices: {payload['environment']['torch']['cuda_device_count']}",
         f"- Compiled modules: {payload['compile']['count']}",
         f"- Contract tests: {payload['tests']['passed']} passed; no skip/xfail",
         f"- CPU smoke: {smoke['cpu']['status']}",
