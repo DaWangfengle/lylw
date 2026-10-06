@@ -174,3 +174,22 @@ def test_unseen_training_ap_has_no_radio_effect_even_if_query_observes_it():
         ap_reliability=reliability,
     )
     assert torch.allclose(first, second, atol=1e-7, rtol=0)
+
+
+def test_profile_radio_nuisance_works_inside_outer_no_grad():
+    query = torch.tensor([[-0.9, 0.1]], dtype=torch.float32)
+    observed = torch.tensor([[True, True]])
+    indices = torch.tensor([[0, 1]], dtype=torch.long)
+    prior = torch.tensor([[0.7, 0.3]], dtype=torch.float32)
+    with torch.no_grad():
+        result = profile_radio_nuisance(
+            query,
+            observed,
+            indices,
+            _memory(),
+            prior,
+            steps=2,
+        )
+    assert torch.isfinite(result["profiled_objective"]).all()
+    assert result["profiled_objective"].requires_grad is False
+    assert result["energy"].requires_grad is False
