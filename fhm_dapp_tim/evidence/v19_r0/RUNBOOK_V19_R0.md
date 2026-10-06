@@ -109,6 +109,8 @@ For each E report:
 
 Also report:
 - inherited V18.5 member dense-all-anchor result;
+- each member's dense posterior-mean MAE;
+- panel point-disagreement RMS and pairwise Top-1 anchor agreement;
 - E=1 Top-192 minus dense-all-anchor;
 - paired E={2,4,8,16} minus E=1 effects.
 
