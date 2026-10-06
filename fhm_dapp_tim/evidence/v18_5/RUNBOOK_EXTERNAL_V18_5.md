@@ -112,6 +112,27 @@ Outputs:
 
 The freeze contains the complete 192-cell surface and correction diagnostics.
 
+### 4.3 mandatory training-freeze artifact audit
+
+Before `evaluate-test`, independently audit the frozen training chain:
+
+`python -m fhm_dapp_tim.fhm_dapp.v18_5_external_artifact_audit --protocol uts --stage training-freeze`
+
+This audit is still test-performance blind.  It must PASS before a test lock
+may be written.  It revalidates:
+
+- training-role row hashes and exact FIT/DEVELOPMENT/CALIBRATION partition;
+- SELECTION_REFIT == FIT + DEVELOPMENT;
+- UJI-frozen lambda and method links;
+- training file hashes;
+- exactly 192 calibration cells;
+- paired NLL one-SE and paired ES one-SE retained decisions;
+- deterministic final parsimony tie-break;
+- eight temperature-matched radio references;
+- KL-budget diagnostics;
+- checkpoint SHA/model/memory integrity;
+- TUJI LODO held-out-device exclusion.
+
 ## 5. TUJI leave-one-device-out isolation
 
 For `tuji-lodo-<DEVICE>`, the held-out device is excluded before any
@@ -175,6 +196,15 @@ scoring attempt failed.
 Successful scoring creates:
 
 `evidence/v18_5/external/<protocol>_test_result.json`
+
+After successful scoring, run the read-only result-chain audit:
+
+`python -m fhm_dapp_tim.fhm_dapp.v18_5_external_artifact_audit --protocol uts --stage result`
+
+It validates the complete manifest -> freeze -> checkpoint -> irreversible
+lock -> result hash chain, frozen method parameters, test-file byte hashes and
+final numerical/KL contracts.  A result is not considered accepted evidence
+until this audit passes.
 
 ## 8. Registered external metrics
 
