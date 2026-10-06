@@ -108,7 +108,9 @@ For each E report:
 - mean member Top-192 retained mass.
 
 Also report:
-- inherited V18.5 member dense-all-anchor result;
+- inherited V18.5 member under the original <=128 support law;
+- the same inherited member under dense-all-anchor inference;
+- paired dense-all-anchor minus original-support effects;
 - each member's dense posterior-mean MAE;
 - panel point-disagreement RMS and pairwise Top-1 anchor agreement;
 - E=1 Top-192 minus dense-all-anchor;
