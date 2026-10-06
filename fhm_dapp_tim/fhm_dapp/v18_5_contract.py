@@ -26,6 +26,7 @@ METHOD_CONTRACT_PATHS: tuple[str, ...] = (
     "fhm_dapp_tim/fhm_dapp/v18_5_contract.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_core.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_datasets.py",
+    "fhm_dapp_tim/fhm_dapp/v18_5_environment.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_radio.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_model.py",
     "fhm_dapp_tim/fhm_dapp/v18_5_protocol.py",
