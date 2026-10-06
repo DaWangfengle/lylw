@@ -22,6 +22,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     validate_epoch_selection_report,
     validate_joint_selection,
     validate_radio_diagnostics,
+    validate_selected_metrics_summary,
     validate_training_trajectory,
 )
 from fhm_dapp_tim.fhm_dapp.v18_5_core import kl_budget_tolerance
@@ -301,6 +302,7 @@ def validate_external_training_chain(
         selection_refit_rows=int(freeze["selection_refit_rows"]),
     )
     selection_summary = validate_selection(calibration)
+    selected_metrics_summary = validate_selected_metrics_summary(calibration)
     selected_parameters = selection_summary["selected_parameters"]
     for key, freeze_key in (
         ("temperature", "posterior_temperature"),
@@ -335,6 +337,7 @@ def validate_external_training_chain(
         "radio_diagnostics": radio_summary,
         "epoch_selection": epoch_summary,
         "selection": selection_summary,
+        "selected_metrics": selected_metrics_summary,
         "checkpoint": checkpoint_summary,
         "provided_test_loaded": False,
     }
