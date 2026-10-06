@@ -19,6 +19,7 @@ import torch
 from fhm_dapp_tim.fhm_dapp.v18_4_datasets import REPO_ROOT
 from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     validate_calibration_surface,
+    validate_epoch_selection_report,
     validate_joint_selection,
     validate_radio_diagnostics,
 )
@@ -274,6 +275,12 @@ def validate_external_training_chain(
         freeze["selected_epoch"]
     ) > int(V185_CONFIG["maximum_epochs"]):
         raise ValueError("external selected epoch outside registered range")
+    epoch_summary = validate_epoch_selection_report(
+        freeze["epoch_selection"],
+        expected_lambda=float(freeze["lambda_spatial"]),
+    )
+    if int(epoch_summary["selected_epoch"]) != int(freeze["selected_epoch"]):
+        raise ValueError("external epoch-selection report/freeze mismatch")
     if int(freeze["selection_refit_rows"]) != roles["selection_refit"]["rows"]:
         raise ValueError("external selection_refit row count mismatch")
 
@@ -319,6 +326,7 @@ def validate_external_training_chain(
         "roles": roles,
         "surface": surface_summary,
         "radio_diagnostics": radio_summary,
+        "epoch_selection": epoch_summary,
         "selection": selection_summary,
         "checkpoint": checkpoint_summary,
         "provided_test_loaded": False,
