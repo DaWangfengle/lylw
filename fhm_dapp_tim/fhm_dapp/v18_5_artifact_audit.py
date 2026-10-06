@@ -342,25 +342,85 @@ def _selection_choice_key(cell: Mapping[str, object]) -> tuple:
     )
 
 
+def _validate_selection_vectors(
+    calibration: Mapping[str, object],
+    *,
+    by_id: Mapping[str, Mapping[str, object]],
+) -> tuple[dict[str, dict[str, np.ndarray]], int]:
+    group_order = list(calibration["selection_group_order"])
+    group_count = int(calibration["coordinate_groups"])
+    if len(group_order) != group_count or group_count < 2:
+        raise ValueError("selection group order/count mismatch")
+    normalized_groups = []
+    for group in group_order:
+        if not isinstance(group, (list, tuple)) or len(group) != 4:
+            raise ValueError("selection group identifier must be [b,f,x,y]")
+        normalized = (
+            int(group[0]),
+            int(group[1]),
+            float(group[2]),
+            float(group[3]),
+        )
+        if not all(math.isfinite(value) for value in normalized[2:]):
+            raise ValueError("selection group coordinate is nonfinite")
+        normalized_groups.append(normalized)
+    if len(set(normalized_groups)) != len(normalized_groups):
+        raise ValueError("selection group order contains duplicates")
+
+    raw_vectors = dict(calibration["selection_vectors"])
+    if set(raw_vectors) != set(by_id):
+        raise ValueError("selection-vector cell IDs mismatch calibration surface")
+    vectors: dict[str, dict[str, np.ndarray]] = {}
+    for cell_id, payload in raw_vectors.items():
+        record: dict[str, np.ndarray] = {}
+        for vector_name, surface_mean, surface_se in (
+            ("group_nll", "nll", "nll_se"),
+            ("group_energy_score", "energy_score_m", "energy_score_se_m"),
+        ):
+            array = np.asarray(payload[vector_name], dtype=np.float64)
+            if array.shape != (group_count,) or not np.isfinite(array).all():
+                raise ValueError(
+                    f"{cell_id}:{vector_name} must be finite and aligned"
+                )
+            mean = float(array.mean())
+            se = float(array.std(ddof=1) / math.sqrt(group_count))
+            if abs(mean - float(by_id[cell_id][surface_mean])) > 1e-12:
+                raise ValueError(
+                    f"{cell_id}:{vector_name} mean mismatches surface"
+                )
+            if abs(se - float(by_id[cell_id][surface_se])) > 1e-12:
+                raise ValueError(
+                    f"{cell_id}:{vector_name} SE mismatches surface"
+                )
+            record[vector_name] = array
+        vectors[cell_id] = record
+    return vectors, group_count
+
+
 def _validate_one_se_gate(
     gate: Mapping[str, object],
     *,
     allowed_ids: set[str],
-    expected_loss_by_id: Mapping[str, float],
+    vectors_by_id: Mapping[str, Mapping[str, np.ndarray]],
+    vector_name: str,
     name: str,
 ) -> set[str]:
     records = dict(gate["records"])
     if set(records) != allowed_ids:
         raise ValueError(f"{name}: gate record IDs mismatch")
-    if set(expected_loss_by_id) != allowed_ids:
-        raise ValueError(f"{name}: expected-loss IDs mismatch")
+    if not allowed_ids.issubset(vectors_by_id):
+        raise ValueError(f"{name}: missing selection vectors")
+    means = {
+        key: float(vectors_by_id[key][vector_name].mean())
+        for key in allowed_ids
+    }
     expected_best = min(
         allowed_ids,
-        key=lambda key: (float(expected_loss_by_id[key]), key),
+        key=lambda key: (means[key], key),
     )
     best = str(gate["best"])
     if best != expected_best:
-        raise ValueError(f"{name}: best cell does not match surface minimum")
+        raise ValueError(f"{name}: best cell does not match vector minimum")
 
     retained = set(map(str, gate["retained"]))
     derived = {
@@ -372,37 +432,40 @@ def _validate_one_se_gate(
     if best not in retained:
         raise ValueError(f"{name}: best cell not retained")
 
-    best_loss = float(expected_loss_by_id[best])
+    reference = vectors_by_id[best][vector_name]
     for key, record in records.items():
+        value = vectors_by_id[key][vector_name]
+        difference = value - reference
+        expected_loss = means[key]
+        expected_difference = float(difference.mean())
+        expected_se = float(
+            0.0
+            if key == best
+            else difference.std(ddof=1) / math.sqrt(len(difference))
+        )
+
         mean_loss = _finite_number(
             record["mean_loss"], name=f"{name}:{key}:mean_loss"
         )
-        expected_loss = float(expected_loss_by_id[key])
         if abs(mean_loss - expected_loss) > 1e-12:
-            raise ValueError(f"{name}: recorded mean loss mismatches surface")
+            raise ValueError(f"{name}: recorded mean loss mismatches vectors")
         mean_difference = _finite_number(
             record["mean_difference_vs_best"],
             name=f"{name}:{key}:mean_difference",
         )
-        expected_difference = expected_loss - best_loss
         if abs(mean_difference - expected_difference) > 1e-12:
             raise ValueError(
-                f"{name}: mean difference mismatches surface losses"
+                f"{name}: mean difference mismatches paired vectors"
             )
         paired_se = _finite_number(
             record["paired_se"],
             name=f"{name}:{key}:paired_se",
         )
-        if paired_se < 0.0:
-            raise ValueError(f"{name}: negative paired SE")
-        expected_keep = mean_difference <= paired_se + 1e-12
+        if abs(paired_se - expected_se) > 1e-12:
+            raise ValueError(f"{name}: paired SE mismatches paired vectors")
+        expected_keep = expected_difference <= expected_se + 1e-12
         if bool(record["retained"]) != expected_keep:
             raise ValueError(f"{name}: decision violates one-SE rule")
-    best_record = records[best]
-    if abs(float(best_record["mean_difference_vs_best"])) > 1e-12:
-        raise ValueError(f"{name}: best mean difference is not zero")
-    if abs(float(best_record["paired_se"])) > 1e-12:
-        raise ValueError(f"{name}: best paired SE is not zero")
     return retained
 
 
@@ -413,32 +476,35 @@ def validate_joint_selection(
     by_id = {str(cell["cell_id"]): cell for cell in surface}
     if len(by_id) != len(surface):
         raise ValueError("calibration cell_id values are not unique")
+    vectors, group_count = _validate_selection_vectors(
+        calibration, by_id=by_id
+    )
     selection = calibration["selection"]
+
     nll_retained = _validate_one_se_gate(
         selection["nll_one_se"],
         allowed_ids=set(by_id),
-        expected_loss_by_id={
-            key: float(cell["nll"]) for key, cell in by_id.items()
-        },
+        vectors_by_id=vectors,
+        vector_name="group_nll",
         name="NLL one-SE",
     )
     if str(selection["raw_nll_best"]) != str(
         selection["nll_one_se"]["best"]
     ):
         raise ValueError("raw NLL best/gate best mismatch")
+
     es_retained = _validate_one_se_gate(
         selection["es_one_se"],
         allowed_ids=nll_retained,
-        expected_loss_by_id={
-            key: float(by_id[key]["energy_score_m"])
-            for key in nll_retained
-        },
+        vectors_by_id=vectors,
+        vector_name="group_energy_score",
         name="ES one-SE",
     )
     if str(selection["raw_es_best_within_nll_set"]) != str(
         selection["es_one_se"]["best"]
     ):
         raise ValueError("raw ES best/gate best mismatch")
+
     selected_id = str(selection["selected_cell_id"])
     if selected_id not in es_retained:
         raise ValueError("selected cell outside ES one-SE set")
@@ -456,7 +522,19 @@ def validate_joint_selection(
     for metric in ("nll", "energy_score_m", "posterior_mean_mae_m"):
         if abs(float(selected_cell[metric]) - float(surface_cell[metric])) > 1e-12:
             raise ValueError(f"selected cell {metric} mismatch surface")
+    for vector_name in ("group_nll", "group_energy_score"):
+        selected_vector = np.asarray(
+            selected_cell[vector_name], dtype=np.float64
+        )
+        if selected_vector.shape != (group_count,) or not np.array_equal(
+            selected_vector,
+            vectors[selected_id][vector_name],
+        ):
+            raise ValueError(
+                f"selected cell {vector_name} mismatches audit vectors"
+            )
     return {
+        "coordinate_groups": group_count,
         "nll_one_se_size": int(len(nll_retained)),
         "es_one_se_size": int(len(es_retained)),
         "selected_cell_id": selected_id,
