@@ -187,3 +187,28 @@ def test_role_unseen_ap_is_ignored_by_candidate_reranker_features():
             second, observed, embedding, candidates, coarse
         )
     assert torch.allclose(features_a, features_b, atol=1e-7, rtol=0)
+
+
+def test_unseen_ap_memory_cannot_change_candidate_features():
+    model, *_rest = _state()
+    model.eval()
+    model.encoder.seen_ap_mask[2] = False
+
+    rss = torch.tensor([[-0.8, -0.4, 0.9]], dtype=torch.float32)
+    observed = torch.ones_like(rss, dtype=torch.bool)
+    candidates = torch.tensor([[0, 1, 2, 3]], dtype=torch.long)
+    coarse = torch.tensor([[0.4, 0.3, 0.2, 0.1]], dtype=torch.float32)
+
+    with torch.no_grad():
+        embedding = model.encoder(rss, observed)
+        baseline = model.candidate_evidence_features_v185(
+            rss, observed, embedding, candidates, coarse
+        )
+        model.anchor_detection_prob[:, 2] = torch.tensor([0.98, 0.91, 0.83, 0.77])
+        model.anchor_rss_center[:, 2] = torch.tensor([-1.0, -0.3, 0.4, 1.0])
+        model.anchor_rss_scale[:, 2] = torch.tensor([0.05, 0.2, 0.7, 1.2])
+        changed = model.candidate_evidence_features_v185(
+            rss, observed, embedding, candidates, coarse
+        )
+
+    assert torch.allclose(baseline, changed, atol=1e-7, rtol=0)
