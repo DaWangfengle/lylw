@@ -14,7 +14,9 @@ import torch
 
 from fhm_dapp_tim.fhm_dapp.v18_4_datasets import dataset_summary
 from fhm_dapp_tim.fhm_dapp.uji_v18_5_development import (
+    MODEL_SEED,
     _build_training_state,
+    _set_seed,
 )
 from fhm_dapp_tim.fhm_dapp.v18_5_core import temperature_base_posterior
 from fhm_dapp_tim.fhm_dapp.v18_5_datasets import load_uji
@@ -82,6 +84,7 @@ def _small_reference(state, rows, device, *, temperature: float):
 
 
 def run_smoke(device_name: str = "cpu") -> dict[str, object]:
+    _set_seed(MODEL_SEED)
     device = torch.device(device_name)
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable")
