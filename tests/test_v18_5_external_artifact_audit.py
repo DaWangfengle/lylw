@@ -15,27 +15,40 @@ from fhm_dapp_tim.fhm_dapp import v18_5_external_artifact_audit as audit
 def _calibration_fixture():
     selector_cells = []
     surface = []
+    selection_vectors = {}
+    group_order = [[0, 0, 0.0, 0.0], [0, 0, 1.0, 0.0], [0, 0, 2.0, 0.0]]
     for temperature in map(float, V185_CONFIG["temperature_grid"]):
         for epsilon in map(float, V185_CONFIG["epsilon_kl_grid"]):
             for scale in map(float, V185_CONFIG["scale_grid"]):
                 cell_id = f"T={temperature:.2f}|E={epsilon:.3f}|S={scale:.2f}"
+                group_nll = [1.0, 1.0, 1.0]
+                group_es = [2.0, 2.0, 2.0]
                 summary = {
                     "cell_id": cell_id,
                     "temperature": temperature,
                     "epsilon_kl": epsilon,
                     "scale_multiplier": scale,
                     "nll": 1.0,
+                    "nll_se": 0.0,
                     "energy_score_m": 2.0,
+                    "energy_score_se_m": 0.0,
                     "posterior_mean_mae_m": 3.0,
                 }
                 surface.append(summary)
+                selection_vectors[cell_id] = {
+                    "group_nll": group_nll,
+                    "group_energy_score": group_es,
+                }
                 selector_cells.append({
                     **summary,
-                    "group_nll": [1.0, 1.0, 1.0],
-                    "group_energy_score": [2.0, 2.0, 2.0],
+                    "group_nll": group_nll,
+                    "group_energy_score": group_es,
                 })
     return {
         "surface": surface,
+        "coordinate_groups": len(group_order),
+        "selection_group_order": group_order,
+        "selection_vectors": selection_vectors,
         "selection": select_joint_calibration(selector_cells),
     }
 
