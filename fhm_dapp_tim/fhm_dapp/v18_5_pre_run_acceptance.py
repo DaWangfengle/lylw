@@ -130,18 +130,23 @@ def _verification_contract() -> dict[str, object]:
 
 
 def _compile_targets() -> list[str]:
-    root = PACKAGE_ROOT / "fhm_dapp"
-    paths = sorted(root.glob("*v18_5*.py"))
-    uji = root / "uji_v18_5_development.py"
-    if uji not in paths:
-        paths.append(uji)
-    if not paths:
-        raise RuntimeError("no V18.5 modules found for compilation")
-    relative = []
-    for path in paths:
+    """Compile every Python file that participates in method or verification."""
+
+    relative_paths = {
+        path
+        for path in (*METHOD_CONTRACT_PATHS, *AUXILIARY_VERIFICATION_PATHS)
+        if path.endswith(".py")
+    }
+    if not relative_paths:
+        raise RuntimeError("no V18.5 method/verification modules found")
+    compiled = []
+    for relative in sorted(relative_paths):
+        path = REPO_ROOT / relative
+        if not path.is_file():
+            raise FileNotFoundError(path)
         py_compile.compile(str(path), doraise=True)
-        relative.append(str(path.relative_to(REPO_ROOT)))
-    return relative
+        compiled.append(relative)
+    return compiled
 
 
 def _test_targets() -> list[str]:
