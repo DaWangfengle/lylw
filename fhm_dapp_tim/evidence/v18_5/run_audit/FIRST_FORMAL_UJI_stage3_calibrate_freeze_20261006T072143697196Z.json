@@ -1,0 +1,22 @@
+{
+  "branch": "v18-5-joint-radio-calibration",
+  "child_pid": 13888,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v18_5_development",
+    "calibrate-freeze",
+    "--device",
+    "cuda"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "exit_code": 0,
+  "finished_utc": "2026-10-06T08:23:24.599629+00:00",
+  "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_5\\run_audit\\FIRST_FORMAL_UJI_stage3_calibrate_freeze_20261006T072143697196Z.log",
+  "runtime_seconds": 3700.8234193000026,
+  "source_commit_sha": "2e84fac20b8a98bcaaeff6783ca1e3b63a8a5407",
+  "stage": "stage3_calibrate_freeze",
+  "started_utc": "2026-10-06T07:21:43.697196+00:00",
+  "status": "PASS",
+  "stdout_unbuffered_only_environment_change": true
+}

@@ -1,0 +1,20 @@
+{
+  "branch": "v18-5-joint-radio-calibration",
+  "child_pid": 3552,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.v18_5_pre_run_acceptance",
+    "--require-cuda"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "exit_code": 1,
+  "finished_utc": "2026-10-06T06:00:06.484531+00:00",
+  "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_5\\run_audit\\FIRST_FORMAL_UJI_stage0_acceptance_20261006T055942748916Z.log",
+  "runtime_seconds": 23.65955959999701,
+  "source_commit_sha": "bab4c496ea1394451f94a8a85e52f6c6b03a1b0a",
+  "stage": "stage0_acceptance",
+  "started_utc": "2026-10-06T05:59:42.748916+00:00",
+  "status": "FAIL",
+  "stdout_unbuffered_only_environment_change": true
+}

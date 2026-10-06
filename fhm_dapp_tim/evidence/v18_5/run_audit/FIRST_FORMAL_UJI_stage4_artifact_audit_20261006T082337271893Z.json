@@ -1,0 +1,19 @@
+{
+  "branch": "v18-5-joint-radio-calibration",
+  "child_pid": 6932,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "exit_code": 0,
+  "finished_utc": "2026-10-06T08:23:42.611771+00:00",
+  "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_5\\run_audit\\FIRST_FORMAL_UJI_stage4_artifact_audit_20261006T082337271893Z.log",
+  "runtime_seconds": 5.257593200003612,
+  "source_commit_sha": "2e84fac20b8a98bcaaeff6783ca1e3b63a8a5407",
+  "stage": "stage4_artifact_audit",
+  "started_utc": "2026-10-06T08:23:37.271893+00:00",
+  "status": "PASS",
+  "stdout_unbuffered_only_environment_change": true
+}

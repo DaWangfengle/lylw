@@ -1,0 +1,43 @@
+{
+  "branch": "v18-5-joint-radio-calibration",
+  "created_utc": "2026-10-06T06:05:44.375602+00:00",
+  "focused_regression": {
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_v18_5_pre_run_acceptance.py::test_test_target_discovery_includes_external_and_uji_contracts"
+    ],
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 1,
+    "runtime_seconds_reported": 3.76,
+    "skipped": 0,
+    "xfail": 0
+  },
+  "git_push_or_upload_executed": false,
+  "human_authorization": "修复并继续跑",
+  "local_commit_created_to_bind_clean_source": true,
+  "method_contract_sha256": "745824e4a8a9ca1972bdf225f2d97ebd84830751a79160576b5834645b142b05",
+  "method_contract_unchanged": true,
+  "preserved_failure_record_sha256": "8c8e4aa129fe0a19032bcb976e41925a39902bbdf11c9998dba8e47c4037f1e3",
+  "prior_failed_source_commit_sha": "bab4c496ea1394451f94a8a85e52f6c6b03a1b0a",
+  "record_type": "V18.5 authorized Windows acceptance portability repair",
+  "repair": {
+    "changed_lines": 1,
+    "new": "return [path.relative_to(REPO_ROOT).as_posix() for path in paths]",
+    "new_sha256": "78c0c1d257f03baa4ef417caf2d762c3446e30a22fdfd1dcb623cfe09633f4da",
+    "old": "return [str(path.relative_to(REPO_ROOT)) for path in paths]",
+    "old_sha256": "ce3ef34f58e31652b7b1dae67ed0b39890aa74eed76084dd6485adb6303e3b9a",
+    "path": "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py"
+  },
+  "repair_record_sha256": "099a1c5fe3098d72c1f29c3468de6dbc383073df4999337524ea56270583398a",
+  "repair_source_commit_sha": "2e84fac20b8a98bcaaeff6783ca1e3b63a8a5407",
+  "restart_policy": "Repeat the complete require-cuda acceptance; continue to prepare only after PASS. Preserve every prior failed record and all formal write-once protections.",
+  "scientific_method_or_grid_or_seed_or_selector_modified": false,
+  "tests_modified": false,
+  "tracked_source_clean": true,
+  "verification_contract_after_sha256": "52a6650a17908ebb6b37870d51c89f1f3fb0b5634dcf539577810a54baa35a6f",
+  "verification_contract_before_sha256": "643613e3445d23de8197ef37053cec8d8a73dbe3f62088adf60bafdd031bcb1c"
+}

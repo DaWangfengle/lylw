@@ -1,0 +1,139 @@
+{
+  "acceptance_sha256": null,
+  "boundary_confirmations": {
+    "external_formal_evaluation_executed": false,
+    "external_test_performance_accessed": false,
+    "formal_training_executed": false,
+    "git_commit_executed": false,
+    "git_push_or_upload_executed": false,
+    "method_or_grid_or_seed_or_selector_modified": false,
+    "post_hoc_probe_executed": false,
+    "source_modified": false,
+    "tests_modified": false,
+    "tracked_source_clean": true,
+    "uji_validationData_accessed": false
+  },
+  "branch": "v18-5-joint-radio-calibration",
+  "compile": {
+    "completed_before_test_failure": true,
+    "module_count": 19
+  },
+  "created_utc": "2026-10-06T06:02:22.598917+00:00",
+  "environment": {
+    "cpu_smoke": "NOT_REACHED",
+    "cuda_smoke": "NOT_REACHED",
+    "preflight_cuda_available": true,
+    "preflight_device": "NVIDIA GeForce RTX 2060",
+    "python": "3.12.12",
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "torch": "2.10.0+cu128"
+  },
+  "execution": {
+    "branch": "v18-5-joint-radio-calibration",
+    "child_pid": 3552,
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "fhm_dapp_tim.fhm_dapp.v18_5_pre_run_acceptance",
+      "--require-cuda"
+    ],
+    "cwd": "D:\\liuyanlunwen",
+    "exit_code": 1,
+    "finished_utc": "2026-10-06T06:00:06.484531+00:00",
+    "log": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_5\\run_audit\\FIRST_FORMAL_UJI_stage0_acceptance_20261006T055942748916Z.log",
+    "runtime_seconds": 23.65955959999701,
+    "source_commit_sha": "bab4c496ea1394451f94a8a85e52f6c6b03a1b0a",
+    "stage": "stage0_acceptance",
+    "started_utc": "2026-10-06T05:59:42.748916+00:00",
+    "status": "FAIL",
+    "stdout_unbuffered_only_environment_change": true
+  },
+  "execution_record_sha256": "dd2c416601c6936a4e8829295f06fc9ae45dcb50161038b90b9dbf7789df2569",
+  "fail_closed_basis": "User instruction sections 5 and 14: stop immediately on acceptance/contract-test failure; do not rescue by modifying the method or tests or continue to prepare.",
+  "failure": {
+    "actual_example": "tests\\test_uji_v18_5_development.py",
+    "current_expression": "str(path.relative_to(REPO_ROOT))",
+    "expected_example": "tests/test_uji_v18_5_development.py",
+    "function": "_test_targets",
+    "remediation_applied": false,
+    "retries": 0,
+    "root_cause": "Windows str(Path.relative_to(...)) serializes backslashes, whereas the discovery contract requires POSIX forward slashes. The target files are discovered but their string representations fail the membership assertion.",
+    "source": "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py",
+    "suggested_minimal_remediation": "Return path.relative_to(REPO_ROOT).as_posix() in _test_targets; retain all tests and scientific method/grid/seed/selector definitions. This recommendation was NOT applied."
+  },
+  "formal_artifact_absence": {
+    "fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.json": true,
+    "fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.md": true,
+    "fhm_dapp_tim/evidence/v18_5/uji_calibration_v18_5.json": true,
+    "fhm_dapp_tim/evidence/v18_5/uji_development_v18_5.json": true,
+    "fhm_dapp_tim/evidence/v18_5/uji_method_freeze_v18_5.json": true,
+    "fhm_dapp_tim/evidence/v18_5/uji_registry_v18_5.json": true,
+    "fhm_dapp_tim/models/v18_5/uji_lambda_0p00.pt": true,
+    "fhm_dapp_tim/models/v18_5/uji_lambda_0p10.pt": true,
+    "fhm_dapp_tim/models/v18_5/uji_lambda_0p25.pt": true,
+    "fhm_dapp_tim/models/v18_5/uji_lambda_0p50.pt": true,
+    "fhm_dapp_tim/models/v18_5/uji_selection_refit.pt": true
+  },
+  "instruction_observed_tip": "173988d027998789735d1fe6ac1df8dd2fd2b7d9",
+  "instruction_path": "C:\\Users\\LiuYan\\.codex\\attachments\\8d635b93-c61d-4117-844e-f7a6e26e55f9\\Pasted text.txt",
+  "instruction_sha256": "0254de3d0bb8b683732cbdb4112231b4695071a0efff77af0275b76a5650c7e8",
+  "observed_method_contract": {
+    "contract_sha256": "745824e4a8a9ca1972bdf225f2d97ebd84830751a79160576b5834645b142b05",
+    "files": {
+      "fhm_dapp_tim/evidence/v18_5/DESIGN_V18_5.md": "2d7fa23e852f18cbc8020259a67ec752305e35ab25a6f2997e94fdadc0e028f0",
+      "fhm_dapp_tim/evidence/v18_5/RUNBOOK_EXTERNAL_V18_5.md": "64b35725ce6fdc608f21e57f3634436df003404cd96acef942ebd08a75d98211",
+      "fhm_dapp_tim/evidence/v18_5/RUNBOOK_UJI_V18_5.md": "260aec7bc5c5e9fba85e0cd0d7b5f87870a8f9281c3809fa3f025f0e31e1aeb8",
+      "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+      "fhm_dapp_tim/fhm_dapp/dapp.py": "154013a4b6fd5bf4c19abd0c94a1ac81dd0200af0a41bf6d01e479bcd8db6266",
+      "fhm_dapp_tim/fhm_dapp/model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_5_development.py": "554220100ce2bc6d662571d4194acc35a594b2270ab4e471ddbbd2398cc4a26a",
+      "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+      "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py": "5c8cf022db7ff53aafb74fc118ba87c546520371ffdd38f6eb68d4456f25850a",
+      "fhm_dapp_tim/fhm_dapp/v18_5_contract.py": "b110dec83ff6531f07e722810f38a23dcbd8e1ecff54cbf67c84c6bc14a0fcfa",
+      "fhm_dapp_tim/fhm_dapp/v18_5_core.py": "cf4375e67dd38cc84732b5e79c602bd325b3e9b6c5150c1056904ededb005571",
+      "fhm_dapp_tim/fhm_dapp/v18_5_datasets.py": "ddcf56c77277897494a59fa3bbd133a919dadc37316982472950bab8f9079114",
+      "fhm_dapp_tim/fhm_dapp/v18_5_external.py": "b55be4232711b81249bac31e8500fa31eb35b39c543f50c43aee5d0379320c90",
+      "fhm_dapp_tim/fhm_dapp/v18_5_model.py": "392d7ca7716f994b485b5c084050523d6553d8bb84fbd0afd0946d2472124c26",
+      "fhm_dapp_tim/fhm_dapp/v18_5_protocol.py": "07eef696576b9c1228b4733158e8f2e2a69ba9be4f99a1ff52850ba1fdb6cb45",
+      "fhm_dapp_tim/fhm_dapp/v18_5_radio.py": "0311e9336ed7420eb0eb5820e25e1c0afbbd9550de452578e1d5d4ca1934a42d",
+      "fhm_dapp_tim/fhm_dapp/v18_single.py": "a985997202bd85a95e988d797c09dab08521ae18f9c0f557581bf42747c9977e"
+    }
+  },
+  "observed_verification_contract": {
+    "files": {
+      ".github/workflows/v18_5_verification.yml": "8324e76c71394e9b7749710a660342310bd6d6255ad753767810225c6c126c6f",
+      "fhm_dapp_tim/fhm_dapp/v18_5_artifact_audit.py": "b909f7b1d6ab7d2f73e12d8c1b5bf4474d7d6ad0d096b9272ab01539e28ebf54",
+      "fhm_dapp_tim/fhm_dapp/v18_5_external_artifact_audit.py": "be973e8b07ada527b922cea100335dfc18a2021d6965af8570c6586129c65d7c",
+      "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py": "ce3ef34f58e31652b7b1dae67ed0b39890aa74eed76084dd6485adb6303e3b9a",
+      "fhm_dapp_tim/fhm_dapp/v18_5_realdata_smoke.py": "d53c4b7676ff375142479a7725e05a0d88b3f4c07c6d639cdef0b23a1ab66cbe",
+      "fhm_dapp_tim/fhm_dapp/v18_5_revision_audit.py": "65c91d9bf4c94aa87189db56935e8a3646b9151549eb1867b9873c0e86f43322"
+    },
+    "verification_sha256": "643613e3445d23de8197ef37053cec8d8a73dbe3f62088adf60bafdd031bcb1c"
+  },
+  "preserved_failure_evidence": {
+    "fhm_dapp_tim\\evidence\\v18_5\\run_audit\\FIRST_FORMAL_UJI_stage0_acceptance_20261006T055942748916Z.json": "404991cae743b8971c675071139489aa2cb1fe3471722101d8082db8279969f9",
+    "fhm_dapp_tim\\evidence\\v18_5\\run_audit\\FIRST_FORMAL_UJI_stage0_acceptance_20261006T055942748916Z.log": "0b0a1e407e3f32e2b0dd71172e8f26d8b325f74391616cf1c67d6d008febba0b"
+  },
+  "pytest": {
+    "failed": 1,
+    "failure": "tests/test_v18_5_pre_run_acceptance.py::test_test_target_discovery_includes_external_and_uji_contracts",
+    "failure_line": 34,
+    "passed": 103,
+    "runtime_seconds": 10.94,
+    "skipped": 0,
+    "total_executed": 104,
+    "xfailed": 0,
+    "xpassed": 0
+  },
+  "record_type": "V18.5 first formal UJI execution failure record",
+  "scientific_status": "FORMAL_UJI_NOT_STARTED",
+  "source_commit_sha": "bab4c496ea1394451f94a8a85e52f6c6b03a1b0a",
+  "stages": {
+    "acceptance": "FAIL",
+    "calibrate_freeze": "NOT_RUN",
+    "develop": "NOT_RUN",
+    "formal_artifact_audit": "NOT_RUN",
+    "prepare": "NOT_RUN"
+  },
+  "status": "FAIL_CLOSED_AT_STAGE_0"
+}

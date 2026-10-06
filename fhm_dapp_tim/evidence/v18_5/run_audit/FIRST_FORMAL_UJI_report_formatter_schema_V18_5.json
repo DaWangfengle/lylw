@@ -1,0 +1,12 @@
+{
+  "record_type": "Reporting-only JSON schema extraction correction",
+  "stage": "post-audit descriptive reporting",
+  "formal_artifact_audit_status": "PASS",
+  "first_formatter_exit_code": 1,
+  "first_formatter_output": "Traceback (most recent call last):\r\n  File \"D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_5\\run_audit\\v185_execution_report_builder.tmp\", line 66, in <module>\r\n    es_best=min(eligible,key=lambda v:(v['energy_score_m'],v['epoch']))\r\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v18_5\\run_audit\\v185_execution_report_builder.tmp\", line 66, in <lambda>\r\n    es_best=min(eligible,key=lambda v:(v['energy_score_m'],v['epoch']))\r\n                                                           ~^^^^^^^^^\r\nKeyError: 'epoch'\r\n",
+  "problem": "Epoch is on the trajectory entry, not inside its development_base metrics.",
+  "correction": "Read the existing outer trajectory epoch and pair it with the recorded development_base metrics.",
+  "scientific_source_or_artifacts_modified": false,
+  "formal_stage_reexecuted": false,
+  "report_files_written_by_failed_attempt": false
+}

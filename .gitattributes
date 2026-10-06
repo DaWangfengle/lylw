@@ -23,3 +23,10 @@ fhm_dapp_tim/evidence/v18_4/COUPLING_STRATUM_PROBE_V18_4.json -text
 fhm_dapp_tim/evidence/v18_4/COUPLING_STRATUM_PROBE_V18_4.md -text
 fhm_dapp_tim/evidence/v18_4/run_audit/COUPLING_STRATUM_PROBE_EXECUTION_V18_4.json -text
 fhm_dapp_tim/evidence/v18_4/run_audit/COUPLING_STRATUM_PROBE_EXECUTION_V18_4.md -text
+
+# Preserve exact bytes for V18.5 frozen results and execution/repair evidence.
+fhm_dapp_tim/evidence/v18_5/*_v18_5.json -text
+fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.json -text
+fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.md -text
+fhm_dapp_tim/evidence/v18_5/run_audit/*.json -text
+fhm_dapp_tim/evidence/v18_5/run_audit/*.md -text

@@ -1,0 +1,1063 @@
+{
+  "acceptance_sha256": "571322bcea9a1af91f0e999a0c4607f52ee2cb929453b442e7a8177b299add30",
+  "acceptance_version": "v18_5_pre_run_acceptance_v1_20261006",
+  "compile": {
+    "count": 19,
+    "modules": [
+      "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py",
+      "fhm_dapp_tim/fhm_dapp/dapp.py",
+      "fhm_dapp_tim/fhm_dapp/model.py",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_5_development.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py",
+      "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_artifact_audit.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_contract.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_core.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_datasets.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_external.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_external_artifact_audit.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_model.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_protocol.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_radio.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_realdata_smoke.py",
+      "fhm_dapp_tim/fhm_dapp/v18_5_revision_audit.py",
+      "fhm_dapp_tim/fhm_dapp/v18_single.py"
+    ]
+  },
+  "external_test_performance_accessed": false,
+  "formal_external_artifacts_absent_after": {
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tampere_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tampere_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-A12_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-A12_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-POCO_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-POCO_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S20_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S20_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S7_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S7_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-tabS7_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-tabS7_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-pooled_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-pooled_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\uts_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\uts_selection_refit.pt.tmp": true
+  },
+  "formal_external_artifacts_absent_before": {
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tampere_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-A12_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-POCO_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S20_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-S7_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-lodo-tabS7_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\tuji-pooled_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_consumption_lock.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_consumption_lock.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_result.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_test_result.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_freeze.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_freeze.json.tmp": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_manifest.json": true,
+    "fhm_dapp_tim\\evidence\\v18_5\\external\\uts_training_manifest.json.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tampere_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tampere_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-A12_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-A12_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-POCO_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-POCO_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S20_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S20_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S7_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-S7_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-tabS7_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-lodo-tabS7_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-pooled_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\tuji-pooled_selection_refit.pt.tmp": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\uts_selection_refit.pt": true,
+    "fhm_dapp_tim\\models\\v18_5\\external\\uts_selection_refit.pt.tmp": true
+  },
+  "formal_uji_artifacts_absent_after": {
+    "evidence\\v18_5\\uji_calibration_v18_5.json": true,
+    "evidence\\v18_5\\uji_calibration_v18_5.json.tmp": true,
+    "evidence\\v18_5\\uji_development_v18_5.json": true,
+    "evidence\\v18_5\\uji_development_v18_5.json.tmp": true,
+    "evidence\\v18_5\\uji_method_freeze_v18_5.json": true,
+    "evidence\\v18_5\\uji_method_freeze_v18_5.json.tmp": true,
+    "evidence\\v18_5\\uji_registry_v18_5.json": true,
+    "evidence\\v18_5\\uji_registry_v18_5.json.tmp": true,
+    "models\\v18_5\\uji_lambda_0p00.pt": true,
+    "models\\v18_5\\uji_lambda_0p00.pt.tmp": true,
+    "models\\v18_5\\uji_lambda_0p10.pt": true,
+    "models\\v18_5\\uji_lambda_0p10.pt.tmp": true,
+    "models\\v18_5\\uji_lambda_0p25.pt": true,
+    "models\\v18_5\\uji_lambda_0p25.pt.tmp": true,
+    "models\\v18_5\\uji_lambda_0p50.pt": true,
+    "models\\v18_5\\uji_lambda_0p50.pt.tmp": true,
+    "models\\v18_5\\uji_selection_refit.pt": true,
+    "models\\v18_5\\uji_selection_refit.pt.tmp": true
+  },
+  "formal_uji_artifacts_absent_before": {
+    "evidence\\v18_5\\uji_calibration_v18_5.json": true,
+    "evidence\\v18_5\\uji_calibration_v18_5.json.tmp": true,
+    "evidence\\v18_5\\uji_development_v18_5.json": true,
+    "evidence\\v18_5\\uji_development_v18_5.json.tmp": true,
+    "evidence\\v18_5\\uji_method_freeze_v18_5.json": true,
+    "evidence\\v18_5\\uji_method_freeze_v18_5.json.tmp": true,
+    "evidence\\v18_5\\uji_registry_v18_5.json": true,
+    "evidence\\v18_5\\uji_registry_v18_5.json.tmp": true,
+    "models\\v18_5\\uji_lambda_0p00.pt": true,
+    "models\\v18_5\\uji_lambda_0p00.pt.tmp": true,
+    "models\\v18_5\\uji_lambda_0p10.pt": true,
+    "models\\v18_5\\uji_lambda_0p10.pt.tmp": true,
+    "models\\v18_5\\uji_lambda_0p25.pt": true,
+    "models\\v18_5\\uji_lambda_0p25.pt.tmp": true,
+    "models\\v18_5\\uji_lambda_0p50.pt": true,
+    "models\\v18_5\\uji_lambda_0p50.pt.tmp": true,
+    "models\\v18_5\\uji_selection_refit.pt": true,
+    "models\\v18_5\\uji_selection_refit.pt.tmp": true
+  },
+  "formal_v185_test_scoring_executed": false,
+  "formal_v185_training_executed": false,
+  "git": {
+    "branch": "v18-5-joint-radio-calibration",
+    "source_commit_sha": "2e84fac20b8a98bcaaeff6783ca1e3b63a8a5407",
+    "tracked_source_dirty": false
+  },
+  "method_contract": {
+    "contract_sha256": "745824e4a8a9ca1972bdf225f2d97ebd84830751a79160576b5834645b142b05",
+    "files": {
+      "fhm_dapp_tim/evidence/v18_5/DESIGN_V18_5.md": "2d7fa23e852f18cbc8020259a67ec752305e35ab25a6f2997e94fdadc0e028f0",
+      "fhm_dapp_tim/evidence/v18_5/RUNBOOK_EXTERNAL_V18_5.md": "64b35725ce6fdc608f21e57f3634436df003404cd96acef942ebd08a75d98211",
+      "fhm_dapp_tim/evidence/v18_5/RUNBOOK_UJI_V18_5.md": "260aec7bc5c5e9fba85e0cd0d7b5f87870a8f9281c3809fa3f025f0e31e1aeb8",
+      "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+      "fhm_dapp_tim/fhm_dapp/dapp.py": "154013a4b6fd5bf4c19abd0c94a1ac81dd0200af0a41bf6d01e479bcd8db6266",
+      "fhm_dapp_tim/fhm_dapp/model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "fhm_dapp_tim/fhm_dapp/uji_v18_5_development.py": "554220100ce2bc6d662571d4194acc35a594b2270ab4e471ddbbd2398cc4a26a",
+      "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+      "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py": "5c8cf022db7ff53aafb74fc118ba87c546520371ffdd38f6eb68d4456f25850a",
+      "fhm_dapp_tim/fhm_dapp/v18_5_contract.py": "b110dec83ff6531f07e722810f38a23dcbd8e1ecff54cbf67c84c6bc14a0fcfa",
+      "fhm_dapp_tim/fhm_dapp/v18_5_core.py": "cf4375e67dd38cc84732b5e79c602bd325b3e9b6c5150c1056904ededb005571",
+      "fhm_dapp_tim/fhm_dapp/v18_5_datasets.py": "ddcf56c77277897494a59fa3bbd133a919dadc37316982472950bab8f9079114",
+      "fhm_dapp_tim/fhm_dapp/v18_5_external.py": "b55be4232711b81249bac31e8500fa31eb35b39c543f50c43aee5d0379320c90",
+      "fhm_dapp_tim/fhm_dapp/v18_5_model.py": "392d7ca7716f994b485b5c084050523d6553d8bb84fbd0afd0946d2472124c26",
+      "fhm_dapp_tim/fhm_dapp/v18_5_protocol.py": "07eef696576b9c1228b4733158e8f2e2a69ba9be4f99a1ff52850ba1fdb6cb45",
+      "fhm_dapp_tim/fhm_dapp/v18_5_radio.py": "0311e9336ed7420eb0eb5820e25e1c0afbbd9550de452578e1d5d4ca1934a42d",
+      "fhm_dapp_tim/fhm_dapp/v18_single.py": "a985997202bd85a95e988d797c09dab08521ae18f9c0f557581bf42747c9977e"
+    }
+  },
+  "official_uji_validation_accessed": false,
+  "revision_audit": {
+    "audit_version": "v18_5_pre_run_v1_20261005",
+    "external_test_performance_accessed": false,
+    "formal_artifacts_absent": {
+      "evidence\\v18_5\\uji_calibration_v18_5.json": true,
+      "evidence\\v18_5\\uji_calibration_v18_5.json.tmp": true,
+      "evidence\\v18_5\\uji_development_v18_5.json": true,
+      "evidence\\v18_5\\uji_development_v18_5.json.tmp": true,
+      "evidence\\v18_5\\uji_method_freeze_v18_5.json": true,
+      "evidence\\v18_5\\uji_method_freeze_v18_5.json.tmp": true,
+      "evidence\\v18_5\\uji_registry_v18_5.json": true,
+      "evidence\\v18_5\\uji_registry_v18_5.json.tmp": true,
+      "models\\v18_5\\uji_lambda_0p00.pt": true,
+      "models\\v18_5\\uji_lambda_0p00.pt.tmp": true,
+      "models\\v18_5\\uji_lambda_0p10.pt": true,
+      "models\\v18_5\\uji_lambda_0p10.pt.tmp": true,
+      "models\\v18_5\\uji_lambda_0p25.pt": true,
+      "models\\v18_5\\uji_lambda_0p25.pt.tmp": true,
+      "models\\v18_5\\uji_lambda_0p50.pt": true,
+      "models\\v18_5\\uji_lambda_0p50.pt.tmp": true,
+      "models\\v18_5\\uji_selection_refit.pt": true,
+      "models\\v18_5\\uji_selection_refit.pt.tmp": true
+    },
+    "formal_v185_run": false,
+    "math": {
+      "active_realized_kl": 0.19999999999999996,
+      "beta_greater_than_one": 1.5003169233126206,
+      "energy_affine_invariance": true,
+      "epsilon_zero_identity": true,
+      "minimum_energy_tie_limit": true,
+      "synthetic_calibration_cells": 192,
+      "synthetic_parsimony_choice": {
+        "epsilon_kl": 0.0,
+        "scale_multiplier": 1.0,
+        "temperature": 1.0
+      }
+    },
+    "official_validation_accessed": false,
+    "scientific_status": "OUTCOME_FREE_PRE_RUN",
+    "status": "PASS",
+    "training_only_datasets": {
+      "TUJI1": {
+        "aps": 259,
+        "dataset": "TUJI1",
+        "observed_numeric_minus_one_count": 0,
+        "observed_values_at_or_below_clip_min": 0,
+        "roles": {
+          "fit": {
+            "capacity": {
+              "anchors": 643,
+              "capacity_safe": true,
+              "conservative_required_capacity": 91,
+              "maximum_positive_target_width": 11,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 643,
+            "memory": {
+              "anchors": 643,
+              "ap_pooled_fallback_fraction": 0.46162114124789083,
+              "global_fallback_fraction": 0.5095144022049154,
+              "global_rss_scale": 0.19999998807907104,
+              "local_scale_fraction": 0.028864456547193718,
+              "role_unseen_aps": 10,
+              "seen_ap_fraction": 0.9613899613899614,
+              "seen_aps": 249,
+              "singleton_anchor_fraction": 0.0015552099533437014,
+              "singleton_anchors": 1,
+              "training_observed_values": 72115
+            },
+            "rows": 3202
+          },
+          "selection_refit": {
+            "capacity": {
+              "anchors": 781,
+              "capacity_safe": true,
+              "conservative_required_capacity": 93,
+              "maximum_positive_target_width": 13,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 781,
+            "memory": {
+              "anchors": 781,
+              "ap_pooled_fallback_fraction": 0.47315341681538864,
+              "global_fallback_fraction": 0.49789646972745566,
+              "global_rss_scale": 0.19999998807907104,
+              "local_scale_fraction": 0.028950113457155712,
+              "role_unseen_aps": 4,
+              "seen_ap_fraction": 0.9845559845559846,
+              "seen_aps": 255,
+              "singleton_anchor_fraction": 0.0012804097311139564,
+              "singleton_anchors": 1,
+              "training_observed_values": 87734
+            },
+            "rows": 3895
+          }
+        },
+        "rows": 4595,
+        "split": "train",
+        "visible_ap_max": 59,
+        "visible_ap_mean": 22.50511425462459,
+        "visible_ap_min": 2
+      },
+      "TUJI1_LODO": {
+        "A12": {
+          "aps": 256,
+          "dataset": "TUJI1",
+          "heldout_device_not_loaded": "A12",
+          "observed_numeric_minus_one_count": 0,
+          "observed_values_at_or_below_clip_min": 0,
+          "roles": {
+            "fit": {
+              "capacity": {
+                "anchors": 642,
+                "capacity_safe": true,
+                "conservative_required_capacity": 95,
+                "maximum_positive_target_width": 15,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 642,
+              "memory": {
+                "anchors": 642,
+                "ap_pooled_fallback_fraction": 0.4834014797507788,
+                "global_fallback_fraction": 0.4920779789719626,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.024520541277258567,
+                "role_unseen_aps": 14,
+                "seen_ap_fraction": 0.9453125,
+                "seen_aps": 242,
+                "singleton_anchor_fraction": 0.0,
+                "singleton_anchors": 0,
+                "training_observed_values": 65752
+              },
+              "rows": 2568
+            },
+            "selection_refit": {
+              "capacity": {
+                "anchors": 780,
+                "capacity_safe": true,
+                "conservative_required_capacity": 95,
+                "maximum_positive_target_width": 15,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 780,
+              "memory": {
+                "anchors": 780,
+                "ap_pooled_fallback_fraction": 0.4829627403846154,
+                "global_fallback_fraction": 0.49212740384615383,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.02490985576923077,
+                "role_unseen_aps": 8,
+                "seen_ap_fraction": 0.96875,
+                "seen_aps": 248,
+                "singleton_anchor_fraction": 0.0,
+                "singleton_anchors": 0,
+                "training_observed_values": 80150
+              },
+              "rows": 3125
+            }
+          },
+          "rows": 3678,
+          "split": "train",
+          "training_devices": [
+            "POCO",
+            "S20",
+            "S7",
+            "tabS7"
+          ],
+          "visible_ap_max": 59,
+          "visible_ap_mean": 25.607123436650355,
+          "visible_ap_min": 8
+        },
+        "POCO": {
+          "aps": 252,
+          "dataset": "TUJI1",
+          "heldout_device_not_loaded": "POCO",
+          "observed_numeric_minus_one_count": 0,
+          "observed_values_at_or_below_clip_min": 0,
+          "roles": {
+            "fit": {
+              "capacity": {
+                "anchors": 643,
+                "capacity_safe": true,
+                "conservative_required_capacity": 94,
+                "maximum_positive_target_width": 14,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 643,
+              "memory": {
+                "anchors": 643,
+                "ap_pooled_fallback_fraction": 0.429083660421141,
+                "global_fallback_fraction": 0.5475881902787035,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.02332814930015552,
+                "role_unseen_aps": 11,
+                "seen_ap_fraction": 0.9563492063492064,
+                "seen_aps": 241,
+                "singleton_anchor_fraction": 0.0,
+                "singleton_anchors": 0,
+                "training_observed_values": 57791
+              },
+              "rows": 2591
+            },
+            "selection_refit": {
+              "capacity": {
+                "anchors": 781,
+                "capacity_safe": true,
+                "conservative_required_capacity": 96,
+                "maximum_positive_target_width": 16,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 781,
+              "memory": {
+                "anchors": 781,
+                "ap_pooled_fallback_fraction": 0.4450338394000366,
+                "global_fallback_fraction": 0.5316952218360669,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.02327093876389651,
+                "role_unseen_aps": 3,
+                "seen_ap_fraction": 0.9880952380952381,
+                "seen_aps": 249,
+                "singleton_anchor_fraction": 0.0,
+                "singleton_anchors": 0,
+                "training_observed_values": 70344
+              },
+              "rows": 3155
+            }
+          },
+          "rows": 3704,
+          "split": "train",
+          "training_devices": [
+            "A12",
+            "S20",
+            "S7",
+            "tabS7"
+          ],
+          "visible_ap_max": 59,
+          "visible_ap_mean": 22.2829373650108,
+          "visible_ap_min": 2
+        },
+        "S20": {
+          "aps": 240,
+          "dataset": "TUJI1",
+          "heldout_device_not_loaded": "S20",
+          "observed_numeric_minus_one_count": 0,
+          "observed_values_at_or_below_clip_min": 0,
+          "roles": {
+            "fit": {
+              "capacity": {
+                "anchors": 643,
+                "capacity_safe": true,
+                "conservative_required_capacity": 93,
+                "maximum_positive_target_width": 13,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 643,
+              "memory": {
+                "anchors": 643,
+                "ap_pooled_fallback_fraction": 0.38783696215655783,
+                "global_fallback_fraction": 0.591601866251944,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.020561171591498187,
+                "role_unseen_aps": 7,
+                "seen_ap_fraction": 0.9708333333333333,
+                "seen_aps": 233,
+                "singleton_anchor_fraction": 0.004665629860031105,
+                "singleton_anchors": 3,
+                "training_observed_values": 49938
+              },
+              "rows": 2531
+            },
+            "selection_refit": {
+              "capacity": {
+                "anchors": 781,
+                "capacity_safe": true,
+                "conservative_required_capacity": 93,
+                "maximum_positive_target_width": 13,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 781,
+              "memory": {
+                "anchors": 781,
+                "ap_pooled_fallback_fraction": 0.40447076397780624,
+                "global_fallback_fraction": 0.5748772940674349,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.020651941954758855,
+                "role_unseen_aps": 3,
+                "seen_ap_fraction": 0.9875,
+                "seen_aps": 237,
+                "singleton_anchor_fraction": 0.0038412291933418692,
+                "singleton_anchors": 3,
+                "training_observed_values": 60198
+              },
+              "rows": 3072
+            }
+          },
+          "rows": 3609,
+          "split": "train",
+          "training_devices": [
+            "A12",
+            "POCO",
+            "S7",
+            "tabS7"
+          ],
+          "visible_ap_max": 44,
+          "visible_ap_mean": 19.57134940426711,
+          "visible_ap_min": 2
+        },
+        "S7": {
+          "aps": 251,
+          "dataset": "TUJI1",
+          "heldout_device_not_loaded": "S7",
+          "observed_numeric_minus_one_count": 0,
+          "observed_values_at_or_below_clip_min": 0,
+          "roles": {
+            "fit": {
+              "capacity": {
+                "anchors": 643,
+                "capacity_safe": true,
+                "conservative_required_capacity": 92,
+                "maximum_positive_target_width": 12,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 643,
+              "memory": {
+                "anchors": 643,
+                "ap_pooled_fallback_fraction": 0.4227506769190733,
+                "global_fallback_fraction": 0.5535803907232656,
+                "global_rss_scale": 0.19999998807907104,
+                "local_scale_fraction": 0.023668932357661113,
+                "role_unseen_aps": 12,
+                "seen_ap_fraction": 0.952191235059761,
+                "seen_aps": 239,
+                "singleton_anchor_fraction": 0.003110419906687403,
+                "singleton_anchors": 2,
+                "training_observed_values": 57512
+              },
+              "rows": 2579
+            },
+            "selection_refit": {
+              "capacity": {
+                "anchors": 781,
+                "capacity_safe": true,
+                "conservative_required_capacity": 94,
+                "maximum_positive_target_width": 14,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 781,
+              "memory": {
+                "anchors": 781,
+                "ap_pooled_fallback_fraction": 0.410980916283649,
+                "global_fallback_fraction": 0.5656860394529437,
+                "global_rss_scale": 0.19999998807907104,
+                "local_scale_fraction": 0.023333044263407317,
+                "role_unseen_aps": 8,
+                "seen_ap_fraction": 0.9681274900398407,
+                "seen_aps": 243,
+                "singleton_anchor_fraction": 0.0038412291933418692,
+                "singleton_anchors": 3,
+                "training_observed_values": 69840
+              },
+              "rows": 3133
+            }
+          },
+          "rows": 3681,
+          "split": "train",
+          "training_devices": [
+            "A12",
+            "POCO",
+            "S20",
+            "tabS7"
+          ],
+          "visible_ap_max": 59,
+          "visible_ap_mean": 22.291496875848953,
+          "visible_ap_min": 2
+        },
+        "tabS7": {
+          "aps": 231,
+          "dataset": "TUJI1",
+          "heldout_device_not_loaded": "tabS7",
+          "observed_numeric_minus_one_count": 0,
+          "observed_values_at_or_below_clip_min": 0,
+          "roles": {
+            "fit": {
+              "capacity": {
+                "anchors": 643,
+                "capacity_safe": true,
+                "conservative_required_capacity": 96,
+                "maximum_positive_target_width": 16,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 643,
+              "memory": {
+                "anchors": 643,
+                "ap_pooled_fallback_fraction": 0.40492011876148737,
+                "global_fallback_fraction": 0.5710986784081652,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.023981202830347464,
+                "role_unseen_aps": 0,
+                "seen_ap_fraction": 1.0,
+                "seen_aps": 231,
+                "singleton_anchor_fraction": 0.0015552099533437014,
+                "singleton_anchors": 1,
+                "training_observed_values": 58927
+              },
+              "rows": 2592
+            },
+            "selection_refit": {
+              "capacity": {
+                "anchors": 781,
+                "capacity_safe": true,
+                "conservative_required_capacity": 97,
+                "maximum_positive_target_width": 17,
+                "support_ceiling": 128
+              },
+              "coordinate_groups": 781,
+              "memory": {
+                "anchors": 781,
+                "ap_pooled_fallback_fraction": 0.4007516171408617,
+                "global_fallback_fraction": 0.575391744405829,
+                "global_rss_scale": 0.17500001192092896,
+                "local_scale_fraction": 0.02385663845330939,
+                "role_unseen_aps": 0,
+                "seen_ap_fraction": 1.0,
+                "seen_aps": 231,
+                "singleton_anchor_fraction": 0.0012804097311139564,
+                "singleton_anchors": 1,
+                "training_observed_values": 71595
+              },
+              "rows": 3149
+            }
+          },
+          "rows": 3708,
+          "split": "train",
+          "training_devices": [
+            "A12",
+            "POCO",
+            "S20",
+            "S7"
+          ],
+          "visible_ap_max": 59,
+          "visible_ap_mean": 22.717637540453076,
+          "visible_ap_min": 2
+        }
+      },
+      "Tampere": {
+        "aps": 489,
+        "dataset": "Tampere",
+        "observed_numeric_minus_one_count": 0,
+        "observed_values_at_or_below_clip_min": 0,
+        "roles": {
+          "fit": {
+            "capacity": {
+              "anchors": 312,
+              "capacity_safe": true,
+              "conservative_required_capacity": 92,
+              "maximum_positive_target_width": 12,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 312,
+            "memory": {
+              "anchors": 312,
+              "ap_pooled_fallback_fraction": 0.7300613496932515,
+              "global_fallback_fraction": 0.26993865030674846,
+              "global_rss_scale": 0.15662497282028198,
+              "local_scale_fraction": 0.0,
+              "role_unseen_aps": 7,
+              "seen_ap_fraction": 0.9856850715746421,
+              "seen_aps": 482,
+              "singleton_anchor_fraction": 1.0,
+              "singleton_anchors": 312,
+              "training_observed_values": 13197
+            },
+            "rows": 312
+          },
+          "selection_refit": {
+            "capacity": {
+              "anchors": 379,
+              "capacity_safe": true,
+              "conservative_required_capacity": 92,
+              "maximum_positive_target_width": 12,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 379,
+            "memory": {
+              "anchors": 379,
+              "ap_pooled_fallback_fraction": 0.7505112474437627,
+              "global_fallback_fraction": 0.24948875255623723,
+              "global_rss_scale": 0.1557248830795288,
+              "local_scale_fraction": 0.0,
+              "role_unseen_aps": 4,
+              "seen_ap_fraction": 0.9918200408997955,
+              "seen_aps": 485,
+              "singleton_anchor_fraction": 1.0,
+              "singleton_anchors": 379,
+              "training_observed_values": 16124
+            },
+            "rows": 379
+          }
+        },
+        "rows": 446,
+        "split": "train",
+        "visible_ap_max": 125,
+        "visible_ap_mean": 42.54035874439462,
+        "visible_ap_min": 12
+      },
+      "UJIIndoorLoc": {
+        "aps": 520,
+        "dataset": "UJIIndoorLoc",
+        "observed_numeric_minus_one_count": 0,
+        "observed_values_at_or_below_clip_min": 0,
+        "roles": {
+          "fit": {
+            "capacity": {
+              "anchors": 655,
+              "capacity_safe": true,
+              "conservative_required_capacity": 98,
+              "maximum_positive_target_width": 18,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 655,
+            "memory": {
+              "anchors": 655,
+              "ap_pooled_fallback_fraction": 0.6324075161479742,
+              "global_fallback_fraction": 0.34997944803288317,
+              "global_rss_scale": 0.17500001192092896,
+              "local_scale_fraction": 0.01761303581914269,
+              "role_unseen_aps": 61,
+              "seen_ap_fraction": 0.8826923076923077,
+              "seen_aps": 459,
+              "singleton_anchor_fraction": 0.0,
+              "singleton_anchors": 0,
+              "training_observed_values": 251610
+            },
+            "rows": 14027
+          },
+          "selection_refit": {
+            "capacity": {
+              "anchors": 794,
+              "capacity_safe": true,
+              "conservative_required_capacity": 96,
+              "maximum_positive_target_width": 16,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 794,
+            "memory": {
+              "anchors": 794,
+              "ap_pooled_fallback_fraction": 0.645637957760124,
+              "global_fallback_fraction": 0.33650939740360397,
+              "global_rss_scale": 0.17500001192092896,
+              "local_scale_fraction": 0.01785264483627204,
+              "role_unseen_aps": 57,
+              "seen_ap_fraction": 0.8903846153846153,
+              "seen_aps": 463,
+              "singleton_anchor_fraction": 0.0,
+              "singleton_anchors": 0,
+              "training_observed_values": 305650
+            },
+            "rows": 17032
+          }
+        },
+        "rows": 19937,
+        "split": "train",
+        "visible_ap_max": 51,
+        "visible_ap_mean": 17.994833726237648,
+        "visible_ap_min": 0
+      },
+      "UTSIndoorLoc": {
+        "aps": 589,
+        "dataset": "UTSIndoorLoc",
+        "observed_numeric_minus_one_count": 0,
+        "observed_values_at_or_below_clip_min": 0,
+        "roles": {
+          "fit": {
+            "capacity": {
+              "anchors": 1026,
+              "capacity_safe": true,
+              "conservative_required_capacity": 93,
+              "maximum_positive_target_width": 13,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 1026,
+            "memory": {
+              "anchors": 1026,
+              "ap_pooled_fallback_fraction": 0.8454876107454072,
+              "global_fallback_fraction": 0.15449915110356535,
+              "global_rss_scale": 0.1499999761581421,
+              "local_scale_fraction": 1.3238151027445996e-05,
+              "role_unseen_aps": 32,
+              "seen_ap_fraction": 0.9456706281833617,
+              "seen_aps": 557,
+              "singleton_anchor_fraction": 0.011695906432748537,
+              "singleton_anchors": 12,
+              "training_observed_values": 224150
+            },
+            "rows": 6406
+          },
+          "selection_refit": {
+            "capacity": {
+              "anchors": 1246,
+              "capacity_safe": true,
+              "conservative_required_capacity": 95,
+              "maximum_positive_target_width": 15,
+              "support_ceiling": 128
+            },
+            "coordinate_groups": 1246,
+            "memory": {
+              "anchors": 1246,
+              "ap_pooled_fallback_fraction": 0.864165669701619,
+              "global_fallback_fraction": 0.13582342954159593,
+              "global_rss_scale": 0.1499999761581421,
+              "local_scale_fraction": 1.0900756785039802e-05,
+              "role_unseen_aps": 32,
+              "seen_ap_fraction": 0.9456706281833617,
+              "seen_aps": 557,
+              "singleton_anchor_fraction": 0.012038523274478331,
+              "singleton_anchors": 15,
+              "training_observed_values": 269393
+            },
+            "rows": 7740
+          }
+        },
+        "rows": 9108,
+        "split": "train",
+        "visible_ap_max": 69,
+        "visible_ap_mean": 35.06576635924462,
+        "visible_ap_min": 1
+      }
+    }
+  },
+  "scientific_status": "OUTCOME_FREE_PRE_RUN_ACCEPTED",
+  "smoke": {
+    "cpu": {
+      "anchors": 655,
+      "aps": 520,
+      "development_rows": 3005,
+      "device": "cpu",
+      "epsilon_zero_identity": true,
+      "finite_beta_fraction": 1.0,
+      "fit_rows": 14027,
+      "gradient_norms": {
+        "0.0": 5.95626272680465,
+        "0.25": 7.517234670694461
+      },
+      "losses": {
+        "0.0": {
+          "anchor_nll": 3.783273696899414,
+          "coordinate_nll": 8.041376113891602,
+          "domain_loss": 2.842978000640869,
+          "forced_support_size": 49.0,
+          "hierarchy_loss": 1.5921392440795898,
+          "invariant_aux_loss": 5.523312568664551,
+          "loss": 14.14369647204876,
+          "natural_recall_mass": 0.9923936724662781,
+          "natural_support_size": 48.875,
+          "spatial_contribution": 0.0,
+          "spatial_energy_loss": 2.038917266940917
+        },
+        "0.25": {
+          "anchor_nll": 3.7927236557006836,
+          "coordinate_nll": 8.041376113891602,
+          "domain_loss": 2.841233015060425,
+          "forced_support_size": 50.75,
+          "hierarchy_loss": 1.5795892477035522,
+          "invariant_aux_loss": 5.4640727043151855,
+          "loss": 14.702834153304162,
+          "natural_recall_mass": 0.9923936724662781,
+          "natural_support_size": 50.625,
+          "spatial_contribution": 0.5708599330282832,
+          "spatial_energy_loss": 2.283439732113133
+        }
+      },
+      "mean_compatibility": 0.4696969836950302,
+      "mean_effective_budget": 0.011742424592375754,
+      "mean_realized_kl": 0.011742424636693689,
+      "memory_diagnostics": {
+        "anchors": 655,
+        "ap_pooled_fallback_fraction": 0.6324075161479742,
+        "global_fallback_fraction": 0.34997944803288317,
+        "global_rss_scale": 0.17500001192092896,
+        "local_scale_fraction": 0.01761303581914269,
+        "role_unseen_aps": 61,
+        "seen_ap_fraction": 0.8826923076923077,
+        "seen_aps": 459,
+        "singleton_anchor_fraction": 0.0,
+        "singleton_anchors": 0,
+        "training_observed_values": 251610
+      },
+      "observed_values_at_or_below_clip_min": 0,
+      "optimizer_steps": 0,
+      "posterior_mean_finite": true,
+      "rows": 19937,
+      "status": "success"
+    },
+    "cuda": {
+      "anchors": 655,
+      "aps": 520,
+      "development_rows": 3005,
+      "device": "cuda",
+      "epsilon_zero_identity": true,
+      "finite_beta_fraction": 1.0,
+      "fit_rows": 14027,
+      "gradient_norms": {
+        "0.0": 6.694971074074973,
+        "0.25": 8.369968651004775
+      },
+      "losses": {
+        "0.0": {
+          "anchor_nll": 3.9556775093078613,
+          "coordinate_nll": 8.041376113891602,
+          "domain_loss": 2.7438747882843018,
+          "forced_support_size": 50.25,
+          "hierarchy_loss": 1.5283515453338623,
+          "invariant_aux_loss": 5.376802444458008,
+          "loss": 14.242623269557953,
+          "natural_recall_mass": 1.0,
+          "natural_support_size": 50.25,
+          "spatial_contribution": 0.0,
+          "spatial_energy_loss": 2.5567997310103525
+        },
+        "0.25": {
+          "anchor_nll": 3.9128875732421875,
+          "coordinate_nll": 8.041376113891602,
+          "domain_loss": 2.745356559753418,
+          "forced_support_size": 50.375,
+          "hierarchy_loss": 1.5357985496520996,
+          "invariant_aux_loss": 5.372594356536865,
+          "loss": 14.770175608198947,
+          "natural_recall_mass": 1.0,
+          "natural_support_size": 50.375,
+          "spatial_contribution": 0.5675962291172217,
+          "spatial_energy_loss": 2.270384916468887
+        }
+      },
+      "mean_compatibility": 0.5757575631141663,
+      "mean_effective_budget": 0.014393939077854159,
+      "mean_realized_kl": 0.014393938957801451,
+      "memory_diagnostics": {
+        "anchors": 655,
+        "ap_pooled_fallback_fraction": 0.6324075161479742,
+        "global_fallback_fraction": 0.34997944803288317,
+        "global_rss_scale": 0.17500001192092896,
+        "local_scale_fraction": 0.01761303581914269,
+        "role_unseen_aps": 61,
+        "seen_ap_fraction": 0.8826923076923077,
+        "seen_aps": 459,
+        "singleton_anchor_fraction": 0.0,
+        "singleton_anchors": 0,
+        "training_observed_values": 251610
+      },
+      "observed_values_at_or_below_clip_min": 0,
+      "optimizer_steps": 0,
+      "posterior_mean_finite": true,
+      "rows": 19937,
+      "status": "success"
+    },
+    "cuda_available": true,
+    "cuda_required": true
+  },
+  "status": "PASS",
+  "tests": {
+    "no_skip_xfail": true,
+    "passed": 104,
+    "target_hashes": {
+      "tests/test_uji_v18_5_development.py": "177b30777fdd3369d40e20385f4fe3a9b71d69967710a95e71e876abae714bb9",
+      "tests/test_v18_5_artifact_audit.py": "9f10c42ff416d02940fc8805a990ec17d495a53380c8d4b2b7c845a9ee691e7c",
+      "tests/test_v18_5_core.py": "9b3df50bf257ad90f82b9b0e28ce2fcbc461925c827b17b563d5406b124ce8d4",
+      "tests/test_v18_5_datasets.py": "49357ce3fa06b40de39d549f0ca438cacdb8bc726feaddd8d13a5aed42feeb87",
+      "tests/test_v18_5_external.py": "3eda5ac645d5430b9392b246fa449ed212907a2749c5a144fa498973b349f012",
+      "tests/test_v18_5_external_artifact_audit.py": "30a77a4b7d090502b0eea19a34dc4931eaf425658074a4cae519e67a0a0ce9bd",
+      "tests/test_v18_5_model.py": "882a4c8cc3703f4551510a03f422cdaf5b94bc7bb4088482b25b27d652f21357",
+      "tests/test_v18_5_pre_run_acceptance.py": "f90b053d1fc2f17191128cde8a58b97814abe3820204ebb25483116540b77b4b",
+      "tests/test_v18_5_protocol.py": "d42b9737d7c3a4853731a8fc8a663d1a15def0bcaeebd862b716d5831bb34541",
+      "tests/test_v18_5_radio.py": "e3da47a729577ced13206cef884f1cfd44a25de2f20788a07799174dc05955c6",
+      "tests/test_v18_5_revision_audit.py": "c17d135f3e2030a6735ae4a26f8cd81c307df12ff032989281285873169e9145"
+    },
+    "targets": [
+      "tests/test_v18_5_artifact_audit.py",
+      "tests/test_v18_5_core.py",
+      "tests/test_v18_5_datasets.py",
+      "tests/test_v18_5_external.py",
+      "tests/test_v18_5_external_artifact_audit.py",
+      "tests/test_v18_5_model.py",
+      "tests/test_v18_5_pre_run_acceptance.py",
+      "tests/test_v18_5_protocol.py",
+      "tests/test_v18_5_radio.py",
+      "tests/test_v18_5_revision_audit.py",
+      "tests/test_uji_v18_5_development.py"
+    ]
+  },
+  "verification_contract": {
+    "files": {
+      ".github/workflows/v18_5_verification.yml": "8324e76c71394e9b7749710a660342310bd6d6255ad753767810225c6c126c6f",
+      "fhm_dapp_tim/fhm_dapp/v18_5_artifact_audit.py": "b909f7b1d6ab7d2f73e12d8c1b5bf4474d7d6ad0d096b9272ab01539e28ebf54",
+      "fhm_dapp_tim/fhm_dapp/v18_5_external_artifact_audit.py": "be973e8b07ada527b922cea100335dfc18a2021d6965af8570c6586129c65d7c",
+      "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py": "78c0c1d257f03baa4ef417caf2d762c3446e30a22fdfd1dcb623cfe09633f4da",
+      "fhm_dapp_tim/fhm_dapp/v18_5_realdata_smoke.py": "d53c4b7676ff375142479a7725e05a0d88b3f4c07c6d639cdef0b23a1ab66cbe",
+      "fhm_dapp_tim/fhm_dapp/v18_5_revision_audit.py": "65c91d9bf4c94aa87189db56935e8a3646b9151549eb1867b9873c0e86f43322"
+    },
+    "verification_sha256": "52a6650a17908ebb6b37870d51c89f1f3fb0b5634dcf539577810a54baa35a6f"
+  }
+}

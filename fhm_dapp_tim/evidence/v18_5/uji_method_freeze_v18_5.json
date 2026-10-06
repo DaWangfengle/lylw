@@ -1,0 +1,20 @@
+{
+  "calibration_result_sha256": "e3170281c239bbb4023b271b5231b5516a44cb4b1bccaca4f066f3196559c6c2",
+  "correction": "radio_only_exact_KL_projection",
+  "decoder": "posterior_mean_of_component_locations",
+  "development_result_sha256": "86c5b7736a4bf2b0f318ae3bb7190b8f8c01b8e1a97d6cc0d5311ce04f898869",
+  "epsilon_kl": 0.1,
+  "external_test_performance_accessed": false,
+  "freeze_sha256": "20a5a0b81c44d97fbb937b21bf852285c676ccd8f1370ef031ca03bb65e8e427",
+  "geometry_posterior_correction": false,
+  "lambda_spatial": 0.0,
+  "official_validation_accessed": false,
+  "posterior_temperature": 1.25,
+  "protocol_version": "uji_v18_5_joint_radio_v1_20261005",
+  "registry_sha256": "3ba80eb59ed6f48f9b71186cf98c155a88d192ba8a5cbd751dd051e0febf93fb",
+  "scale_multiplier": 1.25,
+  "selected_epoch": 27,
+  "selection_refit_checkpoint": "fhm_dapp_tim\\models\\v18_5\\uji_selection_refit.pt",
+  "selection_refit_checkpoint_sha256": "ec9cc9ed94c05f15a07515c3d2c7d55de5b497c788ee5fc15dacf689c1d4b3c2",
+  "source_commit_sha": "2e84fac20b8a98bcaaeff6783ca1e3b63a8a5407"
+}
