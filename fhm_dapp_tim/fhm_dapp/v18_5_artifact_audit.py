@@ -167,6 +167,17 @@ def validate_registry(
         "contract_sha256"
     ) != registry.get("method_contract_sha256"):
         raise ValueError("acceptance method contract differs from registry")
+    environment = acceptance.get("environment")
+    if not isinstance(environment, Mapping):
+        raise ValueError("linked acceptance environment is missing")
+    if acceptance.get("environment_sha256") != _canonical_sha(environment):
+        raise ValueError("linked acceptance environment self-hash mismatch")
+    if registry.get("pre_run_environment_sha256") != acceptance.get(
+        "environment_sha256"
+    ):
+        raise ValueError("registry accepted-environment hash mismatch")
+    if registry.get("pre_run_environment") != environment:
+        raise ValueError("registry accepted-environment payload mismatch")
     current_contract = method_contract(repo_root=REPO_ROOT)
     if current_contract["contract_sha256"] != registry.get(
         "method_contract_sha256"
