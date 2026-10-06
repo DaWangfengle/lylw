@@ -72,7 +72,9 @@ For each member index 1 through 16 run:
 
 python -m fhm_dapp_tim.fhm_dapp.uji_v19_r0_accuracy_recovery cache-member --member-index N --device cuda
 
-Each cache evaluates the complete anchor dictionary and records:
+Each cache evaluates the complete anchor dictionary using the supervised
+full-anchor invariant/retrieval logits (candidate reranker disabled on this
+wide path) and records:
 - dense member probability;
 - member-specific component locations/scales;
 - Top-192 support;
