@@ -9,6 +9,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     validate_epoch_selection_report,
     validate_joint_selection,
     validate_radio_diagnostics,
+    validate_selected_metrics_summary,
     validate_training_trajectory,
 )
 from fhm_dapp_tim.fhm_dapp.v18_5_core import select_joint_calibration
@@ -203,6 +204,16 @@ def _selection_payload():
                     "energy_score_m": 2.0,
                     "energy_score_se_m": 0.0,
                     "posterior_mean_mae_m": 3.0,
+                    "posterior_mean_mae_se_m": 0.0,
+                    "mean_entropy_nats": 1.5,
+                    "mean_effective_anchors": 4.5,
+                    "mean_top1_probability": 0.4,
+                    "mean_radio_compatibility": 0.5,
+                    "mean_realized_kl": 0.0,
+                    "mean_effective_epsilon_kl": 0.0,
+                    "max_kl_budget_excess": 0.0,
+                    "dual_beta_infinite_fraction": 0.0,
+                    "mean_finite_dual_beta": 0.0,
                 }
                 surface.append(summary)
                 selection_vectors[cell_id] = {
@@ -214,12 +225,18 @@ def _selection_payload():
                     "group_nll": group_nll,
                     "group_energy_score": group_es,
                 })
+    selection = select_joint_calibration(selector_cells)
+    selected_surface = next(
+        cell for cell in surface
+        if cell["cell_id"] == selection["selected_cell_id"]
+    )
     return {
         "surface": surface,
         "coordinate_groups": len(group_order),
         "selection_group_order": group_order,
         "selection_vectors": selection_vectors,
-        "selection": select_joint_calibration(selector_cells),
+        "selection": selection,
+        "selected_metrics": dict(selected_surface),
     }
 
 
@@ -462,3 +479,25 @@ def test_training_trajectory_audit_rejects_support_ceiling_violation():
             expected_epochs=1,
             lambda_spatial=0.1,
         )
+
+
+def test_selected_metrics_summary_matches_selected_surface_cell():
+    payload = _selection_payload()
+    summary = validate_selected_metrics_summary(payload)
+    assert summary["cell_id"] == payload["selection"]["selected_cell_id"]
+    assert summary["nll"] == 1.0
+    assert summary["energy_score_m"] == 2.0
+
+
+def test_selected_metrics_summary_rejects_metric_tamper():
+    payload = _selection_payload()
+    payload["selected_metrics"]["nll"] += 0.1
+    with pytest.raises(ValueError, match="selected_metrics nll mismatch"):
+        validate_selected_metrics_summary(payload)
+
+
+def test_selected_metrics_summary_rejects_missing_registered_field():
+    payload = _selection_payload()
+    payload["selected_metrics"].pop("mean_entropy_nats")
+    with pytest.raises(ValueError, match="missing registered fields"):
+        validate_selected_metrics_summary(payload)
