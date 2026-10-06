@@ -90,3 +90,24 @@ def test_method_contract_hash_includes_contract_definition_itself():
     contract = acceptance._method_contract()
     assert set(contract["files"]) == set(acceptance.METHOD_CONTRACT_PATHS)
     assert len(contract["contract_sha256"]) == 64
+
+
+def test_method_contract_hash_includes_all_direct_shared_dependencies():
+    required = {
+        "fhm_dapp_tim/fhm_dapp/model.py",
+        "fhm_dapp_tim/fhm_dapp/dapp.py",
+        "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py",
+        "fhm_dapp_tim/fhm_dapp/v18_single.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py",
+        "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py",
+    }
+    assert required.issubset(set(acceptance.METHOD_CONTRACT_PATHS))
+
+
+def test_acceptance_compile_targets_cover_method_contract_python_files():
+    compiled = set(acceptance._compile_targets())
+    required_python = {
+        path for path in acceptance.METHOD_CONTRACT_PATHS
+        if path.endswith(".py")
+    }
+    assert required_python.issubset(compiled)
