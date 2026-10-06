@@ -14,24 +14,20 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
-import platform
 import py_compile
 import re
 import subprocess
 import sys
 from typing import Sequence
 
-import numpy as np
-import pandas as pd
-import scipy
 import torch
 
 from fhm_dapp_tim.fhm_dapp.v18_5_contract import (
     METHOD_CONTRACT_PATHS,
     method_contract,
 )
+from fhm_dapp_tim.fhm_dapp.v18_5_environment import environment_fingerprint
 from fhm_dapp_tim.fhm_dapp.v18_5_realdata_smoke import run_smoke
 from fhm_dapp_tim.fhm_dapp.v18_5_revision_audit import (
     _formal_artifact_absence,
@@ -240,77 +236,11 @@ def _external_artifact_absence() -> dict[str, bool]:
 
 
 def _environment_fingerprint() -> dict[str, object]:
-    """Record the accepted execution environment without making it portable law."""
-
-    cuda_available = bool(torch.cuda.is_available())
-    devices: list[dict[str, object]] = []
-    if cuda_available:
-        for index in range(torch.cuda.device_count()):
-            properties = torch.cuda.get_device_properties(index)
-            devices.append({
-                "index": int(index),
-                "name": str(properties.name),
-                "compute_capability": [
-                    int(properties.major),
-                    int(properties.minor),
-                ],
-                "total_memory_bytes": int(properties.total_memory),
-            })
-
-    sdp: dict[str, bool | None] = {}
-    for name, attribute in (
-        ("flash_enabled", "flash_sdp_enabled"),
-        ("memory_efficient_enabled", "mem_efficient_sdp_enabled"),
-        ("math_enabled", "math_sdp_enabled"),
-    ):
-        function = getattr(torch.backends.cuda, attribute, None)
-        sdp[name] = bool(function()) if callable(function) else None
-
-    return {
-        "python": {
-            "version": sys.version,
-            "implementation": platform.python_implementation(),
-            "executable": sys.executable,
-        },
-        "platform": {
-            "system": platform.system(),
-            "release": platform.release(),
-            "machine": platform.machine(),
-            "platform": platform.platform(),
-        },
-        "packages": {
-            "numpy": np.__version__,
-            "pandas": pd.__version__,
-            "scipy": scipy.__version__,
-            "torch": torch.__version__,
-        },
-        "torch": {
-            "default_dtype": str(torch.get_default_dtype()),
-            "cuda_build": torch.version.cuda,
-            "cudnn_version": torch.backends.cudnn.version(),
-            "cuda_available": cuda_available,
-            "cuda_device_count": int(torch.cuda.device_count())
-            if cuda_available
-            else 0,
-            "cuda_devices": devices,
-            "deterministic_algorithms_enabled": bool(
-                torch.are_deterministic_algorithms_enabled()
-            ),
-            "cudnn_available": bool(torch.backends.cudnn.is_available()),
-            "cudnn_deterministic": bool(torch.backends.cudnn.deterministic),
-            "cudnn_benchmark": bool(torch.backends.cudnn.benchmark),
-            "scaled_dot_product_attention": sdp,
-        },
-        "determinism": {
-            "cublas_workspace_config": os.environ.get(
-                "CUBLAS_WORKSPACE_CONFIG"
-            ),
-            "model_seed": int(MODEL_SEED),
-            "scoring_seed": int(SCORING_SEED),
-            "predictive_draws": int(PREDICTIVE_DRAWS),
-        },
-    }
-
+    return environment_fingerprint(
+        model_seed=MODEL_SEED,
+        scoring_seed=SCORING_SEED,
+        predictive_draws=PREDICTIVE_DRAWS,
+    )
 
 def _smoke(*, require_cuda: bool) -> dict[str, object]:
     cpu = run_smoke("cpu")
