@@ -32,6 +32,7 @@ jobs:
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_contract.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_core.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_datasets.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_environment.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_radio.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_model.py
           python -m py_compile fhm_dapp_tim/fhm_dapp/v18_5_protocol.py
