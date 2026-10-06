@@ -221,6 +221,93 @@ def _validate_fit_checkpoint(
     }
 
 
+def validate_training_trajectory(
+    records: Sequence[Mapping[str, object]],
+    *,
+    expected_epochs: int,
+    lambda_spatial: float,
+) -> dict[str, object]:
+    """Recompute the registered training objective from saved epoch metrics."""
+
+    if len(records) != int(expected_epochs):
+        raise ValueError("training trajectory epoch count mismatch")
+    maximum_support = int(V185_CONFIG["support_ceiling"])
+    max_objective_error = 0.0
+    minimum_recall = 1.0
+    for epoch_index, metrics in enumerate(records, start=1):
+        required = (
+            "loss",
+            "anchor_nll",
+            "coordinate_nll",
+            "spatial_energy_loss",
+            "spatial_contribution",
+            "invariant_aux_loss",
+            "hierarchy_loss",
+            "domain_loss",
+            "natural_recall_mass",
+            "natural_support_size",
+            "forced_support_size",
+        )
+        values = {
+            key: _finite_number(
+                metrics[key],
+                name=f"training epoch {epoch_index}:{key}",
+            )
+            for key in required
+        }
+        expected_spatial = (
+            float(lambda_spatial) * values["spatial_energy_loss"]
+        )
+        spatial_error = abs(
+            values["spatial_contribution"] - expected_spatial
+        )
+        tolerance = max(2e-5, 2e-6 * max(1.0, abs(expected_spatial)))
+        if spatial_error > tolerance:
+            raise ValueError(
+                f"training epoch {epoch_index}: spatial contribution mismatch"
+            )
+        expected_loss = (
+            float(V185_CONFIG["anchor_weight"]) * values["anchor_nll"]
+            + float(V185_CONFIG["coordinate_weight"])
+            * values["coordinate_nll"]
+            + expected_spatial
+            + float(V185_CONFIG["invariant_aux_weight"])
+            * values["invariant_aux_loss"]
+            + float(V185_CONFIG["hierarchy_weight"])
+            * values["hierarchy_loss"]
+            + float(V185_CONFIG["domain_adversarial_weight"])
+            * values["domain_loss"]
+        )
+        objective_error = abs(values["loss"] - expected_loss)
+        objective_tolerance = max(
+            5e-5, 5e-6 * max(1.0, abs(expected_loss))
+        )
+        if objective_error > objective_tolerance:
+            raise ValueError(
+                f"training epoch {epoch_index}: objective decomposition mismatch"
+            )
+        max_objective_error = max(max_objective_error, objective_error)
+
+        recall = values["natural_recall_mass"]
+        if not -1e-8 <= recall <= 1.0 + 1e-8:
+            raise ValueError(
+                f"training epoch {epoch_index}: natural recall outside [0,1]"
+            )
+        minimum_recall = min(minimum_recall, recall)
+        for key in ("natural_support_size", "forced_support_size"):
+            size = values[key]
+            if size <= 0.0 or size > maximum_support + 1e-6:
+                raise ValueError(
+                    f"training epoch {epoch_index}: {key} outside support ceiling"
+                )
+    return {
+        "epochs": int(expected_epochs),
+        "lambda_spatial": float(lambda_spatial),
+        "maximum_objective_reconstruction_error": float(max_objective_error),
+        "minimum_natural_recall_mass": float(minimum_recall),
+    }
+
+
 def _rederive_lambda_epoch_selection(
     report: Mapping[str, object],
 ) -> tuple[int, dict[str, object], set[int]]:
@@ -281,6 +368,11 @@ def validate_epoch_selection_report(
         range(1, maximum + 1)
     ):
         raise ValueError("epoch-selection trajectory sequence mismatch")
+    training_summary = validate_training_trajectory(
+        [item["train"] for item in trajectory],
+        expected_epochs=maximum,
+        lambda_spatial=float(expected_lambda),
+    )
 
     derived_epoch, derived_metrics, derived_shortlist = (
         _rederive_lambda_epoch_selection(report)
@@ -329,6 +421,7 @@ def validate_epoch_selection_report(
         "selected_epoch": int(derived_epoch),
         "shortlist_epochs": sorted(derived_shortlist),
         "selected_base_metrics": dict(recorded_metrics),
+        "training_trajectory": training_summary,
     }
 
 
@@ -1030,6 +1123,11 @@ def _validate_refit_checkpoint(
         development["selected"]["selected_epoch"]
     ):
         raise ValueError("selection-refit checkpoint epoch mismatch")
+    trajectory_summary = validate_training_trajectory(
+        checkpoint["trajectory"],
+        expected_epochs=int(checkpoint["selected_epoch"]),
+        lambda_spatial=float(checkpoint["lambda_spatial"]),
+    )
 
     references = checkpoint["temperature_radio_reference"]
     expected_temperatures = set(map(float, V185_CONFIG["temperature_grid"]))
@@ -1061,6 +1159,7 @@ def _validate_refit_checkpoint(
     return {
         "anchors": int(len(memory["coords"])),
         "memory_diagnostics": checkpoint["memory_diagnostics"],
+        "training_trajectory": trajectory_summary,
         "temperature_references": reference_summary,
     }
 
