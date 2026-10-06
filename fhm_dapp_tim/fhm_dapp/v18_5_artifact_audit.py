@@ -20,6 +20,7 @@ import numpy as np
 import torch
 
 from fhm_dapp_tim.fhm_dapp.v18_4_datasets import REPO_ROOT
+from fhm_dapp_tim.fhm_dapp.v18_5_contract import method_contract
 from fhm_dapp_tim.fhm_dapp.v18_5_core import kl_budget_tolerance
 from fhm_dapp_tim.fhm_dapp.v18_5_model import V185_CONFIG
 from fhm_dapp_tim.fhm_dapp.uji_v18_5_development import (
@@ -144,6 +145,46 @@ def validate_registry(
         if list(map(float, registry[key])) != expected:
             raise ValueError(f"registry {key} differs from V18.5 design")
 
+    acceptance_path = REPO_ROOT / str(registry["pre_run_acceptance_path"])
+    acceptance = _load_json(acceptance_path)
+    if acceptance.get("acceptance_sha256") != _canonical_sha(
+        acceptance, omit="acceptance_sha256"
+    ):
+        raise ValueError("pre-run acceptance self-hash mismatch")
+    if acceptance.get("acceptance_sha256") != registry.get(
+        "pre_run_acceptance_sha256"
+    ):
+        raise ValueError("registry links a different pre-run acceptance")
+    if acceptance.get("status") != "PASS":
+        raise ValueError("linked pre-run acceptance did not PASS")
+    if acceptance.get("scientific_status") != "OUTCOME_FREE_PRE_RUN_ACCEPTED":
+        raise ValueError("linked pre-run acceptance scientific status mismatch")
+    if dict(acceptance.get("git", {})).get("source_commit_sha") != registry[
+        "source_commit_sha"
+    ]:
+        raise ValueError("acceptance source SHA differs from registry source")
+    if dict(acceptance.get("method_contract", {})).get(
+        "contract_sha256"
+    ) != registry.get("method_contract_sha256"):
+        raise ValueError("acceptance method contract differs from registry")
+    current_contract = method_contract(repo_root=REPO_ROOT)
+    if current_contract["contract_sha256"] != registry.get(
+        "method_contract_sha256"
+    ):
+        raise RuntimeError("current method contract differs from formal registry")
+    smoke = dict(acceptance.get("smoke", {}))
+    if (
+        smoke.get("cuda_required") is not True
+        or smoke.get("cuda_available") is not True
+        or dict(smoke.get("cuda", {})).get("status") != "success"
+        or dict(smoke.get("cpu", {})).get("status") != "success"
+    ):
+        raise ValueError("linked pre-run acceptance lacks CPU/CUDA PASS")
+    if acceptance.get("official_uji_validation_accessed") is not False:
+        raise ValueError("linked acceptance accessed UJI validation")
+    if acceptance.get("external_test_performance_accessed") is not False:
+        raise ValueError("linked acceptance accessed external test performance")
+
     train_path = REPO_ROOT / str(registry["train_path"])
     if not train_path.exists():
         raise FileNotFoundError(train_path)
@@ -154,6 +195,10 @@ def validate_registry(
     summary = {
         "source_commit_sha": registry["source_commit_sha"],
         "registry_sha256": registry["registry_sha256"],
+        "pre_run_acceptance_sha256": registry[
+            "pre_run_acceptance_sha256"
+        ],
+        "method_contract_sha256": registry["method_contract_sha256"],
         "training_rows": int(registry["training_rows"]),
         "training_coordinate_groups": int(
             registry["training_coordinate_groups"]
