@@ -1159,6 +1159,7 @@ def _calibration_surface(
         )
 
     selector_cells = []
+    selection_vectors = {}
     surface = []
     for cell_id, record in cells.items():
         es = torch.cat(record.pop("es"))
@@ -1214,10 +1215,14 @@ def _calibration_surface(
             ),
         }
         surface.append(summary)
-        selector_cells.append({
-            **summary,
+        vector_record = {
             "group_energy_score": group_es.tolist(),
             "group_nll": group_nll.tolist(),
+        }
+        selection_vectors[cell_id] = vector_record
+        selector_cells.append({
+            **summary,
+            **vector_record,
         })
     if len(surface) != 192:
         raise RuntimeError(f"expected 192 calibration cells, got {len(surface)}")
@@ -1225,6 +1230,11 @@ def _calibration_surface(
     return {
         "surface": surface,
         "selection": selected,
+        "selection_group_order": [
+            [int(group[0]), int(group[1]), float(group[2]), float(group[3])]
+            for group in ordered_groups
+        ],
+        "selection_vectors": selection_vectors,
         "radio_diagnostics_by_temperature": (
             radio_diagnostics_by_temperature
         ),
