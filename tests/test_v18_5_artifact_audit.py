@@ -3,6 +3,8 @@ import copy
 import pytest
 
 from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
+    _rederive_global_lambda,
+    _rederive_lambda_epoch_selection,
     validate_calibration_surface,
     validate_joint_selection,
     validate_radio_diagnostics,
@@ -279,3 +281,77 @@ def test_joint_selection_artifact_validator_rejects_mean_difference_tamper():
     gate["records"][key]["mean_difference_vs_best"] = 0.25
     with pytest.raises(ValueError, match="mean difference"):
         validate_joint_selection(payload)
+
+
+
+def _epoch_metrics(es, nll, mae):
+    return {
+        "energy_score_m": float(es),
+        "energy_score_se_m": 0.1,
+        "nll": float(nll),
+        "nll_se": 0.1,
+        "posterior_mean_mae_m": float(mae),
+        "posterior_mean_mae_se_m": 0.2,
+        "mean_entropy_nats": 2.0,
+        "mean_effective_anchors": 7.0,
+        "mean_top1_probability": 0.3,
+        "rows": 100,
+        "coordinate_groups": 20,
+    }
+
+
+def _lambda_report(lam, chosen_epoch, chosen_metrics):
+    trajectory = []
+    for epoch in range(1, int(V185_CONFIG["maximum_epochs"]) + 1):
+        record = {"epoch": epoch, "train": {"loss": 1.0}}
+        if epoch >= int(V185_CONFIG["minimum_epochs"]):
+            record["development_base"] = _epoch_metrics(5.30, 6.5, 8.0)
+        trajectory.append(record)
+    trajectory[15 - 1]["development_base"] = _epoch_metrics(5.00, 6.4, 7.8)
+    trajectory[16 - 1]["development_base"] = _epoch_metrics(5.03, 6.2, 7.9)
+    trajectory[17 - 1]["development_base"] = _epoch_metrics(5.03, 6.2, 7.7)
+    return {
+        "lambda_spatial": float(lam),
+        "selected_epoch": int(chosen_epoch),
+        "selected_base_metrics": dict(chosen_metrics),
+        "eligible_epoch_shortlist": [
+            {"epoch": 15, **trajectory[14]["development_base"]},
+            {"epoch": 16, **trajectory[15]["development_base"]},
+            {"epoch": 17, **trajectory[16]["development_base"]},
+        ],
+        "trajectory": trajectory,
+    }
+
+
+def test_development_epoch_audit_rederives_registered_priority():
+    report = _lambda_report(
+        0.1,
+        17,
+        _epoch_metrics(5.03, 6.2, 7.7),
+    )
+    epoch, metrics, shortlist = _rederive_lambda_epoch_selection(report)
+    assert epoch == 17
+    assert metrics["posterior_mean_mae_m"] == 7.7
+    assert shortlist == {15, 16, 17}
+
+
+def test_development_global_lambda_audit_rederives_smaller_lambda_tie():
+    reports = [
+        {
+            "lambda_spatial": 0.0,
+            "selected_base_metrics": _epoch_metrics(5.00, 6.3, 7.5),
+        },
+        {
+            "lambda_spatial": 0.1,
+            "selected_base_metrics": _epoch_metrics(5.03, 6.1, 7.4),
+        },
+        {
+            "lambda_spatial": 0.25,
+            "selected_base_metrics": _epoch_metrics(5.04, 6.1, 7.4),
+        },
+        {
+            "lambda_spatial": 0.5,
+            "selected_base_metrics": _epoch_metrics(5.20, 5.0, 6.0),
+        },
+    ]
+    assert _rederive_global_lambda(reports) == 0.1
