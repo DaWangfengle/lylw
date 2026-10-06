@@ -145,7 +145,7 @@ class V185SparseAPSetEncoder(SparseAPSetEncoder):
         # APs absent from the role that built this model are not learned
         # features.  Ignore them rather than routing them through an untrained
         # unknown-AP embedding at development/calibration/test time.
-        visible = observed_mask & self.encoder.seen_ap_mask.unsqueeze(0)
+        visible = observed_mask & self.seen_ap_mask.unsqueeze(0)
         if self.training and float(ap_dropout) > 0.0:
             visible = visible & (torch.rand_like(rss) >= float(ap_dropout))
 
