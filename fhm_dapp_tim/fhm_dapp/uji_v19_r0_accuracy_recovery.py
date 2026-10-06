@@ -699,6 +699,12 @@ def evaluate(
         "energy_score": [],
         "nll": [],
     }
+    individual_mean_errors = {
+        index: []
+        for index in range(1, int(V19_R0_CONFIG["member_count"]) + 1)
+    }
+    member_point_disagreement = []
+    pairwise_top1_agreement = []
 
     started = time.time()
     for start in range(0, len(development_rows), batch_size):
@@ -712,6 +718,44 @@ def evaluate(
             )
             for key, value in randomness.items()
         }
+
+        member_points = []
+        member_top1 = []
+        for member_index, cache in enumerate(caches, start=1):
+            probability = cache["probability"][start:stop].to(device)
+            component_location = cache[
+                "component_location"
+            ][start:stop].to(device)
+            point = torch.sum(
+                probability.unsqueeze(2) * component_location, dim=1
+            )
+            member_points.append(point)
+            member_top1.append(probability.argmax(dim=1))
+            individual_mean_errors[member_index].append(
+                torch.linalg.vector_norm(point - target, dim=1).cpu()
+            )
+        point_panel = torch.stack(member_points)
+        panel_center = point_panel.mean(dim=0)
+        member_point_disagreement.append(
+            torch.sqrt(
+                (
+                    (point_panel - panel_center.unsqueeze(0))
+                    .square()
+                    .sum(dim=2)
+                    .mean(dim=0)
+                ).clamp_min(0.0)
+            ).cpu()
+        )
+        top1_panel = torch.stack(member_top1)
+        pair_index = torch.triu_indices(
+            len(caches), len(caches), offset=1, device=device
+        )
+        pairwise_top1_agreement.append(
+            (
+                top1_panel[pair_index[0]]
+                == top1_panel[pair_index[1]]
+            ).float().mean(dim=0).cpu()
+        )
 
         dense_score = predictive_actions_and_scores(
             caches[0]["probability"][start:stop].to(device),
@@ -791,6 +835,30 @@ def evaluate(
     inherited_metrics, inherited_vectors = _metric_payload(
         inherited_scored, keys
     )
+    individual_member_metrics = {}
+    for member_index, chunks in individual_mean_errors.items():
+        values = torch.cat(chunks)
+        vector = _group_vector_tensor(values, keys)
+        individual_member_metrics[str(member_index)] = {
+            "seed": int(member_seeds()[member_index - 1]),
+            "dense_posterior_mean_mae_m": float(vector.mean()),
+            "dense_posterior_mean_mae_se_m": float(
+                vector.std(ddof=1) / math.sqrt(len(vector))
+            ),
+        }
+    disagreement = torch.cat(member_point_disagreement).double()
+    top1_agreement = torch.cat(pairwise_top1_agreement).double()
+    diversity = {
+        "mean_member_point_rms_disagreement_m": float(
+            disagreement.mean()
+        ),
+        "p90_member_point_rms_disagreement_m": float(
+            torch.quantile(disagreement, 0.90)
+        ),
+        "mean_pairwise_top1_anchor_agreement": float(
+            top1_agreement.mean()
+        ),
+    }
 
     profiles: dict[str, object] = {}
     vectors_by_e: dict[int, dict[str, np.ndarray]] = {}
@@ -877,6 +945,8 @@ def evaluate(
             "v18_5_development_reference"
         ],
         "inherited_member_dense_all_anchor": inherited_metrics,
+        "individual_member_dense_posterior_mean": individual_member_metrics,
+        "member_diversity": diversity,
         "E1_top192_consensus": e1,
         "E1_top192_minus_dense_all_anchor": e1_vs_dense,
         "profiles": profiles,
