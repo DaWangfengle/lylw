@@ -874,6 +874,21 @@ def evaluate(
     inherited_original_metrics, inherited_original_vectors = _metric_payload(
         inherited_original_scored, keys
     )
+    historical_reference = registry["v18_5_development_reference"]
+    if abs(
+        float(inherited_original_metrics["posterior_mean_mae_m"])
+        - float(historical_reference["posterior_mean_mae_m"])
+    ) > 2e-5:
+        raise RuntimeError(
+            "V19-R0 failed to reproduce historical V18.5 development MAE"
+        )
+    if abs(
+        float(inherited_original_metrics["nll"])
+        - float(historical_reference["nll"])
+    ) > 2e-5:
+        raise RuntimeError(
+            "V19-R0 failed to reproduce historical V18.5 development NLL"
+        )
     inherited_scored = {
         name: torch.cat(values)
         for name, values in inherited_dense.items()
