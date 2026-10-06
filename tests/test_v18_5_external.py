@@ -284,3 +284,93 @@ def test_external_source_contains_no_geometry_or_gm_deployment():
     assert "weighted_component_geometric_median" not in source
     assert "geometry_reliability" not in source
     assert '"geometry_posterior_correction": False' in source
+
+
+def test_failed_test_scoring_after_lock_is_irreversible(tmp_path: Path):
+    source = tmp_path / "test.csv"
+    source.write_text("placeholder", encoding="utf-8")
+    lock_path = tmp_path / "lock.json"
+    result_path = tmp_path / "result.json"
+
+    freeze = {
+        "training_freeze_sha256": "train-freeze",
+        "uji_method_freeze_sha256": "uji-freeze",
+        "checkpoint_sha256": "checkpoint",
+        "checkpoint_path": "unused.pt",
+        "manifest_sha256": "manifest",
+        "execution_source_commit_sha": "c" * 40,
+        "lambda_spatial": 0.25,
+        "selected_epoch": 12,
+        "posterior_temperature": 1.0,
+        "epsilon_kl": 0.0,
+        "scale_multiplier": 1.0,
+    }
+    model = SimpleNamespace(
+        anchor_detection_prob=torch.ones(2, 2),
+        anchor_rss_center=torch.zeros(2, 2),
+        anchor_rss_scale=torch.ones(2, 2),
+    )
+    checkpoint = {
+        "memory": {
+            "prototype_rss": torch.zeros(2, 2),
+            "prototype_observed_mask": torch.ones(2, 2, dtype=torch.bool),
+        },
+        "origin": torch.zeros(2),
+    }
+    reference = DatasetReference(
+        dataset="UTSIndoorLoc",
+        ap_ids=("a", "b"),
+        building_mapping={"0": 0},
+        floor_mapping={"0": 0},
+        device_mapping={"0": 0},
+        user_mapping={"0": 0},
+        extra={},
+    )
+
+    def distribution(*args, **kwargs):
+        return {
+            "probability": torch.tensor([[1.0]]),
+            "component_location": torch.zeros(1, 1, 2),
+            "component_scale": torch.ones(1, 1, 2),
+            "posterior_mean": torch.zeros(1, 2),
+            "correction": None,
+        }
+
+    with patch.object(
+        external, "load_external_training_freeze", return_value=freeze
+    ), patch.object(
+        external, "_test_paths", return_value=[source]
+    ), patch.object(
+        external,
+        "_load_external_checkpoint",
+        return_value=(model, reference, object(), checkpoint),
+    ), patch.object(
+        external, "v185_distribution", side_effect=distribution
+    ), patch.object(
+        external, "_current_head", return_value="c" * 40
+    ), patch.object(
+        external, "_load_test", side_effect=RuntimeError("synthetic score failure")
+    ):
+        with pytest.raises(RuntimeError, match="synthetic score failure"):
+            external.evaluate_test_once(
+                "uts",
+                training_freeze_path=tmp_path / "freeze.json",
+                lock_path=lock_path,
+                result_path=result_path,
+                device_name="cpu",
+            )
+
+    assert lock_path.exists()
+    assert not result_path.exists()
+
+    with patch.object(
+        external, "load_external_training_freeze", return_value=freeze
+    ):
+        with pytest.raises(RuntimeError, match="lock already exists"):
+            external.evaluate_test_once(
+                "uts",
+                training_freeze_path=tmp_path / "freeze.json",
+                lock_path=lock_path,
+                result_path=result_path,
+                device_name="cpu",
+            )
