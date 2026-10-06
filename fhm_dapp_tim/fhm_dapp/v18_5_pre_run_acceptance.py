@@ -23,6 +23,10 @@ from typing import Sequence
 
 import torch
 
+from fhm_dapp_tim.fhm_dapp.v18_5_contract import (
+    METHOD_CONTRACT_PATHS,
+    method_contract,
+)
 from fhm_dapp_tim.fhm_dapp.v18_5_realdata_smoke import run_smoke
 from fhm_dapp_tim.fhm_dapp.v18_5_revision_audit import (
     _formal_artifact_absence,
@@ -44,19 +48,6 @@ EXTERNAL_SLUGS = (
     "tuji-lodo-S20",
     "tuji-lodo-S7",
     "tuji-lodo-tabS7",
-)
-
-METHOD_CONTRACT_PATHS = (
-    "fhm_dapp_tim/fhm_dapp/v18_5_core.py",
-    "fhm_dapp_tim/fhm_dapp/v18_5_datasets.py",
-    "fhm_dapp_tim/fhm_dapp/v18_5_radio.py",
-    "fhm_dapp_tim/fhm_dapp/v18_5_model.py",
-    "fhm_dapp_tim/fhm_dapp/v18_5_protocol.py",
-    "fhm_dapp_tim/fhm_dapp/uji_v18_5_development.py",
-    "fhm_dapp_tim/fhm_dapp/v18_5_external.py",
-    "fhm_dapp_tim/evidence/v18_5/DESIGN_V18_5.md",
-    "fhm_dapp_tim/evidence/v18_5/RUNBOOK_UJI_V18_5.md",
-    "fhm_dapp_tim/evidence/v18_5/RUNBOOK_EXTERNAL_V18_5.md",
 )
 
 AUXILIARY_VERIFICATION_PATHS = (
@@ -127,11 +118,7 @@ def _hash_manifest(paths: Sequence[str]) -> dict[str, str]:
 
 
 def _method_contract() -> dict[str, object]:
-    files = _hash_manifest(METHOD_CONTRACT_PATHS)
-    return {
-        "files": files,
-        "contract_sha256": _canonical_sha(files),
-    }
+    return method_contract(repo_root=REPO_ROOT)
 
 
 def _verification_contract() -> dict[str, object]:
