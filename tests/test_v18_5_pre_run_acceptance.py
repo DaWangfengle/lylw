@@ -80,3 +80,13 @@ def test_external_artifact_absence_rejects_stale_partial(tmp_path: Path):
         partial.write_bytes(b"partial")
         with pytest.raises(RuntimeError, match="stale formal"):
             acceptance._external_artifact_absence()
+
+
+def test_method_contract_hash_includes_contract_definition_itself():
+    assert (
+        "fhm_dapp_tim/fhm_dapp/v18_5_contract.py"
+        in acceptance.METHOD_CONTRACT_PATHS
+    )
+    contract = acceptance._method_contract()
+    assert set(contract["files"]) == set(acceptance.METHOD_CONTRACT_PATHS)
+    assert len(contract["contract_sha256"]) == 64
