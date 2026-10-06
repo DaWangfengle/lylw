@@ -40,7 +40,7 @@ V19_R0_CONFIG: dict[str, object] = {
     "inherited_member_seed": 185511,
     "new_member_seed_start": 19301,
     "scoring_seed": 19931,
-    "reranker_anchor_chunk": 96,
+    "component_anchor_chunk": 96,
 }
 
 
@@ -67,8 +67,8 @@ def validate_v19_r0_config(
         raise ValueError("V19-R0 retains Student-t df=4")
     if int(config["predictive_draws"]) != 64:
         raise ValueError("V19-R0 uses 64 predictive draws per stream")
-    if int(config["reranker_anchor_chunk"]) <= 0:
-        raise ValueError("reranker anchor chunk must be positive")
+    if int(config["component_anchor_chunk"]) <= 0:
+        raise ValueError("component anchor chunk must be positive")
 
 
 def member_seeds(
@@ -115,7 +115,7 @@ def dense_member_distribution(
     if invariant_logits.shape != (len(rss), anchors):
         raise RuntimeError("full-anchor invariant logits have wrong shape")
     width = (
-        int(V19_R0_CONFIG["reranker_anchor_chunk"])
+        int(V19_R0_CONFIG["component_anchor_chunk"])
         if anchor_chunk is None
         else int(anchor_chunk)
     )
