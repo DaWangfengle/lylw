@@ -11,7 +11,40 @@ Do not open `validationData.csv`.
 
 Do not score UTS/Tampere/TUJI test outcomes.
 
-## 2. Prepare
+## 2. Mandatory pre-run acceptance
+
+Before `prepare`, run the unified outcome-free acceptance gate on the exact
+source revision that will be used for formal V18.5 execution:
+
+`python -m fhm_dapp_tim.fhm_dapp.v18_5_pre_run_acceptance --require-cuda`
+
+It must PASS and create the write-once records:
+
+- `evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.json`
+- `evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.md`
+
+The acceptance gate must confirm, in one execution:
+
+- clean tracked source and a frozen method-contract hash;
+- compilation of every V18.5 implementation/audit module;
+- every discovered V18.5 contract test passes with no skip/xfail;
+- CPU smoke PASS;
+- CUDA smoke PASS;
+- exact-KL synthetic contracts, including a beta>1 active solution and the
+  minimum-energy tie-set limit;
+- training-only UJI/UTS/Tampere/TUJI pooled and all five TUJI LODO audits;
+- support-capacity safety;
+- role-unseen AP isolation diagnostics;
+- absence of all formal UJI checkpoints/results before and after acceptance;
+- absence of all eight external-protocol formal artifacts before and after
+  acceptance;
+- no UJI validation access and no external test-performance access.
+
+The acceptance runner is not a formal experiment stage: it performs no formal
+model training and produces no formal checkpoint.  Any acceptance failure is a
+hard stop; do not delete or overwrite stale formal artifacts to force a pass.
+
+## 3. Prepare
 
 Command:
 
@@ -31,7 +64,7 @@ The registry freezes:
 - epsilon grid;
 - scale grid.
 
-## 3. Develop
+## 4. Develop
 
 Command:
 
@@ -79,7 +112,7 @@ Expected result:
 
 `evidence/v18_5/uji_development_v18_5.json`
 
-## 4. Selection refit
+## 5. Selection refit
 
 `calibrate-freeze` rebuilds the selected lambda model from scratch on
 `selection_refit = fit + development` for exactly the selected epoch count.
@@ -93,7 +126,7 @@ It rebuilds:
 
 Calibration labels do not fit the radio references.
 
-## 5. Temperature-specific references
+## 6. Temperature-specific references
 
 For each T in
 
@@ -109,7 +142,7 @@ on selection_refit:
 
 A reference fitted at one T cannot be used at another T.
 
-## 6. Joint calibration
+## 7. Joint calibration
 
 Command:
 
@@ -133,7 +166,7 @@ For each T:
 
 Use common Student-t randomness for all 192 cells.
 
-## 7. Calibration selector
+## 8. Calibration selector
 
 First paired NLL one-SE set.
 
@@ -150,7 +183,7 @@ Final deterministic choice:
 
 `epsilon=0` remains fully eligible.
 
-## 8. Final freeze
+## 9. Final freeze
 
 Expected artifacts:
 
@@ -169,7 +202,7 @@ The freeze records:
 - posterior-mean decoder;
 - no geometry correction.
 
-## 9. Read-only formal artifact audit
+## 10. Read-only formal artifact audit
 
 After `calibrate-freeze` succeeds, validate the complete provenance and
 numerical graph before interpreting results:
@@ -192,7 +225,7 @@ The validator must confirm:
 This validator is read-only and must not access UJI validation or any external
 test split.
 
-## 10. Hard stop
+## 11. Hard stop
 
 After method freeze and artifact-audit PASS:
 
