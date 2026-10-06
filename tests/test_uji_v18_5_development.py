@@ -111,3 +111,114 @@ def test_atomic_checkpoint_failure_cleans_partial(tmp_path: Path):
             driver._save_torch_new(path, {"value": 1})
     assert not path.exists()
     assert not partial.exists()
+
+
+
+def _fake_acceptance_payload(source_sha: str):
+    contract = driver.method_contract(repo_root=driver.REPO_ROOT)
+    payload = {
+        "acceptance_version": "test",
+        "status": "PASS",
+        "scientific_status": "OUTCOME_FREE_PRE_RUN_ACCEPTED",
+        "git": {
+            "source_commit_sha": source_sha,
+            "branch": "v18-5-joint-radio-calibration",
+            "tracked_source_dirty": False,
+        },
+        "method_contract": contract,
+        "verification_contract": {
+            "files": {},
+            "verification_sha256": "test",
+        },
+        "compile": {"modules": [], "count": 0},
+        "tests": {"passed": 1, "no_skip_xfail": True},
+        "smoke": {
+            "cpu": {"status": "success"},
+            "cuda": {"status": "success"},
+            "cuda_required": True,
+            "cuda_available": True,
+        },
+        "revision_audit": {"status": "PASS"},
+        "formal_uji_artifacts_absent_before": {},
+        "formal_uji_artifacts_absent_after": {},
+        "formal_external_artifacts_absent_before": {},
+        "formal_external_artifacts_absent_after": {},
+        "official_uji_validation_accessed": False,
+        "external_test_performance_accessed": False,
+        "formal_v185_training_executed": False,
+        "formal_v185_test_scoring_executed": False,
+    }
+    payload["acceptance_sha256"] = driver._canonical_sha(payload)
+    return payload
+
+
+def _write_acceptance(path: Path, payload):
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def test_formal_driver_accepts_matching_cuda_pre_run_acceptance(tmp_path: Path):
+    source = "a" * 40
+    path = tmp_path / "acceptance.json"
+    payload = _fake_acceptance_payload(source)
+    _write_acceptance(path, payload)
+    with patch.object(
+        driver,
+        "_git_source_state",
+        return_value={"source_commit_sha": source, "tracked_source_dirty": False},
+    ):
+        loaded = driver.load_pre_run_acceptance(path)
+    assert loaded["acceptance_sha256"] == payload["acceptance_sha256"]
+
+
+def test_formal_driver_rejects_acceptance_from_different_source(tmp_path: Path):
+    path = tmp_path / "acceptance.json"
+    payload = _fake_acceptance_payload("a" * 40)
+    _write_acceptance(path, payload)
+    with patch.object(
+        driver,
+        "_git_source_state",
+        return_value={"source_commit_sha": "b" * 40, "tracked_source_dirty": False},
+    ):
+        with pytest.raises(RuntimeError, match="different source"):
+            driver.load_pre_run_acceptance(path)
+
+
+def test_formal_driver_rejects_changed_method_contract(tmp_path: Path):
+    source = "a" * 40
+    path = tmp_path / "acceptance.json"
+    payload = _fake_acceptance_payload(source)
+    payload["method_contract"] = dict(payload["method_contract"])
+    payload["method_contract"]["contract_sha256"] = "0" * 64
+    payload["acceptance_sha256"] = driver._canonical_sha(
+        payload, omit="acceptance_sha256"
+    )
+    _write_acceptance(path, payload)
+    with patch.object(
+        driver,
+        "_git_source_state",
+        return_value={"source_commit_sha": source, "tracked_source_dirty": False},
+    ):
+        with pytest.raises(RuntimeError, match="method contract"):
+            driver.load_pre_run_acceptance(path)
+
+
+def test_formal_driver_rejects_acceptance_without_cuda_pass(tmp_path: Path):
+    source = "a" * 40
+    path = tmp_path / "acceptance.json"
+    payload = _fake_acceptance_payload(source)
+    payload["smoke"]["cuda"]["status"] = "not_available"
+    payload["smoke"]["cuda_available"] = False
+    payload["acceptance_sha256"] = driver._canonical_sha(
+        payload, omit="acceptance_sha256"
+    )
+    _write_acceptance(path, payload)
+    with patch.object(
+        driver,
+        "_git_source_state",
+        return_value={"source_commit_sha": source, "tracked_source_dirty": False},
+    ):
+        with pytest.raises(ValueError, match="CUDA"):
+            driver.load_pre_run_acceptance(path)
