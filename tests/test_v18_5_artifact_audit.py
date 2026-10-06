@@ -6,6 +6,7 @@ from fhm_dapp_tim.fhm_dapp.v18_5_artifact_audit import (
     _rederive_global_lambda,
     _rederive_lambda_epoch_selection,
     validate_calibration_surface,
+    validate_epoch_selection_report,
     validate_joint_selection,
     validate_radio_diagnostics,
 )
@@ -355,3 +356,41 @@ def test_development_global_lambda_audit_rederives_smaller_lambda_tie():
         },
     ]
     assert _rederive_global_lambda(reports) == 0.1
+
+
+def test_shared_epoch_selection_validator_accepts_rederived_report():
+    report = _lambda_report(
+        0.1,
+        17,
+        _epoch_metrics(5.03, 6.2, 7.7),
+    )
+    summary = validate_epoch_selection_report(
+        report, expected_lambda=0.1
+    )
+    assert summary["selected_epoch"] == 17
+    assert summary["shortlist_epochs"] == [15, 16, 17]
+
+
+def test_shared_epoch_selection_validator_rejects_tampered_external_epoch():
+    report = _lambda_report(
+        0.1,
+        16,
+        _epoch_metrics(5.03, 6.2, 7.9),
+    )
+    with pytest.raises(ValueError, match="selected epoch"):
+        validate_epoch_selection_report(
+            report, expected_lambda=0.1
+        )
+
+
+def test_shared_epoch_selection_validator_rejects_tampered_shortlist():
+    report = _lambda_report(
+        0.1,
+        17,
+        _epoch_metrics(5.03, 6.2, 7.7),
+    )
+    report["eligible_epoch_shortlist"].pop()
+    with pytest.raises(ValueError, match="shortlist"):
+        validate_epoch_selection_report(
+            report, expected_lambda=0.1
+        )
