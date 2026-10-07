@@ -1,0 +1,211 @@
+任务：执行“V9 + V17 历史强基线复现阶段”。本阶段只验证 V9/V17 是否能重新回到 sub-6m（目标是历史 5.x m）精度，不设计新模型，不复现 V18/V19，不做外部数据集。
+
+前提：
+1. 当前本地代码已经位于 historical-v9-v17-reproduction 分支。
+2. 不要执行任何 git commit / push / pull / merge / rebase / branch 创建或删除。Git 操作由用户另行处理。
+3. 使用当前项目既有 Python 环境和 CUDA GPU。
+4. 不删除或覆盖任何旧历史实验目录；本阶段的新产物只能写到：
+   - fhm_dapp_tim/evidence/historical_reproduction/
+   - fhm_dapp_tim/models/historical_reproduction/
+5. 严禁读取或预测 data/UJIndoorLoc/validationData.csv；严禁运行任何外部数据集；严禁把 V18/V19 结果用于调参。
+
+====================
+A. 先做代码与契约审计
+====================
+
+阅读并理解：
+- fhm_dapp_tim/fhm_dapp/historical_reproduction.py
+- fhm_dapp_tim/evidence/historical_reproduction/DESIGN_HISTORICAL_REPRODUCTION.md
+- fhm_dapp_tim/evidence/historical_reproduction/DESIGN_V9_REPRODUCTION.md
+- fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py
+- fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py
+- fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py
+- fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py
+- fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py
+- fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py
+
+确认以下科学常量绝对不能改：
+V9:
+- MEMBER_SEEDS = 9311..9322
+- INITIAL_MEMBER_COUNT = 8
+- 原始 candidate、K/lambda grid、selection/freeze、两成员扩展规则全部保持原实现
+- 最大只允许扩展到 E=12
+
+V17:
+- member seeds = 17301..17325，共 25 个
+- 每个成员必须重新执行原 V17-R0 member-fit -> early-stop epoch selection
+- 然后用相同 seed 从头在 outer_refit role 上训练 selected_epoch 个 epoch
+- selected frozen law = E16 / L192 / K192 / alpha=1
+- historical comparator = E5 / L24 / K24 / alpha=0.25
+- 不能根据本次结果重新选择 E/L/K/alpha
+- 必须保留 R3 的 balanced cyclic subset estimand，不能挑有利 seed 子集
+
+如果发现 historical_reproduction.py 有纯实现 bug（语法、路径、resume、类型、checkpoint loader 兼容性等），可以修复 reproduction harness 和对应 tests，但：
+- 不得修改历史 V9/V17 模型、训练损失、seed、数据划分、评分公式、超参数或选择规则；
+- 不得为了得到 5.x 结果而改 scientific constants；
+- 任何修复必须先解释为什么是“实现修复而非科学改动”，并补测试。
+
+====================
+B. 静态检查
+====================
+
+依次运行：
+
+python -m py_compile fhm_dapp_tim/fhm_dapp/historical_reproduction.py
+
+python -m pytest -q tests/test_historical_reproduction.py tests/test_uji_v9_experiment.py tests/test_uji_v17_mother.py
+
+若失败：
+- 先定位是否为 reproduction harness 的实现问题；
+- 只修实现问题；
+- 重跑到全部通过；
+- 不得通过改历史科学常量让测试通过。
+
+然后运行：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction preflight --device cuda
+
+核对输出必须包含：
+- CUDA available
+- trainingData.csv 的 SHA256
+- V9/V17 fixed seed panel
+- sub_six_gate_m = 6.0
+- official_validation_predictions_authorized = false
+- external_predictions_authorized = false
+
+====================
+C. 注册复现阶段
+====================
+
+运行：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction prepare --device cuda
+
+确认生成：
+fhm_dapp_tim/evidence/historical_reproduction/registry_historical_reproduction.json
+
+不要手工修改 registry。
+
+====================
+D. 原样复现 V9
+====================
+
+运行：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction run-v9 --device cuda
+
+这个命令应当自动完成：
+1. V9 registry
+2. 两个原始 candidate 的 E=8 成员训练
+3. selection radio memory
+4. development cache/grid
+5. 原始 candidate selection + information-saturation freeze
+6. 若历史规则要求，自动按 E=8 -> E=10 -> E=12 每次只增加 2 个成员
+7. frozen selected candidate 的 outer_refit final members
+8. final radio memory
+9. single outer-test evaluation
+10. REPRODUCTION_V9.json
+
+注意：
+- 不允许因为开发结果不好而改 grid；
+- 不允许跳过 V9 原始 freeze；
+- 不允许打开 official validation；
+- 如果 V9 MAE >= 6.0，记录 FAIL，但不要“救火改模型”；仍继续做 V17 复现，以便我们得到完整诊断。
+
+记录：
+- selected candidate
+- selected E/K/lambda
+- development MAE
+- outer coordinate-macro 2D MAE
+- 是否 < 6.0 m
+
+====================
+E. 原样复现 V17 frozen R3
+====================
+
+先运行：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction prepare-v17
+
+然后运行：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction run-v17 --device cuda
+
+run-v17 具有 resume 能力；已有合法 member checkpoint 时应复用，不应重训。
+
+必须最终得到 25 个：
+fhm_dapp_tim/models/historical_reproduction/v17/member_XX_seed17XXX.pt
+
+并且每个 member 的 selected_epoch 必须来自该 seed 自己重新执行的原 V17-R0 early-stop rule，而不是统一固定 epoch，也不能根据 outer-test outcome 改 epoch。
+
+训练结束后额外运行一次完整性检查：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction check-v17-members
+
+要求：
+- complete_members = 25
+- all_complete = true
+- 每个 member identity/seed/registry/phase/anchor_count 均合法
+- outer-test / official labels 均未在训练中消费
+
+如果 run-v17 已经完成 evaluate，则直接读取结果；否则运行：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction evaluate-v17 --device cuda
+
+记录：
+- 25 个 member 的 selected_epoch
+- selected_E16_L192_K192_A1 coordinate-macro MAE
+- historical_E05_L024_K024_A0p25 coordinate-macro MAE
+- Energy Score
+- paired familywise comparison
+- retained-mass diagnostics
+- selected V17 是否 < 6.0 m
+
+如果 V17 MAE >= 6.0，同样只记录 FAIL；不要修改模型救火。
+
+====================
+F. 汇总
+====================
+
+运行：
+
+python -m fhm_dapp_tim.fhm_dapp.historical_reproduction summarize
+
+必须生成：
+fhm_dapp_tim/evidence/historical_reproduction/REPRODUCTION_SUMMARY.json
+
+最终 gate：
+- V9 MAE finite 且 < 6.0 m
+- V17 selected MAE finite 且 < 6.0 m
+二者同时满足才允许 next_stage_authorized = true。
+
+无论 PASS/FAIL，都不要在本次任务中设计最终融合模型。
+
+====================
+G. 最终审计与报告
+====================
+
+完成后请创建：
+fhm_dapp_tim/evidence/historical_reproduction/RUN_REPORT_HISTORICAL_REPRODUCTION.md
+
+报告必须至少包含：
+1. 当前 Python / PyTorch / CUDA / GPU 环境
+2. preflight 与 pytest 结果
+3. trainingData.csv SHA256
+4. V9 完整 selected configuration 与最终 MAE
+5. V17 25-member selected_epoch 表
+6. V17 selected E16 与 historical E5 两个配置的 MAE / Energy Score
+7. 两个 sub-6 gate 是否通过
+8. 是否 next_stage_authorized
+9. 明确声明：
+   - 本阶段没有运行 V18/V19 模型
+   - 没有使用 official validation
+   - 没有使用外部数据集
+   - 没有根据 outer outcome 调参
+   - 没有实现下一阶段最终模型
+
+特别重要：
+- 不要为了让结果“看起来成功”篡改、放宽、绕过 <6.0 m gate。
+- 不要像 V19-R0 那样对精度 gate 做 waiver。
+- 如果出现实现异常，修的是 reproduction harness；如果模型真实 MAE 不到 5.x，则如实报告，我们下一轮再分析原因。
+- 不执行任何 Git 上传操作。
