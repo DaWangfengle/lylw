@@ -1,0 +1,54 @@
+{"role": "calibration", "completed": 32, "total": 1529}
+{"role": "calibration", "completed": 64, "total": 1529}
+{"role": "calibration", "completed": 96, "total": 1529}
+{"role": "calibration", "completed": 128, "total": 1529}
+{"role": "calibration", "completed": 160, "total": 1529}
+{"role": "calibration", "completed": 192, "total": 1529}
+{"role": "calibration", "completed": 224, "total": 1529}
+{"role": "calibration", "completed": 256, "total": 1529}
+{"role": "calibration", "completed": 288, "total": 1529}
+{"role": "calibration", "completed": 320, "total": 1529}
+{"role": "calibration", "completed": 352, "total": 1529}
+{"role": "calibration", "completed": 384, "total": 1529}
+{"role": "calibration", "completed": 416, "total": 1529}
+{"role": "calibration", "completed": 448, "total": 1529}
+{"role": "calibration", "completed": 480, "total": 1529}
+{"role": "calibration", "completed": 512, "total": 1529}
+{"role": "calibration", "completed": 544, "total": 1529}
+{"role": "calibration", "completed": 576, "total": 1529}
+{"role": "calibration", "completed": 608, "total": 1529}
+{"role": "calibration", "completed": 640, "total": 1529}
+{"role": "calibration", "completed": 672, "total": 1529}
+{"role": "calibration", "completed": 704, "total": 1529}
+{"role": "calibration", "completed": 736, "total": 1529}
+{"role": "calibration", "completed": 768, "total": 1529}
+{"role": "calibration", "completed": 800, "total": 1529}
+{"role": "calibration", "completed": 832, "total": 1529}
+{"role": "calibration", "completed": 864, "total": 1529}
+{"role": "calibration", "completed": 896, "total": 1529}
+{"role": "calibration", "completed": 928, "total": 1529}
+{"role": "calibration", "completed": 960, "total": 1529}
+{"role": "calibration", "completed": 992, "total": 1529}
+{"role": "calibration", "completed": 1024, "total": 1529}
+{"role": "calibration", "completed": 1056, "total": 1529}
+{"role": "calibration", "completed": 1088, "total": 1529}
+{"role": "calibration", "completed": 1120, "total": 1529}
+{"role": "calibration", "completed": 1152, "total": 1529}
+{"role": "calibration", "completed": 1184, "total": 1529}
+{"role": "calibration", "completed": 1216, "total": 1529}
+{"role": "calibration", "completed": 1248, "total": 1529}
+{"role": "calibration", "completed": 1280, "total": 1529}
+{"role": "calibration", "completed": 1312, "total": 1529}
+{"role": "calibration", "completed": 1344, "total": 1529}
+{"role": "calibration", "completed": 1376, "total": 1529}
+{"role": "calibration", "completed": 1408, "total": 1529}
+{"role": "calibration", "completed": 1440, "total": 1529}
+{"role": "calibration", "completed": 1472, "total": 1529}
+{"role": "calibration", "completed": 1504, "total": 1529}
+{"role": "calibration", "completed": 1529, "total": 1529}
+{
+  "chosen_gamma": 0.7,
+  "calibration": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\calibration_v17_g1.json",
+  "freeze": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\freeze_v17_g1.json",
+  "freeze_sha256": "2bf7e709997f27ad83898e57f06cd63370dab508b622ea2577930b94050e75fe"
+}

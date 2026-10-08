@@ -1,0 +1,3424 @@
+{
+  "status": "INITIAL_SOURCE_AND_ENVIRONMENT_AUDIT_PASS",
+  "recorded_utc": "2026-10-08T05:44:29.363294+00:00",
+  "workspace": "D:\\liuyanlunwen",
+  "local_ref": "ref: refs/heads/v17-g1-geometry-support-pilot",
+  "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "python_version": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "torch_version": "2.10.0+cu128",
+  "cuda_runtime": "12.8",
+  "cuda_available": true,
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 2060",
+    "memory_bytes": 6442123264,
+    "free_memory_bytes": 5361369088
+  },
+  "workspace_free_bytes": 92786253824,
+  "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "initial_G1_sources": {
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g1_protocol.py": {
+      "bytes": 7377,
+      "mtime_ns": 1791437868598786400,
+      "sha256": "43c19ff5db2b3cc4e6c3487ef999aa73f0458738d89fef3537bf2f7c2a53521b"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g1_experiment.py": {
+      "bytes": 27355,
+      "mtime_ns": 1791437868588694400,
+      "sha256": "a93888793b4ef91355c8480d9d14737073fb1aba71b650a3ef38edbeda8dfca0"
+    },
+    "tests/test_uji_v17_g1.py": {
+      "bytes": 5841,
+      "mtime_ns": 1791437868598786400,
+      "sha256": "efb8e59f82f4cf4d0020bc485a2d75cc12b37118ada944c1b21cbe3f879360fc"
+    },
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/DESIGN_V17_G1.md": {
+      "bytes": 7168,
+      "mtime_ns": 1791437868588694400,
+      "sha256": "6a11a8093b9a8f2619f21a5cdc140bff43e04ffad8cba3ab65ba98a34a3dac01"
+    },
+    "V17_G1_CODEX_RUN.txt": {
+      "bytes": 7848,
+      "mtime_ns": 1791437868572848300,
+      "sha256": "a74d1281086d99714e95c1db9617c23238fc0458948419347c105c7484c324c8"
+    }
+  },
+  "protected_historical_assets": {
+    "fhm_dapp_tim/fhm_dapp/__init__.py": {
+      "bytes": 497,
+      "mtime_ns": 1782726187734277100,
+      "sha256": "b1c16c21a864a4bf5d543e3ed16f4fe52b1674d2107af18483846fb666dbfff0"
+    },
+    "fhm_dapp_tim/fhm_dapp/anchor.py": {
+      "bytes": 13988,
+      "mtime_ns": 1785600611497037300,
+      "sha256": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd"
+    },
+    "fhm_dapp_tim/fhm_dapp/audit_bplus_localization_bridge_v5.py": {
+      "bytes": 44304,
+      "mtime_ns": 1786248597712326800,
+      "sha256": "3bf453a345d79a568f987485a1b44c182211150a62baf58a6bee80acaa845690"
+    },
+    "fhm_dapp_tim/fhm_dapp/audit_bplus_sparse50_fem_v5.py": {
+      "bytes": 51917,
+      "mtime_ns": 1786250490744073200,
+      "sha256": "67f22b63ab881763bb26d83f271c9d5699ad7636a7e4a5297180b2c9e0e6a821"
+    },
+    "fhm_dapp_tim/fhm_dapp/audit_hierarchical_front_v6.py": {
+      "bytes": 40830,
+      "mtime_ns": 1786251480680564300,
+      "sha256": "549f69c0373dca1633e8221683748025614924a6f358b6d0cf6186172cccfee1"
+    },
+    "fhm_dapp_tim/fhm_dapp/audit_sparse_radiomap_v5.py": {
+      "bytes": 27167,
+      "mtime_ns": 1786244022850196300,
+      "sha256": "b6298da58aebc86fc82a31741c17ebdc4a06abc5f02dea7e7b79d1c436bb7c7a"
+    },
+    "fhm_dapp_tim/fhm_dapp/baselines_v44.py": {
+      "bytes": 22929,
+      "mtime_ns": 1786209914424524000,
+      "sha256": "84745dc24ff541f0ae211a69bdac7979d2f76e142721e8dc986093d9fca9303c"
+    },
+    "fhm_dapp_tim/fhm_dapp/candidates.py": {
+      "bytes": 5915,
+      "mtime_ns": 1784364067797885200,
+      "sha256": "0f73e850da813558a7c52b9cc20f8e4743918c62ce08dce7cb89d23535112760"
+    },
+    "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py": {
+      "bytes": 24952,
+      "mtime_ns": 1786294831658637200,
+      "sha256": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d"
+    },
+    "fhm_dapp_tim/fhm_dapp/consensus.py": {
+      "bytes": 16878,
+      "mtime_ns": 1783953067811998200,
+      "sha256": "86551de8e57b1e46085acd7eb2a42b39803beb9baf9a58d483486dc6d45d5121"
+    },
+    "fhm_dapp_tim/fhm_dapp/dapp.py": {
+      "bytes": 96649,
+      "mtime_ns": 1784363076397172800,
+      "sha256": "154013a4b6fd5bf4c19abd0c94a1ac81dd0200af0a41bf6d01e479bcd8db6266"
+    },
+    "fhm_dapp_tim/fhm_dapp/data.py": {
+      "bytes": 16115,
+      "mtime_ns": 1786212154826769700,
+      "sha256": "ae9a6a2628a72a86d6649a505ead7a6401a1287064e64cf4ef71e1baa02d2afc"
+    },
+    "fhm_dapp_tim/fhm_dapp/device_robust_v4.py": {
+      "bytes": 30902,
+      "mtime_ns": 1786219637516052700,
+      "sha256": "ec94b90f4ba5d27a91bcbe61c427356d8389454de023834edf5c78c1839a5d62"
+    },
+    "fhm_dapp_tim/fhm_dapp/ensemble.py": {
+      "bytes": 4037,
+      "mtime_ns": 1782726187754274900,
+      "sha256": "379a62415e5981555fcf37f7b134851977b316d8ac8657c4da228ec5d47c77ed"
+    },
+    "fhm_dapp_tim/fhm_dapp/evaluate_v4.py": {
+      "bytes": 33557,
+      "mtime_ns": 1786219089009788700,
+      "sha256": "6330a1a4eeb8cba30e4b3fe2a52eace05f291f869ad76323092ec52fd9e87363"
+    },
+    "fhm_dapp_tim/fhm_dapp/experiment_v7.py": {
+      "bytes": 69404,
+      "mtime_ns": 1786257014484193800,
+      "sha256": "11b61753e1c511e4cd181085ac7c97a42dc188c1d25b805cf3a56d572c544d3a"
+    },
+    "fhm_dapp_tim/fhm_dapp/experiment_v71.py": {
+      "bytes": 56448,
+      "mtime_ns": 1786266842123057500,
+      "sha256": "51cdb2c671fa9e2738d45b7fbc6ec65e7430854e3a940095ab5f187f43b941f6"
+    },
+    "fhm_dapp_tim/fhm_dapp/final_v44.py": {
+      "bytes": 51883,
+      "mtime_ns": 1786237294606018200,
+      "sha256": "a1ebddfe815abc422598318305164d1394c81630ffacb078c15ec78e6ebaf510"
+    },
+    "fhm_dapp_tim/fhm_dapp/freeze_confirmation_v43.py": {
+      "bytes": 10334,
+      "mtime_ns": 1786208239771377100,
+      "sha256": "edc1d0d9ab0ad8908ddeee8e564aecb0260c4c0a1327cb93f8fa36209d3f5465"
+    },
+    "fhm_dapp_tim/fhm_dapp/historical_reproduction.py": {
+      "bytes": 37477,
+      "mtime_ns": 1791375608904873700,
+      "sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee"
+    },
+    "fhm_dapp_tim/fhm_dapp/marked_orbit_v10.py": {
+      "bytes": 19900,
+      "mtime_ns": 1786805213116195600,
+      "sha256": "dcdba911abaa0e7f56ad32d216e0b80dbd1e331e1abc042d65fe569e9b0945cc"
+    },
+    "fhm_dapp_tim/fhm_dapp/metrics.py": {
+      "bytes": 745,
+      "mtime_ns": 1782726187763012200,
+      "sha256": "41bbb57569c6852b005ea1e13fdbd306bcb24e047dd643f022d82ff2a324d9ae"
+    },
+    "fhm_dapp_tim/fhm_dapp/minimal_v3.py": {
+      "bytes": 15916,
+      "mtime_ns": 1786202981388807000,
+      "sha256": "4ddd0fd52cd95e0aa699fb5de269b68be4f8ba982984543a80564b81ae273443"
+    },
+    "fhm_dapp_tim/fhm_dapp/model.py": {
+      "bytes": 72925,
+      "mtime_ns": 1786289203838451500,
+      "sha256": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef"
+    },
+    "fhm_dapp_tim/fhm_dapp/physics.py": {
+      "bytes": 6933,
+      "mtime_ns": 1782726187777732500,
+      "sha256": "3445a7521713688f77bf469354041f3d6ddcd1f31d93e38a733ce57efff73ee8"
+    },
+    "fhm_dapp_tim/fhm_dapp/posterior_diagnostics_v44.py": {
+      "bytes": 5212,
+      "mtime_ns": 1786219066752604000,
+      "sha256": "40171f2bedfd890cfed7c455e70443bca9a51db62f2f6503fd5422d6dcb91b17"
+    },
+    "fhm_dapp_tim/fhm_dapp/projected_ensemble.py": {
+      "bytes": 231335,
+      "mtime_ns": 1784364035913248100,
+      "sha256": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423"
+    },
+    "fhm_dapp_tim/fhm_dapp/protocol_v3.py": {
+      "bytes": 13837,
+      "mtime_ns": 1785643751628990300,
+      "sha256": "4a9f0be716f3bf8dc63c4383c69db76d3fc9c491f4118939da353ea8002f74fa"
+    },
+    "fhm_dapp_tim/fhm_dapp/protocol_v4.py": {
+      "bytes": 38708,
+      "mtime_ns": 1786207985270554100,
+      "sha256": "05872abbacc6a28e84d849b64775fb67459d0c686e0ce563ed413795f07de8bd"
+    },
+    "fhm_dapp_tim/fhm_dapp/train_anchor.py": {
+      "bytes": 13519,
+      "mtime_ns": 1782812531940766200,
+      "sha256": "4e2b597d385f315d556cc6759d5a26a7de4392e654cc5e08dc57efb3c151f480"
+    },
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v2.py": {
+      "bytes": 17953,
+      "mtime_ns": 1785604662922301000,
+      "sha256": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb"
+    },
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v4.py": {
+      "bytes": 31598,
+      "mtime_ns": 1786212310574891200,
+      "sha256": "701e6476fd860a01e37324e42f0a9686d2675a74cded36b81f8080e0a1ea39c8"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_experiment.py": {
+      "bytes": 84205,
+      "mtime_ns": 1786545900673102800,
+      "sha256": "7750a9668fefbdce1be003d0811606c5d0a9c52fbdcce50970fc7cc90c919990"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v2.py": {
+      "bytes": 77876,
+      "mtime_ns": 1786548956315534600,
+      "sha256": "4faaf3ac4f184ec199f41fce0b404f492c2cadba97851580f65fd3c74588bc7a"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v3_callfix.py": {
+      "bytes": 27311,
+      "mtime_ns": 1786549594563493200,
+      "sha256": "6b7ff78336e40635857090b1ec19aaab3c6631e75467142e07217e82dd8c38cc"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v4_runtime_isolation.py": {
+      "bytes": 23413,
+      "mtime_ns": 1786549863859549200,
+      "sha256": "04aa7e8b1c8e35e0a5e84916bb459905f3f17899756318c0cff37b90f753c847"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_memory_safe_v5_scoring_signature.py": {
+      "bytes": 30668,
+      "mtime_ns": 1786550291343288700,
+      "sha256": "fe71d72afdb93d681e118b1389748b73ba71cd805fbeed76db9f56a471908827"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_protocol.py": {
+      "bytes": 36824,
+      "mtime_ns": 1786544755528178500,
+      "sha256": "8f8b44bc558331c02edcdf1ad75552923265a9cd387fd3f561d945674475c0e9"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_common.py": {
+      "bytes": 6905,
+      "mtime_ns": 1786555714052385000,
+      "sha256": "a3be6a3534d9ce03ca1775ed354d071c061abbe2eae7961b41d86c34d9473d86"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_comparator_v1.py": {
+      "bytes": 27333,
+      "mtime_ns": 1786556192220150300,
+      "sha256": "b33c2f2275b83703dc118de4765db22993b829072f7e16ff9ed938f2d3a8c188"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_comparator_v2_method_order.py": {
+      "bytes": 18976,
+      "mtime_ns": 1786556505738030300,
+      "sha256": "6913044a1613fd81273122ad83e0008cabf06f8eac12eed099a57d4511745b0d"
+    },
+    "fhm_dapp_tim/fhm_dapp/tuji_v9_wknn_protocol.py": {
+      "bytes": 22636,
+      "mtime_ns": 1786555900545678400,
+      "sha256": "669bec55e28f361326ee86e6a58a92aa9104a3948dfa97abfafa49f816474106"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v16_protocol.py": {
+      "bytes": 23317,
+      "mtime_ns": 1786977143280521800,
+      "sha256": "422936efbacf5ff1b15e12bebe9928a21b69f0feae536e2ba666e55e0eec91f0"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py": {
+      "bytes": 14049,
+      "mtime_ns": 1787318789372213300,
+      "sha256": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py": {
+      "bytes": 28143,
+      "mtime_ns": 1787318571803041100,
+      "sha256": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_diagnose.py": {
+      "bytes": 9442,
+      "mtime_ns": 1787322401459043900,
+      "sha256": "6f626e026978d1c5494d5608e041a0877f0d8797fa136ee1713a6609038f0d35"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a1.py": {
+      "bytes": 8237,
+      "mtime_ns": 1787321917073346800,
+      "sha256": "51ad6d96dbcdbd7dff43f8a478c73e12a7b29c508fede674fbd63efd51485fdc"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a2.py": {
+      "bytes": 9334,
+      "mtime_ns": 1787322124439772200,
+      "sha256": "5d95d7a8455e61e906588c0ea7fe23251f3bdd2b347643b82f9b2dc727543c6f"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1.py": {
+      "bytes": 40426,
+      "mtime_ns": 1787323867661690900,
+      "sha256": "2b635284ca85b36774f18ccf160ba3780969de30afec59a8ccf5696e91c1c791"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1_protocol.py": {
+      "bytes": 16862,
+      "mtime_ns": 1787323864493009700,
+      "sha256": "754babfea65af7ab7d251a835aa6f22879d099705e14194df0af58216b1d7880"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r1_runtime_a1.py": {
+      "bytes": 9782,
+      "mtime_ns": 1787324071023487700,
+      "sha256": "06c26409c993d9da3579f8fdfc43419881be5ff9166176cd5785ec3d53d1bddf"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2a.py": {
+      "bytes": 8193,
+      "mtime_ns": 1787327308650435400,
+      "sha256": "5857a8cbe0b5f4a79926853c1eecb0f54fdd4a15677b35ca996c7ffec4b01b63"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2a_protocol.py": {
+      "bytes": 11634,
+      "mtime_ns": 1787327209344991600,
+      "sha256": "fd3965683eee098df3782fb22559e1b667f2894faad199899f0c9c60cdd821e6"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b.py": {
+      "bytes": 25877,
+      "mtime_ns": 1787329032729865600,
+      "sha256": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b_protocol.py": {
+      "bytes": 15272,
+      "mtime_ns": 1787329041188570700,
+      "sha256": "7875daf3feb97503bbccc058982d602d5afc4848c27b259f9eba0e5a00b664aa"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2c.py": {
+      "bytes": 26674,
+      "mtime_ns": 1787331183484599000,
+      "sha256": "6300eaed612cebde5a84c3c4ce6127b78646d036844955cb04cfa91bddfbaf1f"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2c_protocol.py": {
+      "bytes": 17590,
+      "mtime_ns": 1787331181915986000,
+      "sha256": "e09b24c9838231347b7e29293de517db36e8acee1ad3bafb627a5b2838480c6d"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2d.py": {
+      "bytes": 37661,
+      "mtime_ns": 1787332293200523000,
+      "sha256": "4f1ff170f2c20e2412bd82180eb8427d888e8db33dfbeeaf90711a6191bcd714"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2d_protocol.py": {
+      "bytes": 25120,
+      "mtime_ns": 1787332291621248500,
+      "sha256": "2f71e3c45e28f3b2394477fb36e4a703637f124449b0b18a46365b31eeb61f69"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2e.py": {
+      "bytes": 40471,
+      "mtime_ns": 1787335057749698000,
+      "sha256": "e80776c51417f4e5f30fdee78d149419320f8affbb02a0985a2138780fbfcb25"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2e_protocol.py": {
+      "bytes": 23738,
+      "mtime_ns": 1787334825706280200,
+      "sha256": "75b9a2043b45f0039292b325587aaf899b87b68cce4cb1a619ad252a73b03002"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py": {
+      "bytes": 35027,
+      "mtime_ns": 1787337973704309200,
+      "sha256": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_protocol.py": {
+      "bytes": 19735,
+      "mtime_ns": 1787337769264209400,
+      "sha256": "9ba17833a05b93aabc41efa73f5e077ea438888fa74250c8055f12e99ca4eecf"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_runtime_a1.py": {
+      "bytes": 24213,
+      "mtime_ns": 1787340480825544000,
+      "sha256": "9edc4fd2369350912dd56461a78bd8cd9017849cb05666f67ac4182d0524aac5"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f_runtime_a2.py": {
+      "bytes": 24246,
+      "mtime_ns": 1787341254385179800,
+      "sha256": "1c0a9573eaa6bd4f1c0c3db7b22589a50685369bb6e554bbd2e81fe8911b2436"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py": {
+      "bytes": 31556,
+      "mtime_ns": 1787342619197201900,
+      "sha256": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py": {
+      "bytes": 21899,
+      "mtime_ns": 1787342703763593200,
+      "sha256": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_runtime_a1.py": {
+      "bytes": 11706,
+      "mtime_ns": 1787348199997323700,
+      "sha256": "9a1e35725bd97b4f12b5feeefa7439eb2d9a6926a00bd4ccfdff741b2cddcc56"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v18_1_experiment.py": {
+      "bytes": 62657,
+      "mtime_ns": 1790750369613999500,
+      "sha256": "c8d7e2ea88cc91b77ae5c74adbb411c6a8427367a28ee108a3db6704c5274225"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v18_2_experiment.py": {
+      "bytes": 67322,
+      "mtime_ns": 1790757398747453900,
+      "sha256": "92bc0cae01c6450de1187ee9fd8a48f46b2697b27d0356f4d1ebe728d6c16ebe"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v18_3_experiment.py": {
+      "bytes": 71987,
+      "mtime_ns": 1790843089408065400,
+      "sha256": "29467b336b4d9fe30d46100608859c87f4729ee5a0be221c5a130d948a0f77f7"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v18_4_development.py": {
+      "bytes": 63301,
+      "mtime_ns": 1791049323783926900,
+      "sha256": "1ecc932e3863e046f365c825805d04d91ad685b4ce325c3c3c81a6cfea1483f8"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v18_5_development.py": {
+      "bytes": 62104,
+      "mtime_ns": 1791276621075284800,
+      "sha256": "6183313e8a5cb578b17ef7c2ec387d9d61640b74be0d088215402375cb9073d6"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v18_experiment.py": {
+      "bytes": 37874,
+      "mtime_ns": 1790693017521115100,
+      "sha256": "171fbb9c9c1cd3422cbeba687458283863cea740d901783e6db608de947dfe57"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v19_r0_accuracy_recovery.py": {
+      "bytes": 42211,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "adfc3fae2532dfa9d3008f6e63dd6f8ba9b23b4699016da0b979aa203b7e6309"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py": {
+      "bytes": 83674,
+      "mtime_ns": 1786293807835361100,
+      "sha256": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v9_postlock_audit.py": {
+      "bytes": 12657,
+      "mtime_ns": 1786294833028075300,
+      "sha256": "a9073aa669f37898d8ffb0ccc149c79735c2e7ba9b2baba12429a6f8e8b5b84b"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v9_wknn_comparator_v2.py": {
+      "bytes": 30151,
+      "mtime_ns": 1786457970340027100,
+      "sha256": "cc2511901448a0a870089033833752d0f7be2855c594924b2bb4e8fd8b3f0632"
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v9_wknn_protocol.py": {
+      "bytes": 29744,
+      "mtime_ns": 1786456931561833300,
+      "sha256": "bfdbc194ca5bff5f7eeed3176477bb029b1a2c68ade4e03b324b6ccf7143dc2b"
+    },
+    "fhm_dapp_tim/fhm_dapp/uncertainty.py": {
+      "bytes": 22506,
+      "mtime_ns": 1783953207570648000,
+      "sha256": "a02daff9565e71a0351187adc307c3a43faae82cc732a84a5dae76043e40cc2a"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_1_single.py": {
+      "bytes": 23026,
+      "mtime_ns": 1790750369613999500,
+      "sha256": "39f307b96a844be8940366f6db1a8e967fd046dd419c3537efab99f743be3e20"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_2_single.py": {
+      "bytes": 40229,
+      "mtime_ns": 1790757398747453900,
+      "sha256": "84db59687a6bce15ddaa6952acd8ac8bbe1afd207d89b4d75c426dcf18bd2323"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_3_single.py": {
+      "bytes": 48267,
+      "mtime_ns": 1790841399844426200,
+      "sha256": "b4f1bc5359da71ce643ccd73be09249bf428314532917f041198cf11bfe0b4dd"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_capacity_audit.py": {
+      "bytes": 7844,
+      "mtime_ns": 1791046895542973100,
+      "sha256": "05c56e247e5ad6aed9fa3d74a7ce7ba92130f38e313555b134198c977c4b4580"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_core.py": {
+      "bytes": 21217,
+      "mtime_ns": 1791049322974124400,
+      "sha256": "caf660c629907cda071b3dd9494c3d247d9fa26409e2356f2e9888ee12302eae"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_coupling_stratum_probe.py": {
+      "bytes": 71210,
+      "mtime_ns": 1791103619029169700,
+      "sha256": "6ac302dafdd9b16a4ba8220daf539234c9510622212235fa207ab1d0b792b599"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_dataset_audit.py": {
+      "bytes": 9415,
+      "mtime_ns": 1791046895543973100,
+      "sha256": "82d7e1f846b1d0a8be59730c652ffdabe0dc39054d665fa8f72652978038de71"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_datasets.py": {
+      "bytes": 25109,
+      "mtime_ns": 1791046895544524000,
+      "sha256": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_decoder_probe.py": {
+      "bytes": 24149,
+      "mtime_ns": 1790919717185900500,
+      "sha256": "670ac5523e5b3701e3daec40b223114e810f2870e306802e37a7062d8759da5b"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_external.py": {
+      "bytes": 43159,
+      "mtime_ns": 1791049324621748900,
+      "sha256": "2d4d2308c16d6c9eb8d9bfb5231242db08e9cd07ab6a6da115c9396dde971a4b"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_mechanism_probe.py": {
+      "bytes": 75355,
+      "mtime_ns": 1791098366714815400,
+      "sha256": "7753b856dab0d762429a80b5e0096575cfe1a2a38bf341eb9b771e48b7a1fc59"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_model.py": {
+      "bytes": 45188,
+      "mtime_ns": 1791047868849855900,
+      "sha256": "84689fe8eb65b78b531b78c47b1493ac694415ded82566cfb9a05cfd83c50b4a"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_protocol.py": {
+      "bytes": 10910,
+      "mtime_ns": 1791046895544524000,
+      "sha256": "5c8cf022db7ff53aafb74fc118ba87c546520371ffdd38f6eb68d4456f25850a"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_realdata_smoke.py": {
+      "bytes": 7099,
+      "mtime_ns": 1791048704363486500,
+      "sha256": "13caaad99bc0828706269a7b0c6cf0762864063c333a43aa7ae68fa32a5cdd14"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_4_revision_audit.py": {
+      "bytes": 20060,
+      "mtime_ns": 1791049002831190500,
+      "sha256": "af7d21873216dafafe9ee1308cc9dc9792c0b791e2a81d59787a6ad1f8f0be6f"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_artifact_audit.py": {
+      "bytes": 61755,
+      "mtime_ns": 1791276621075855400,
+      "sha256": "c85270a482247a731b41bd134c00113dc09ca15dc670c69d4a3b3fcf4a99bbdb"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_contract.py": {
+      "bytes": 2721,
+      "mtime_ns": 1791276621075855400,
+      "sha256": "5c983dded2f7a4fac5c3492c7209e8d1491f48727f8a5446b572fdfe127753de"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_core.py": {
+      "bytes": 15927,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "cf4375e67dd38cc84732b5e79c602bd325b3e9b6c5150c1056904ededb005571"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_datasets.py": {
+      "bytes": 11023,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "ddcf56c77277897494a59fa3bbd133a919dadc37316982472950bab8f9079114"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_environment.py": {
+      "bytes": 3342,
+      "mtime_ns": 1791276621076857300,
+      "sha256": "2b4cdf9769d2dc173a6f95ff83a0444c77b0be5701ee45929640bd8b4144eae9"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_external.py": {
+      "bytes": 54759,
+      "mtime_ns": 1791276621077857500,
+      "sha256": "e4ee3fd1734ccef4e55f9931a1c4b03acb39c01e7b736b9e4b0ed0021381efd6"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_external_artifact_audit.py": {
+      "bytes": 27530,
+      "mtime_ns": 1791276621077857500,
+      "sha256": "a5fa528227d3d46a1e8c0f467092af65fb2775a8e1b28a4f0e9a1d3d3bb83e1f"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_model.py": {
+      "bytes": 38665,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "392d7ca7716f994b485b5c084050523d6553d8bb84fbd0afd0946d2472124c26"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_pre_run_acceptance.py": {
+      "bytes": 15164,
+      "mtime_ns": 1791276621078858100,
+      "sha256": "2244aa59b8aa7debad651f41dc5515f19a638379743f03a411cf4673698c91a9"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_predictive_decision_probe.py": {
+      "bytes": 14905,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "9061fd3f7c3e2918c497eecf3175c56ab9938a677362863dad295883fffd0f55"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_protocol.py": {
+      "bytes": 3368,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "07eef696576b9c1228b4733158e8f2e2a69ba9be4f99a1ff52850ba1fdb6cb45"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_radio.py": {
+      "bytes": 11479,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "0311e9336ed7420eb0eb5820e25e1c0afbbd9550de452578e1d5d4ca1934a42d"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_realdata_smoke.py": {
+      "bytes": 8890,
+      "mtime_ns": 1791276621079324200,
+      "sha256": "ce130c1ba5c804c6945e9720349d36805f9e7a6a0f46abf6dbc176d4efb622ca"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_5_revision_audit.py": {
+      "bytes": 13256,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "65c91d9bf4c94aa87189db56935e8a3646b9151549eb1867b9873c0e86f43322"
+    },
+    "fhm_dapp_tim/fhm_dapp/v18_single.py": {
+      "bytes": 9546,
+      "mtime_ns": 1790692170433996200,
+      "sha256": "a985997202bd85a95e988d797c09dab08521ae18f9c0f557581bf42747c9977e"
+    },
+    "fhm_dapp_tim/fhm_dapp/v19_r0_core.py": {
+      "bytes": 14249,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "81d125fba58b349c07efff050ceb9ed7a3c73fee02e0e3df05cfe09024759e6f"
+    },
+    "fhm_dapp_tim/fhm_dapp/v9_wknn_common.py": {
+      "bytes": 5769,
+      "mtime_ns": 1786456841353756000,
+      "sha256": "ef7be95e8643be384462f628bbc59a9135436b4d214f06c9ae441ebd7af47a5a"
+    },
+    "tests/test_coherent_marked_v9.py": {
+      "bytes": 5341,
+      "mtime_ns": 1786292399949828200,
+      "sha256": "de71f9009f1a6935228b66b529c672fb98d8db003057012e1595349099ffe761"
+    },
+    "tests/test_historical_reproduction.py": {
+      "bytes": 4492,
+      "mtime_ns": 1791375493991490900,
+      "sha256": "c1e6f51970a860a95589f932dc5494bcebd310326c1fb7a803bd675b73fe42b9"
+    },
+    "tests/test_uji_v17_mother.py": {
+      "bytes": 2932,
+      "mtime_ns": 1787318658457539200,
+      "sha256": "53b98fb79d6f0bbbbe1c986972c3f2663d326429492315018cea8850b2adb498"
+    },
+    "tests/test_uji_v17_mother_r1.py": {
+      "bytes": 3875,
+      "mtime_ns": 1787323729384014500,
+      "sha256": "41a29a79e052d715d991e2baff8455b273dba8fd8bbd73ea8a69aa394fb1e3ac"
+    },
+    "tests/test_uji_v17_mother_r2a.py": {
+      "bytes": 1631,
+      "mtime_ns": 1787327279643647800,
+      "sha256": "92a85ba1af1e6e5d61acf79d7e8da103af78d05ba564306db4434d13c511b137"
+    },
+    "tests/test_uji_v17_mother_r2b.py": {
+      "bytes": 5567,
+      "mtime_ns": 1787330005005834400,
+      "sha256": "9efef4e9d8a2eb44bc3417275e1737c468421fa9f91c49537e5381a16b325ffc"
+    },
+    "tests/test_uji_v17_mother_r2c.py": {
+      "bytes": 5913,
+      "mtime_ns": 1787331185044247300,
+      "sha256": "ca9660094bd1202df964842ba0998ec59754a9b19303074927520a6090ccaf2c"
+    },
+    "tests/test_uji_v17_mother_r2d.py": {
+      "bytes": 3883,
+      "mtime_ns": 1787332163326374200,
+      "sha256": "cf88346512c0115b23bca872f6664849c0111da8f4c4c59657624a8ff2b18d3c"
+    },
+    "tests/test_uji_v17_mother_r2e.py": {
+      "bytes": 5474,
+      "mtime_ns": 1787335099179615600,
+      "sha256": "11a3d541624c656cd0fa7a4df4ef64af1d110f48cd4f4327df76404bea05d804"
+    },
+    "tests/test_uji_v17_mother_r2f.py": {
+      "bytes": 4000,
+      "mtime_ns": 1787338003748841100,
+      "sha256": "121c9ae6252f3b273af01cec86fa46ba11d1f19f103457d042fd4a39c88004db"
+    },
+    "tests/test_uji_v17_mother_r2f_runtime_a1.py": {
+      "bytes": 4905,
+      "mtime_ns": 1787340541208209500,
+      "sha256": "c10f017bf275dbcac73bdb19161dd99b868100d610a7a74c8466e7782c78fbc8"
+    },
+    "tests/test_uji_v17_mother_r2f_runtime_a2.py": {
+      "bytes": 3557,
+      "mtime_ns": 1787341300590164500,
+      "sha256": "293968910eb6828e6aec842fa5d7fb7fbc992cbebc5b985f9168817d61b976b6"
+    },
+    "tests/test_uji_v17_mother_r3.py": {
+      "bytes": 3224,
+      "mtime_ns": 1787342646855307900,
+      "sha256": "034437094ca37502907f5d69736093bd869836990a983e7d92c95552bb96eeae"
+    },
+    "tests/test_uji_v17_mother_r3_runtime_a1.py": {
+      "bytes": 2635,
+      "mtime_ns": 1787348220349897100,
+      "sha256": "9d6a54ff9452f41f048163a652093e978acef59df5b65ff70649719709f5d5af"
+    },
+    "tests/test_uji_v18_1_experiment.py": {
+      "bytes": 9159,
+      "mtime_ns": 1790750369613999500,
+      "sha256": "b4b1b5b279b9cbff060b79457ded98418adf3288d1175eb7b805285b917c60ce"
+    },
+    "tests/test_uji_v18_2_experiment.py": {
+      "bytes": 10366,
+      "mtime_ns": 1790757398747453900,
+      "sha256": "6e88f4f573bb56a77b3c6c21dc57afd9f1428a75defacf10a23352a5acabd86e"
+    },
+    "tests/test_uji_v18_3_experiment.py": {
+      "bytes": 14234,
+      "mtime_ns": 1790843090169170500,
+      "sha256": "4aced6984fe5ab06ab85454aea0be892c87df0ef2f4a2af8ce24317a00718ec3"
+    },
+    "tests/test_uji_v18_4_development.py": {
+      "bytes": 10202,
+      "mtime_ns": 1791048705198744600,
+      "sha256": "280747ca0fed1d9db06dd20c2c198520d14b97371f561e8d22b0c94d765534e2"
+    },
+    "tests/test_uji_v18_5_development.py": {
+      "bytes": 11425,
+      "mtime_ns": 1791276621079324200,
+      "sha256": "1a68ed3eca7e38ca72f0b773877f89b2824f7b0d082b30cf2849ec8b4092d302"
+    },
+    "tests/test_uji_v18_experiment.py": {
+      "bytes": 3871,
+      "mtime_ns": 1790692170433996200,
+      "sha256": "89a7f7c3d11ff00404120a1a918ae4900b9f0a279e24e5f447bc622cc52b867a"
+    },
+    "tests/test_uji_v19_r0_accuracy_recovery.py": {
+      "bytes": 2067,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "f035d3bbf0327466d8553f7016b1a59d5e0da919d5e5ce734be41bd8aa150612"
+    },
+    "tests/test_uji_v9_experiment.py": {
+      "bytes": 3265,
+      "mtime_ns": 1791357046398647900,
+      "sha256": "de7110cb941ec33ba1fa60a8fe0b631c17e8ad6803fa4a487d24cbc8a211bf7b"
+    },
+    "tests/test_uji_v9_postlock_audit.py": {
+      "bytes": 767,
+      "mtime_ns": 1786294834403478300,
+      "sha256": "680b65626598fd2ec7762baa8bb7f5b57eaf5516928cc6e53bfa8bfaa81fd3e0"
+    },
+    "tests/test_uji_v9_wknn_comparator_v2.py": {
+      "bytes": 2365,
+      "mtime_ns": 1786458244847213000,
+      "sha256": "219a8e01fc1840fd49848448907f60ad42493f091e23ccd111f6ddf170c595ec"
+    },
+    "tests/test_uji_v9_wknn_protocol.py": {
+      "bytes": 1735,
+      "mtime_ns": 1786456919974972300,
+      "sha256": "ad52324de55c3c61e9556ee1f53a621db1d367b039c63a8dbf5bd4873227d919"
+    },
+    "tests/test_v18_4_capacity_audit.py": {
+      "bytes": 2676,
+      "mtime_ns": 1791046895544524000,
+      "sha256": "d0ff9cb2a00c0ace44833d32592e2464e2febd51233475e2bb52ef3a73584cce"
+    },
+    "tests/test_v18_4_core.py": {
+      "bytes": 15957,
+      "mtime_ns": 1791050837761984000,
+      "sha256": "8d58a403a30e1cf5011bc746144335d8344094ea72c24c38c2743e2ecbf21385"
+    },
+    "tests/test_v18_4_coupling_stratum_probe.py": {
+      "bytes": 32225,
+      "mtime_ns": 1791103998278749700,
+      "sha256": "ee4ca02b41778f4248f047bb36c90bd71217212a09cfd3f8d9758111cac637c9"
+    },
+    "tests/test_v18_4_datasets.py": {
+      "bytes": 4769,
+      "mtime_ns": 1791046895544524000,
+      "sha256": "8df557fb3a57d50c78e048fbde28ad9c3366601a19dc3bf6bd468b934c76f942"
+    },
+    "tests/test_v18_4_decoder_probe.py": {
+      "bytes": 4636,
+      "mtime_ns": 1790919717186408400,
+      "sha256": "3fd581c5660b024b4344fe6143c674ad4c9fa54d4320ea21bfef3db15d5c7e73"
+    },
+    "tests/test_v18_4_external.py": {
+      "bytes": 7795,
+      "mtime_ns": 1791050839408803300,
+      "sha256": "8393350e8207275993c3d3bd56e7a2995dc3c917fd35be918d34f2dceac61278"
+    },
+    "tests/test_v18_4_mechanism_probe.py": {
+      "bytes": 26915,
+      "mtime_ns": 1791098367486580500,
+      "sha256": "04f029948d586a38b9c8eb0bfc4823b87c7ab82dd00f1a039bef7d9c8f4912c5"
+    },
+    "tests/test_v18_4_model.py": {
+      "bytes": 20188,
+      "mtime_ns": 1791050838571336900,
+      "sha256": "73fc16b753acf0cb1b2a66fa59cb7c2bc40213022a6f2627fedba418d36016f2"
+    },
+    "tests/test_v18_4_protocol.py": {
+      "bytes": 3751,
+      "mtime_ns": 1791046895544524000,
+      "sha256": "2381cdc928b67e2f7bd9b430035190b65f151b991016b869cf0146c5b09a68f6"
+    },
+    "tests/test_v18_5_artifact_audit.py": {
+      "bytes": 18299,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "9f10c42ff416d02940fc8805a990ec17d495a53380c8d4b2b7c845a9ee691e7c"
+    },
+    "tests/test_v18_5_core.py": {
+      "bytes": 6295,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "9b3df50bf257ad90f82b9b0e28ce2fcbc461925c827b17b563d5406b124ce8d4"
+    },
+    "tests/test_v18_5_datasets.py": {
+      "bytes": 4823,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "49357ce3fa06b40de39d549f0ca438cacdb8bc726feaddd8d13a5aed42feeb87"
+    },
+    "tests/test_v18_5_external.py": {
+      "bytes": 13781,
+      "mtime_ns": 1791276621079324200,
+      "sha256": "3e2c621b45711b48681308f6016c1f0391276598fde26a1dc80249b3052dd855"
+    },
+    "tests/test_v18_5_external_artifact_audit.py": {
+      "bytes": 12321,
+      "mtime_ns": 1791276621079324200,
+      "sha256": "4b511fec4d48a7b932304f283c840bcbc797db6eba96a817d9196f3d0b0077f4"
+    },
+    "tests/test_v18_5_model.py": {
+      "bytes": 7382,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "882a4c8cc3703f4551510a03f422cdaf5b94bc7bb4088482b25b27d652f21357"
+    },
+    "tests/test_v18_5_pre_run_acceptance.py": {
+      "bytes": 5965,
+      "mtime_ns": 1791276621079324200,
+      "sha256": "f2640eab324f34ab65fd20e5e214f377107cbc8bfb4fd570a9e2548cbf31c2e0"
+    },
+    "tests/test_v18_5_predictive_decision_probe.py": {
+      "bytes": 728,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "464aaeba52e3849b693e79466624954976feac63025ecbced5ea612420777079"
+    },
+    "tests/test_v18_5_protocol.py": {
+      "bytes": 1938,
+      "mtime_ns": 1791266063017602800,
+      "sha256": "d42b9737d7c3a4853731a8fc8a663d1a15def0bcaeebd862b716d5831bb34541"
+    },
+    "tests/test_v18_5_radio.py": {
+      "bytes": 7260,
+      "mtime_ns": 1791266063017602800,
+      "sha256": "e3da47a729577ced13206cef884f1cfd44a25de2f20788a07799174dc05955c6"
+    },
+    "tests/test_v18_5_revision_audit.py": {
+      "bytes": 607,
+      "mtime_ns": 1791266063017602800,
+      "sha256": "c17d135f3e2030a6735ae4a26f8cd81c307df12ff032989281285873169e9145"
+    },
+    "tests/test_v19_r0_core.py": {
+      "bytes": 5988,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "b9a5c7ebb125d35367ef17703d2d4f9a17bdcf4981a602c342d589f63aa11d91"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_HISTORICAL_REPRODUCTION.md": {
+      "bytes": 2370,
+      "mtime_ns": 1791355908652136700,
+      "sha256": "329bb5a0a42497b4979ce6f8ca764f74d14c09758d3faa3faf883d60b024a3e3"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_V9_REPRODUCTION.md": {
+      "bytes": 699,
+      "mtime_ns": 1791355908652927400,
+      "sha256": "c73db53ee34aff3c6224d75cdea6f2ce745e23d7c21a13d178bc0f901a98bd34"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/registry_historical_reproduction.json": {
+      "bytes": 3164,
+      "mtime_ns": 1791357184435820800,
+      "sha256": "ccadebebb8238a4262c6a08452f96299439d0ccf9681bd2500e8ea2cfc65144f"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/REPRODUCTION_SUMMARY.json": {
+      "bytes": 629,
+      "mtime_ns": 1791375905671396500,
+      "sha256": "20594c307d79f32a48a007061a9de222f4faf361517321ff2fcb11f45175becd"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/check-v17-members_attempt01.json": {
+      "bytes": 809,
+      "mtime_ns": 1791375343110516900,
+      "sha256": "0a1e4f3b2b273ba183f6824ee058b91fb5fe27bec104a33080ec4d17880e1d60"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/check-v17-members_attempt01.log": {
+      "bytes": 5163,
+      "mtime_ns": 1791375342559878900
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt01.json": {
+      "bytes": 787,
+      "mtime_ns": 1791356415790307200,
+      "sha256": "494148b0f23059334383a4d3831597c9f3ddd8bcfce786e38343f993b6f5d0ec"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt01.log": {
+      "bytes": 0,
+      "mtime_ns": 1791356415449116200
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt02.json": {
+      "bytes": 787,
+      "mtime_ns": 1791356557318389200,
+      "sha256": "0dca14a192aa60f2cb1046c86b1a84a4a487f9d96d0d19049503a0ba1224a31f"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt02.log": {
+      "bytes": 0,
+      "mtime_ns": 1791356557092551000
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt03.json": {
+      "bytes": 786,
+      "mtime_ns": 1791356942252148600,
+      "sha256": "ff97be082834486a874b03a72397c66cac6e3d913a4bb991c708a617d725fe62"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt03.log": {
+      "bytes": 0,
+      "mtime_ns": 1791356942034118100
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt04.json": {
+      "bytes": 787,
+      "mtime_ns": 1791357082682904000,
+      "sha256": "f62a6f37c57e72d23be9aceac24fd979e2e5e36068db60130f519655b28cc980"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt04.log": {
+      "bytes": 0,
+      "mtime_ns": 1791357082469239200
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt05.json": {
+      "bytes": 787,
+      "mtime_ns": 1791375628358394200,
+      "sha256": "d7d374aea66adb4a5f7179e1f2fd480a0a785a30efa87cfb34cc858dc51f357f"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt05.log": {
+      "bytes": 0,
+      "mtime_ns": 1791375628082985400
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/ENVIRONMENT_AND_STATIC_PRECHECK.json": {
+      "bytes": 3431,
+      "mtime_ns": 1791357176375640500,
+      "sha256": "9749366991c989bf20a5a6338fc2832942669746d790cc6af39d8bbad87517d0"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/evaluate-v17_attempt01.json": {
+      "bytes": 823,
+      "mtime_ns": 1791375768845435000,
+      "sha256": "92fc9869e2239b7dd327d17d1499f0f0cc5d986e7e1bf2b10eb24bb4e4b33501"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/evaluate-v17_attempt01.log": {
+      "bytes": 55768,
+      "mtime_ns": 1791375767968621100
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/execute_stage.py": {
+      "bytes": 4217,
+      "mtime_ns": 1791356906146353300,
+      "sha256": "bcd8553c7995f9aea8becc3a4e99dcd49eebf13ccc0acd1491bb736355a4f7d0"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/FINAL_EXECUTION_VERIFICATION.json": {
+      "bytes": 37666,
+      "mtime_ns": 1791376107959036500,
+      "sha256": "45fa7f50fc505493752df82f94d88e54e2ba21a264165b5cc1c9d62dca4deb2f"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/finalize_report.py": {
+      "bytes": 27979,
+      "mtime_ns": 1791376065610779300,
+      "sha256": "b0b14fd63050578d05f1ef40a4a281575b1bb7a6962fe5969fc45047ed03a287"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/GIT_EXPORT_VERIFICATION.json": {
+      "bytes": 28351,
+      "mtime_ns": 1791434677411630700,
+      "sha256": "c52c80cc7481a61366ae6c5ac47f676a8e2fff417b6ca017b2d74c71ae66a46a"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/historical_runner_before_retained_mass_repair.py": {
+      "bytes": 38249,
+      "mtime_ns": 1791375493977062100,
+      "sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/historical_tests_before_retained_mass_repair.py": {
+      "bytes": 3877,
+      "mtime_ns": 1791375493984064600,
+      "sha256": "0e55926f12b0a4aa68df5205ab0f424e8d19b445a55f286ade98f4ee3fb2a7d5"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/INITIAL_EXECUTION_AUDIT.json": {
+      "bytes": 3477,
+      "mtime_ns": 1791356381786012700,
+      "sha256": "99de7029b3139eb72ab16ce992181baeadff66be9f2e5efd71bcf78dd76cc817"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/POST_TRAINING_IMPLEMENTATION_PRECHECK.json": {
+      "bytes": 3661,
+      "mtime_ns": 1791375770582278700,
+      "sha256": "ecfd38627810a60b23839d208f0c2704e8da5dfd4a3360ddee3e3b31311ef95c"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/PRECHECK_DESIGN_FIXTURE_AND_PATH_REPAIR.json": {
+      "bytes": 3016,
+      "mtime_ns": 1791356906146353300,
+      "sha256": "1d8066226dccb2b5cb33409a66f969187e6004f89c94881aaa10bbb0fd4f2f2d"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/PRECHECK_OPERATIONAL_REPAIR.json": {
+      "bytes": 1088,
+      "mtime_ns": 1791356529246605900,
+      "sha256": "a77d8cc6409ed61ebd79bfc9dfc596838181e123d1d691f361b761468635cb3e"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/PRECHECK_TRAINING_INPUT_PATH_REPAIR.json": {
+      "bytes": 1891,
+      "mtime_ns": 1791357046403044500,
+      "sha256": "028529806246a397b180f30f57a073893893ba33282eb5d851dfe0b274dfb54f"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/preflight_attempt01.json": {
+      "bytes": 814,
+      "mtime_ns": 1791357128363253900,
+      "sha256": "7cd055793d59111c51a286d4cd1b25dd5e3d47bb3d55b553c6dd4e3f31e21c62"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/preflight_attempt01.log": {
+      "bytes": 2431,
+      "mtime_ns": 1791357127864068100
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/preflight_attempt02.json": {
+      "bytes": 813,
+      "mtime_ns": 1791375679834828700,
+      "sha256": "ea30f6a4f463acf5a89d791bf10d8e6b090f8e2c1e25f51db66abc6429488fa5"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/preflight_attempt02.log": {
+      "bytes": 2431,
+      "mtime_ns": 1791375679309070900
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/prepare-v17_attempt01.json": {
+      "bytes": 793,
+      "mtime_ns": 1791360629727887500,
+      "sha256": "baa17dfb925238c7e587da2873144aca691a41df815951f7117bedafc448a459"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/prepare-v17_attempt01.log": {
+      "bytes": 9064,
+      "mtime_ns": 1791360629140619500
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/prepare_attempt01.json": {
+      "bytes": 808,
+      "mtime_ns": 1791357184938401100,
+      "sha256": "2125c8d6fdc2ea73e414fef2375b78aad31b4eec49c3946ef5ba401ef034cac3"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/prepare_attempt01.log": {
+      "bytes": 3056,
+      "mtime_ns": 1791357184443825500
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt01.log": {
+      "bytes": 6528,
+      "mtime_ns": 1791356428127338300
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt02.json": {
+      "bytes": 853,
+      "mtime_ns": 1791356566878331900,
+      "sha256": "edd3dd8f4341b198a67002000c651f95156a0fcd59afbc008a9a28730c839ec7"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt02.log": {
+      "bytes": 2599,
+      "mtime_ns": 1791356566045398600
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt03.json": {
+      "bytes": 853,
+      "mtime_ns": 1791356952108893200,
+      "sha256": "557436d1e874e0e4ad05c7bc423cfaffc993beacce1b4e0dfc6478ce28aa16f2"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt03.log": {
+      "bytes": 37185,
+      "mtime_ns": 1791356951243365700
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt04.json": {
+      "bytes": 854,
+      "mtime_ns": 1791357098959630000,
+      "sha256": "b95b6341f69487ebf31d643b7155b06c0c7ccd8cb98ce9aa9d66b39073053961"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt04.log": {
+      "bytes": 100,
+      "mtime_ns": 1791357098077069600
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt05.json": {
+      "bytes": 854,
+      "mtime_ns": 1791375535505309100,
+      "sha256": "1c5f398bb845e92a2bc6be07108f8f6f09a0f169ac69beab7f4df2382db95ae2"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt05.log": {
+      "bytes": 2112,
+      "mtime_ns": 1791375534586138200
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt06.json": {
+      "bytes": 854,
+      "mtime_ns": 1791375656710056800,
+      "sha256": "a66e1923100fa761720163e0bacf4364b21f41fd137f8195c4833a007bbc68d0"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt06.log": {
+      "bytes": 100,
+      "mtime_ns": 1791375655791696300
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/REGISTRY_VERIFICATION.json": {
+      "bytes": 405,
+      "mtime_ns": 1791357256271217600,
+      "sha256": "9d96f8b54308237f38977db972945e5eb172ed91cada9c1846bab6748446ca02"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/run-v17_attempt01.json": {
+      "bytes": 809,
+      "mtime_ns": 1791375114092480800,
+      "sha256": "212c87a5bda25fe7c5988cfb0473ca39b41329409b8842020907aa7568994d82"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/run-v17_attempt01.log": {
+      "bytes": 1034569,
+      "mtime_ns": 1791375113241406000
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/run-v9_attempt01.json": {
+      "bytes": 805,
+      "mtime_ns": 1791360573236232500,
+      "sha256": "cb5e04748c6075053c86c0bd020211727d1af94227979f7b93f843917d09a5db"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/run-v9_attempt01.log": {
+      "bytes": 274711,
+      "mtime_ns": 1791360571988367800
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/summarize_attempt01.json": {
+      "bytes": 786,
+      "mtime_ns": 1791375906176045700,
+      "sha256": "bff9eaebc1f3bf99a1410f78f4cedcc7a3e8552dd0d15929ff44718d8e6b16f4"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/summarize_attempt01.log": {
+      "bytes": 613,
+      "mtime_ns": 1791375905672390800
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/V17_RETAINED_MASS_FAILURE_AND_REPAIR_PLAN.json": {
+      "bytes": 7482,
+      "mtime_ns": 1791375493986067300,
+      "sha256": "4566c43103d432ebafa734e91dace5824714000a5fbac7b1260846de39b1205e"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/V17_RETAINED_MASS_IMPLEMENTATION_REPAIR.json": {
+      "bytes": 2783,
+      "mtime_ns": 1791375609002820000,
+      "sha256": "719ad021d1d00818c952b708d17b1e5130e82658a6c5e745b119c5681540de33"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/run_audit/V9_COMPLETE_V17_REGISTRY_VERIFICATION.json": {
+      "bytes": 2151,
+      "mtime_ns": 1791361104523220000,
+      "sha256": "05a6ca69a16d92fd5d25acdbc1dee76d92ddde0891a738548e46b54c7a517ff1"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/RUN_REPORT_HISTORICAL_REPRODUCTION.md": {
+      "bytes": 12477,
+      "mtime_ns": 1791376107959036500,
+      "sha256": "6b373ca8ceeab2f2e3232fb0891cfb178120b2051d48dc9e7255ae14c5be4d59"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v17/outer_refit_v17_reproduction.csv": {
+      "bytes": 34012311,
+      "mtime_ns": 1791360627234313600,
+      "sha256": "578d6584e50355a5f62fd4a978bbac67c402a6f2f96a9df8a2324a7a11e7cc83"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v17/outer_result_v17_reproduction.json": {
+      "bytes": 49926,
+      "mtime_ns": 1791375767932415900,
+      "sha256": "f6c622588d1e1b347839c8d097918560518130489759d5044fe4a74cffc77868"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v17/registry_v17_reproduction.json": {
+      "bytes": 9367,
+      "mtime_ns": 1791360627112313600,
+      "sha256": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_cache_geometry_invariant_E08.pt": {
+      "bytes": 317780353,
+      "mtime_ns": 1791357942829050100
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_cache_geometry_invariant_E10.pt": {
+      "bytes": 392488961,
+      "mtime_ns": 1791359258236330000
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_cache_geometry_invariant_E12.pt": {
+      "bytes": 467197633,
+      "mtime_ns": 1791359734979628500
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_cache_historical_affine_E08.pt": {
+      "bytes": 317780199,
+      "mtime_ns": 1791358803042646400
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_cache_historical_affine_E10.pt": {
+      "bytes": 392488807,
+      "mtime_ns": 1791359481795240700
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_cache_historical_affine_E12.pt": {
+      "bytes": 467197351,
+      "mtime_ns": 1791360041305090300
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E08.json": {
+      "bytes": 6369,
+      "mtime_ns": 1791358053396026300,
+      "sha256": "d28186529c92b94d9621e7ad0069caee96064edf33def3107ae80e56300e9363"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E08.pt": {
+      "bytes": 9114263,
+      "mtime_ns": 1791358053377641300
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E10.json": {
+      "bytes": 7814,
+      "mtime_ns": 1791359288981268500,
+      "sha256": "3dc9414ec1e40f1ee0e82b2361d84b3c8db38e500ca2931db80f63713e47890f"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E10.pt": {
+      "bytes": 11396807,
+      "mtime_ns": 1791359288964054500
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E12.json": {
+      "bytes": 9258,
+      "mtime_ns": 1791359766314659000,
+      "sha256": "bed6ff5c588243a413f6b768a4cb77c328d25ae66c7f3353dd1d2ccab81838e9"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E12.pt": {
+      "bytes": 13679095,
+      "mtime_ns": 1791359766308260300
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E08.json": {
+      "bytes": 6342,
+      "mtime_ns": 1791359077402534700,
+      "sha256": "0a5106b78eb8e34d90ba8c55621ec6dc0d7167251bf48e3fe9eb3ec883b435db"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E08.pt": {
+      "bytes": 9112657,
+      "mtime_ns": 1791359077376702900
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E10.json": {
+      "bytes": 7777,
+      "mtime_ns": 1791359552418287500,
+      "sha256": "973c88ce7175f8f52fc39db720633c502df99cd32e6c6fca585766cdfe995e62"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E10.pt": {
+      "bytes": 11394801,
+      "mtime_ns": 1791359552418287500
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E12.json": {
+      "bytes": 9218,
+      "mtime_ns": 1791360119788005600,
+      "sha256": "2539febea9155901d96fc8eb16ddb0b7ed02ca3ca00cf1d9d9517aabd6b8538e"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E12.pt": {
+      "bytes": 13676689,
+      "mtime_ns": 1791360119770805200
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/outer_test_cache_geometry_invariant.pt": {
+      "bytes": 764448191,
+      "mtime_ns": 1791360569209250600
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/outer_test_result_v9_uji.json": {
+      "bytes": 15789,
+      "mtime_ns": 1791360571988367800,
+      "sha256": "9b1026f970899ba5cfb48be38f124084e7336b1667731c645942f94955cc37e5"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/radio_memory_final_geometry_invariant.pt": {
+      "bytes": 15566795,
+      "mtime_ns": 1791360554927518300
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/radio_memory_selection_geometry_invariant.pt": {
+      "bytes": 12420487,
+      "mtime_ns": 1791357935301009600
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/radio_memory_selection_historical_affine.pt": {
+      "bytes": 12420472,
+      "mtime_ns": 1791358796239360200
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/registry_v9_uji.json": {
+      "bytes": 987814,
+      "mtime_ns": 1791357269078916700,
+      "sha256": "088f4732cc352f8bdb2e45a8d17a0b4cbb6198c5fcaee4a126d2665a116edeb0"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/REPRODUCTION_V9.json": {
+      "bytes": 964,
+      "mtime_ns": 1791360571988367800,
+      "sha256": "9dd187a8dce6a6f9d1b4129cd4dbc82f6a88e1250088f25240e1e704069fc5c7"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/selection_extension_required_through_E10_v9_uji.json": {
+      "bytes": 8706,
+      "mtime_ns": 1791359554104015700,
+      "sha256": "da9e328e1fe309275894197cfb20185ba8d4d32ec8d4cd0578e77aba35dfc755"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/selection_extension_required_through_E8_v9_uji.json": {
+      "bytes": 6629,
+      "mtime_ns": 1791359078893142200,
+      "sha256": "85d96ec4c4022656c90406322dbbe1ad46db18df071f5cec90235d25e703c549"
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/v9/selection_freeze_v9_uji.json": {
+      "bytes": 12258,
+      "mtime_ns": 1791360121811094400,
+      "sha256": "703093dffdce66bf41cb78b52997d55b26b868c0cb3d8eb8286bf2d9cf7cdcc1"
+    },
+    "fhm_dapp_tim/evidence/v18_1/calibration_result_v18_1.json": {
+      "bytes": 9938,
+      "mtime_ns": 1790752041593941300,
+      "sha256": "f9d359767a061bfbb9c6cb12a8ce2040491ff05f3c2f87776de8b94616e2f4a3"
+    },
+    "fhm_dapp_tim/evidence/v18_1/DESIGN_V18_1.md": {
+      "bytes": 8997,
+      "mtime_ns": 1790750369613999500,
+      "sha256": "aa03ee37cbd2033784f41e284480840b6960ff6aa05c68c598a36fe3ddc32656"
+    },
+    "fhm_dapp_tim/evidence/v18_1/external_result_v18_1.json": {
+      "bytes": 2762,
+      "mtime_ns": 1790752911034730000,
+      "sha256": "774c073842c904326992302328fdc501ef7f9b1e5e19e1c6d908dde4a3dd648e"
+    },
+    "fhm_dapp_tim/evidence/v18_1/external_validation_consumed.lock": {
+      "bytes": 611,
+      "mtime_ns": 1790752908292614900
+    },
+    "fhm_dapp_tim/evidence/v18_1/registry_v18_1.json": {
+      "bytes": 1119517,
+      "mtime_ns": 1790751465916401400,
+      "sha256": "9a11e96d9529f7b2b95dc48c72be022d016a1136a06a63c3417cfc1409b25007"
+    },
+    "fhm_dapp_tim/evidence/v18_1/role_shards/calibration.pt": {
+      "bytes": 8930501,
+      "mtime_ns": 1790751465765252900
+    },
+    "fhm_dapp_tim/evidence/v18_1/role_shards/early_stop.pt": {
+      "bytes": 4934072,
+      "mtime_ns": 1790751465452721700
+    },
+    "fhm_dapp_tim/evidence/v18_1/role_shards/member_fit.pt": {
+      "bytes": 29194232,
+      "mtime_ns": 1790751465399160000
+    },
+    "fhm_dapp_tim/evidence/v18_1/role_shards/selection_refit.pt": {
+      "bytes": 34116665,
+      "mtime_ns": 1790751465619422000
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/calibrate-freeze.log": {
+      "bytes": 12620,
+      "mtime_ns": 1790752041601032100
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/calibrate-freeze_execution.json": {
+      "bytes": 523,
+      "mtime_ns": 1790752042433243100,
+      "sha256": "fd82a49cdb10ce447936eacd870c378b6654c9506a4dd235ed6f4e65eeaeb6b1"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/calibrate-freeze_io.jsonl": {
+      "bytes": 964,
+      "mtime_ns": 1790752041583736000
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/calibrate-freeze_runtime.json": {
+      "bytes": 576,
+      "mtime_ns": 1790752041611681200,
+      "sha256": "9c57c48aa73e5d3874d0523db3d654bffa3c19088dfd43928f573e8ca0a8b1e4"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/cuda_preflight.log": {
+      "bytes": 1977,
+      "mtime_ns": 1790751108798109700
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/external.log": {
+      "bytes": 2762,
+      "mtime_ns": 1790752911036731800
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/external_execution.json": {
+      "bytes": 507,
+      "mtime_ns": 1790752911876940000,
+      "sha256": "b7dcf8f0cec68860af64bda1b3a194279beb55156f2e29d0b065d11c4a59fae6"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/external_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790752903853054600
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/external_io.jsonl": {
+      "bytes": 1138,
+      "mtime_ns": 1790752908527690800
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/external_runtime.json": {
+      "bytes": 568,
+      "mtime_ns": 1790752911043732500,
+      "sha256": "9d04ff54e1ce417f77e16d7d8fa48e4d4fed7ec684e03065161c12b168658193"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/final_verification.json": {
+      "bytes": 31776,
+      "mtime_ns": 1790752883819427600,
+      "sha256": "2f7fe03f9a7283502ee7a844b8201687a66da124d558979387bef4c3b8809365"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/freeze_verification.json": {
+      "bytes": 9732,
+      "mtime_ns": 1790752059088677600,
+      "sha256": "29e3eba2be4e0a7f92754c630ec3431b6be4ed3594a2a984427d98a764c6bcbd"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/pre_external_gate.json": {
+      "bytes": 32777,
+      "mtime_ns": 1790752889553724900,
+      "sha256": "073370d2818cf6c7442792c3524837057d7655d7001bb69fbc5301542b50c9fc"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/preflight.json": {
+      "bytes": 1975,
+      "mtime_ns": 1790751108755597000,
+      "sha256": "cfed62e01039da0d4b11b467498b35a5b67b044bc6de1220f80f175a12c60e2d"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/preflight.py": {
+      "bytes": 3371,
+      "mtime_ns": 1790751101177986800,
+      "sha256": "15f31dab6b62adf28fc8af75036199122aa1b6fef24de286cc144259ca74a7fa"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/preflight_io.jsonl": {
+      "bytes": 0,
+      "mtime_ns": 1790751102343837400
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/preflight_runtime.json": {
+      "bytes": 567,
+      "mtime_ns": 1790751108765968600,
+      "sha256": "4191d31ecd2e1cc3340d8af37804e360c8e30070de68f032b74c190eff7d6318"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/prepare.log": {
+      "bytes": 1119517,
+      "mtime_ns": 1790751466303840900
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/prepare_execution.json": {
+      "bytes": 475,
+      "mtime_ns": 1790751466872921200,
+      "sha256": "f6b5d09994d4fc14eac18cd41abb903e835b0ad08d12129f49b6c66714555e10"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/prepare_io.jsonl": {
+      "bytes": 1404,
+      "mtime_ns": 1790751465766351600
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/prepare_runtime.json": {
+      "bytes": 445,
+      "mtime_ns": 1790751466319363100,
+      "sha256": "0fb8bcf807bd47705c039086bff40487ada93a62695e98979d1e311d2194950d"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/prepare_verification.json": {
+      "bytes": 3121,
+      "mtime_ns": 1790751638464960100,
+      "sha256": "dba389400a1b115ce083d7272119a6521c46328919ddbf01ac883a2fbdbd3a3b"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/py_compile.log": {
+      "bytes": 143,
+      "mtime_ns": 1790750765168473900
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/pytest.log": {
+      "bytes": 102,
+      "mtime_ns": 1790750777701205100
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/report_run.py": {
+      "bytes": 26036,
+      "mtime_ns": 1790753495137135900,
+      "sha256": "d7a2055bdd7374c58340207cde1752d85f3b43e181ff727bc3b280fffae12e32"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/run_phase.py": {
+      "bytes": 3178,
+      "mtime_ns": 1790751100051785100,
+      "sha256": "b6d406bb86fd47ed0413da573ad04194e45190ccc80c30344f63156db7eba750"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/selection_verification.json": {
+      "bytes": 74803,
+      "mtime_ns": 1790752014401445300,
+      "sha256": "424c160a9efa41e4cd38f6e5baa7a17e252b9a5070490f8d32301d0a90911a58"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/sitecustomize.py": {
+      "bytes": 4476,
+      "mtime_ns": 1790751458446342300,
+      "sha256": "4091fd68de35b0a2f5ad786eb8a3c4a985e4b9bc3b8cba579dee8c669f2cb7be"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/source_snapshot.json": {
+      "bytes": 657,
+      "mtime_ns": 1790751459475858000,
+      "sha256": "81de7a3fcb1bdaf438239dc3c4278bea2c4bb5915594fcf2cd139e43cc015497"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/stability.log": {
+      "bytes": 18083,
+      "mtime_ns": 1790752657704561900
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/stability_execution.json": {
+      "bytes": 510,
+      "mtime_ns": 1790752658555869400,
+      "sha256": "ea737e7c32e4659b16a4a8c24852b0e25b15b8558544be635342dc8637d636a1"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/stability_io.jsonl": {
+      "bytes": 964,
+      "mtime_ns": 1790752076598979100
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/stability_runtime.json": {
+      "bytes": 569,
+      "mtime_ns": 1790752657704561900,
+      "sha256": "e5bc3fff08e1ceb77ff54b6230229a93ca1fe36f95393257b26ff8247c0013e2"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/stability_verification.json": {
+      "bytes": 23565,
+      "mtime_ns": 1790752672805131300,
+      "sha256": "5577b7fcf9f4b6269aa5c79ac648e8d4f1a20d421b5b147f9bd4cab86853750a"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-final.log": {
+      "bytes": 2165,
+      "mtime_ns": 1790752859303327100
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-final_execution.json": {
+      "bytes": 513,
+      "mtime_ns": 1790752860236663900,
+      "sha256": "4efe2b4c95bd9b3dfaf41e33369821074e8cbdb1118d74e0066f5bf07b001856"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-final_io.jsonl": {
+      "bytes": 1208,
+      "mtime_ns": 1790752859286669400
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-final_runtime.json": {
+      "bytes": 571,
+      "mtime_ns": 1790752859303327100,
+      "sha256": "d647c5299710aa7d7d6a06fbe4730f3e5adad550e2d9f81cb021d199154724b1"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-selection.log": {
+      "bytes": 14425,
+      "mtime_ns": 1790751999530225200
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-selection_execution.json": {
+      "bytes": 523,
+      "mtime_ns": 1790752000377762500,
+      "sha256": "3b59d05648e75a1a41c4782e48beb67fe42c06685ddc8ade2b2ddc293bea4cde"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-selection_io.jsonl": {
+      "bytes": 1724,
+      "mtime_ns": 1790751999518381700
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/train-selection_runtime.json": {
+      "bytes": 575,
+      "mtime_ns": 1790751999538297100,
+      "sha256": "51324f0f9d1c46361b5895c4e7f293e50d211a9357af9aa18603e6406eff9890"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-final_io.jsonl": {
+      "bytes": 908,
+      "mtime_ns": 1790752883803799500
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-final_runtime.json": {
+      "bytes": 450,
+      "mtime_ns": 1790752883827962200,
+      "sha256": "9caa411bc8680a56f7546ce18fc739aa63af4de589630d137076bb972cca5b2b"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-freeze_io.jsonl": {
+      "bytes": 460,
+      "mtime_ns": 1790752059073923100
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-freeze_runtime.json": {
+      "bytes": 451,
+      "mtime_ns": 1790752059094262500,
+      "sha256": "ef9e49f138f5a0aeef7d9b116a8c3f134fe8b98fdca4dc3a0a45d61c7371a2cb"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-gate_io.jsonl": {
+      "bytes": 904,
+      "mtime_ns": 1790752889535810000
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-gate_runtime.json": {
+      "bytes": 449,
+      "mtime_ns": 1790752889559831900,
+      "sha256": "ce8f968e3ab325d234701d52e535c957001ba151a01a7fecdbd1321d303dd91f"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-prepare_io.jsonl": {
+      "bytes": 2208,
+      "mtime_ns": 1790751638383566600
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-prepare_runtime.json": {
+      "bytes": 452,
+      "mtime_ns": 1790751638471258800,
+      "sha256": "8b5a73508e57fe5f563caff668e18172e671997223f2d431dea0c86ec4c5d8f0"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-selection_io.jsonl": {
+      "bytes": 466,
+      "mtime_ns": 1790752014392621300
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-selection_runtime.json": {
+      "bytes": 454,
+      "mtime_ns": 1790752014401445300,
+      "sha256": "40b68eee8a7cbec2e9927d63de8ee91dc63a228f0e8a704d46d2d72d20481d1b"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-stability_io.jsonl": {
+      "bytes": 466,
+      "mtime_ns": 1790752672789732900
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify-stability_runtime.json": {
+      "bytes": 454,
+      "mtime_ns": 1790752672805131300,
+      "sha256": "c7ae9369f4d8cf0b3217d8c95703a8aab99fa9bc9638658bd30f658b68e8021e"
+    },
+    "fhm_dapp_tim/evidence/v18_1/run_audit/verify_run.py": {
+      "bytes": 10730,
+      "mtime_ns": 1790752847089552000,
+      "sha256": "c4088f72df0fbe2a3b366339b11c7fea7ccc3602a6c493be3936a562e23ea016"
+    },
+    "fhm_dapp_tim/evidence/v18_1/RUN_REPORT_V18_1.json": {
+      "bytes": 138603,
+      "mtime_ns": 1790752978184595400,
+      "sha256": "b3dc66e89cf3166afc45685bcc858f9d2a6b96520585d89cad9aa931da04e66b"
+    },
+    "fhm_dapp_tim/evidence/v18_1/RUN_REPORT_V18_1.md": {
+      "bytes": 19317,
+      "mtime_ns": 1790753495137135900,
+      "sha256": "7af986574ce8adf8897f11958ab9bf97cba844b5c80fc25e303e2ab42ee9cce1"
+    },
+    "fhm_dapp_tim/evidence/v18_1/selection_freeze_v18_1.json": {
+      "bytes": 1956,
+      "mtime_ns": 1790752041594862200,
+      "sha256": "343ac37cbf2abc350f4b68776b95b24f8d680322d9fa2debd659b3cd4bdbd22f"
+    },
+    "fhm_dapp_tim/evidence/v18_1/stability_result_v18_1.json": {
+      "bytes": 14243,
+      "mtime_ns": 1790752657701419700,
+      "sha256": "f2979610e9e95e70b9bcd811e38dac1b6153a2c6cd87bb68caf582271e51e776"
+    },
+    "fhm_dapp_tim/evidence/v18_2/benchmark_result_v18_2.json": {
+      "bytes": 3384,
+      "mtime_ns": 1790763550552726300,
+      "sha256": "7c0f03af0b00b0a911a84a212f63042b8e12bc850edfb69159c6ecd3634164ae"
+    },
+    "fhm_dapp_tim/evidence/v18_2/calibration_result_v18_2.json": {
+      "bytes": 10675,
+      "mtime_ns": 1790760184984642900,
+      "sha256": "1ac103ca8ade3c70ec95d76dbee6ecefdeb87168c81e28d75c7554c769b74c1c"
+    },
+    "fhm_dapp_tim/evidence/v18_2/confirmation_consumed.lock": {
+      "bytes": 528,
+      "mtime_ns": 1790762720344298100
+    },
+    "fhm_dapp_tim/evidence/v18_2/confirmation_result_v18_2.json": {
+      "bytes": 3309,
+      "mtime_ns": 1790762726761380900,
+      "sha256": "cfeefbd18aa7adb2b076c9cad456a0de16b6bb64d46afc9f7e0f6281ca3d0afe"
+    },
+    "fhm_dapp_tim/evidence/v18_2/DESIGN_V18_2.md": {
+      "bytes": 11710,
+      "mtime_ns": 1790757398747453900,
+      "sha256": "50de9fd46992f092d7db73d16b603c5572e648a6ee7d03a6c948ddfa5e7efa79"
+    },
+    "fhm_dapp_tim/evidence/v18_2/registry_v18_2.json": {
+      "bytes": 979070,
+      "mtime_ns": 1790758507445751100,
+      "sha256": "b5bbbce43f02c9e06df34d6018aebe57aedf1792a2a73b724ab5ac6eb89191ac"
+    },
+    "fhm_dapp_tim/evidence/v18_2/role_shards/calibration.pt": {
+      "bytes": 6785541,
+      "mtime_ns": 1790758506984654700
+    },
+    "fhm_dapp_tim/evidence/v18_2/role_shards/confirmation.pt": {
+      "bytes": 8930514,
+      "mtime_ns": 1790758507304802000
+    },
+    "fhm_dapp_tim/evidence/v18_2/role_shards/early_stop.pt": {
+      "bytes": 4234680,
+      "mtime_ns": 1790758506794197000
+    },
+    "fhm_dapp_tim/evidence/v18_2/role_shards/member_fit.pt": {
+      "bytes": 23119416,
+      "mtime_ns": 1790758506747121600
+    },
+    "fhm_dapp_tim/evidence/v18_2/role_shards/outer_refit.pt": {
+      "bytes": 34116613,
+      "mtime_ns": 1790758507222302400
+    },
+    "fhm_dapp_tim/evidence/v18_2/role_shards/selection_refit.pt": {
+      "bytes": 27342841,
+      "mtime_ns": 1790758506924347600
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/benchmark-result_verification.json": {
+      "bytes": 72542,
+      "mtime_ns": 1790763575581859200,
+      "sha256": "1a7b6524c10a33c8eed04eb60d0acd912559d565b7aa0c47045ff01a4cb060ca"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/benchmark.log": {
+      "bytes": 3802,
+      "mtime_ns": 1790763550552726300
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/benchmark_execution.json": {
+      "bytes": 508,
+      "mtime_ns": 1790763551371597100,
+      "sha256": "3f1231acd646dd6d901f332062a32ce5655a3cc263ff9ce9d257543cc4de92e6"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/benchmark_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790763543054825600
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/benchmark_io.jsonl": {
+      "bytes": 988,
+      "mtime_ns": 1790763550552726300
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/benchmark_runtime.json": {
+      "bytes": 637,
+      "mtime_ns": 1790763550571212800,
+      "sha256": "da4fad10e7651ef49eb05678dbe7c788f910362ed210071a61fd3b28b06f9405"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/calibrate-freeze.log": {
+      "bytes": 14160,
+      "mtime_ns": 1790760185008070900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/calibrate-freeze_execution.json": {
+      "bytes": 524,
+      "mtime_ns": 1790760185853260900,
+      "sha256": "225f4983fde8ff8eafe58be7f23c4c1d62d0f5e8761c79058984add60f71be48"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/calibrate-freeze_io.jsonl": {
+      "bytes": 1040,
+      "mtime_ns": 1790760184984642900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/calibrate-freeze_runtime.json": {
+      "bytes": 644,
+      "mtime_ns": 1790760185014742600,
+      "sha256": "77a1ffd6ef4d1391b10ae2fc98ea7e83e57e75c61ecebecebf0104d18824976a"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/confirm.log": {
+      "bytes": 3727,
+      "mtime_ns": 1790762726777016900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/confirm_execution.json": {
+      "bytes": 505,
+      "mtime_ns": 1790762727611685600,
+      "sha256": "a160d92d57d570cd75a11f57e39dd4870ad179b4822b3e0f6608b0478882621d"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/confirm_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790762716097698300
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/confirm_io.jsonl": {
+      "bytes": 1317,
+      "mtime_ns": 1790762720348407200
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/confirm_runtime.json": {
+      "bytes": 637,
+      "mtime_ns": 1790762726777016900,
+      "sha256": "0e00a90135d76884f4e70c5a12545f83c120bbd1b764b6a4a2aecdb2a8ebf580"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/confirmation-refit_verification.json": {
+      "bytes": 49148,
+      "mtime_ns": 1790762696034156900,
+      "sha256": "3c822dba77be3f78cfee2cfbec28d744133b0a3395e4da2c31f0b637b6adc409"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/confirmation-result_verification.json": {
+      "bytes": 52301,
+      "mtime_ns": 1790762758766976500,
+      "sha256": "0bc7815279aca781368dcba0edb08521e41f1fb7ddb7ba88f272ba50c81f5c83"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/cuda_preflight.log": {
+      "bytes": 3009,
+      "mtime_ns": 1790758466072007700
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/cuda_preflight_setup_failure.log": {
+      "bytes": 254,
+      "mtime_ns": 1790758381633141800
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/final_verification.json": {
+      "bytes": 69584,
+      "mtime_ns": 1790763520761357300,
+      "sha256": "50ed624f496354e68b092c4d67edb66bd8784642bc1d38ccaa703c6d0cabb5d0"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/freeze_verification.json": {
+      "bytes": 10604,
+      "mtime_ns": 1790760217016940200,
+      "sha256": "c9e634f4c7619995a68ebf982077b6573602f473fb1d2307bfe5ada8095b4756"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/pre_benchmark_gate.json": {
+      "bytes": 69790,
+      "mtime_ns": 1790763528656106500,
+      "sha256": "889a7fa83c26c6b4191f6c95c3388864f146e29f5ea6c95185078984c2f3f0c0"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/pre_confirmation_gate.json": {
+      "bytes": 50100,
+      "mtime_ns": 1790762701499652500,
+      "sha256": "cb2f593ac38575d55450a36ff07c0a073c138d6ab3eda8f07680a30053bdea61"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/preflight.json": {
+      "bytes": 3007,
+      "mtime_ns": 1790758466028312600,
+      "sha256": "d6084787bc161a033fcfb09f568424e94a5561e2c6cbbf3909efa5c2bf4fbc64"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/preflight.py": {
+      "bytes": 4908,
+      "mtime_ns": 1790758458437456400,
+      "sha256": "2cabe03045691df0c135705fce917c6064f70789a91542cecae1ad6f90d94dfa"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/preflight_io.jsonl": {
+      "bytes": 0,
+      "mtime_ns": 1790758379399196200
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/preflight_runtime.json": {
+      "bytes": 637,
+      "mtime_ns": 1790758466038492000,
+      "sha256": "6006e7fab1367ebf6662e5631033f43db2322c9107458cc527fa368bc4edbeb4"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/preflight_setup_failure_runtime.json": {
+      "bytes": 515,
+      "mtime_ns": 1790758381545491400,
+      "sha256": "603558997227a5e9d129c5a3f7bad594735a71b33dd729d3f9e393c694ff054c"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/prepare.log": {
+      "bytes": 979070,
+      "mtime_ns": 1790758508184790300
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/prepare_execution.json": {
+      "bytes": 476,
+      "mtime_ns": 1790758508728754500,
+      "sha256": "99a150290a4d1be6f4cd1461bb95e21331df1fe3368d4d3381807ed952ca8f70"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/prepare_io.jsonl": {
+      "bytes": 2064,
+      "mtime_ns": 1790758507305816900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/prepare_runtime.json": {
+      "bytes": 513,
+      "mtime_ns": 1790758508184790300,
+      "sha256": "8e36a29939169fbbb801ba3f1b50ccc8e89b258567dff54727d44cecd50797d0"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/prepare_verification.json": {
+      "bytes": 4362,
+      "mtime_ns": 1790758811027363600,
+      "sha256": "0e4e21fbd6800aa8c2c88852f508354b1e31dac89341e3f5f0922e1e5fc12ed4"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/py_compile.log": {
+      "bytes": 176,
+      "mtime_ns": 1790757907095690500
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/pytest.log": {
+      "bytes": 101,
+      "mtime_ns": 1790757913648739600
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/qa_report.py": {
+      "bytes": 6444,
+      "mtime_ns": 1790760834139528500,
+      "sha256": "db22a1442d45940f705b4fdc61a23247f3e78842ce7af87e15dfc64133ce9b7f"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/report_qa.json": {
+      "bytes": 888,
+      "mtime_ns": 1790763812306726400,
+      "sha256": "9a5a1514d6e3bdfe328fb0a394a3ca0723a972cf15f967b899b406fea44d0389"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/report_run.py": {
+      "bytes": 35763,
+      "mtime_ns": 1790763767485475600,
+      "sha256": "6ec04c86d53c12f113e26a73861da2af1b5ca135f226386057bcacb440386db1"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/run_phase.py": {
+      "bytes": 3656,
+      "mtime_ns": 1790758281238993700,
+      "sha256": "62695d3befe64af9ae622816cafebd574303e85cad4dab1758740f2506150c3e"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/selection_verification.json": {
+      "bytes": 120713,
+      "mtime_ns": 1790760162535717000,
+      "sha256": "99c55102d7d8ceab9208ffda489fd5288607b1cc150656e8329533bc325b7557"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/sitecustomize.py": {
+      "bytes": 4721,
+      "mtime_ns": 1790758281238993700,
+      "sha256": "9f5bd2dc1f737eb3992c8184164976b46f2de04c13fad37b523a500b096d29af"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/source_snapshot.json": {
+      "bytes": 657,
+      "mtime_ns": 1790758500895160800,
+      "sha256": "9b09bd968aada0ca4c23f351bba77147d3c4eef2a2c13bc3aaf27b141c1a9e46"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/stability.log": {
+      "bytes": 30635,
+      "mtime_ns": 1790762078629329400
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/stability_execution.json": {
+      "bytes": 511,
+      "mtime_ns": 1790762079519910100,
+      "sha256": "0a579c36543b8b89d23378b5106d7c70c0efaf0629b8517dba01f86cdd48534a"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/stability_io.jsonl": {
+      "bytes": 1040,
+      "mtime_ns": 1790760243878124400
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/stability_runtime.json": {
+      "bytes": 637,
+      "mtime_ns": 1790762078644955600,
+      "sha256": "d75a0352a156d7d00b7b042d39a6808eadc8829f06adfcf1d78337fa7fdede02"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/stability_verification.json": {
+      "bytes": 31827,
+      "mtime_ns": 1790762094183992500,
+      "sha256": "a9dcf3d28aa253f18ba5379d05cdbc93cdd09592398547ed75e7c5b6aa11baa3"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-confirmation.log": {
+      "bytes": 4583,
+      "mtime_ns": 1790762663393098200
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-confirmation_execution.json": {
+      "bytes": 527,
+      "mtime_ns": 1790762664243635900,
+      "sha256": "02828ff72e3e678df4a7c4a40f33232613d77e5feccd3878f9206959c6986ed0"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-confirmation_io.jsonl": {
+      "bytes": 797,
+      "mtime_ns": 1790762663393098200
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-confirmation_runtime.json": {
+      "bytes": 646,
+      "mtime_ns": 1790762663410337200,
+      "sha256": "6781c2864b2f06e1d44a490cdb701487f0141f62e1ce680ce418164da9e463c0"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-final.log": {
+      "bytes": 4580,
+      "mtime_ns": 1790763464755689000
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-final_execution.json": {
+      "bytes": 514,
+      "mtime_ns": 1790763465613608800,
+      "sha256": "c6c851eb27014e7f3a48ec3b214bd117f67813c231d1afbd4364e2c2f37a6189"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-final_io.jsonl": {
+      "bytes": 1367,
+      "mtime_ns": 1790763464738054500
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-final_runtime.json": {
+      "bytes": 639,
+      "mtime_ns": 1790763464763398300,
+      "sha256": "1176421083d3ddb942e357cfb387c047820e85100c6525436362443c6d2189e2"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-selection.log": {
+      "bytes": 25059,
+      "mtime_ns": 1790759891271441600
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-selection_execution.json": {
+      "bytes": 522,
+      "mtime_ns": 1790759892136452800,
+      "sha256": "7354334388159c2082f72bbbf1e76276602d65259063a1c93beadb9d9401fe89"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-selection_io.jsonl": {
+      "bytes": 1857,
+      "mtime_ns": 1790759891251281700
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/train-selection_runtime.json": {
+      "bytes": 643,
+      "mtime_ns": 1790759891279422400,
+      "sha256": "1e8f9efee61dc44e5dd930eae9dbd2bdc512a709c06d5c57b5f193f16f4d7fb8"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-benchmark-result_io.jsonl": {
+      "bytes": 1575,
+      "mtime_ns": 1790763575563644300
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-benchmark-result_runtime.json": {
+      "bytes": 529,
+      "mtime_ns": 1790763575588873500,
+      "sha256": "0b6306fe3c669bcffbc52cd88f85644cd5dd861055aa9075874301d00d88f2b1"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-confirmation-refit_io.jsonl": {
+      "bytes": 789,
+      "mtime_ns": 1790762696034156900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-confirmation-refit_runtime.json": {
+      "bytes": 531,
+      "mtime_ns": 1790762696053488100,
+      "sha256": "dba2d9822807a9760bf7cefa4beee85b43557622df8914c015ad38572687d6c0"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-confirmation-result_io.jsonl": {
+      "bytes": 1077,
+      "mtime_ns": 1790762758762331900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-confirmation-result_runtime.json": {
+      "bytes": 532,
+      "mtime_ns": 1790762758773976300,
+      "sha256": "18d5d4eb38dbb191e4e89d640ce4ebae8c7d5e4daddc2287cbece799fc60010f"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-final_io.jsonl": {
+      "bytes": 1509,
+      "mtime_ns": 1790763520746155900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-final_runtime.json": {
+      "bytes": 518,
+      "mtime_ns": 1790763520761357300,
+      "sha256": "aa56c2637bdb9842d86cb9e400898d6926a9cdb92b90f5ec78807cc5df1a401a"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-freeze_io.jsonl": {
+      "bytes": 249,
+      "mtime_ns": 1790760217016940200
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-freeze_runtime.json": {
+      "bytes": 519,
+      "mtime_ns": 1790760217032554600,
+      "sha256": "7a138188f5a9e0ba116db8fe9e993fe87e92dd98ab0665af617b410b1075cfcf"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-gate-benchmark_io.jsonl": {
+      "bytes": 1563,
+      "mtime_ns": 1790763528636133700
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-gate-benchmark_runtime.json": {
+      "bytes": 527,
+      "mtime_ns": 1790763528659136400,
+      "sha256": "2d0d1555f03522279eceead3f1084e3bb9c8832d3469ad53fe4105be55fa20f2"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-gate-confirmation_io.jsonl": {
+      "bytes": 786,
+      "mtime_ns": 1790762701461948700
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-gate-confirmation_runtime.json": {
+      "bytes": 530,
+      "mtime_ns": 1790762701505711800,
+      "sha256": "355e9303f57f666fe1f49613492923456557e0d54a6133de4f620b184d63be0d"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-prepare_io.jsonl": {
+      "bytes": 2911,
+      "mtime_ns": 1790758810804916700
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-prepare_runtime.json": {
+      "bytes": 520,
+      "mtime_ns": 1790758811027363600,
+      "sha256": "cb715e54f8ef8e72e1d49dc368def5a5c7a622e2be1bace0da2e0209780efb53"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-selection_io.jsonl": {
+      "bytes": 504,
+      "mtime_ns": 1790760162520092200
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-selection_runtime.json": {
+      "bytes": 522,
+      "mtime_ns": 1790760162551340900,
+      "sha256": "ffc042fbcc2f6085f85edf0edaa584b6919c58f7603ced97b0310e1694501142"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-stability_io.jsonl": {
+      "bytes": 252,
+      "mtime_ns": 1790762094168362900
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify-stability_runtime.json": {
+      "bytes": 522,
+      "mtime_ns": 1790762094183992500,
+      "sha256": "2b329fe634ff98e1cc6c333e1d8ef0dce947bd90393c5338181c978a677961c9"
+    },
+    "fhm_dapp_tim/evidence/v18_2/run_audit/verify_run.py": {
+      "bytes": 14870,
+      "mtime_ns": 1790758806536489600,
+      "sha256": "778b00cda61b4d0c081e3b86609a58afbe6442842630661d6a7d67e203bc2559"
+    },
+    "fhm_dapp_tim/evidence/v18_2/RUN_REPORT_V18_2.json": {
+      "bytes": 329655,
+      "mtime_ns": 1790763768750603400,
+      "sha256": "88c5e34c448c494cdd2d4153b24bbccdc132d2279fc2adc583427323297c06ab"
+    },
+    "fhm_dapp_tim/evidence/v18_2/RUN_REPORT_V18_2.md": {
+      "bytes": 29745,
+      "mtime_ns": 1790763768750603400,
+      "sha256": "fea402f66ec72439af56b70272921e84cd1075372d1b83923daabbee88927e64"
+    },
+    "fhm_dapp_tim/evidence/v18_2/selection_freeze_v18_2.json": {
+      "bytes": 2291,
+      "mtime_ns": 1790760185001317800,
+      "sha256": "3b7f463eba45e831cdbe499f5358b4241bfe75693182f812acca15b75d0d7999"
+    },
+    "fhm_dapp_tim/evidence/v18_2/stability_result_v18_2.json": {
+      "bytes": 21580,
+      "mtime_ns": 1790762078629329400,
+      "sha256": "dcfdacdfcfad9fc980724ae53c5402e13b913fceafcae82bdf7d852572f09eeb"
+    },
+    "fhm_dapp_tim/evidence/v18_3/calibration_result_v18_3.json": {
+      "bytes": 9765,
+      "mtime_ns": 1790844518583301000,
+      "sha256": "7cbaf13ece250f4efc72df430dfd23f8dd7e2a76dd8b8457d29ec2d50a99f817"
+    },
+    "fhm_dapp_tim/evidence/v18_3/DESIGN_V18_3.md": {
+      "bytes": 11805,
+      "mtime_ns": 1790841399844426200,
+      "sha256": "c5d52f554543635e260bd4ea79eb22801d08132100a142476e26a688e98567cc"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/registry_v18_3.json": {
+      "bytes": 979876,
+      "mtime_ns": 1790842653440127200,
+      "sha256": "514ecb9ede80d0f56371995b1dbedc743377e7c66e894fb457617e8cbb0855bb"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/role_shards/calibration.pt": {
+      "bytes": 6785541,
+      "mtime_ns": 1790842652982823900
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/role_shards/confirmation.pt": {
+      "bytes": 8930514,
+      "mtime_ns": 1790842653295250700
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/role_shards/early_stop.pt": {
+      "bytes": 4465848,
+      "mtime_ns": 1790842652773500800
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/role_shards/member_fit.pt": {
+      "bytes": 22888632,
+      "mtime_ns": 1790842652719299000
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/role_shards/outer_refit.pt": {
+      "bytes": 34116613,
+      "mtime_ns": 1790842653219182300
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/role_shards/selection_refit.pt": {
+      "bytes": 27342841,
+      "mtime_ns": 1790842652919061100
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/check_fix_proposal.py": {
+      "bytes": 3788,
+      "mtime_ns": 1790842900960148800,
+      "sha256": "bcd280c87dfa1a98a32d1491a062342ab7134ccc786b01d73ee1392a0c43b385"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/failure_record.json": {
+      "bytes": 3992,
+      "mtime_ns": 1790843021012314000,
+      "sha256": "b3bd7015566258f4023d1af222a55f06c7b2e6e38b1056413fde6095a49dfec2"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/FAILURE_V18_3.md": {
+      "bytes": 1352,
+      "mtime_ns": 1790843021012314000,
+      "sha256": "6b09f67cbb2a575717ed779003eb1fbc0fb65474f223f8a7ba8f7c458a93861c"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/implementation_fix_proposal.log": {
+      "bytes": 1278,
+      "mtime_ns": 1790842907805790300
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/implementation_fix_proposal.patch": {
+      "bytes": 507,
+      "mtime_ns": 1790842905419342900
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/implementation_fix_proposal_verification.json": {
+      "bytes": 858,
+      "mtime_ns": 1790842907805790300,
+      "sha256": "7e5578d3f468f2586ff2f08d0e8670b695f677d3354c5cf565eed3843bb2d2b1"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/preflight.json": {
+      "bytes": 4270,
+      "mtime_ns": 1790842432307084400,
+      "sha256": "8ca482216b4cdba16bc0f250a29518270766c169064cddffbd17db3497340377"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/preflight.log": {
+      "bytes": 4272,
+      "mtime_ns": 1790842432367542100
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/preflight.py": {
+      "bytes": 5994,
+      "mtime_ns": 1790842407611835100,
+      "sha256": "17821d1e13dfad337ca841cf48ca743f3b3a5f8889b5b60106cbfd13a128386f"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/preflight_io.jsonl": {
+      "bytes": 0,
+      "mtime_ns": 1790842425028236900
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/preflight_runtime.json": {
+      "bytes": 2061,
+      "mtime_ns": 1790842432311383300,
+      "sha256": "0d0e1910e6a74dff188be56d62773bf0a606d417dc7662988495398d1e55d470"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/prepare.log": {
+      "bytes": 979876,
+      "mtime_ns": 1790842654202631900
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/prepare_execution.json": {
+      "bytes": 508,
+      "mtime_ns": 1790842654798986700,
+      "sha256": "0a64b255e93ddf472248e67d99b8e124d33929c8c5ec3a38b8fec8b819e9f389"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/prepare_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790842646680180000
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/prepare_io.jsonl": {
+      "bytes": 2064,
+      "mtime_ns": 1790842653295250700
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/prepare_runtime.json": {
+      "bytes": 927,
+      "mtime_ns": 1790842654207819000,
+      "sha256": "f5875290a6b9d552884d512b9ad07f1739d36752f0d5ba5407f5e3b8086b4333"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/prepare_verification.json": {
+      "bytes": 6352,
+      "mtime_ns": 1790842665889939600,
+      "sha256": "517d3c7300f93f91d32878be5db00b12d31c85b6b7b6ae41e9056644d7a337af"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/py_compile.log": {
+      "bytes": 170,
+      "mtime_ns": 1790841656326800500
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/pytest.log": {
+      "bytes": 102,
+      "mtime_ns": 1790841744716712000
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/regression_test_proposal.patch": {
+      "bytes": 1549,
+      "mtime_ns": 1790843021012314000
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/restart_authorization.json": {
+      "bytes": 357,
+      "mtime_ns": 1790843091358558000,
+      "sha256": "3198ba313531f0bd97ed51755b84534b858045c4f4b434b138aa543c65dd131e"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/run_phase.py": {
+      "bytes": 5402,
+      "mtime_ns": 1790842406844998000,
+      "sha256": "34811dc9487156de355af59c764a79bf2745ac498298595a5c1907164ca02f61"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/sitecustomize.py": {
+      "bytes": 13218,
+      "mtime_ns": 1790842406076835400,
+      "sha256": "04180836e54165518fd2cc2134bb572ab15651650bc9045cfd2800c863d98c74"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/source_snapshot.json": {
+      "bytes": 10493,
+      "mtime_ns": 1790842646594958400,
+      "sha256": "4ca0e3ce8b014c6074731009a446804b732500ab688b0b6f88ffb0706441486a"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/train-selection.log": {
+      "bytes": 1534,
+      "mtime_ns": 1790842706505667800
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/train-selection_execution.json": {
+      "bytes": 553,
+      "mtime_ns": 1790842707377996700,
+      "sha256": "beea1ee00f5220cc0c8a08e7ffbe3621b41039debacb5a5dc90f5abbf3f7173f"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/train-selection_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790842672810650000
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/train-selection_io.jsonl": {
+      "bytes": 1606,
+      "mtime_ns": 1790842676662285800
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/train-selection_runtime.json": {
+      "bytes": 2111,
+      "mtime_ns": 1790842706521303800,
+      "sha256": "ebd82eb539ba7cfdec37f660455b069e278d3db1c6dc39246dcb3883dcc41ddd"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/verify-prepare_io.jsonl": {
+      "bytes": 2911,
+      "mtime_ns": 1790842665670093800
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/verify-prepare_runtime.json": {
+      "bytes": 934,
+      "mtime_ns": 1790842665899808000,
+      "sha256": "07cb92a903ae708841db23559f9161fc78a4f64a5f22cb268fddf3557aaac2aa"
+    },
+    "fhm_dapp_tim/evidence/v18_3/failed_attempts/d7500d3-20261001T081726Z/run_audit/verify_run.py": {
+      "bytes": 19736,
+      "mtime_ns": 1790842636458185900,
+      "sha256": "34a5b2883ede42ea5b1affef9e0e54658c291632985b241d20916268cc3987d6"
+    },
+    "fhm_dapp_tim/evidence/v18_3/ISSUE_FIX_LOG_V18_3.json": {
+      "bytes": 22818,
+      "mtime_ns": 1790850223544057900,
+      "sha256": "a1a455d071eba7830b6709d3294e68d08987c80d1d0e4fa95bb7989777e9c1c5"
+    },
+    "fhm_dapp_tim/evidence/v18_3/ISSUE_FIX_LOG_V18_3.md": {
+      "bytes": 9244,
+      "mtime_ns": 1790850134123211000,
+      "sha256": "b15f69bf3db85094459b5fb4f941ea51728def809dcc4908a81af39044bc7581"
+    },
+    "fhm_dapp_tim/evidence/v18_3/registry_v18_3.json": {
+      "bytes": 979876,
+      "mtime_ns": 1790843287759759000,
+      "sha256": "514ecb9ede80d0f56371995b1dbedc743377e7c66e894fb457617e8cbb0855bb"
+    },
+    "fhm_dapp_tim/evidence/v18_3/role_shards/calibration.pt": {
+      "bytes": 6785541,
+      "mtime_ns": 1790843287279012500
+    },
+    "fhm_dapp_tim/evidence/v18_3/role_shards/confirmation.pt": {
+      "bytes": 8930514,
+      "mtime_ns": 1790843287607514600
+    },
+    "fhm_dapp_tim/evidence/v18_3/role_shards/early_stop.pt": {
+      "bytes": 4465848,
+      "mtime_ns": 1790843287082209600
+    },
+    "fhm_dapp_tim/evidence/v18_3/role_shards/member_fit.pt": {
+      "bytes": 22888632,
+      "mtime_ns": 1790843287030571600
+    },
+    "fhm_dapp_tim/evidence/v18_3/role_shards/outer_refit.pt": {
+      "bytes": 34116613,
+      "mtime_ns": 1790843287530557100
+    },
+    "fhm_dapp_tim/evidence/v18_3/role_shards/selection_refit.pt": {
+      "bytes": 27342841,
+      "mtime_ns": 1790843287206555200
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/calibrate-freeze.log": {
+      "bytes": 13146,
+      "mtime_ns": 1790844518591472300
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/calibrate-freeze_execution.json": {
+      "bytes": 781,
+      "mtime_ns": 1790844519475641800,
+      "sha256": "9592a4846c527a9dec8e7e644ae4a213d56f97036e2ad55eb4315b74ebf92340"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/calibrate-freeze_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790844504240313900
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/calibrate-freeze_io.jsonl": {
+      "bytes": 1040,
+      "mtime_ns": 1790844518569414400
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/calibrate-freeze_runtime.json": {
+      "bytes": 2092,
+      "mtime_ns": 1790844518599114900,
+      "sha256": "e31771ef1b4d6eee4058adbafaed0f878eb8dae4ead73b05413fb39015cb8a7a"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/capacity_diagnosis.json": {
+      "bytes": 6647,
+      "mtime_ns": 1790847137190639600,
+      "sha256": "b2b872c18e637a39cfb7b4fb0f1a6da6efb389eab598d02ac48b867f4ce0556f"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/capacity_fix_proposal.log": {
+      "bytes": 920,
+      "mtime_ns": 1790847940997338400
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/capacity_fix_proposal.patch": {
+      "bytes": 500,
+      "mtime_ns": 1790847938511408600
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/capacity_fix_proposal_verification.json": {
+      "bytes": 918,
+      "mtime_ns": 1790847940956589400,
+      "sha256": "5d3568e63f392bbe74a961cddb92b031c5c7635c8a1e35df72f6875f6d07a75d"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/check_capacity_fix_proposal.py": {
+      "bytes": 4417,
+      "mtime_ns": 1790847934003437500,
+      "sha256": "10d15d9119d657c1359a99265fb5b898939a0ce1b19722b8e9df3215b0a513a8"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/check_full_capacity.py": {
+      "bytes": 5047,
+      "mtime_ns": 1790848271759550100,
+      "sha256": "b0c94c466a7a79b2cd24d7043c2f8a6a242e0510ee0008283b5d36b03593b121"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/clean_start.json": {
+      "bytes": 1606,
+      "mtime_ns": 1790843280999634400,
+      "sha256": "2977f1087541a120ad54f122a1df6e8e1104d132eebd5bf392590b7bd341dd4c"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/determinism_first_epoch_replay.json": {
+      "bytes": 303,
+      "mtime_ns": 1790844995682907800,
+      "sha256": "57944af692c914bb6aefa04afc99e27c31bbabe97daae7c8ee84973dfe1f80c8"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/environment.json": {
+      "bytes": 550,
+      "mtime_ns": 1790844380693082000,
+      "sha256": "da4181429e517abfbf044bf98721cf55a10eecc0e4e984b6cd8fe907f2b1a76f"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/freeze_verification.json": {
+      "bytes": 9688,
+      "mtime_ns": 1790844550515819500,
+      "sha256": "ff7f7e253be32ec1ac01fe319628712af25eeeaeda264c87f32c8f38ef8d1ed4"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/full_support_metadata_capacity.json": {
+      "bytes": 437,
+      "mtime_ns": 1790847429754283400,
+      "sha256": "de0a6563571c87a7a0d3200def244a46d97a2d989643c55a4fb361d45b13ee40"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/preflight.json": {
+      "bytes": 4646,
+      "mtime_ns": 1790843257490649900,
+      "sha256": "86a63c55d20a2d514b745ab76f82b0c53d7c18e034f74b3d7c6df45831213570"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/preflight.log": {
+      "bytes": 4648,
+      "mtime_ns": 1790843257546777700
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/preflight.py": {
+      "bytes": 7041,
+      "mtime_ns": 1790843221819313900,
+      "sha256": "9248e9801dadb84008c06a45fc3d5160b5190f7a312bef322f700f36cdfc27aa"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/preflight_io.jsonl": {
+      "bytes": 0,
+      "mtime_ns": 1790843250645018900
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/preflight_runtime.json": {
+      "bytes": 2061,
+      "mtime_ns": 1790843257500183100,
+      "sha256": "0f3155e459a09005fc3ec4cbec47afe46c76183227e732f5d805ae86ffb5691b"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/prepare.log": {
+      "bytes": 979876,
+      "mtime_ns": 1790843288506230000
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/prepare_execution.json": {
+      "bytes": 731,
+      "mtime_ns": 1790843289076012600,
+      "sha256": "7ba5aa9f68622be8a38f0a216eb8e21e5cc99e360b3ab64f5c747cf0168fb9ee"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/prepare_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790843281210739700
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/prepare_io.jsonl": {
+      "bytes": 2064,
+      "mtime_ns": 1790843287607514600
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/prepare_runtime.json": {
+      "bytes": 927,
+      "mtime_ns": 1790843288512226700,
+      "sha256": "f5875290a6b9d552884d512b9ad07f1739d36752f0d5ba5407f5e3b8086b4333"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/prepare_verification.json": {
+      "bytes": 6352,
+      "mtime_ns": 1790843294536613100,
+      "sha256": "517d3c7300f93f91d32878be5db00b12d31c85b6b7b6ae41e9056644d7a337af"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/py_compile.log": {
+      "bytes": 137,
+      "mtime_ns": 1790843224752720500
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/pytest.log": {
+      "bytes": 101,
+      "mtime_ns": 1790843231412237300
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/qa_report.py": {
+      "bytes": 8965,
+      "mtime_ns": 1790844063372867100,
+      "sha256": "6dcf38a341edac994a00f39e82e6ed0a022290a5c18ee69b7155644dc93befa8"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/report_incomplete.py": {
+      "bytes": 14908,
+      "mtime_ns": 1790848651049637400,
+      "sha256": "964f6d705418a3957f31fdddbbc01a82e82a3b4510cd39888c904d1d5f57a648"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/report_run.py": {
+      "bytes": 39779,
+      "mtime_ns": 1790846827782312800,
+      "sha256": "153a1dcaf4f347d0235a771497f5551ed3e04e698e517f24d9665230a67295bf"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/run_phase.py": {
+      "bytes": 5556,
+      "mtime_ns": 1790843222603747600,
+      "sha256": "d6eac8a73480c15e814c505dd110cfb80987d3e44e1de24231bbda6cf40c85e7"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/selection_verification.json": {
+      "bytes": 138657,
+      "mtime_ns": 1790844502573583900,
+      "sha256": "6c5ee0ede15cbc95b75dafb415c830d11657c1f8ab39558abae9c58043ccb253"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/sitecustomize.py": {
+      "bytes": 14209,
+      "mtime_ns": 1790843221040502800,
+      "sha256": "58eca69e6ae0110dd9dfaaa2cd6b0dab55c3c36edda1168ce233f7c3cdc96adb"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/source_snapshot.json": {
+      "bytes": 10493,
+      "mtime_ns": 1790843281123407500,
+      "sha256": "83a2ab274792db3bbae82cbb6c22c689632ae678aad40274fffb28969d165e23"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/stability.log": {
+      "bytes": 35908,
+      "mtime_ns": 1790846876839900800
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/stability_execution.json": {
+      "bytes": 767,
+      "mtime_ns": 1790846877793694500,
+      "sha256": "58b6fafc08dac3a72dd7642377a682fcee3836f5bdcf4fe5ac07b5c68950f4d5"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/stability_full_training_histories.json": {
+      "bytes": 94951,
+      "mtime_ns": 1790846876867674400,
+      "sha256": "2e9358b41d1b059de01c52d03146accaaabc7c9089070c5da3177b2b559aa47c"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/stability_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790844552156130700
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/stability_io.jsonl": {
+      "bytes": 1040,
+      "mtime_ns": 1790844561639641600
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/stability_runtime.json": {
+      "bytes": 2109,
+      "mtime_ns": 1790846876857034400,
+      "sha256": "a921e73880ba9432093b7f0addf3beecd101b5eea8854c1ea2c31c11de3d19f6"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/stability_verification.json": {
+      "bytes": 36278,
+      "mtime_ns": 1790846898078050100,
+      "sha256": "0e8cc1160537bff39444f68abe89611327712ab9495ea124c658eaf0284bd47a"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-confirmation.log": {
+      "bytes": 1549,
+      "mtime_ns": 1790846906416327500
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-confirmation_execution.json": {
+      "bytes": 784,
+      "mtime_ns": 1790846907155041100,
+      "sha256": "1ee04f216a7ba7310635c9d4021822f1f7ac26508ea46b0378f823ddbba488da"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-confirmation_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790846899739558900
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-confirmation_io.jsonl": {
+      "bytes": 540,
+      "mtime_ns": 1790846903488466900
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-confirmation_runtime.json": {
+      "bytes": 938,
+      "mtime_ns": 1790846906422777900,
+      "sha256": "4fe4f547f20722320585021441ed213ab87d615a881527db8bf078ef5cd00751"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-selection.log": {
+      "bytes": 26085,
+      "mtime_ns": 1790844456273567600
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-selection_execution.json": {
+      "bytes": 779,
+      "mtime_ns": 1790844457170787300,
+      "sha256": "59ae4269b84690efeea4e8362c2bfebf2df5ada981d42245e5cb6976a9a0a7a1"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-selection_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790843309911918000
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-selection_io.jsonl": {
+      "bytes": 1857,
+      "mtime_ns": 1790844456262566000
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/train-selection_runtime.json": {
+      "bytes": 2114,
+      "mtime_ns": 1790844456279609300,
+      "sha256": "65e571831e49f223a81a147ca47535645d1cab6b86f235a8d1131a9789b25676"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-freeze_io.jsonl": {
+      "bytes": 249,
+      "mtime_ns": 1790844550515819500
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-freeze_runtime.json": {
+      "bytes": 933,
+      "mtime_ns": 1790844550537811800,
+      "sha256": "2d8e1021e64048db692f60cfd0e60d3cea633e10e5a014bb79ccfd7fca41147e"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-prepare_io.jsonl": {
+      "bytes": 2911,
+      "mtime_ns": 1790843294316975300
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-prepare_runtime.json": {
+      "bytes": 934,
+      "mtime_ns": 1790843294549662300,
+      "sha256": "07cb92a903ae708841db23559f9161fc78a4f64a5f22cb268fddf3557aaac2aa"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-selection_io.jsonl": {
+      "bytes": 504,
+      "mtime_ns": 1790844502564044700
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-selection_runtime.json": {
+      "bytes": 936,
+      "mtime_ns": 1790844502573583900,
+      "sha256": "32df46047304a299876483a8e9a17ee1b2281328132e6a4f0e03a6693a1eca20"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-stability_io.jsonl": {
+      "bytes": 252,
+      "mtime_ns": 1790846898050413700
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify-stability_runtime.json": {
+      "bytes": 936,
+      "mtime_ns": 1790846898085051200,
+      "sha256": "c4204899522c4a783f31ce2532eec27967e60b8d9d72d0eb1c6517c8d2cd8083"
+    },
+    "fhm_dapp_tim/evidence/v18_3/run_audit/verify_run.py": {
+      "bytes": 20194,
+      "mtime_ns": 1790843223374567300,
+      "sha256": "e1409e82eea54772e875b73807cafd03f5854befc211c687e7fd9bbf7ed7e8d3"
+    },
+    "fhm_dapp_tim/evidence/v18_3/RUN_STATUS_V18_3.json": {
+      "bytes": 338107,
+      "mtime_ns": 1790848652069067800,
+      "sha256": "edf59d63762f1094256e32d5ddaea7dad2328ed97bdc53e1d89b2e081147655e"
+    },
+    "fhm_dapp_tim/evidence/v18_3/RUN_STATUS_V18_3.md": {
+      "bytes": 13484,
+      "mtime_ns": 1790848652070150100,
+      "sha256": "9daa3764f88853d7f021f9e514ba9656035bf239407ab0fbb149d32d0b812e6d"
+    },
+    "fhm_dapp_tim/evidence/v18_3/selection_freeze_v18_3.json": {
+      "bytes": 2679,
+      "mtime_ns": 1790844518583301000,
+      "sha256": "93511a6529ad855fad69b3df9f2bc6806502c2dc08d5aaa134886453e2c45d60"
+    },
+    "fhm_dapp_tim/evidence/v18_3/stability_result_v18_3.json": {
+      "bytes": 26666,
+      "mtime_ns": 1790846876815350900,
+      "sha256": "48364deb3953b9e2cb185a14d1969305d75eb601143e587c85ec0df516ca2469"
+    },
+    "fhm_dapp_tim/evidence/v18_4/CAPACITY_AUDIT_V18_4.md": {
+      "bytes": 2590,
+      "mtime_ns": 1791046895540972900,
+      "sha256": "26cfa42595ceb62f998e335edd461ee956f99b95d71568cfe3eb11e38bb2df0e"
+    },
+    "fhm_dapp_tim/evidence/v18_4/COUPLING_STRATUM_PROBE_V18_4.json": {
+      "bytes": 55193408,
+      "mtime_ns": 1791125116223776900,
+      "sha256": "091a6212b0963eb00f69435bb65a9bfe45d5b89fe9757b1a59b4e799988ad0da"
+    },
+    "fhm_dapp_tim/evidence/v18_4/COUPLING_STRATUM_PROBE_V18_4.md": {
+      "bytes": 28371,
+      "mtime_ns": 1791125116226282400,
+      "sha256": "ce52bbf758489e5abd86ecea7dafee05b04b716d69fa566361e8f92b6bb07973"
+    },
+    "fhm_dapp_tim/evidence/v18_4/DECODER_PROBE_REPORT_V18_4.md": {
+      "bytes": 5387,
+      "mtime_ns": 1790922310794200200,
+      "sha256": "a4b3736719bb34b4152fb3f7ab5aec5395aadd999d90c7440568a214938a5705"
+    },
+    "fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.json": {
+      "bytes": 7675,
+      "mtime_ns": 1790922108373052600,
+      "sha256": "0fbb06216418c679f9567f1499143116f60c8a1005728407d3532e7bc7a32514"
+    },
+    "fhm_dapp_tim/evidence/v18_4/decoder_probe_v18_3.md": {
+      "bytes": 1094,
+      "mtime_ns": 1790922108380703500,
+      "sha256": "458ea620a0398ab0674d14f7870b0a20d6f00f5e68203b60900b90b72e222207"
+    },
+    "fhm_dapp_tim/evidence/v18_4/DESIGN_GATE_V18_4.md": {
+      "bytes": 6962,
+      "mtime_ns": 1790919717185390400,
+      "sha256": "2e1394d6b6b84dcaf52076cdbe74298c68750f09aa568eb5cc7e8670e4b76458"
+    },
+    "fhm_dapp_tim/evidence/v18_4/DESIGN_V18_4.md": {
+      "bytes": 29082,
+      "mtime_ns": 1791049194573241900,
+      "sha256": "3bc205a9e8712ca2959cd0b6c383a4d045f8852e7a35ca688687975aa8114853"
+    },
+    "fhm_dapp_tim/evidence/v18_4/MECHANISM_PROBE_V18_4.json": {
+      "bytes": 365128,
+      "mtime_ns": 1791100571257223600,
+      "sha256": "790b667892d4b21ec8eb062d6fc27c9cf6d63196d680d300648bf94c1a983d67"
+    },
+    "fhm_dapp_tim/evidence/v18_4/MECHANISM_PROBE_V18_4.md": {
+      "bytes": 14726,
+      "mtime_ns": 1791100571265487800,
+      "sha256": "31affba0655b847e0c2fd742169a4355eb1657c765ea72db6e3577c0be90b627"
+    },
+    "fhm_dapp_tim/evidence/v18_4/PRE_RUN_REVISION_AUDIT_V18_4.json": {
+      "bytes": 15989,
+      "mtime_ns": 1791051258602767300,
+      "sha256": "67413b834a9ae46473c448cf4f41edde123079041873f35ff2f37e99e8efe689"
+    },
+    "fhm_dapp_tim/evidence/v18_4/PRE_RUN_REVISION_AUDIT_V18_4.md": {
+      "bytes": 4089,
+      "mtime_ns": 1791051258602998600,
+      "sha256": "9edcc991e20f9f8725d3064c0ef64d276761b1db2d5c00213ab9166798f0e78a"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/audit_path_fix_verification.json": {
+      "bytes": 641,
+      "mtime_ns": 1790920614567473900,
+      "sha256": "16053ea46086cf5042fb119475969f8db90eb78eaea60559e385d53d000e428b"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/audit_path_selfcheck.log": {
+      "bytes": 109,
+      "mtime_ns": 1790920614563462300
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/audit_path_selfcheck_runtime.json": {
+      "bytes": 889,
+      "mtime_ns": 1790920614068100700,
+      "sha256": "2763d7ba1d00ae2b402abb6532d0e89ccc5910cfb863fb0b9bcfa316de1b6192"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/checkpoint_reconstruction_runtime.json": {
+      "bytes": 1222,
+      "mtime_ns": 1790920821476882000,
+      "sha256": "5b41e2592902e3f886e8537302d92fa2171917618b28f22d9adeb2c010ab04a4"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/checkpoint_reconstruction_selfcheck.log": {
+      "bytes": 123,
+      "mtime_ns": 1790920822244214900
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/checkpoint_reconstruction_verification.json": {
+      "bytes": 721,
+      "mtime_ns": 1790920822247330700,
+      "sha256": "2d81a9dceab2e4e0e47a00db79415f20ffa8fab6cb7277c0432a4aedb657c60d"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/coupling_gate_20261004T085538Z.log": {
+      "bytes": 6956,
+      "mtime_ns": 1791104219889127700
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/coupling_probe_20261004T085743Z.log": {
+      "bytes": 16532,
+      "mtime_ns": 1791125117349048000
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/COUPLING_STRATUM_PROBE_EXECUTION_V18_4.json": {
+      "bytes": 72753,
+      "mtime_ns": 1791125116228286000,
+      "sha256": "070bc8a68738fb70da28c36e55b2169a46c7a3ef74ee7b189f27a6401d7fb6b3"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/COUPLING_STRATUM_PROBE_EXECUTION_V18_4.md": {
+      "bytes": 6118,
+      "mtime_ns": 1791125116230283100,
+      "sha256": "89ac8864e76493aa31eee574471d15c4749d5b03c0f1d63734313e582fef2b74"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/failed_startup_run_probe_once.py": {
+      "bytes": 3156,
+      "mtime_ns": 1790920516411560700,
+      "sha256": "f2e6b8ec9dd581a400d89a8df910cf68566b005fd2fb3665daebdbf2bb37b745"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/failed_startup_sitecustomize.py": {
+      "bytes": 6179,
+      "mtime_ns": 1790920516411560700,
+      "sha256": "9d0f36719c42ab491a31a34db7877ed782e04acddc139b7465075f4aab69fd07"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/finalize_probe_evidence.py": {
+      "bytes": 11894,
+      "mtime_ns": 1790922221650457400,
+      "sha256": "7d10dd0ce5bd3fff0fd28249d3c3477f9efce04b25e4cb3c4553b2bdc392bb0b"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_calibrate_freeze.log": {
+      "bytes": 2992,
+      "mtime_ns": 1791093482813891700
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_compile.log": {
+      "bytes": 0,
+      "mtime_ns": 1791052555922326500
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_cpu_smoke.log": {
+      "bytes": 1844,
+      "mtime_ns": 1791052733339495800
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_cuda_smoke.log": {
+      "bytes": 1817,
+      "mtime_ns": 1791052750187088500
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_develop.log": {
+      "bytes": 285922,
+      "mtime_ns": 1791092898302358500
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.json": {
+      "bytes": 77900,
+      "mtime_ns": 1791093886370826700,
+      "sha256": "b3c63ab7d650f1c7f013acd7ecf29ed599b6ffbe08399eac880fc00f3f971610"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_EXECUTION_V18_4.md": {
+      "bytes": 16960,
+      "mtime_ns": 1791093886371829200,
+      "sha256": "1670bdf2b41a1420c38d45b3de2d1638dabb49cac202df2c4a62b88e7d7c8548"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_prepare.log": {
+      "bytes": 575059,
+      "mtime_ns": 1791052778981621000
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/FORMAL_UJI_PREPARE_GATE_V18_4.md": {
+      "bytes": 5349,
+      "mtime_ns": 1791052992048632400,
+      "sha256": "60f946854a647a0ce486013620f99f155ec7370aedf3ad4f6940c6193b6c6016"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_pytest.log": {
+      "bytes": 112,
+      "mtime_ns": 1791052667207551800
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/formal_uji_run_state_v18_4.json": {
+      "bytes": 945901,
+      "mtime_ns": 1791093886476313400,
+      "sha256": "28c149c54c4e6b11a692fd2b5e4e9212568de134027aa1b64005b07f439a15b0"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/mechanism_gate_20261004T072119.log": {
+      "bytes": 4819,
+      "mtime_ns": 1791098555941521900
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/mechanism_probe_20261004T072348.log": {
+      "bytes": 2234,
+      "mtime_ns": 1791100571271474900
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/MECHANISM_PROBE_EXECUTION_V18_4.json": {
+      "bytes": 48960,
+      "mtime_ns": 1791100571266473900,
+      "sha256": "591c47388d2ba8588b6b6cdaa751af31b40dd2c17430e276aa73bd0ebe9cad40"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/MECHANISM_PROBE_EXECUTION_V18_4.md": {
+      "bytes": 5422,
+      "mtime_ns": 1791100571267476100,
+      "sha256": "31332d041b50dd650d3349362f0dd48a0264e35ff00fec3a46272e9e7f19767e"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_AUTHORIZATION_RUN_STATUS_DECODER_GATE_V18_4.json": {
+      "bytes": 14316,
+      "mtime_ns": 1790922453752888600,
+      "sha256": "ddc92cb4b26cf5e04e1be9c4dea59797850c6d067fc2d48fad637134ccadcf4b"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_AUTHORIZATION_RUN_STATUS_DECODER_GATE_V18_4.md": {
+      "bytes": 6276,
+      "mtime_ns": 1790922453752888600,
+      "sha256": "4072f303db40bf9255390e5f494b02a7f10c6126866514d94494232efe3b9737"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_audit.log": {
+      "bytes": 742,
+      "mtime_ns": 1791051259407555700
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_compile.log": {
+      "bytes": 0,
+      "mtime_ns": 1791050892179750700
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_cpu_smoke.log": {
+      "bytes": 1844,
+      "mtime_ns": 1791051100361485000
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_cuda_smoke.log": {
+      "bytes": 1817,
+      "mtime_ns": 1791051119771818700
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_pytest.log": {
+      "bytes": 112,
+      "mtime_ns": 1791051017036601600
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_acceptance_v18_4.json": {
+      "bytes": 24159,
+      "mtime_ns": 1791051499740244000,
+      "sha256": "c782f077afd32891069b3ab0487649aa930c85ac7c12ae813c904f5c887503d3"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_RUN_REVISION_ACCEPTANCE_V18_4.md": {
+      "bytes": 12705,
+      "mtime_ns": 1791051706087667500,
+      "sha256": "bc7101f237e0016bb1ab33584594ed0985de861875b30a67de7e5bc4ccfb7f3f"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_execution_v18_4.json": {
+      "bytes": 22888,
+      "mtime_ns": 1791050034551746000,
+      "sha256": "dbf34ff40456d4bedee0a9b5130a5a263ff74e33cced6bb3b08338fbbaa9cd48"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/PRE_RUN_REVISION_EXECUTION_V18_4.md": {
+      "bytes": 11079,
+      "mtime_ns": 1791049951323658600,
+      "sha256": "7b9a24c8093695471cc73064a9780b735df2dfaade4873420e6fb5a2233efbc9"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/pre_run_revision_pytest.log": {
+      "bytes": 14351,
+      "mtime_ns": 1791049509407145700
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/preflight.json": {
+      "bytes": 14002,
+      "mtime_ns": 1790920231470427600,
+      "sha256": "d02d89d5fca32e6e0d0a564e8f1c7ea76c0ba8583998be7c91150e917528ce9a"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/preflight_1.log": {
+      "bytes": 0,
+      "mtime_ns": 1790920216090707400
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/preflight_2.log": {
+      "bytes": 0,
+      "mtime_ns": 1790920216161690200
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/preflight_3.log": {
+      "bytes": 102,
+      "mtime_ns": 1790920228770806600
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/preflight_4.log": {
+      "bytes": 101,
+      "mtime_ns": 1790920231469426000
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe.log": {
+      "bytes": 3018,
+      "mtime_ns": 1790920398900041800
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_02.log": {
+      "bytes": 1757,
+      "mtime_ns": 1790920627280135800
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_02_execution.json": {
+      "bytes": 962,
+      "mtime_ns": 1790920628091757900,
+      "sha256": "2b71e8244f230984ff0d1a27d2cfaf004ca6856e88ff2d5f3ecbf4cc312c6bd5"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_02_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790920620809550400
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_02_runtime.json": {
+      "bytes": 1139,
+      "mtime_ns": 1790920627280135800,
+      "sha256": "fd28309169dd48dc950062f86cd2688d145a634d8dc9462d82d5b7bc96e68c74"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_03.log": {
+      "bytes": 1921,
+      "mtime_ns": 1790920839080338600
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_03_execution.json": {
+      "bytes": 974,
+      "mtime_ns": 1790920839947101400,
+      "sha256": "1e8151e45b6ce834798d12d7a8571938ff47e8b3d0d2da8148002afd0903b702"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_03_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790920832967608900
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_03_runtime.json": {
+      "bytes": 1309,
+      "mtime_ns": 1790920839095846200,
+      "sha256": "5374560919eb74fde3add040940ee223b22d7bd961c7d53b80b79fc9c8cbb04e"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_04.log": {
+      "bytes": 4768,
+      "mtime_ns": 1790922108383703900
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_04_execution.json": {
+      "bytes": 1028,
+      "mtime_ns": 1790922109305570000,
+      "sha256": "5e42d79f53ea75f89a12cc7a006f44424cd757b1eeaca755fb85bc59e1a76ffb"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_04_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790921953584350400
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_04_runtime.json": {
+      "bytes": 1751,
+      "mtime_ns": 1790922108392871100,
+      "sha256": "9e300cc55421d30d08e9dd25793a13b71f2b761fe50dfa7d72871192b44fd03e"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_execution.json": {
+      "bytes": 747,
+      "mtime_ns": 1790920399575455700,
+      "sha256": "3baf7185a283c89399a61cde22891daf3446bcd8983946d37a0d6eefe70f1c3f"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790920393805708700
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/probe_runtime.json": {
+      "bytes": 1131,
+      "mtime_ns": 1790920398901679700,
+      "sha256": "47ab97a3f42df1871055cb0f6dc6e0e4baed6de0ab929308d8345990124d1c42"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/publication_authorization.json": {
+      "bytes": 1928,
+      "mtime_ns": 1790923179468072200,
+      "sha256": "8b304ad74d4419bf4fc830accc42dc9eb07782726ef570fdfbf924dd43f265c3"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/radio_prediction_equivalence.json": {
+      "bytes": 819,
+      "mtime_ns": 1790921892330367100,
+      "sha256": "9100317a2e88e946f89342a569ba94633a25fcb963dee53d1687cee35348dfb2"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/radio_profile_authorization.json": {
+      "bytes": 519,
+      "mtime_ns": 1790921753392741700,
+      "sha256": "bc4453eca2ddcb43d12e5c9e5235127cc2030f1cad3e251bd78a197bf1a53b65"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/RADIO_PROFILING_EXCEPTION_PROPOSAL.json": {
+      "bytes": 2947,
+      "mtime_ns": 1790921393011556300,
+      "sha256": "3fcca528c6381f13802cd9fba38af8c2aea5e432469af36745301f81f05208f9"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/result_verification.json": {
+      "bytes": 1054,
+      "mtime_ns": 1790922310794200200,
+      "sha256": "5afefa261eae6541e0ba0e1e32e0cc367e415f20ddb78ae9ccc28268696ed759"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/run_probe_once.py": {
+      "bytes": 5700,
+      "mtime_ns": 1790921952490397000,
+      "sha256": "d5593002f0744bbc0a689ad7a3800283392f0b7758f0668af6523219c979cacb"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/second_startup_run_probe_once.py": {
+      "bytes": 4440,
+      "mtime_ns": 1790920767185860700,
+      "sha256": "32ae09b8b0b7a057cf3dacb46c7e64df3627c0d912c85559d2ffa7f5d93ac20c"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/second_startup_sitecustomize.py": {
+      "bytes": 6246,
+      "mtime_ns": 1790920767185860700,
+      "sha256": "462fcec9d2ca32e77f64fc1cd3718ce47e4457edab03e1bcbdef3ea9efe4d546"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/sitecustomize.py": {
+      "bytes": 11551,
+      "mtime_ns": 1790921754255426000,
+      "sha256": "3ad23f5e24c95646835347bd1d24162b83f845d2ca8c0664007d8bd0b177c7f5"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_audited.json": {
+      "bytes": 6826,
+      "mtime_ns": 1790921878347347200,
+      "sha256": "d44c8a55c0bd2cfd636d855e7b1b0352b8027659288f2bc4aff0ab9ac7294a7b"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_audited.log": {
+      "bytes": 95,
+      "mtime_ns": 1790921879043061500
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_baseline.json": {
+      "bytes": 6826,
+      "mtime_ns": 1790921872011932000,
+      "sha256": "d44c8a55c0bd2cfd636d855e7b1b0352b8027659288f2bc4aff0ab9ac7294a7b"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_baseline.log": {
+      "bytes": 95,
+      "mtime_ns": 1790921872723972600
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cpu_runtime.json": {
+      "bytes": 1555,
+      "mtime_ns": 1790921878347347200,
+      "sha256": "ff81a56bee793267198b0d4a6a6fec6469c84cc56e8d9d00d4ff40f565d12aa2"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_audited.json": {
+      "bytes": 6827,
+      "mtime_ns": 1790921891480337600,
+      "sha256": "46e02303b7260684066fc62204ca307752230ddc5e57e43f75d1755bffb49548"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_audited.log": {
+      "bytes": 96,
+      "mtime_ns": 1790921892317845200
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_baseline.json": {
+      "bytes": 6827,
+      "mtime_ns": 1790921884880455900,
+      "sha256": "46e02303b7260684066fc62204ca307752230ddc5e57e43f75d1755bffb49548"
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_baseline.log": {
+      "bytes": 96,
+      "mtime_ns": 1790921885715656500
+    },
+    "fhm_dapp_tim/evidence/v18_4/run_audit/synthetic_cuda_runtime.json": {
+      "bytes": 1563,
+      "mtime_ns": 1790921891502225600,
+      "sha256": "02e601e315464ace8e80877a188e1e5201d7e2246015d68a012e60fffc20e526"
+    },
+    "fhm_dapp_tim/evidence/v18_4/RUN_STATUS_DECODER_GATE_V18_4.json": {
+      "bytes": 19628,
+      "mtime_ns": 1790922610333361400,
+      "sha256": "40aef841848472d3b794114622c70b2dd10eb9d455983b0015c693a38df1c991"
+    },
+    "fhm_dapp_tim/evidence/v18_4/RUN_STATUS_DECODER_GATE_V18_4.md": {
+      "bytes": 1913,
+      "mtime_ns": 1790923180241860600,
+      "sha256": "809f5ddf8c55ae765671fac430fc4d98da5b685f898629ee7f846084a1293be2"
+    },
+    "fhm_dapp_tim/evidence/v18_4/RUNBOOK_EXTERNAL_V18_4.md": {
+      "bytes": 5821,
+      "mtime_ns": 1791049194574254200,
+      "sha256": "2df5f4ce87a5f00faa7cd91c673e84c8a80e270113c7408148dab3f4171007df"
+    },
+    "fhm_dapp_tim/evidence/v18_4/RUNBOOK_UJI_V18_4.md": {
+      "bytes": 6518,
+      "mtime_ns": 1791049194573241900,
+      "sha256": "b6d013d19afacaa7fcd71d805ad18f6383891ad4805366fedf6bcaa0c7461d3c"
+    },
+    "fhm_dapp_tim/evidence/v18_4/uji_calibration_v18_4.json": {
+      "bytes": 8566,
+      "mtime_ns": 1791093482805135000,
+      "sha256": "77500418abd927629b5687e2639c6d77a56c7464f144fab81089899dc4076082"
+    },
+    "fhm_dapp_tim/evidence/v18_4/uji_development_v18_4.json": {
+      "bytes": 285840,
+      "mtime_ns": 1791092898280545700,
+      "sha256": "8b7a30e2de836c26631d8fcda965dc6d7bbeb522c6d01ed53f3a4c25b1dc2019"
+    },
+    "fhm_dapp_tim/evidence/v18_4/uji_method_freeze_v18_4.json": {
+      "bytes": 2910,
+      "mtime_ns": 1791093482805225600,
+      "sha256": "9901da1203e05af9a73ff8b7a3d6c6f75d77364b2f6d3a52d093e7d72b6c874f"
+    },
+    "fhm_dapp_tim/evidence/v18_4/uji_registry_v18_4.json": {
+      "bytes": 574977,
+      "mtime_ns": 1791052778950368900,
+      "sha256": "3470b9ff247117fbe9cefcd2f8135a55a8efe440b497a4ac96e8346339c26fb3"
+    },
+    "fhm_dapp_tim/evidence/v18_5/DESIGN_V18_5.md": {
+      "bytes": 12165,
+      "mtime_ns": 1791266063001959600,
+      "sha256": "2d7fa23e852f18cbc8020259a67ec752305e35ab25a6f2997e94fdadc0e028f0"
+    },
+    "fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.json": {
+      "bytes": 51322,
+      "mtime_ns": 1791266805959129300,
+      "sha256": "9b2c7d36727d26a372e87bf84458e3df055a5ccbba6e5d9d6a5e16a78c6bc251"
+    },
+    "fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.md": {
+      "bytes": 602,
+      "mtime_ns": 1791266805960130200,
+      "sha256": "9e089e48fbc2dbff8f11a42ccb5ec34e3eaee5f2bc692d6bc17b3b608291af2c"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_RESTART_V18_5.json": {
+      "bytes": 348148,
+      "mtime_ns": 1791275195820496300,
+      "sha256": "7765cbc6faf727a9f06ce38e8b3b98413744b6838c0d7056254854491b81a733"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_RESTART_V18_5.md": {
+      "bytes": 42053,
+      "mtime_ns": 1791275195827309200,
+      "sha256": "e48da390372d6155b5bb1353fd0c4d60cfc2c526dce51f8ed6516c4fc492e745"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_V18_5.json": {
+      "bytes": 8041,
+      "mtime_ns": 1791266542598917900,
+      "sha256": "8c8e4aa129fe0a19032bcb976e41925a39902bbdf11c9998dba8e47c4037f1e3"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_EXECUTION_V18_5.md": {
+      "bytes": 2733,
+      "mtime_ns": 1791266542598917900,
+      "sha256": "f9b899d6a29d518ab33de280ef4d6e28d945816c606dbafa1d02973344f0d54f"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_report_formatter_schema_V18_5.json": {
+      "bytes": 1190,
+      "mtime_ns": 1791275186923916700,
+      "sha256": "6eb15345fd8a86aea5acfe6d2b21f52183ebf119c364fe960b209edd443e5017"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage0_acceptance_20261006T055942748916Z.json": {
+      "bytes": 725,
+      "mtime_ns": 1791266406484531100,
+      "sha256": "404991cae743b8971c675071139489aa2cb1fe3471722101d8082db8279969f9"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage0_acceptance_20261006T055942748916Z.log": {
+      "bytes": 2014,
+      "mtime_ns": 1791266405917970500
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage0_acceptance_restart_20261006T060555836985Z.json": {
+      "bytes": 743,
+      "mtime_ns": 1791266806945543700,
+      "sha256": "8bafbb73e2ab4f61d686ab6c673ce6e5efaf4e73ab05fb68b0541ac211c763bc"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage0_acceptance_restart_20261006T060555836985Z.log": {
+      "bytes": 822,
+      "mtime_ns": 1791266805962131300
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage1_prepare_20261006T060721936316Z.json": {
+      "bytes": 709,
+      "mtime_ns": 1791266849834291300,
+      "sha256": "767eb6ae02840b30482c05bc3f5c4f697571ba1fae5a3cb9c459cbf7f10b9665"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage1_prepare_20261006T060721936316Z.log": {
+      "bytes": 574974,
+      "mtime_ns": 1791266849128965200
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage2_develop_20261006T060900984510Z.json": {
+      "bytes": 739,
+      "mtime_ns": 1791271179611250500,
+      "sha256": "d7199d83b43b08e39da756184b77c3e559c1b3da1c0d93c966ee6becf918282f"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage2_develop_20261006T060900984510Z.log": {
+      "bytes": 285645,
+      "mtime_ns": 1791271178525835000
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage3_calibrate_freeze_20261006T072143697196Z.json": {
+      "bytes": 766,
+      "mtime_ns": 1791275004607015300,
+      "sha256": "be85a138a96c5d9e36043ddd188ed3e52d98205debc4bae30bfe7bf243685de4"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage3_calibrate_freeze_20261006T072143697196Z.log": {
+      "bytes": 1937,
+      "mtime_ns": 1791275003519371300
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage4_artifact_audit_20261006T082337271893Z.json": {
+      "bytes": 707,
+      "mtime_ns": 1791275022612771100,
+      "sha256": "708a2444fc3a35a35ac9160227d425b47b2d8d52fc5bba21492625f292d9382f"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/FIRST_FORMAL_UJI_stage4_artifact_audit_20261006T082337271893Z.log": {
+      "bytes": 8404,
+      "mtime_ns": 1791275021996864900
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/GIT_PUBLICATION_PREPARATION_V18_5.json": {
+      "bytes": 11994,
+      "mtime_ns": 1791276983227501300,
+      "sha256": "923f81b277409bf0f0fe68cec8cd90a4cdd9319d2bb6409b5cc575c30ec36c19"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/GIT_PUBLICATION_PREPARATION_V18_5.md": {
+      "bytes": 2899,
+      "mtime_ns": 1791276984006467200,
+      "sha256": "3aa2148cb89e11bf8bfa2627194a3a9b790ab5c96e3e8f9fa09e5aba49b31dca"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/v185_execution_report_builder.tmp": {
+      "bytes": 28073,
+      "mtime_ns": 1791275187729069700
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/v185_first_formal_gpu_samples.jsonl": {
+      "bytes": 17550,
+      "mtime_ns": 1791274963833139400
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/WINDOWS_ACCEPTANCE_REPAIR_V18_5.json": {
+      "bytes": 2141,
+      "mtime_ns": 1791266744376600900,
+      "sha256": "84fc17fd7f07f610a4a52beb5bab4f319b757ad5230384badf926b9814974b9e"
+    },
+    "fhm_dapp_tim/evidence/v18_5/run_audit/WINDOWS_ACCEPTANCE_REPAIR_V18_5.md": {
+      "bytes": 1183,
+      "mtime_ns": 1791266744376600900,
+      "sha256": "f90f7dbf061496e9c6b6a942227248e9f301cfd3f69bdad9b64e169b2938628a"
+    },
+    "fhm_dapp_tim/evidence/v18_5/RUNBOOK_EXTERNAL_V18_5.md": {
+      "bytes": 8003,
+      "mtime_ns": 1791276621074284400,
+      "sha256": "61a9f79db4fe42d96d36de59432784e75244708cd998141d878b2a11c74c0119"
+    },
+    "fhm_dapp_tim/evidence/v18_5/RUNBOOK_UJI_V18_5.md": {
+      "bytes": 6576,
+      "mtime_ns": 1791276621074284400,
+      "sha256": "08e1d3aa48ebbf50c1058176db19bfde646135a2ecffd426c0d39aafa41b863e"
+    },
+    "fhm_dapp_tim/evidence/v18_5/uji_calibration_v18_5.json": {
+      "bytes": 1737607,
+      "mtime_ns": 1791275003488044300,
+      "sha256": "313a7e0cff14bb0aee70030527df49fa06cc4c8a65569002074bba04a724c1cb"
+    },
+    "fhm_dapp_tim/evidence/v18_5/uji_development_v18_5.json": {
+      "bytes": 278319,
+      "mtime_ns": 1791271178464012000,
+      "sha256": "59dab320819914144dc226418cbc097f5fd602973cb79c5fd2de1e2d6871e4db"
+    },
+    "fhm_dapp_tim/evidence/v18_5/uji_method_freeze_v18_5.json": {
+      "bytes": 1062,
+      "mtime_ns": 1791275003511301400,
+      "sha256": "958bf49d9d88e0ce6f0873482e8501025f16e8cd9cbbb318f37d390c7307c130"
+    },
+    "fhm_dapp_tim/evidence/v18_5/uji_registry_v18_5.json": {
+      "bytes": 537692,
+      "mtime_ns": 1791266848632106400,
+      "sha256": "2d72c8a1358548f687ffb2e1001b3bf0be9147a6627465d655c32fa65feea4cd"
+    },
+    "fhm_dapp_tim/evidence/v18_single/DESIGN_V18.md": {
+      "bytes": 4387,
+      "mtime_ns": 1790692170433996200,
+      "sha256": "cbe274294f7a7768ea23bca6bc38ce6374888941c29a714714817b858d00879e"
+    },
+    "fhm_dapp_tim/evidence/v18_single/development_result_v18.json": {
+      "bytes": 1291,
+      "mtime_ns": 1790693354727552300,
+      "sha256": "aa988bbe3a6443fae154ecaf589e9cd416fdbf0fa6430a53d5fab69f2a0e9d80"
+    },
+    "fhm_dapp_tim/evidence/v18_single/outer_test_result_v18.json": {
+      "bytes": 1194,
+      "mtime_ns": 1790693456368085700,
+      "sha256": "ed8e0b2f645ec8c758e95a09a6d673e8b12df6fd1f55e9ca343fac31287b8502"
+    },
+    "fhm_dapp_tim/evidence/v18_single/registry_v18.json": {
+      "bytes": 975242,
+      "mtime_ns": 1790693126123423600,
+      "sha256": "84fbfc89d6eb811476384513201abe6964be7c452e29f9f491370cdd0466ba95"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/artifact_manifest.json": {
+      "bytes": 1930,
+      "mtime_ns": 1790693718186036200,
+      "sha256": "404bface19658cc4216738627b69fc3428c428040d35b8a719dc4d011e6de8cb"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/code_snapshot.json": {
+      "bytes": 9778,
+      "mtime_ns": 1790693119954673300,
+      "sha256": "13edb1cf759283285f8b42c15d74bc83a15923818a6696f23f7d56022dc7c4f7"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/final_verification.json": {
+      "bytes": 3960,
+      "mtime_ns": 1790693433855255300,
+      "sha256": "8bf74e5500665de6d5a0cba95aa03cf990dc260f52c9ef771b5b60ccfe7a7598"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/final_verification.log": {
+      "bytes": 3962,
+      "mtime_ns": 1790693433921814400
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/freeze.log": {
+      "bytes": 3100,
+      "mtime_ns": 1790693354727552300
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/freeze_execution.json": {
+      "bytes": 910,
+      "mtime_ns": 1790693355489694400,
+      "sha256": "65010d2b241386bdb86042fc4396af5d433acd9262b0e112489f41a86fae1748"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/freeze_gpu_samples.jsonl": {
+      "bytes": 627,
+      "mtime_ns": 1790693353551051700
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/freeze_verification.json": {
+      "bytes": 906,
+      "mtime_ns": 1790693366673289000,
+      "sha256": "44ee9d8936a47ec4e15ae5a74ad749e311ffb81de541b775788e1ddaf56c7fa8"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/freeze_verification.log": {
+      "bytes": 908,
+      "mtime_ns": 1790693366694835700
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/generate_report.py": {
+      "bytes": 15994,
+      "mtime_ns": 1790747517435533700,
+      "sha256": "744d9852f6061be0756e4d089b6abc1a0fcc221b380f7144a3251527947cab3e"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/outer.log": {
+      "bytes": 1194,
+      "mtime_ns": 1790693456370104700
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/outer_execution.json": {
+      "bytes": 909,
+      "mtime_ns": 1790693457131031300,
+      "sha256": "872e9a1ba3ca02dfb39218af48eb8834a2a7d76462ecc0b4fe0eee07df032730"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/outer_gpu_samples.jsonl": {
+      "bytes": 626,
+      "mtime_ns": 1790693455239778500
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/outer_invocation.lock": {
+      "bytes": 34,
+      "mtime_ns": 1790693448890632400
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/pre_outer_gate.json": {
+      "bytes": 637,
+      "mtime_ns": 1790693439169292200,
+      "sha256": "dcf2f32fb695aaa8960c5211421c99db524fa5a73ea222a93080f5dd0589746f"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/preflight.json": {
+      "bytes": 3107,
+      "mtime_ns": 1790693216173423600,
+      "sha256": "238613b8c056598a5ca53e7377d3d3b2e67e1055536fdd070bc4b4f30d4196cc"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/py_compile_initial.log": {
+      "bytes": 52,
+      "mtime_ns": 1790692606700267800
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/py_compile_verified.log": {
+      "bytes": 52,
+      "mtime_ns": 1790693018768619800
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/pytest_initial.log": {
+      "bytes": 1118,
+      "mtime_ns": 1790692618139614500
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/pytest_verified.log": {
+      "bytes": 101,
+      "mtime_ns": 1790693023292003700
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/register.log": {
+      "bytes": 975242,
+      "mtime_ns": 1790693126483193700
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/register_execution.json": {
+      "bytes": 885,
+      "mtime_ns": 1790693127063879200,
+      "sha256": "cc9827fb9f4e4d4a3998ca0eec0240a164cf7e615bd3a5134794cff0bc7f3d38"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/register_gpu_samples.jsonl": {
+      "bytes": 628,
+      "mtime_ns": 1790693126320171900
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/registry_verification.json": {
+      "bytes": 1207,
+      "mtime_ns": 1790693140056706300,
+      "sha256": "df98f917b74d8fbc4fc0c48e7d7f0bb343d7c560f4acc91d6e43010bb790b93d"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/registry_verification.log": {
+      "bytes": 1209,
+      "mtime_ns": 1790693140095666600
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/run_phase.py": {
+      "bytes": 5504,
+      "mtime_ns": 1790747517436540400,
+      "sha256": "4aab6696af4ab6547e686ec3a866912cca457d2cfe2c8b8696b07d91ba1e54e7"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/selection_verification.json": {
+      "bytes": 3976,
+      "mtime_ns": 1790693339332018100,
+      "sha256": "e129e9bbf194e2489f087668aeb280e74cdb4dd7a73bd01fb8feb0cd283e0a69"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/selection_verification.log": {
+      "bytes": 3978,
+      "mtime_ns": 1790693339402066000
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/synthetic_verification.json": {
+      "bytes": 1002,
+      "mtime_ns": 1790692941829725100,
+      "sha256": "b41bf9ccf7e63274a4d32e8b29ecc7326e76a55e69b2824a63b790aa535af6af"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/synthetic_verification.log": {
+      "bytes": 1506,
+      "mtime_ns": 1790692941840208900
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/train-final.log": {
+      "bytes": 1318,
+      "mtime_ns": 1790693392158673700
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/train-final_execution.json": {
+      "bytes": 921,
+      "mtime_ns": 1790693393068184100,
+      "sha256": "6968b10752801e12d59fdd8623b188555a768d71e367f892994813d3cb6e365f"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/train-final_gpu_samples.jsonl": {
+      "bytes": 1258,
+      "mtime_ns": 1790693391292019300
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/train-selection.log": {
+      "bytes": 8372,
+      "mtime_ns": 1790693322308917700
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/train-selection_execution.json": {
+      "bytes": 931,
+      "mtime_ns": 1790693323236398300,
+      "sha256": "e06d0ed30fc81de7531673553722af6f85b9e6d250181bba38eae3de14c626e3"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/train-selection_gpu_samples.jsonl": {
+      "bytes": 13109,
+      "mtime_ns": 1790693322434982200
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/training_trajectory_v18.json": {
+      "bytes": 44999,
+      "mtime_ns": 1790693718163131500,
+      "sha256": "41c4bb3af89b3da5cdf37fcfca5297bc72713e63ac4ab0378c753436b744149d"
+    },
+    "fhm_dapp_tim/evidence/v18_single/run_audit/verify_run.py": {
+      "bytes": 9699,
+      "mtime_ns": 1790747517437385000,
+      "sha256": "3c33c2c784387b62db3bc42403d39a1008f8ff411be35e4e0284c98da91f39c0"
+    },
+    "fhm_dapp_tim/evidence/v18_single/RUN_REPORT_V18.md": {
+      "bytes": 6865,
+      "mtime_ns": 1790693718167444900,
+      "sha256": "3aeaa0375ab1788dba18cc8107e05e4a1f931abca93b100eab7c11744a3e887f"
+    },
+    "fhm_dapp_tim/evidence/v18_single/RUN_SUMMARY_V18.json": {
+      "bytes": 14549,
+      "mtime_ns": 1790693718166438400,
+      "sha256": "57bb8ec6f09579d67158d96d733ebde8900185cfb21180d47121ef08d0b5f83f"
+    },
+    "fhm_dapp_tim/evidence/v18_single/selection_freeze_v18.json": {
+      "bytes": 1639,
+      "mtime_ns": 1790693354727552300,
+      "sha256": "86862bf4c797230d57a49cb28caef1294b375e93ed3f7e97c90a3c75edc0ae5d"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/DESIGN_V19_R0.md": {
+      "bytes": 4297,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "8a0cc57bfcb9c9ac2872e13b72edf1c6b434cf52aeb1a96f4e25d05b8fc2843a"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/development_result_v19_r0.json": {
+      "bytes": 21713,
+      "mtime_ns": 1791296233493341600,
+      "sha256": "c61e35a9c30059d24c8cb0cfc263a3de7071d0f003b148d38d25d22f1d94b1fd"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/registry_v19_r0.json": {
+      "bytes": 214655,
+      "mtime_ns": 1791289111243945000,
+      "sha256": "28061b2004f3435cee3c53ac6ba47fcdbc8c19ceb396519a7b1e0cdb7f8be745"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/run_audit/FIRST_ACCURACY_RECOVERY_EXECUTION_V19_R0.json": {
+      "bytes": 100074,
+      "mtime_ns": 1791296418238439500,
+      "sha256": "a2adbd6db942fa930464682e4e36ecc553a8fb71e1a13749582581d0d7a4b897"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/run_audit/FIRST_ACCURACY_RECOVERY_EXECUTION_V19_R0.md": {
+      "bytes": 34389,
+      "mtime_ns": 1791296847042040900,
+      "sha256": "de406099bccf6d1170f9dd7c3cd444a0f4e6045ef66fafb6bbfb9839220aa636"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/run_audit/FIRST_ACCURACY_RECOVERY_FAILURE_V19_R0.log": {
+      "bytes": 30259,
+      "mtime_ns": 1791295898123479200
+    },
+    "fhm_dapp_tim/evidence/v19_r0/RUNBOOK_V19_R0.md": {
+      "bytes": 3536,
+      "mtime_ns": 1791285842392341000,
+      "sha256": "db66537ddd54f5803f035669983dffa09d73f39ce0f3357809cf651e8e0cf0fa"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/V18_5_PREDICTIVE_DECISION_PROBE.json": {
+      "bytes": 3633,
+      "mtime_ns": 1791289073884124300,
+      "sha256": "50058823f32711a00f1f18549ccbdf10af36ea75bd13df68cd072eb6cb8620f4"
+    },
+    "fhm_dapp_tim/evidence/v19_r0/V18_5_PREDICTIVE_DECISION_PROBE.md": {
+      "bytes": 638,
+      "mtime_ns": 1791289073887718900,
+      "sha256": "fabffad47a97139ece84141554dc119af9c751b46d35cafecd72505de5ad6dc6"
+    },
+    "data/UJIndoorLoc/trainingData.csv": {
+      "bytes": 42725381,
+      "mtime_ns": 1411022462820493400,
+      "sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168"
+    }
+  },
+  "historical_binary_content_read": false,
+  "old_checkpoint_weights_used": false,
+  "official_or_external_data_opened": false,
+  "outer_test_predictions": 0,
+  "initial_process_launcher_failures": [
+    {
+      "operation": "read-only local file/environment inspection",
+      "reason": "helper_unknown_error: setup refresh had errors",
+      "recovery": "same scoped read under reviewed execution"
+    }
+  ],
+  "initial_inspection_notes": [
+    "An rg inspection initially named two nonexistent optional module paths; actual imports and existing source paths were then read."
+  ],
+  "G1_result_files_present_at_start": []
+}

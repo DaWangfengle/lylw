@@ -1,0 +1,16 @@
+{
+  "status": "NEW_G1_REGRESSION_FIELD_NAME_REPAIRED",
+  "recorded_utc": "2026-10-08T05:49:47.606042+00:00",
+  "failure": "The newly added regression incorrectly expected a nested mae result; original R3 returns exact_mixture_mean_mae_coordinate_macro_m.",
+  "failure_stage": "pytest_attempt02.json",
+  "previous_suite": {
+    "passed": 36,
+    "failed": 1
+  },
+  "edited_source": "tests/test_uji_v17_g1.py",
+  "before_sha256": "66abb99811646628a3ad04346dbc70b487b01523be574964fb6703704cad5a98",
+  "after_sha256": "1473244a9f176adc0c2a88a58806dbc7c2b547e7d0d3804884c2cf7d2ea2c6f5",
+  "scientific_or_production_change": false,
+  "original_R3_tests_passed": true,
+  "registry_exists": false
+}

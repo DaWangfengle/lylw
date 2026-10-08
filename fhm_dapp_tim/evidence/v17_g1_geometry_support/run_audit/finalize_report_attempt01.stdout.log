@@ -1,0 +1,7 @@
+{
+  "status": "FINAL_EXECUTION_VERIFICATION_PASS",
+  "decision": "STOP_GEOMETRY_DENSITY_MECHANISM",
+  "chosen_gamma": 0.7,
+  "report": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\RUN_REPORT_V17_G1.md",
+  "report_sha256": "b46b25d9dce4f3ed5e376f84d03f27ca9716317453e00cb896ef8cf4698e3eaa"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "REPORTING_ONLY_INTERRUPTION_AMENDMENT",
+  "recorded_utc": "2026-10-08T06:29:27.948976+00:00",
+  "original_reporting_helper_sha256": "f2fa090b36b5e7b243668dd9c40b3e9f6055bbffcd9b1a4899145bb1eaf5405e",
+  "new_reporting_helper_sha256": "f93394e57a451aa054a247a7bcf105eb384c95d4df4f41d7c3503a7cc65f81e7",
+  "changes": [
+    "Select the successful saved attempt for each member.",
+    "Require a matching audited hash if a validated checkpoint was resumed.",
+    "Preserve unknown interrupted exit code/duration as N/A and report wall-clock duration separately.",
+    "Include the documented interruption and recovery in the final report."
+  ],
+  "original_helper_kept_unchanged": true,
+  "registered_G1_production_sources_modified": false,
+  "scientific_change": false,
+  "registry_rewritten": false,
+  "models_modified_by_reporting_amendment": false,
+  "predictions_rerun": false,
+  "authority": "User explicitly authorizes recovery only from validated matching members; this amendment changes only new reporting/audit tooling."
+}

@@ -1,0 +1,35 @@
+--- RUN_REPORT_V17_G1_before_formatting_fix.md
++++ RUN_REPORT_V17_G1.md
+@@ -11,7 +11,7 @@
+ | 项目 | 记录 |
+ | --- | --- |
+ | Python 解释器 | D:\miniminiconda\envs\liuyan\python.exe |
+-| Python | 3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)] |
++| Python | 3.12.12 \| packaged by Anaconda, Inc. \| (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)] |
+ | 操作系统 | Windows-10-10.0.19045-SP0 |
+ | Torch / CUDA runtime | 2.10.0+cu128 / 12.8 |
+ | GPU | NVIDIA GeForce RTX 2060，6442123264 bytes |
+@@ -22,7 +22,7 @@
+ | 最终测试 | 37 passed，0 failed / skipped / xfailed |
+ | 确认命令执行次数 | 1 |
+ 
+-执行顺序为编译、完整测试、CUDA 预检、prepare、成员 1..25 串行训练、check-members、calibrate 与 freeze、唯一一次 confirm。每条阶段命令的 stdout/stderr、退出码、起止 UTC、运行秒数与日志 SHA256 均独立保存在 run_audit。
++执行顺序为编译、完整测试、CUDA 预检、prepare、成员 1..25 串行训练、check-members、calibrate 与 freeze、唯一一次 confirm。每条阶段命令的 stdout/stderr 与日志 SHA256 均独立保存在 run_audit；已完成阶段记录退出码、起止 UTC 和运行秒数，中断阶段无法恢复的退出码与耗时明确标为 N/A。
+ 
+ ## 注册数据、源码和不可变记录
+ 
+@@ -210,7 +210,7 @@
+ | train-member-04 | 1 | 0 | 273.977497800 | bc8cb157f1ff67b866c997a3d0251965c739168824b5db01a4932384029f74e8 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
+ | train-member-05 | 1 | 0 | 250.775221500 | 330b5177f941c4ad42b47d7b2d981aa5abc18256f80636f89a8d50e12c216df0 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
+ | train-member-06 | 1 | 0 | 243.975788200 | f108f8bbd579814b5f4e279340b073568c031b904cf2f8ca2a9e7088f5488ff7 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
+-| train-member-07 | 1 | None | N/A | a3be4bca76340f13449cf7217b572313c9ec5748770d6434f0b7985976be6221 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
++| train-member-07 | 1 | N/A | N/A | a3be4bca76340f13449cf7217b572313c9ec5748770d6434f0b7985976be6221 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
+ | train-member-07 | 2 | 0 | 214.274754300 | f6e68dfabd2be5f3288a8e776f254620ab98d5fa4aad1aab45cae0f9f9805f97 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
+ | train-member-08 | 1 | 0 | 297.744801900 | 80f93f30916ccd0455bd86db5c5e2450d8bd2a3fa5ed3cc11349fa405572c292 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
+ | train-member-09 | 1 | 0 | 319.055649500 | 90f7fba9a96292c05be5700cf85577affd6c335be03b8aec126ff47e9e44ced0 | d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048 |
+@@ -240,3 +240,5 @@
+ 本轮只在 V17 development 内探索和确认几何密度机制。595-anchor selection_refit 模型及本轮 confirmation cohort 与历史 746-anchor outer_refit / outer-test 不同，不能把这里的结果与旧 5.725985 m 当作同一测试集比较。
+ 
+ official validation、outer-test 和外部数据预测次数均为 0；未进行外部泛化验证，未完成 Q1 完整证据链，没有部署或最终模型结论。历史 next_stage_authorized=false 未修改。本轮所有操作在本地执行，Git 操作由用户自行负责。
++
++报告排版修订仅转义 Python 版本中的表格竖线、统一中断字段的 N/A 显示并澄清耗时记录；原始报告、原始最终审计及差异均保存在 run_audit/REPORT_FORMATTING_AMENDMENT.json 所列路径中。科学结果及冻结文件未改动。

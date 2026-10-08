@@ -1,0 +1,12 @@
+{
+  "calibration_file_sha256": "76a5379d43b93742587daea701948222014946fb1aaa2a7a5e8b5a01c9079f6e",
+  "calibration_result_sha256": "0729b512f74de0d607afb4f4717919a2f139c1110f62e798cd5c0c443045f86d",
+  "chosen_gamma": 0.7,
+  "confirmation_metrics_accessed": false,
+  "official_validation_predictions": 0,
+  "outer_test_predictions": 0,
+  "protocol": "v17_g1_geometry_support_development_v1_20261008",
+  "registry_sha256": "bfd44edf4f5f05f08dea2bc2c9972138b361fff529467c166c3e7ab333ebccf6",
+  "result_sha256": "2bf7e709997f27ad83898e57f06cd63370dab508b622ea2577930b94050e75fe",
+  "selection": "min_mae_with_ES_guard"
+}

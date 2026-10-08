@@ -1,0 +1,11 @@
+--- before/test_uji_v17_g1.py
++++ after/test_uji_v17_g1.py
+@@ -195,7 +195,7 @@
+         energy, per_subset_mae, subsets, torch.tensor([0]), 1
+     )
+     assert torch.linalg.vector_norm(means.mean(dim=0) - target).item() == 0.0
+-    assert [r["mae"]["coordinate_macro_m"] for r in records] == [2.0, 2.0]
++    assert [r["exact_mixture_mean_mae_coordinate_macro_m"] for r in records] == [2.0, 2.0]
+     assert "Losses, not predictive distributions" in (
+         _isolated_legacy_r3_design_fixture.read_text(encoding="utf-8")
+     )

@@ -1,0 +1,28 @@
+{
+  "stage": "train-member",
+  "member_index": 2,
+  "attempt": 1,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment",
+    "train-member",
+    "--member-index",
+    "2",
+    "--device",
+    "cuda"
+  ],
+  "working_directory": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T05:56:54.200565+00:00",
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\train-member-02_attempt01.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\train-member-02_attempt01.stderr.log",
+  "scientific_parameters_changed_by_logger": false,
+  "output_encoding": "utf-8",
+  "pytest_cacheprovider": "disabled",
+  "child_pid": 21028,
+  "ended_utc": "2026-10-08T06:01:29.670276+00:00",
+  "runtime_seconds": 275.47024140000576,
+  "exit_code": 0,
+  "stdout_sha256": "a9e98b8ee2cd44058feadf556fd22c454ed100e7d20e05029d4a2cdb2ad5a0bc",
+  "stderr_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048"
+}

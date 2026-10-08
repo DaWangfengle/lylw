@@ -1,0 +1,11 @@
+{
+  "status": "ready",
+  "protocol": "v17_g1_geometry_support_development_v1_20261008",
+  "train_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "historical_v17_registry_sha256": "15a42989c7fb3f4c92906cebefd08d4fa359d80bffe238ec3bdb9a8e268b450b",
+  "historical_v17_registry_file_sha256": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab",
+  "baseline": "unchanged_V17_R3_E16_with_25_balanced_subsets",
+  "candidate": "inverse_geometry_support_atomic_anchor_prior",
+  "no_outer_test_or_official_predictions": true,
+  "historical_next_stage_authorized_remains": false
+}

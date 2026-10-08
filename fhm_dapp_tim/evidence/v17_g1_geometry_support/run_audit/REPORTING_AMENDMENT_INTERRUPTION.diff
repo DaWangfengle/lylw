@@ -1,0 +1,55 @@
+--- original/finalize_report.py
++++ reporting/finalize_report_with_resume.py
+@@ -82,11 +82,18 @@
+     for index in range(1,26):
+         path = run.member_path(index)
+         member = torch.load(path, map_location="cpu", weights_only=True)
+-        stage = load(AUDIT / f"train-member-{index:02d}_attempt01.json")
+-        stdout = (AUDIT / f"train-member-{index:02d}_attempt01.stdout.log").read_text(encoding="utf-8")
++        candidates = [load(p) for p in sorted(AUDIT.glob(f"train-member-{index:02d}_attempt*.json"))]
++        successful = [s for s in candidates if s["exit_code"] == 0]
++        assert successful, f"No successful recorded completion for member {index}"
++        stage = successful[-1]
++        stdout = Path(stage["stdout_path"]).read_text(encoding="utf-8")
+         saved_result = json.JSONDecoder().raw_decode(stdout[stdout.rfind("\n{")+1:])[0]
+         digest = sha(path)
+-        assert stage["exit_code"] == 0 and saved_result["resumed"] is False
++        assert stage["exit_code"] == 0
++        if saved_result["resumed"]:
++            resume_proofs = [load(p) for p in AUDIT.glob("INTERRUPTION_RESUME_VERIFICATION_*.json")]
++            verified = [r for proof in resume_proofs for r in proof["verified_completed_members"]]
++            assert any(r["member"] == index and r["checkpoint_sha256"] == digest for r in verified)
+         assert saved_result["sha256"] == digest
+         assert member["epoch"] == len(member["refit_history"]) == g1.EPOCHS[index-1]
+         assert member["member_seed"] == g1.SEEDS[index-1]
+@@ -159,7 +166,10 @@
+         "test_result":gate["pytest"], "member_records":members,
+         "retained_failed_stage_records":failures,"warning_records":warning_records,
+         "scientific_source_repair_after_freeze":False,
+-        "runtime_seconds_sum":sum(s["runtime_seconds"] for s in stages),
++        "runtime_seconds_sum":sum(s["runtime_seconds"] for s in stages if s["runtime_seconds"] is not None),
++        "runtime_seconds_unknown_stage_count":sum(s["runtime_seconds"] is None for s in stages),
++        "wall_clock_seconds":(datetime.datetime.now(datetime.timezone.utc) - datetime.datetime.fromisoformat(initial["recorded_utc"])).total_seconds(),
++        "interrupted_stage_records":[s for s in stages if s["exit_code"] is None],
+         "member_training_seconds_sum":sum(m["training_seconds"] for m in members),
+         "Git_operations_performed":False,
+         "new_model_or_next_stage_implemented":False,
+@@ -180,7 +190,9 @@
+             ["Torch / CUDA runtime",f"{initial['torch_version']} / {initial['cuda_runtime']}"],
+             ["GPU",f"{initial['gpu']['name']}，{initial['gpu']['memory_bytes']} bytes"],
+             ["25 成员训练秒数合计",fmt(verification["member_training_seconds_sum"])],
+-            ["全部日志阶段运行秒数合计",fmt(verification["runtime_seconds_sum"])],
++            ["已知日志阶段运行秒数合计",fmt(verification["runtime_seconds_sum"])],
++            ["中断阶段耗时无法恢复数",verification["runtime_seconds_unknown_stage_count"]],
++            ["从初始审计至报告的 wall-clock 秒数（含中断）",fmt(verification["wall_clock_seconds"])],
+             ["最终测试","37 passed，0 failed / skipped / xfailed"],
+             ["确认命令执行次数","1"],
+         ]),
+@@ -290,6 +302,7 @@
+                 s["attempt"],s["exit_code"],fmt(s["runtime_seconds"]),
+                 s["stdout_sha256"],s["stderr_sha256"]] for s in stages]),
+         f"stderr 中保存 {len(warning_records)} 条警告记录。原始 CUDA Memory Efficient attention backward 警告说明该内核默认非确定；本轮保留原训练配置和精度，固定 seed 不能承诺 GPU 训练逐位相同。完整警告见 run_audit/FINAL_EXECUTION_VERIFICATION.json 与各成员 stderr 日志。",
++        "训练期间发生一次 turn 中断：成员 1..6 已完成，成员 7 第一次尝试停在已记录的 epoch 15/52，未生成 checkpoint。先核验前六名的 seed、epoch、registry、selection_refit CSV 和 checkpoint 哈希，保留成员 7 两份原始日志；其退出码与精确耗时无法恢复，记为 N/A。成员 7 以同一 seed 和完整 52 epochs 重新训练为 attempt02，后续仍按原编号执行。详见 INTERRUPTION_RESUME_VERIFICATION_01.json。该恢复未修改冻结 G1 生产源码、registry、设计或已完成模型；报告工具另行记录修订审计。",
+         "## 证据范围",
+         "本轮只在 V17 development 内探索和确认几何密度机制。595-anchor selection_refit 模型及本轮 confirmation cohort 与历史 746-anchor outer_refit / outer-test 不同，不能把这里的结果与旧 5.725985 m 当作同一测试集比较。",
+         "official validation、outer-test 和外部数据预测次数均为 0；未进行外部泛化验证，未完成 Q1 完整证据链，没有部署或最终模型结论。历史 next_stage_authorized=false 未修改。本轮所有操作在本地执行，Git 操作由用户自行负责。",

@@ -1,0 +1,30 @@
+{
+  "status": "PREPARE_NOT_STARTED_G1_TEST_FIXTURE_REPAIR",
+  "recorded_utc": "2026-10-08T05:48:34.312658+00:00",
+  "original_failure": "tests/test_uji_v17_mother_r3.py referenced a missing DESIGN_V17_R3_OUTER_CONFIRMATION.md",
+  "first_suite": {
+    "passed": 34,
+    "failed": 1
+  },
+  "failed_stage_audit": "pytest_attempt01.json",
+  "edited_file": "tests/test_uji_v17_g1.py",
+  "before_sha256": "efb8e59f82f4cf4d0020bc485a2d75cc12b37118ada944c1b21cbe3f879360fc",
+  "after_sha256": "66abb99811646628a3ad04346dbc70b487b01523be574964fb6703704cad5a98",
+  "diff": "PRECHECK_FIXTURE_REPAIR.diff",
+  "fixture_provenance": "New, explicitly labelled G1 test document quoting the unchanged frozen R3 scoring implementation; not claimed as recovered original design.",
+  "fixture_scope": "Temporary G1 test workspace and pytest session only; restored after test session.",
+  "new_regression_tests": [
+    "Independent two-opposite-forecasts example confirms expected loss rather than loss of the averaged forecast using the original R3 subset scorer.",
+    "Mocked G1 training serialization uses the actual restricted saver/loader and verifies exact selection_refit seed, epoch, split metadata and validated checkpoint resume."
+  ],
+  "production_G1_sources_unchanged": true,
+  "design_unchanged": true,
+  "historical_sources_and_evidence_modified": false,
+  "scientific_constants_split_loss_optimizer_scoring_gate_changed": false,
+  "registry_present": false,
+  "formal_checkpoints_present": false,
+  "permission_basis": "User permits minimal new-G1 test fixture repairs before prepare/training.",
+  "operational_notes": [
+    "The first repair-tool script had a JavaScript parse error before execution; no files were touched."
+  ]
+}

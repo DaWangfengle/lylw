@@ -1,0 +1,29 @@
+{
+  "stage": "pytest",
+  "member_index": null,
+  "attempt": 2,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_uji_v17_g1.py",
+    "tests/test_historical_reproduction.py",
+    "tests/test_uji_v17_mother_r3.py",
+    "--basetemp",
+    "fhm_dapp_tim/models/v17_g1_geometry_support/pytest_tmp"
+  ],
+  "working_directory": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T05:48:47.808579+00:00",
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\pytest_attempt02.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\pytest_attempt02.stderr.log",
+  "scientific_parameters_changed_by_logger": false,
+  "output_encoding": "utf-8",
+  "pytest_cacheprovider": "disabled",
+  "child_pid": 9328,
+  "ended_utc": "2026-10-08T05:48:55.648176+00:00",
+  "runtime_seconds": 7.83989269999438,
+  "exit_code": 1,
+  "stdout_sha256": "b61cc0d559040d4911a60a96dbed1dabf5e693a0f57542d9f2451095b04f4523",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

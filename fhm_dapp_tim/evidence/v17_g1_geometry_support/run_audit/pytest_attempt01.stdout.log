@@ -1,0 +1,40 @@
+..................................F                                      [100%]
+================================== FAILURES ===================================
+________ test_expected_risk_definition_averages_losses_not_predictions ________
+
+    def test_expected_risk_definition_averages_losses_not_predictions():
+        subset_losses = torch.tensor(
+            [[1.0, 3.0, 5.0], [3.0, 5.0, 7.0], [5.0, 7.0, 9.0]],
+            dtype=torch.float64,
+        )
+        expected_rows = subset_losses.mean(dim=0)
+        assert torch.equal(expected_rows, torch.tensor([3.0, 5.0, 7.0], dtype=torch.float64))
+>       design = Path(protocol.DEFAULT_DESIGN).read_text(encoding="utf-8")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_uji_v17_mother_r3.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_acrhap_mother/DESIGN_V17_R3_OUTER_CONFIRMATION.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_acrhap_mother\\DESIGN_V17_R3_OUTER_CONFIRMATION.md'
+
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1013: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/test_uji_v17_mother_r3.py::test_expected_risk_definition_averages_losses_not_predictions
+1 failed, 34 passed in 8.35s

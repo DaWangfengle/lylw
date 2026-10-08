@@ -1,0 +1,73 @@
+{
+  "status": "INTERRUPTION_RESUME_VERIFICATION_PASS",
+  "recorded_utc": "2026-10-08T06:27:17.883428+00:00",
+  "verified_completed_members": [
+    {
+      "member": 1,
+      "seed": 17301,
+      "epoch": 65,
+      "checkpoint_sha256": "ddd8e4acb213ddba370308cb967ff2c95d6f25bccb436ccd1911cfd77be031d0"
+    },
+    {
+      "member": 2,
+      "seed": 17302,
+      "epoch": 69,
+      "checkpoint_sha256": "e8ba0f7b928ca013a2e2f8153c17ea85ff3be70a03b68273f271742e2724e79a"
+    },
+    {
+      "member": 3,
+      "seed": 17303,
+      "epoch": 56,
+      "checkpoint_sha256": "f65f8a2de4468835d751b3e5791973e206d654810c1ba38f5b8b61edfe730e2e"
+    },
+    {
+      "member": 4,
+      "seed": 17304,
+      "epoch": 67,
+      "checkpoint_sha256": "74fc2ad61143630df3722adc3f00c637503595c54feb050c5402e1fb9bd6df0d"
+    },
+    {
+      "member": 5,
+      "seed": 17305,
+      "epoch": 62,
+      "checkpoint_sha256": "96550e8ec9be9bc45e08b56b59898e3a57f422c5fb9e84843ac162af1effce7d"
+    },
+    {
+      "member": 6,
+      "seed": 17306,
+      "epoch": 60,
+      "checkpoint_sha256": "477bdb623fabfffd5c18c2c9f90fcf5c4611155e2e2e5327e846e2cebb3b1309"
+    }
+  ],
+  "frozen_registry_file_sha256": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+  "frozen_production_sources_unchanged": true,
+  "frozen_test_sha256_unchanged": true,
+  "interrupted_attempt_record": "train-member-07_attempt01.json",
+  "unknown_exit_code_not_fabricated": true,
+  "first_pending_member": 7,
+  "resume_attempt": 2,
+  "remaining_members_in_order": [
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "calibration_confirmation_predictions": 0,
+  "scientific_design_changed": false,
+  "known_tool_state": "functions exec cell and unified exec session handles were absent after turn interruption."
+}

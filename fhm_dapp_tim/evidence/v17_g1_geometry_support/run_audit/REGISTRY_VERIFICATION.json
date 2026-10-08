@@ -1,0 +1,19 @@
+{
+  "status": "REGISTRY_VERIFICATION_PASS",
+  "recorded_utc": "2026-10-08T05:52:32.389085+00:00",
+  "registry_sha256": "bfd44edf4f5f05f08dea2bc2c9972138b361fff529467c166c3e7ab333ebccf6",
+  "registry_file_sha256": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+  "selection_refit_csv_sha256": "1ead6c5d635f7da35fb10e509ddb09dac7af448086c763aa48e4d1f42fd2e949",
+  "selection_refit_rows": 12717,
+  "selection_refit_anchors": 595,
+  "G1_production_source_hashes": {
+    "g1_execution": "a93888793b4ef91355c8480d9d14737073fb1aba71b650a3ef38edbeda8dfca0",
+    "g1_protocol": "43c19ff5db2b3cc4e6c3487ef999aa73f0458738d89fef3537bf2f7c2a53521b",
+    "r0_training": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "r3_scoring": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082"
+  },
+  "G1_test_source_sha256": "1473244a9f176adc0c2a88a58806dbc7c2b547e7d0d3804884c2cf7d2ea2c6f5",
+  "all_25_checkpoints_absent_before_training": true,
+  "calibration_freeze_confirmation_absent": true,
+  "historical_gate_waiver": false
+}

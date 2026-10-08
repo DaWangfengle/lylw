@@ -1,0 +1,20 @@
+{
+  "stage": "finalize-report",
+  "attempt": 1,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "runpy.run_path",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\finalize_report_with_resume.py"
+  ],
+  "working_directory": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T07:55:20.177280+00:00",
+  "ended_utc": "2026-10-08T07:55:26.373807+00:00",
+  "runtime_seconds": 6.195962600002531,
+  "exit_code": 0,
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\finalize_report_attempt01.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\finalize_report_attempt01.stderr.log",
+  "stdout_sha256": "ebf387d06ad5249a8257c12933f5da1c8a9d515385e56b19e3deb46b9eae0184",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "no_prediction_rerun": true,
+  "frozen_scientific_sources_and_results_not_edited": true
+}

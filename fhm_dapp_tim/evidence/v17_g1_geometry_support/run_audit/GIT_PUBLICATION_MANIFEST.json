@@ -1,0 +1,1252 @@
+{
+  "status": "PRE_PUBLICATION_VERIFICATION_PASS",
+  "recorded_utc": "2026-10-08T08:04:04.284960+00:00",
+  "authorization": "User explicitly requested local commit and GitHub push after completed V17-G1 execution.",
+  "phase": "publication_after_completed_scientific_execution",
+  "scientific_execution_report_preserved": true,
+  "branch": "v17-g1-geometry-support-pilot",
+  "remote_url": "https://github.com/DaWangfengle/lylw.git",
+  "parent_commit": "3f827b6f2d4574af2e79c9c92818f21c6171c669",
+  "github_branch_start_commit": "3f827b6f2d4574af2e79c9c92818f21c6171c669",
+  "manifest_excludes_its_own_file": true,
+  "staged_files_before_manifest": 152,
+  "staged_bytes_before_manifest": 28123793,
+  "staged_extensions": {
+    "": 1,
+    ".md": 3,
+    ".json": 56,
+    ".diff": 4,
+    ".log": 76,
+    ".py": 10,
+    ".txt": 1,
+    ".csv": 1
+  },
+  "raw_stage_logs_included": 76,
+  "all_new_scientific_evidence_blobs_equal_audited_worktree_bytes": true,
+  "all_25_local_model_hashes_verified_and_weights_excluded": true,
+  "pytest_scratch_directories_excluded": true,
+  "protected_historical_assets_unchanged": 716,
+  "production_scientific_sources_unchanged": true,
+  "decision": "STOP_GEOMETRY_DENSITY_MECHANISM",
+  "chosen_gamma": 0.7,
+  "confirmation_execution_count": 1,
+  "publication_operations_not_yet_performed_at_manifest_generation": true,
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes_in_git": 3721,
+      "git_blob_oid": "4e681e4034091cb08b7ab810a607c4c2aeee6d09",
+      "sha256_in_git": "32f81499169cd020e06a80d59bb48a77687a52e012c68b4632007bc6c56d6816",
+      "worktree_sha256": "32f81499169cd020e06a80d59bb48a77687a52e012c68b4632007bc6c56d6816",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/RUN_REPORT_V17_G1.md",
+      "bytes_in_git": 23600,
+      "git_blob_oid": "c4547b7440021ed55674261415bbe5f7c6e8016b",
+      "sha256_in_git": "9fc338e544269ade7863ac15466cf5bf985e0da267396f0ccf2dfddc5b32ffdf",
+      "worktree_sha256": "9fc338e544269ade7863ac15466cf5bf985e0da267396f0ccf2dfddc5b32ffdf",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/calibration_v17_g1.json",
+      "bytes_in_git": 52704,
+      "git_blob_oid": "bff31a753c3d14ba21d5b6e14381c2222caf2411",
+      "sha256_in_git": "76a5379d43b93742587daea701948222014946fb1aaa2a7a5e8b5a01c9079f6e",
+      "worktree_sha256": "76a5379d43b93742587daea701948222014946fb1aaa2a7a5e8b5a01c9079f6e",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/confirmation_v17_g1.json",
+      "bytes_in_git": 56075,
+      "git_blob_oid": "e3b45adbf5519ba566be8898d2e38568d9f8c87c",
+      "sha256_in_git": "48806835eb64051a707fd52cd7e594baa1f7c68fda7a8f9db1f6b03bd0888a9d",
+      "worktree_sha256": "48806835eb64051a707fd52cd7e594baa1f7c68fda7a8f9db1f6b03bd0888a9d",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/freeze_v17_g1.json",
+      "bytes_in_git": 628,
+      "git_blob_oid": "e4a510660c323920fc6bf002a601b5193d06647f",
+      "sha256_in_git": "24e9a1599bce2e1bf76a4b4da1e6707d0c8967777502a316d7d0fa07a508c43c",
+      "worktree_sha256": "24e9a1599bce2e1bf76a4b4da1e6707d0c8967777502a316d7d0fa07a508c43c",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/registry_v17_g1.json",
+      "bytes_in_git": 6732,
+      "git_blob_oid": "0b0a14e6fcb675d40412a667ff4d5bd98e9f3bbc",
+      "sha256_in_git": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+      "worktree_sha256": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/ALL_MEMBERS_PRE_CALIBRATION_AUDIT.json",
+      "bytes_in_git": 9389,
+      "git_blob_oid": "28286d63446d3d9efbe97e8509d205034bf63e3e",
+      "sha256_in_git": "32d62771ded82d45dfea8588559c31854cfc000b37d051cff7bbc5512fc58038",
+      "worktree_sha256": "32d62771ded82d45dfea8588559c31854cfc000b37d051cff7bbc5512fc58038",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/CALIBRATION_FREEZE_VERIFICATION.json",
+      "bytes_in_git": 4933,
+      "git_blob_oid": "b95219a570a4ca94d8795ea349bf013eddf6cae3",
+      "sha256_in_git": "8848ce29dd2add0e3191f60e52780746bc1b8ede37b8bf0de19863454d2bc77c",
+      "worktree_sha256": "8848ce29dd2add0e3191f60e52780746bc1b8ede37b8bf0de19863454d2bc77c",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/CONFIRMATION_COMMAND_STARTED.json",
+      "bytes_in_git": 246,
+      "git_blob_oid": "b23dd1e415170bc7c5c9a42249417410a41588dc",
+      "sha256_in_git": "5e023a83b33edb0f9f28d91014dab8a308c9d14ed63a451a76268a57066a3975",
+      "worktree_sha256": "5e023a83b33edb0f9f28d91014dab8a308c9d14ed63a451a76268a57066a3975",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/FINAL_EXECUTION_VERIFICATION.json",
+      "bytes_in_git": 27107,
+      "git_blob_oid": "030a098794a1b59804736a7cbd40fe343a81ff09",
+      "sha256_in_git": "ca800d83f356783a3da0f7fed6c79aefbb5aa4f89e2d2e0309ab45206fe25588",
+      "worktree_sha256": "ca800d83f356783a3da0f7fed6c79aefbb5aa4f89e2d2e0309ab45206fe25588",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/FINAL_EXECUTION_VERIFICATION_before_report_formatting.json",
+      "bytes_in_git": 26580,
+      "git_blob_oid": "23c459923bfac305e4a4202d920b74911eb17f03",
+      "sha256_in_git": "02c734f0b7cdec5a99d67cb64c2962775199b93515a831f5bec2c1c229c6c476",
+      "worktree_sha256": "02c734f0b7cdec5a99d67cb64c2962775199b93515a831f5bec2c1c229c6c476",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/FINAL_REPORT_REVIEW.json",
+      "bytes_in_git": 843,
+      "git_blob_oid": "d6dda48e9232c6c3f32111e1b66bda5d714d7d29",
+      "sha256_in_git": "8ecad953f2d7599f3d1a4d61409f016ffd82853b4941c5e4139c37e5401abb71",
+      "worktree_sha256": "8ecad953f2d7599f3d1a4d61409f016ffd82853b4941c5e4139c37e5401abb71",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/INITIAL_EXECUTION_AUDIT.json",
+      "bytes_in_git": 143402,
+      "git_blob_oid": "1882555e3c50a41ad97464596c558a7387a10009",
+      "sha256_in_git": "70a30348114cb63ae3161791fbfa6d5671bd3aa07fb1327d54de9effe42a4035",
+      "worktree_sha256": "70a30348114cb63ae3161791fbfa6d5671bd3aa07fb1327d54de9effe42a4035",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/INTERRUPTION_RESUME_VERIFICATION_01.json",
+      "bytes_in_git": 1879,
+      "git_blob_oid": "e0cf967f3fa2111219a2459a33cebbbc116aafdc",
+      "sha256_in_git": "a7118ea43452dbb9f2525cb95562be19b24e0dd7af06ec1ed44907e431bfabd8",
+      "worktree_sha256": "a7118ea43452dbb9f2525cb95562be19b24e0dd7af06ec1ed44907e431bfabd8",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/PRECHECK_FIXTURE_REPAIR.diff",
+      "bytes_in_git": 4912,
+      "git_blob_oid": "66209cde0e22847deaf7690f8e003d3be5118e79",
+      "sha256_in_git": "c883a33ed55042c419675c8e654c289c894f840ab326279a68842a241325e1ba",
+      "worktree_sha256": "c883a33ed55042c419675c8e654c289c894f840ab326279a68842a241325e1ba",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/PRECHECK_FIXTURE_REPAIR.json",
+      "bytes_in_git": 1728,
+      "git_blob_oid": "89d2ca6ee26a5856075c2f8b57762fa863b8e55a",
+      "sha256_in_git": "7197701ea8ef3a837aa555c50c2f661ecb520743af978e24fa7334b45732fe3d",
+      "worktree_sha256": "7197701ea8ef3a837aa555c50c2f661ecb520743af978e24fa7334b45732fe3d",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/PRECHECK_REGRESSION_FIELD_REPAIR.diff",
+      "bytes_in_git": 531,
+      "git_blob_oid": "d20dfe3cf38f79ed493af618b90de3d67d7f34eb",
+      "sha256_in_git": "e290574a3e8fc07589624fc88ed3250db247e8ac2829823bdca421f76cf97ffb",
+      "worktree_sha256": "e290574a3e8fc07589624fc88ed3250db247e8ac2829823bdca421f76cf97ffb",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/PRECHECK_REGRESSION_FIELD_REPAIR.json",
+      "bytes_in_git": 691,
+      "git_blob_oid": "1ffe39ab12d55e664642bdb2dd0fb81cd0f9d7f4",
+      "sha256_in_git": "e3132c5cde72b73a5fcaff521da79e0561f2f27edc1c34d1c77431977a3af7f1",
+      "worktree_sha256": "e3132c5cde72b73a5fcaff521da79e0561f2f27edc1c34d1c77431977a3af7f1",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/PREPARE_GATE.json",
+      "bytes_in_git": 2308,
+      "git_blob_oid": "9c575ea04c786391ac1486da434386d5a22631e3",
+      "sha256_in_git": "a35595b8f1db2bf7245959a6bf0add653539319d8a433c06a5dd3d1b2c505e7d",
+      "worktree_sha256": "a35595b8f1db2bf7245959a6bf0add653539319d8a433c06a5dd3d1b2c505e7d",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/REGISTRY_VERIFICATION.json",
+      "bytes_in_git": 1069,
+      "git_blob_oid": "48e7dd037485c465e8625ba699f5c8c0baf1621e",
+      "sha256_in_git": "08ba57116c7eb170eefe02ecb1fda31045b1203fbdfa0a7b3fcb64ed3fe0fde5",
+      "worktree_sha256": "08ba57116c7eb170eefe02ecb1fda31045b1203fbdfa0a7b3fcb64ed3fe0fde5",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/REPORTING_AMENDMENT_INTERRUPTION.diff",
+      "bytes_in_git": 5040,
+      "git_blob_oid": "bbfa9f43e0b465f7552e101c1abafab9702fd514",
+      "sha256_in_git": "3f097f2d2f7d2e16811aa25df77e9c5b68575387036f9873d485e012850f2e4e",
+      "worktree_sha256": "3f097f2d2f7d2e16811aa25df77e9c5b68575387036f9873d485e012850f2e4e",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/REPORTING_AMENDMENT_INTERRUPTION.json",
+      "bytes_in_git": 1043,
+      "git_blob_oid": "b29ed829a8f733efbf1595b0dca33babfe5d3213",
+      "sha256_in_git": "7aa77a1e588dd732ed03d31f9cb9d86ef450b5b6785096b6397a7e4205e412e0",
+      "worktree_sha256": "7aa77a1e588dd732ed03d31f9cb9d86ef450b5b6785096b6397a7e4205e412e0",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/REPORT_FORMATTING_AMENDMENT.diff",
+      "bytes_in_git": 3651,
+      "git_blob_oid": "9d627d1861c6eb5de6fa22c7f7c1b55ced93777e",
+      "sha256_in_git": "2d5fa2ba037c8474866bd7bb57eaff8d4b6a2a6406df664374810242bf64220b",
+      "worktree_sha256": "2d5fa2ba037c8474866bd7bb57eaff8d4b6a2a6406df664374810242bf64220b",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/REPORT_FORMATTING_AMENDMENT.json",
+      "bytes_in_git": 1401,
+      "git_blob_oid": "8cde64ecbe8fcf613c48550ed4ccf82c3935c3ea",
+      "sha256_in_git": "f9f93e73a2e93428062744caba995a2fd7c012fe867637a4cedd04667d6c690a",
+      "worktree_sha256": "f9f93e73a2e93428062744caba995a2fd7c012fe867637a4cedd04667d6c690a",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/RUN_REPORT_V17_G1_before_formatting_fix.md",
+      "bytes_in_git": 23237,
+      "git_blob_oid": "88787a4bf1774f7a69bd8b9fc71df7700afd482a",
+      "sha256_in_git": "b46b25d9dce4f3ed5e376f84d03f27ca9716317453e00cb896ef8cf4698e3eaa",
+      "worktree_sha256": "b46b25d9dce4f3ed5e376f84d03f27ca9716317453e00cb896ef8cf4698e3eaa",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/calibrate_attempt01.json",
+      "bytes_in_git": 1022,
+      "git_blob_oid": "c88f8b7880f7fe5ff6b600a5d03eb67576705a9f",
+      "sha256_in_git": "dfc6faee7a3ad956fef60c6a48807c24f4f002aeb58574b8e555881d2f220dd3",
+      "worktree_sha256": "dfc6faee7a3ad956fef60c6a48807c24f4f002aeb58574b8e555881d2f220dd3",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/calibrate_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/calibrate_attempt01.stdout.log",
+      "bytes_in_git": 3129,
+      "git_blob_oid": "d1f1ab83d80c3f49d441c46b7946c018c65d0015",
+      "sha256_in_git": "f4be74abca7e5ab312a5a97732d364ace2b20a29501f821cd784a6cd00330afa",
+      "worktree_sha256": "f4be74abca7e5ab312a5a97732d364ace2b20a29501f821cd784a6cd00330afa",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/check-members_attempt01.json",
+      "bytes_in_git": 1010,
+      "git_blob_oid": "13b88e8d1e0b8aa5d09cd86062fbfaceea68ceb0",
+      "sha256_in_git": "51f61fb6ca9f31177314c78266d708e8aefb81fb941b3bb6320aafd3fdc62c25",
+      "worktree_sha256": "51f61fb6ca9f31177314c78266d708e8aefb81fb941b3bb6320aafd3fdc62c25",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/check-members_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/check-members_attempt01.stdout.log",
+      "bytes_in_git": 3569,
+      "git_blob_oid": "774a8422c654f334ecc8b5cc87f7bef11043882b",
+      "sha256_in_git": "20bce1ec6c708d24b24711017c46551eaa53f3c97e7c256a306b5a4596a12fd8",
+      "worktree_sha256": "20bce1ec6c708d24b24711017c46551eaa53f3c97e7c256a306b5a4596a12fd8",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt01.json",
+      "bytes_in_git": 1088,
+      "git_blob_oid": "79fbcd943f62a082b17e59225b6f4377d1f22406",
+      "sha256_in_git": "806daf96cf5d00c57437990ddc78e50aef0fe7699307c484e190b2cc15bad2f5",
+      "worktree_sha256": "806daf96cf5d00c57437990ddc78e50aef0fe7699307c484e190b2cc15bad2f5",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt01.stdout.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt02.json",
+      "bytes_in_git": 1087,
+      "git_blob_oid": "1f3d2b526c92fa45bfe4ceaaf020930576b614c9",
+      "sha256_in_git": "a7f6f7acc6158718c610f1a1005d29438ad849c954e57f6ca27ea9da4bfb81d4",
+      "worktree_sha256": "a7f6f7acc6158718c610f1a1005d29438ad849c954e57f6ca27ea9da4bfb81d4",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt02.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt02.stdout.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt03.json",
+      "bytes_in_git": 1087,
+      "git_blob_oid": "4c9536cc74fe6aa59b966602109e0772d50c07bd",
+      "sha256_in_git": "b2d2ee092b69bcb605559a1ee8256096f11637d8863f0ee8c381916917ff5fba",
+      "worktree_sha256": "b2d2ee092b69bcb605559a1ee8256096f11637d8863f0ee8c381916917ff5fba",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt03.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/compile_attempt03.stdout.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/confirm_attempt01.json",
+      "bytes_in_git": 1013,
+      "git_blob_oid": "b939b761212b9f9b9d73aa822ddd5927fb4c08dc",
+      "sha256_in_git": "b9a9aa6a1a1dc836f15dd25fc19dcedc11ce9bb6ae4aac6fd830d8921ecf5c99",
+      "worktree_sha256": "b9a9aa6a1a1dc836f15dd25fc19dcedc11ce9bb6ae4aac6fd830d8921ecf5c99",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/confirm_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/confirm_attempt01.stdout.log",
+      "bytes_in_git": 59101,
+      "git_blob_oid": "f9b470560f913691c59d7ea1a54e0494352a0402",
+      "sha256_in_git": "ef1939fdfa50c69eb9b3e1b0e24cf7532ee8e7f3319603d74c97b437df136312",
+      "worktree_sha256": "ef1939fdfa50c69eb9b3e1b0e24cf7532ee8e7f3319603d74c97b437df136312",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/execute_stage.py",
+      "bytes_in_git": 5746,
+      "git_blob_oid": "93cb684fa9b56b969174e86242374781a3ea23ab",
+      "sha256_in_git": "6bc99bd8713b0e0293ad9583d78079bf57beee4becaef1b46d8c222e0847832a",
+      "worktree_sha256": "6bc99bd8713b0e0293ad9583d78079bf57beee4becaef1b46d8c222e0847832a",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/finalize_report.py",
+      "bytes_in_git": 22860,
+      "git_blob_oid": "cef827fc62882bb5fd70347bea2db3acf5d6a0d1",
+      "sha256_in_git": "f2fa090b36b5e7b243668dd9c40b3e9f6055bbffcd9b1a4899145bb1eaf5405e",
+      "worktree_sha256": "f2fa090b36b5e7b243668dd9c40b3e9f6055bbffcd9b1a4899145bb1eaf5405e",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/finalize_report_attempt01.json",
+      "bytes_in_git": 997,
+      "git_blob_oid": "bbffaf133b024ec10d92330329fa4199e643714d",
+      "sha256_in_git": "cbd961f8a09935b672b963e5ef734839a590f02473e88d748cd6ea85893adf3c",
+      "worktree_sha256": "cbd961f8a09935b672b963e5ef734839a590f02473e88d748cd6ea85893adf3c",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/finalize_report_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/finalize_report_attempt01.stdout.log",
+      "bytes_in_git": 314,
+      "git_blob_oid": "ab9c8843f0b8b06685ef6e9bc95156a86390db25",
+      "sha256_in_git": "ebf387d06ad5249a8257c12933f5da1c8a9d515385e56b19e3deb46b9eae0184",
+      "worktree_sha256": "ebf387d06ad5249a8257c12933f5da1c8a9d515385e56b19e3deb46b9eae0184",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/finalize_report_with_resume.py",
+      "bytes_in_git": 24537,
+      "git_blob_oid": "ec4ce0bf0fb98421242c7b7966336de18d442f3c",
+      "sha256_in_git": "f93394e57a451aa054a247a7bcf105eb384c95d4df4f41d7c3503a7cc65f81e7",
+      "worktree_sha256": "f93394e57a451aa054a247a7bcf105eb384c95d4df4f41d7c3503a7cc65f81e7",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/initial_sources/DESIGN_V17_G1.md",
+      "bytes_in_git": 7168,
+      "git_blob_oid": "53ce5d2b1c1144fc27dccbce5cd12314c3642382",
+      "sha256_in_git": "6a11a8093b9a8f2619f21a5cdc140bff43e04ffad8cba3ab65ba98a34a3dac01",
+      "worktree_sha256": "6a11a8093b9a8f2619f21a5cdc140bff43e04ffad8cba3ab65ba98a34a3dac01",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/initial_sources/V17_G1_CODEX_RUN.txt",
+      "bytes_in_git": 7848,
+      "git_blob_oid": "29c5d287bd6e4d2acb42a758f44546a526be399c",
+      "sha256_in_git": "a74d1281086d99714e95c1db9617c23238fc0458948419347c105c7484c324c8",
+      "worktree_sha256": "a74d1281086d99714e95c1db9617c23238fc0458948419347c105c7484c324c8",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/initial_sources/test_uji_v17_g1.py",
+      "bytes_in_git": 5841,
+      "git_blob_oid": "9a7ed722cda8763a319cdd1ab4bca0430f3b4b7b",
+      "sha256_in_git": "efb8e59f82f4cf4d0020bc485a2d75cc12b37118ada944c1b21cbe3f879360fc",
+      "worktree_sha256": "efb8e59f82f4cf4d0020bc485a2d75cc12b37118ada944c1b21cbe3f879360fc",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/initial_sources/uji_v17_g1_experiment.py",
+      "bytes_in_git": 27355,
+      "git_blob_oid": "f7fb7479c4a48b11f6c7cfd9064cb2c1ea8fa964",
+      "sha256_in_git": "a93888793b4ef91355c8480d9d14737073fb1aba71b650a3ef38edbeda8dfca0",
+      "worktree_sha256": "a93888793b4ef91355c8480d9d14737073fb1aba71b650a3ef38edbeda8dfca0",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/initial_sources/uji_v17_g1_protocol.py",
+      "bytes_in_git": 7377,
+      "git_blob_oid": "cade2eb2caf99e594f552e5414072f337be9d06e",
+      "sha256_in_git": "43c19ff5db2b3cc4e6c3487ef999aa73f0458738d89fef3537bf2f7c2a53521b",
+      "worktree_sha256": "43c19ff5db2b3cc4e6c3487ef999aa73f0458738d89fef3537bf2f7c2a53521b",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/initialize_audit.py",
+      "bytes_in_git": 4181,
+      "git_blob_oid": "a2e17da628fafcd6dfb7b23c7c18332a28c3d6e6",
+      "sha256_in_git": "595a91780398e0801df72c1d993f50bbf66224237202ed32896286a61cca85fc",
+      "worktree_sha256": "595a91780398e0801df72c1d993f50bbf66224237202ed32896286a61cca85fc",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/monitor_training.py",
+      "bytes_in_git": 1453,
+      "git_blob_oid": "e862ec9ab953c6779afab4ec6a7905d21ad8d825",
+      "sha256_in_git": "84d5d28c7317ad0ae9f971b91564052322960f9c98d8592b29b5d40ed0828d72",
+      "worktree_sha256": "84d5d28c7317ad0ae9f971b91564052322960f9c98d8592b29b5d40ed0828d72",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/preflight_attempt01.json",
+      "bytes_in_git": 1022,
+      "git_blob_oid": "f09ac62e0ea000b16b858599bfd90cb7407ad8f9",
+      "sha256_in_git": "f01678f1876d374e37186ea86a10ebd26be3533bbc700e43bf27e2ade320e7fc",
+      "worktree_sha256": "f01678f1876d374e37186ea86a10ebd26be3533bbc700e43bf27e2ade320e7fc",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/preflight_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/preflight_attempt01.stdout.log",
+      "bytes_in_git": 627,
+      "git_blob_oid": "4f5350fb4e03ea09e40142a809b8bd1854b07724",
+      "sha256_in_git": "dadb1ac223164ee7408f5d029b863ef2d49ce463fd690403b3ac53b451972c4d",
+      "worktree_sha256": "dadb1ac223164ee7408f5d029b863ef2d49ce463fd690403b3ac53b451972c4d",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/prepare_attempt01.json",
+      "bytes_in_git": 1013,
+      "git_blob_oid": "1e41b21cf05f062af8fd6f8169de054532ba36f5",
+      "sha256_in_git": "cfae1265f7b257747a0101ac31b0499e80ffff0d0ce9f28cb6817f4e17dce603",
+      "worktree_sha256": "cfae1265f7b257747a0101ac31b0499e80ffff0d0ce9f28cb6817f4e17dce603",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/prepare_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/prepare_attempt01.stdout.log",
+      "bytes_in_git": 6732,
+      "git_blob_oid": "cbbf8e0a403e84261b3297d3e8e513044729d1a3",
+      "sha256_in_git": "c4016a744d3905d3303e9624ba041e75773c98eea2508133648a61dae191ef27",
+      "worktree_sha256": "c4016a744d3905d3303e9624ba041e75773c98eea2508133648a61dae191ef27",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt01.json",
+      "bytes_in_git": 1135,
+      "git_blob_oid": "9ea51dd6d491ce4dfa92c8d95084999cece3a3f7",
+      "sha256_in_git": "7494960385c4c38e279fa6d44c22cd10d7086715643c3f3d0dd263d4b85b2117",
+      "worktree_sha256": "7494960385c4c38e279fa6d44c22cd10d7086715643c3f3d0dd263d4b85b2117",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt01.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt01.stdout.log",
+      "bytes_in_git": 2289,
+      "git_blob_oid": "114a205143a32067b1364bb2383684d06ce1930a",
+      "sha256_in_git": "7d3ef4af4ab93acc126c6f0687fc218b3613c93d2a8d4434f81881712630421d",
+      "worktree_sha256": "7d3ef4af4ab93acc126c6f0687fc218b3613c93d2a8d4434f81881712630421d",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt02.json",
+      "bytes_in_git": 1135,
+      "git_blob_oid": "8cc1cb474cb2c10aa7472371c73917ac347a912b",
+      "sha256_in_git": "444a26a989b27e20f5cbece21655a99d06407d088018936ef631321081a2dcfa",
+      "worktree_sha256": "444a26a989b27e20f5cbece21655a99d06407d088018936ef631321081a2dcfa",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt02.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt02.stdout.log",
+      "bytes_in_git": 1519,
+      "git_blob_oid": "e613dfc4021bede1bc0869206216205eea6f73cf",
+      "sha256_in_git": "b61cc0d559040d4911a60a96dbed1dabf5e693a0f57542d9f2451095b04f4523",
+      "worktree_sha256": "b61cc0d559040d4911a60a96dbed1dabf5e693a0f57542d9f2451095b04f4523",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt03.json",
+      "bytes_in_git": 1136,
+      "git_blob_oid": "afac9fa49adf6aa438582505913a521e9ab6a4be",
+      "sha256_in_git": "c59baf928659281d100a7d92ca04ac90700c31e5eb9de0eb2d45f4578501d6ee",
+      "worktree_sha256": "c59baf928659281d100a7d92ca04ac90700c31e5eb9de0eb2d45f4578501d6ee",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt03.stderr.log",
+      "bytes_in_git": 0,
+      "git_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256_in_git": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/pytest_attempt03.stdout.log",
+      "bytes_in_git": 101,
+      "git_blob_oid": "9cec7b9a05a7025f0f6c38966ef5a5e1da273da3",
+      "sha256_in_git": "e0cb6c1437cfce142c6318294eeb4bb44228eb4e7f7b51ca7996e37108fbe439",
+      "worktree_sha256": "e0cb6c1437cfce142c6318294eeb4bb44228eb4e7f7b51ca7996e37108fbe439",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/test_g1_before_regression_field_repair.py",
+      "bytes_in_git": 10386,
+      "git_blob_oid": "d06944723706288d35f28e6caf60b08382c18ebd",
+      "sha256_in_git": "66abb99811646628a3ad04346dbc70b487b01523be574964fb6703704cad5a98",
+      "worktree_sha256": "66abb99811646628a3ad04346dbc70b487b01523be574964fb6703704cad5a98",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-01_attempt01.json",
+      "bytes_in_git": 1068,
+      "git_blob_oid": "a3ce6d81fce793734e46c7bdd68f3d03ff0b3b00",
+      "sha256_in_git": "b3575129670016bb80b2caa6b5540446daf810a43cc85b5e9b7aea09bf10288c",
+      "worktree_sha256": "b3575129670016bb80b2caa6b5540446daf810a43cc85b5e9b7aea09bf10288c",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-01_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-01_attempt01.stdout.log",
+      "bytes_in_git": 8024,
+      "git_blob_oid": "260dd2eee482bd2ff98e3f6071609f8d8a834d81",
+      "sha256_in_git": "8fa1a776a30bdcd99bd95e372d59f3d96e27c57ce27de6c02c5e3ca726be40d1",
+      "worktree_sha256": "8fa1a776a30bdcd99bd95e372d59f3d96e27c57ce27de6c02c5e3ca726be40d1",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-02_attempt01.json",
+      "bytes_in_git": 1069,
+      "git_blob_oid": "3ac4d3f94c671d8316aecfd2ba91879c3c71b4e7",
+      "sha256_in_git": "96bfecd9cfe23c66a57910ae67f6da069bd783cad0678a86afec629da830eb00",
+      "worktree_sha256": "96bfecd9cfe23c66a57910ae67f6da069bd783cad0678a86afec629da830eb00",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-02_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-02_attempt01.stdout.log",
+      "bytes_in_git": 8580,
+      "git_blob_oid": "7427416b98b66a88a5c7929ef4b37d06791b15fd",
+      "sha256_in_git": "a9e98b8ee2cd44058feadf556fd22c454ed100e7d20e05029d4a2cdb2ad5a0bc",
+      "worktree_sha256": "a9e98b8ee2cd44058feadf556fd22c454ed100e7d20e05029d4a2cdb2ad5a0bc",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-03_attempt01.json",
+      "bytes_in_git": 1068,
+      "git_blob_oid": "4d526f3f17261efa83542efbbdae854babc0dd20",
+      "sha256_in_git": "571241c074a7c1b9eb20050fc7353137112eed120da15cd2d60d957a09eff674",
+      "worktree_sha256": "571241c074a7c1b9eb20050fc7353137112eed120da15cd2d60d957a09eff674",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-03_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-03_attempt01.stdout.log",
+      "bytes_in_git": 7460,
+      "git_blob_oid": "928612cfbd663a95c3a1541e8985d569dff7d52a",
+      "sha256_in_git": "c9647ef9cc50a618578b40c8c3df66b49f91ca44ed72d07d8713bbdb075a7b04",
+      "worktree_sha256": "c9647ef9cc50a618578b40c8c3df66b49f91ca44ed72d07d8713bbdb075a7b04",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-04_attempt01.json",
+      "bytes_in_git": 1067,
+      "git_blob_oid": "5e7e554d133ebc2a8dc677f063a694fadedeb58f",
+      "sha256_in_git": "2d97468567a1593503129b1965801b1339a824bd92892ecb5fbd027f305ed8d6",
+      "worktree_sha256": "2d97468567a1593503129b1965801b1339a824bd92892ecb5fbd027f305ed8d6",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-04_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-04_attempt01.stdout.log",
+      "bytes_in_git": 8573,
+      "git_blob_oid": "73eff1a8eba6c504be0ddd576da52412e77156eb",
+      "sha256_in_git": "bc8cb157f1ff67b866c997a3d0251965c739168824b5db01a4932384029f74e8",
+      "worktree_sha256": "bc8cb157f1ff67b866c997a3d0251965c739168824b5db01a4932384029f74e8",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-05_attempt01.json",
+      "bytes_in_git": 1068,
+      "git_blob_oid": "facb807adf28eee4e522a12b49eb25c608ca820d",
+      "sha256_in_git": "ae288acfd7cec6f544ae6e3e4edd7f4c5cef5ca38d493d1b2c330ea848b2e515",
+      "worktree_sha256": "ae288acfd7cec6f544ae6e3e4edd7f4c5cef5ca38d493d1b2c330ea848b2e515",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-05_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-05_attempt01.stdout.log",
+      "bytes_in_git": 8019,
+      "git_blob_oid": "22f9a9c0ed19defe43713ac1ea710b6cd1bae985",
+      "sha256_in_git": "330b5177f941c4ad42b47d7b2d981aa5abc18256f80636f89a8d50e12c216df0",
+      "worktree_sha256": "330b5177f941c4ad42b47d7b2d981aa5abc18256f80636f89a8d50e12c216df0",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-06_attempt01.json",
+      "bytes_in_git": 1069,
+      "git_blob_oid": "e9ba4848ddf708d1333ede9b832c9333dc3a44c0",
+      "sha256_in_git": "aad0b38f07a9f5359651dffb015ef47f1750224d114537b5eb35d0cdd70653f3",
+      "worktree_sha256": "aad0b38f07a9f5359651dffb015ef47f1750224d114537b5eb35d0cdd70653f3",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-06_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-06_attempt01.stdout.log",
+      "bytes_in_git": 7462,
+      "git_blob_oid": "250c0e576d3e948c6f689361b2c13e9a8bfb5f50",
+      "sha256_in_git": "f108f8bbd579814b5f4e279340b073568c031b904cf2f8ca2a9e7088f5488ff7",
+      "worktree_sha256": "f108f8bbd579814b5f4e279340b073568c031b904cf2f8ca2a9e7088f5488ff7",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-07_attempt01.json",
+      "bytes_in_git": 1472,
+      "git_blob_oid": "f02b2be02d2e16824c3b517316ce428055c33dea",
+      "sha256_in_git": "692e438fa73600c293a754175b1baf9e99182602c274ce6826f636cb76d07259",
+      "worktree_sha256": "692e438fa73600c293a754175b1baf9e99182602c274ce6826f636cb76d07259",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-07_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-07_attempt01.stdout.log",
+      "bytes_in_git": 2228,
+      "git_blob_oid": "a198d668610a6a116c4f72f34f54f94a5baad4ca",
+      "sha256_in_git": "a3be4bca76340f13449cf7217b572313c9ec5748770d6434f0b7985976be6221",
+      "worktree_sha256": "a3be4bca76340f13449cf7217b572313c9ec5748770d6434f0b7985976be6221",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-07_attempt02.json",
+      "bytes_in_git": 1069,
+      "git_blob_oid": "e808ade40a0bc497555c567692865bca5d5ed808",
+      "sha256_in_git": "3a1a89d3d38c6a79bc59d56fd619c3ffe582d2b6204d2a038cb094231f59bb21",
+      "worktree_sha256": "3a1a89d3d38c6a79bc59d56fd619c3ffe582d2b6204d2a038cb094231f59bb21",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-07_attempt02.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-07_attempt02.stdout.log",
+      "bytes_in_git": 6895,
+      "git_blob_oid": "427ad97e53f44f041fb5a8f4a42bb21b8d37fa77",
+      "sha256_in_git": "f6e68dfabd2be5f3288a8e776f254620ab98d5fa4aad1aab45cae0f9f9805f97",
+      "worktree_sha256": "f6e68dfabd2be5f3288a8e776f254620ab98d5fa4aad1aab45cae0f9f9805f97",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-08_attempt01.json",
+      "bytes_in_git": 1068,
+      "git_blob_oid": "432909d54ef0ff70cb1a76ed28e6b1f30610f7c9",
+      "sha256_in_git": "61c23de38735b10d9b1eca6475bad70e31289ede28051aaa99465f5d089c54e2",
+      "worktree_sha256": "61c23de38735b10d9b1eca6475bad70e31289ede28051aaa99465f5d089c54e2",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-08_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-08_attempt01.stdout.log",
+      "bytes_in_git": 9140,
+      "git_blob_oid": "f6a151371c815eafe7596e73afdba0741d727fa2",
+      "sha256_in_git": "80f93f30916ccd0455bd86db5c5e2450d8bd2a3fa5ed3cc11349fa405572c292",
+      "worktree_sha256": "80f93f30916ccd0455bd86db5c5e2450d8bd2a3fa5ed3cc11349fa405572c292",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-09_attempt01.json",
+      "bytes_in_git": 1067,
+      "git_blob_oid": "981c0c8d45995f8c55ae31b2be141f4114cbada6",
+      "sha256_in_git": "4cdfabe01bf0491f8afab21b73b0c4725bf1e5328905b5879cd1325b32cbb577",
+      "worktree_sha256": "4cdfabe01bf0491f8afab21b73b0c4725bf1e5328905b5879cd1325b32cbb577",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-09_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-09_attempt01.stdout.log",
+      "bytes_in_git": 9702,
+      "git_blob_oid": "e35678399f2377c20d705e77cf3b056b43ef6d58",
+      "sha256_in_git": "90f7fba9a96292c05be5700cf85577affd6c335be03b8aec126ff47e9e44ced0",
+      "worktree_sha256": "90f7fba9a96292c05be5700cf85577affd6c335be03b8aec126ff47e9e44ced0",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-10_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "596e8869908858b9a42522be9ee674ce580d1097",
+      "sha256_in_git": "cf6d45a1878ecd46c7ce6aab225332da3fd266abb9f85ba9becc7acd17e0eb74",
+      "worktree_sha256": "cf6d45a1878ecd46c7ce6aab225332da3fd266abb9f85ba9becc7acd17e0eb74",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-10_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-10_attempt01.stdout.log",
+      "bytes_in_git": 8015,
+      "git_blob_oid": "bca7998d306dae3cbcd0cfb9492f7003f99198cd",
+      "sha256_in_git": "9554019cae22fa0a518b72b248fa080959e527647b5b1412de05f5fafdf5b0ee",
+      "worktree_sha256": "9554019cae22fa0a518b72b248fa080959e527647b5b1412de05f5fafdf5b0ee",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-11_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "28f0d2a492c05fdc70edda3610130bc669c7baf1",
+      "sha256_in_git": "8f5357c9322691abe3ab199b54ae76205cadbcd9dda16387f0b34a14fd503e1b",
+      "worktree_sha256": "8f5357c9322691abe3ab199b54ae76205cadbcd9dda16387f0b34a14fd503e1b",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-11_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-11_attempt01.stdout.log",
+      "bytes_in_git": 8014,
+      "git_blob_oid": "ee653bfd2f7ff536dd03af190fa5832cdf4084b5",
+      "sha256_in_git": "7419a1aff4aa9cd8c5eb437d6e7857a3bee262109337d8c255b6897569aba320",
+      "worktree_sha256": "7419a1aff4aa9cd8c5eb437d6e7857a3bee262109337d8c255b6897569aba320",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-12_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "d57d405f5143417c469ed3a4450e6d814c501cc7",
+      "sha256_in_git": "790e5feef35e5e1de18606bc9ff5b2ac356be862e3ccbf2f611078279e0937bb",
+      "worktree_sha256": "790e5feef35e5e1de18606bc9ff5b2ac356be862e3ccbf2f611078279e0937bb",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-12_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-12_attempt01.stdout.log",
+      "bytes_in_git": 7461,
+      "git_blob_oid": "da93183df51258c66c63a116134ed549639b73c8",
+      "sha256_in_git": "a0c2d73e9c2a437c31b1910c5443642b2d0d2fe417f35ca374c8e4484b0f6122",
+      "worktree_sha256": "a0c2d73e9c2a437c31b1910c5443642b2d0d2fe417f35ca374c8e4484b0f6122",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-13_attempt01.json",
+      "bytes_in_git": 1069,
+      "git_blob_oid": "b2c7676bb5444c95bea872d19cf8f85388f5a66a",
+      "sha256_in_git": "7f5903890081800e5e4b96a69ae4f4f69a4a739f050ee8c97a182e83c8075982",
+      "worktree_sha256": "7f5903890081800e5e4b96a69ae4f4f69a4a739f050ee8c97a182e83c8075982",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-13_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-13_attempt01.stdout.log",
+      "bytes_in_git": 8022,
+      "git_blob_oid": "20e904ba4c7be8d9c48086ef4a40848f71d962cc",
+      "sha256_in_git": "00ef72fd0c2f4769de3f4c7d40502497d3639ecdc92fcbd9d30eb69ae23e9667",
+      "worktree_sha256": "00ef72fd0c2f4769de3f4c7d40502497d3639ecdc92fcbd9d30eb69ae23e9667",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-14_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "82bb7354eea12976a2ac038fbc510d841abd421e",
+      "sha256_in_git": "d6587facd5e4961fc507f65e39ae457b34e75f4cbf58939d920380e485849dd3",
+      "worktree_sha256": "d6587facd5e4961fc507f65e39ae457b34e75f4cbf58939d920380e485849dd3",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-14_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-14_attempt01.stdout.log",
+      "bytes_in_git": 8021,
+      "git_blob_oid": "78672b7b3c4b3f6704a043c4ebfe491ea7d40bc5",
+      "sha256_in_git": "ce9ebee022549ef3963a60a64bbc13ec8b8adb56a88e288693a5a58ae430d2f1",
+      "worktree_sha256": "ce9ebee022549ef3963a60a64bbc13ec8b8adb56a88e288693a5a58ae430d2f1",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-15_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "1ccd613e23cde2dfaf8e65ae010bda056a0a0f05",
+      "sha256_in_git": "2e305db3efba8c28a86eff5bc6ba1b14a92acbe63ffd273bfdfdb7f9ca4f6316",
+      "worktree_sha256": "2e305db3efba8c28a86eff5bc6ba1b14a92acbe63ffd273bfdfdb7f9ca4f6316",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-15_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-15_attempt01.stdout.log",
+      "bytes_in_git": 6334,
+      "git_blob_oid": "e2a7806f233e1ad2efa2c3271e81a7caa2ae5250",
+      "sha256_in_git": "9d2154d1e5010bfb6a24ae36dd5f977769f14fe9282d9fda5c852758ebfaf5f6",
+      "worktree_sha256": "9d2154d1e5010bfb6a24ae36dd5f977769f14fe9282d9fda5c852758ebfaf5f6",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-16_attempt01.json",
+      "bytes_in_git": 1070,
+      "git_blob_oid": "fb88e0fbe0227154264be182a39a71d2220adbf0",
+      "sha256_in_git": "32bb022af30f126ad419872de35c63bf84269801af9144b78cf5026be96e7b44",
+      "worktree_sha256": "32bb022af30f126ad419872de35c63bf84269801af9144b78cf5026be96e7b44",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-16_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-16_attempt01.stdout.log",
+      "bytes_in_git": 9145,
+      "git_blob_oid": "d0cf74b9e855ad3a573d5e5e8e40d0230855774f",
+      "sha256_in_git": "3d001d18f9121690f2552037b1f3f5969909cda9288b61dac9cd99bd3a67e4aa",
+      "worktree_sha256": "3d001d18f9121690f2552037b1f3f5969909cda9288b61dac9cd99bd3a67e4aa",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-17_attempt01.json",
+      "bytes_in_git": 1070,
+      "git_blob_oid": "ad321c87180ae6e85011903c5720be98946f358d",
+      "sha256_in_git": "556a7cd0307e8c1a27c91406392736f80a2f67a5d61202bcbe5bfd5b51303634",
+      "worktree_sha256": "556a7cd0307e8c1a27c91406392736f80a2f67a5d61202bcbe5bfd5b51303634",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-17_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-17_attempt01.stdout.log",
+      "bytes_in_git": 7454,
+      "git_blob_oid": "0dc54955e19b28fdacdef6f7a1fb690ab39f6ff9",
+      "sha256_in_git": "a96f3efda5cb1e8e73c8e9816a2ee59125871a559c730505074bbadea40d5396",
+      "worktree_sha256": "a96f3efda5cb1e8e73c8e9816a2ee59125871a559c730505074bbadea40d5396",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-18_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "f6117830f298e4b5ae700da77de714bbb352c097",
+      "sha256_in_git": "b49c33f7000dcb00a792bb51f4e5c31cb17deb044df73bf557a95b85ce9958e6",
+      "worktree_sha256": "b49c33f7000dcb00a792bb51f4e5c31cb17deb044df73bf557a95b85ce9958e6",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-18_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-18_attempt01.stdout.log",
+      "bytes_in_git": 9138,
+      "git_blob_oid": "a7a177e711a909391e2722ef349374578e6dbdbb",
+      "sha256_in_git": "31fdfc974ca57d704ce95135e3e3e2c8d5b8f5bbc2a81e975dfe060770aeae5d",
+      "worktree_sha256": "31fdfc974ca57d704ce95135e3e3e2c8d5b8f5bbc2a81e975dfe060770aeae5d",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-19_attempt01.json",
+      "bytes_in_git": 1070,
+      "git_blob_oid": "17dcc347094e39491e48bf9f99867bcd6d2990e3",
+      "sha256_in_git": "29f7ac32d1748c2a6a1d6055317cff2579ea0d46fbfd78a335cb065e5a08bb19",
+      "worktree_sha256": "29f7ac32d1748c2a6a1d6055317cff2579ea0d46fbfd78a335cb065e5a08bb19",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-19_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-19_attempt01.stdout.log",
+      "bytes_in_git": 7460,
+      "git_blob_oid": "32d2670d3d684383754168b7d18ddf3a25eedcbf",
+      "sha256_in_git": "17bf7296470ce2ce165b229cf1a58b5c2aec6e1b5c7e728d2098f8008a831e64",
+      "worktree_sha256": "17bf7296470ce2ce165b229cf1a58b5c2aec6e1b5c7e728d2098f8008a831e64",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-20_attempt01.json",
+      "bytes_in_git": 1070,
+      "git_blob_oid": "396cffa887500fc2e9074ac4d03b5a9ab27c1613",
+      "sha256_in_git": "9ba96432bf93179f2f3466b9a1eeed9d96d742059ad68164e109eff3a8e09742",
+      "worktree_sha256": "9ba96432bf93179f2f3466b9a1eeed9d96d742059ad68164e109eff3a8e09742",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-20_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-20_attempt01.stdout.log",
+      "bytes_in_git": 8572,
+      "git_blob_oid": "c0400f354ff7a9f8dc33e32820fbe5af1c55a3ff",
+      "sha256_in_git": "5f2a19bda32235a2a4743817c983560d270de9c037f585507b240ecb91747e7d",
+      "worktree_sha256": "5f2a19bda32235a2a4743817c983560d270de9c037f585507b240ecb91747e7d",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-21_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "464d6a3760b4c480bf06d454e6573714a55fa25f",
+      "sha256_in_git": "aa37e63d7f4d1d975355b587e974723c7f4c1061d813522e503810fb9f8aa81b",
+      "worktree_sha256": "aa37e63d7f4d1d975355b587e974723c7f4c1061d813522e503810fb9f8aa81b",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-21_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-21_attempt01.stdout.log",
+      "bytes_in_git": 6889,
+      "git_blob_oid": "5ee19148773699e21fbadd216fe5f8096f4b7d23",
+      "sha256_in_git": "fe6483bf7a2b13afc154c9bb7ad62739cc8f03312b35d196b15a76df73b173e6",
+      "worktree_sha256": "fe6483bf7a2b13afc154c9bb7ad62739cc8f03312b35d196b15a76df73b173e6",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-22_attempt01.json",
+      "bytes_in_git": 1070,
+      "git_blob_oid": "9067f1f58e4b366fdbf2437c2ba57ab5d23f0cff",
+      "sha256_in_git": "c70a7a6cf374009f2ce4cc4cb714158fd5f5395de5080efd093a68c61c31118c",
+      "worktree_sha256": "c70a7a6cf374009f2ce4cc4cb714158fd5f5395de5080efd093a68c61c31118c",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-22_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-22_attempt01.stdout.log",
+      "bytes_in_git": 7453,
+      "git_blob_oid": "290bfb181f6947bf671753fe44365ca97b0b09a8",
+      "sha256_in_git": "e246d61800e2179c9356a2cc0627249638e110fb40467f9861b294d7dd84f8e6",
+      "worktree_sha256": "e246d61800e2179c9356a2cc0627249638e110fb40467f9861b294d7dd84f8e6",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-23_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "abd59d6aa9a81849dd474c8c5067652850a56d96",
+      "sha256_in_git": "914ad8552aaaebabd907282b93144f87c49b52c2264a4b5892f3eeda19d9c7d1",
+      "worktree_sha256": "914ad8552aaaebabd907282b93144f87c49b52c2264a4b5892f3eeda19d9c7d1",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-23_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-23_attempt01.stdout.log",
+      "bytes_in_git": 6897,
+      "git_blob_oid": "1007f66eecddad2f6dd76e888109f358966c5539",
+      "sha256_in_git": "919387550641c913e2058e786d0ce093bacfc30373f1f6d3e83804445537234c",
+      "worktree_sha256": "919387550641c913e2058e786d0ce093bacfc30373f1f6d3e83804445537234c",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-24_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "0e559e402c3a9ed81ba4e2400c376d966bdac4ae",
+      "sha256_in_git": "f25b86215e5dd912c30e6f5b045e67def8e2bbce943ca7aad8d02845ba5a8ff9",
+      "worktree_sha256": "f25b86215e5dd912c30e6f5b045e67def8e2bbce943ca7aad8d02845ba5a8ff9",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-24_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-24_attempt01.stdout.log",
+      "bytes_in_git": 8013,
+      "git_blob_oid": "5cc6b9079813807645367796e0e0fcd680dd9beb",
+      "sha256_in_git": "2a5ab63296e66c6c298950d9b7654f74be9a30ac2ecb4c88b27147b91d171f48",
+      "worktree_sha256": "2a5ab63296e66c6c298950d9b7654f74be9a30ac2ecb4c88b27147b91d171f48",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-25_attempt01.json",
+      "bytes_in_git": 1071,
+      "git_blob_oid": "7ca399442c11856ae57f4ab1e92e3b1fd7520a2f",
+      "sha256_in_git": "7d960b49e5a42bb84f60c72b22ffd8af707ba4c46bfd0ceb7d8bf5123c64b8dc",
+      "worktree_sha256": "7d960b49e5a42bb84f60c72b22ffd8af707ba4c46bfd0ceb7d8bf5123c64b8dc",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-25_attempt01.stderr.log",
+      "bytes_in_git": 502,
+      "git_blob_oid": "2fbd07ebbc4b25f16d11faea774f1c51cd9bb407",
+      "sha256_in_git": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "worktree_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/train-member-25_attempt01.stdout.log",
+      "bytes_in_git": 7448,
+      "git_blob_oid": "eb0aa0f521723e480997b61da6ee6daf6e93b9a0",
+      "sha256_in_git": "74a45d97c5e6bab5003b4df8151842371782f8722a7908f8392bbe0f02cc108c",
+      "worktree_sha256": "74a45d97c5e6bab5003b4df8151842371782f8722a7908f8392bbe0f02cc108c",
+      "bytes_identical": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_g1_geometry_support/selection_refit_v17_g1.csv",
+      "bytes_in_git": 27253378,
+      "git_blob_oid": "4cb0f850d83ed58126e50b78c4350d680dff9964",
+      "sha256_in_git": "1ead6c5d635f7da35fb10e509ddb09dac7af448086c763aa48e4d1f42fd2e949",
+      "worktree_sha256": "1ead6c5d635f7da35fb10e509ddb09dac7af448086c763aa48e4d1f42fd2e949",
+      "bytes_identical": true
+    },
+    {
+      "path": "tests/test_uji_v17_g1.py",
+      "bytes_in_git": 10402,
+      "git_blob_oid": "a648a2391ce7af5176e52784d62a9fc7bfe5801a",
+      "sha256_in_git": "1473244a9f176adc0c2a88a58806dbc7c2b547e7d0d3804884c2cf7d2ea2c6f5",
+      "worktree_sha256": "1473244a9f176adc0c2a88a58806dbc7c2b547e7d0d3804884c2cf7d2ea2c6f5",
+      "bytes_identical": true
+    }
+  ]
+}

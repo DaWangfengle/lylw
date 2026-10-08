@@ -151,3 +151,110 @@ def test_calibration_and_confirmation_are_separate_commands():
     assert '_evaluate("calibration"' in calibration
     assert '_evaluate("confirmation"' in confirmation
     assert "G1Error" in calibration and "G1Error" in confirmation
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _isolated_legacy_r3_design_fixture(tmp_path_factory):
+    """Supply only the missing legacy test document within the G1 temp area.
+
+    This is an explicitly labelled test fixture, not recovered preregistration.
+    The frozen legacy source is included as the authority for the estimand.
+    """
+    if run.r3p.DEFAULT_DESIGN.is_file():
+        yield run.r3p.DEFAULT_DESIGN
+        return
+    fixture = (
+        tmp_path_factory.mktemp("g1_legacy_r3_test_document")
+        / "R3_EXPECTED_LOSS_TEST_FIXTURE.md"
+    )
+    fixture.write_text(
+        "# G1-owned isolated fixture for the missing legacy R3 test document\n\n"
+        "This is a test dependency, not the original R3 design or evidence.\n"
+        "Losses, not predictive distributions, are averaged across the fixed "
+        "25 overlapping balanced E16 subsets. The production scoring source "
+        "below remains unchanged.\n\n"
+        + inspect.getsource(run.r3._subset_run_records)
+        + "\n",
+        encoding="utf-8",
+    )
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(run.r3p, "DEFAULT_DESIGN", fixture)
+        yield fixture
+
+
+def test_legacy_test_fixture_retains_original_subset_loss_estimand(
+    _isolated_legacy_r3_design_fixture,
+):
+    # Average forecast would have zero error here, whereas expected loss is 2m.
+    means = torch.tensor([[[-2.0, 0.0]], [[2.0, 0.0]]], dtype=torch.float64)
+    target = torch.zeros((1, 2), dtype=torch.float64)
+    per_subset_mae = torch.linalg.vector_norm(means - target, dim=-1)
+    energy = per_subset_mae * 0.5
+    subsets = ((0,), (1,))
+    records = run.r3._subset_run_records(
+        energy, per_subset_mae, subsets, torch.tensor([0]), 1
+    )
+    assert torch.linalg.vector_norm(means.mean(dim=0) - target).item() == 0.0
+    assert [r["exact_mixture_mean_mae_coordinate_macro_m"] for r in records] == [2.0, 2.0]
+    assert "Losses, not predictive distributions" in (
+        _isolated_legacy_r3_design_fixture.read_text(encoding="utf-8")
+    )
+
+
+def test_new_selection_refit_checkpoint_roundtrip_and_validated_resume(
+    tmp_path, monkeypatch
+):
+    from types import SimpleNamespace
+
+    source_rows = np.array([2, 7, 11], dtype=np.int64)
+    selection_keys = {(0, 0, float(i), float(i + 1)) for i in range(595)}
+    registry = {"registry_sha256": "fixture_registry", "roles": {}}
+    checkpoint_path = tmp_path / "g1_member_01.pt"
+    refit_csv = tmp_path / "selection_refit.csv"
+    refit_csv.write_text("G1 synthetic serialization fixture\n", encoding="utf-8")
+    calls = []
+    fake_model = SimpleNamespace(
+        n_anchors=595,
+        state_dict=lambda: {"weight": torch.tensor([1.25], dtype=torch.float32)},
+    )
+
+    def fake_refit(data, rows, *, seed, epochs, device, log_every):
+        assert np.array_equal(rows, source_rows)
+        assert seed == 17301 and epochs == 65 and device.type == "cpu"
+        calls.append((seed, epochs))
+        return (
+            fake_model,
+            {"n_aps": 1, "array_stat": np.array([1.0], dtype=np.float32)},
+            np.array([7.0, 13.0], dtype=np.float32),
+            {5: 0},
+            [{"epoch": epoch} for epoch in range(1, epochs + 1)],
+        )
+
+    monkeypatch.setattr(run, "prepare", lambda device_name: registry)
+    monkeypatch.setattr(run, "member_path", lambda index: checkpoint_path)
+    monkeypatch.setattr(run, "REFIT_CSV", refit_csv)
+    monkeypatch.setattr(run, "load_uji_v16", lambda path: {"fixture": True})
+    monkeypatch.setattr(run, "_read_hashed", lambda path, field: registry)
+    monkeypatch.setattr(
+        run, "_roles",
+        lambda data, historical: (
+            {"selection_refit": selection_keys},
+            {"selection_refit": source_rows},
+        ),
+    )
+    monkeypatch.setattr(
+        run, "r0", SimpleNamespace(_fit_refit=fake_refit, PATIENCE=run.r0.PATIENCE)
+    )
+    first = run.train_member(1, "cpu")
+    assert first["resumed"] is False
+    saved = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
+    assert saved["phase"] == "g1_selection_refit"
+    assert saved["epoch"] == len(saved["refit_history"]) == 65
+    assert torch.equal(saved["coord_origin"], torch.tensor([7.0, 13.0]))
+    assert len(saved["anchor_coordinate_keys"]) == 595
+    assert all(value is False for key, value in saved["split_contract"].items()
+               if key != "training_roles")
+    second = run.train_member(1, "cpu")
+    assert second["resumed"] is True
+    assert second["sha256"] == first["sha256"]
+    assert calls == [(17301, 65)]

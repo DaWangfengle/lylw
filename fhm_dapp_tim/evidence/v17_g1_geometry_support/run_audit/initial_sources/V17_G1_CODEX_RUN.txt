@@ -1,0 +1,67 @@
+V17-G1 | Codex local execution and evidence instructions
+========================================================
+Research goal: prospective, development-only geometry-support debiasing pilot
+GitHub branch prepared by ChatGPT: v17-g1-geometry-support-pilot
+Base parent: historical-v9-v17-reproduction at 1235c1915c9a29e83b50156472e3320d8de59875
+Repository: DaWangfengle/lylw
+Principal code:
+  fhm_dapp_tim/fhm_dapp/uji_v17_g1_protocol.py
+  fhm_dapp_tim/fhm_dapp/uji_v17_g1_experiment.py
+  tests/test_uji_v17_g1.py
+Binding design:
+  fhm_dapp_tim/evidence/v17_g1_geometry_support/DESIGN_V17_G1.md
+
+You are responsible for LOCAL EXECUTION, test and code-interface repairs if strictly necessary, and auditable result reporting. Scientific design and code are already implemented on the specified branch. The user handles ALL Git operations. Do not run, suggest, or include any git commit, push, pull, checkout, merge, branch creation, or upload commands. Do not modify historical V9/V17/V18/V19 original source, historical evidence, or trainingData.csv.
+
+I. SCIENTIFIC CONTRACT (MUST NOT BE SILENTLY ALTERED)
+- The historical reproduction is mixed: V9 6.3555593491m FAIL, V17 selected 5.7259850344m PASS; historical next_stage_authorized remains FALSE. G1 is a separate new, user-approved development pilot, NOT retroactive authorization/waiver.
+- V17 legacy R0 architecture, augmentations, loss, optimizer, early-stop schedule decisions, 25 seeds 17301..17325, 25 historical selected epochs (65,69,56,67,62,60,52,74,79,62,65,57,64,61,50,74,59,73,60,68,52,58,53,61,56) are fixed.
+- DO NOT REUSE original historical OUTER_REFIT checkpoints to evaluate development. They have trained on development coordinates. Freshly REFIT on the registered SELECTION_REFIT, 12717 RSS rows / 595 coordinates. Do NOT retrain/alter original R0 schedules.
+- Development=151 coordinate groups, split stratified by building/floor + fixed hash seed 18111 into non-overlapping calibration/confirmation. No same coordinate can appear in both. No outer_test rows are evaluated.
+- Frozen R3 selected inference: E16/L192/K192/alpha1, common t4 draws64, balanced 25 cyclic subsets (overlapping). Gamma variants 0,0.35,0.70; density radius10m; frozen selection: minimize CALIBRATION macro MAE subject to calibration macro Energy Score <= baseline+0.02m. Placebo shuffles within building/floor. GAMMA ZERO IS EXACT BASELINE.
+- After calibration and FREEZE, one and only one confirmation on the heldout confirmation-coordinate set. No manual re-selection after seeing confirmation numbers. Paired max-T familywise two endpoints, 5000 resamples. GO only if all four checks pass: macro MAE gain >=0.15m; MAE simultaneous upper bound <0; ES simultaneous upper bound <=0; better MAE than shuffled placebo. If not: report STOP, no tuning.
+- If gamma0 selected, differences are exactly zero and studentized bootstrap is undefined; use explicit not-applicable inference and STOP. Never invent CIs.
+- No official validationData.csv; no external datasets, no outer-test predictions, no use of old outer-test outcome for choices. Do not invent comparison to 5.725985 on a common heldout set: this G1 development cohort and 595-anchor base are different.
+- No change to metric estimand. Report 25-overlapping-balanced-subset expected loss, NOT performance of one selected 16-member deployed checkpoint.
+
+II. PRE-RUN AUDIT AND TESTS
+1) User already has the branch available locally; do not manage Git for them. Check files exist and scientific hashes/protocol constants in DESIGN_V17_G1.md match the implementation, especially data SHA256 45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168.
+2) Python environment should be the same functioning CUDA conda environment used for historical reproduction (on user machine historically Python3.12.12, Torch2.10+cu128, RTX2060 6GB). Avoid installing/unpinning dependencies or changing torch/cuda precision absent a demonstrated environment blocker.
+3) From repository root, run:
+   python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g1_protocol.py fhm_dapp_tim/fhm_dapp/uji_v17_g1_experiment.py tests/test_uji_v17_g1.py
+   python -m pytest -q tests/test_uji_v17_g1.py tests/test_historical_reproduction.py tests/test_uji_v17_mother_r3.py --basetemp fhm_dapp_tim/models/v17_g1_geometry_support/pytest_tmp
+   python -m fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment preflight --device cuda
+4) Check that preflight reports ready, historical registry SHA matches, design and train data are intact, no official/outer use. All failures must be preserved in run_audit, not erased.
+5) If there is a Python API/Windows-path/fixture bug BEFORE prepare or training, repair the smallest G1-only code/tests area and add a regression test for the exact failure. Re-run all tests/preflight. Do not change scientific constants, role splitting, score, loss, seeds, gamma grid, hard gates, or old files. Document exact AST/code diff and why the change is behavior-neutral. An implementation repair after registry freeze requires a transparent separate amendment; do not silently rewrite registry or trained checkpoints.
+
+III. TRAIN AND CALIBRATE (ALLOW HOURS OF CUDA COMPUTE)
+Run the following in exact order. Capture stdout/stderr and exit code of every command under:
+  fhm_dapp_tim/evidence/v17_g1_geometry_support/run_audit/
+Do not delete failures. Do not start calibration until 25 checkpoints are complete.
+
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment prepare --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment train-member --member-index 1 --device cuda
+  ...
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment train-member --member-index 25 --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment check-members
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment calibrate --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment confirm --device cuda
+
+The ellipsis above instructs EXECUTING EVERY INTEGER 2 THROUGH 24, not skipping them. Run serially on a single 6GB GPU; member commands can resume validated existing weights but cannot overwrite or retune. A single run-all command is also implemented, but explicit steps/logging are preferred for audit and partial failure handling.
+
+IV. REQUIRED REPORT + COMPLETION
+Create exactly:
+  fhm_dapp_tim/evidence/v17_g1_geometry_support/RUN_REPORT_V17_G1.md
+Include:
+- machine, Python/Torch/CUDA, GPU, elapsed duration, code/registry/data SHA256;
+- exact calibration and confirmation group and row counts, role disjointness, source row index + coordinate SHA256;
+- 25 training seed/epoch/checkpoint SHA256 and validation that no confirmation/outer/official labels were touched during fitting;
+- gamma0/calibration alternatives and ES guard, frozen chosen gamma and freeze hash;
+- confirmation baseline / selected / placebo macro MAE and Energy Score, row MAE and 25-subset distribution; paired MAE/ES delta, maxT 95% simultaneous upper bounds (or gamma0 not-applicable), gate conditions, STOP/GO decision;
+- retained failure logs and minimal repair proof, tests pass/failed counts, known CUDA determinism warnings;
+- limits: it is exploratory within V17 development only, not a second outer trial, not comparable as same-cohort point estimate to historical 5.726m, not JCR Q1 validation.
+- NO official validation/external predictions, NO deployment/final-model claim, and no new phase if gate fails.
+
+If a serious scientific fault appears, STOP and report why; do not weaken guardrails to get a positive answer. Do not create a next-generation model automatically. No Git-related commands in your work instructions or report.
+
+After your local run, the USER will handle uploading result artifacts. The next ChatGPT analysis will audit the new registry/calibration/freeze/confirmation evidence and decide the subsequent research step.

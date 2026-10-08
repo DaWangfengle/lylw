@@ -1,0 +1,27 @@
+{
+  "stage": "compile",
+  "member_index": null,
+  "attempt": 2,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "compileall",
+    "-q",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g1_protocol.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g1_experiment.py",
+    "tests/test_uji_v17_g1.py"
+  ],
+  "working_directory": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T05:48:47.639103+00:00",
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\compile_attempt02.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\compile_attempt02.stderr.log",
+  "scientific_parameters_changed_by_logger": false,
+  "output_encoding": "utf-8",
+  "pytest_cacheprovider": "disabled",
+  "child_pid": 22300,
+  "ended_utc": "2026-10-08T05:48:47.714912+00:00",
+  "runtime_seconds": 0.0789853000023868,
+  "exit_code": 0,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

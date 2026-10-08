@@ -1,0 +1,17 @@
+{
+  "status": "REPORT_PRESENTATION_AMENDMENT",
+  "recorded_utc": "2026-10-08T07:57:58.338947+00:00",
+  "reason": "Markdown table delimiters in Python build string needed escaping; interrupted exit code is displayed as N/A, without inventing an exit code.",
+  "original_report_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\RUN_REPORT_V17_G1_before_formatting_fix.md",
+  "original_report_sha256": "b46b25d9dce4f3ed5e376f84d03f27ca9716317453e00cb896ef8cf4698e3eaa",
+  "revised_report_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\RUN_REPORT_V17_G1.md",
+  "revised_report_sha256": "9fc338e544269ade7863ac15466cf5bf985e0da267396f0ccf2dfddc5b32ffdf",
+  "original_final_verification_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\FINAL_EXECUTION_VERIFICATION_before_report_formatting.json",
+  "original_final_verification_sha256": "02c734f0b7cdec5a99d67cb64c2962775199b93515a831f5bec2c1c229c6c476",
+  "diff_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\REPORT_FORMATTING_AMENDMENT.diff",
+  "diff_sha256": "2d5fa2ba037c8474866bd7bb57eaff8d4b6a2a6406df664374810242bf64220b",
+  "frozen_registry_sources_checkpoints_calibration_freeze_confirmation_modified": false,
+  "predictions_rerun": false,
+  "statistical_inference_rerun": false,
+  "posthoc_tuning": false
+}

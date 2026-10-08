@@ -1,0 +1,27 @@
+....................F................                                    [100%]
+================================== FAILURES ===================================
+_______ test_legacy_test_fixture_retains_original_subset_loss_estimand ________
+
+_isolated_legacy_r3_design_fixture = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/models/v17_g1_geometry_support/pytest_tmp/g1_legacy_r3_test_document0/R3_EXPECTED_LOSS_TEST_FIXTURE.md')
+
+    def test_legacy_test_fixture_retains_original_subset_loss_estimand(
+        _isolated_legacy_r3_design_fixture,
+    ):
+        # Average forecast would have zero error here, whereas expected loss is 2m.
+        means = torch.tensor([[[-2.0, 0.0]], [[2.0, 0.0]]], dtype=torch.float64)
+        target = torch.zeros((1, 2), dtype=torch.float64)
+        per_subset_mae = torch.linalg.vector_norm(means - target, dim=-1)
+        energy = per_subset_mae * 0.5
+        subsets = ((0,), (1,))
+        records = run.r3._subset_run_records(
+            energy, per_subset_mae, subsets, torch.tensor([0]), 1
+        )
+        assert torch.linalg.vector_norm(means.mean(dim=0) - target).item() == 0.0
+>       assert [r["mae"]["coordinate_macro_m"] for r in records] == [2.0, 2.0]
+                ^^^^^^^^
+E       KeyError: 'mae'
+
+tests\test_uji_v17_g1.py:198: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_uji_v17_g1.py::test_legacy_test_fixture_retains_original_subset_loss_estimand
+1 failed, 36 passed in 6.64s

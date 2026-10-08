@@ -1,0 +1,32 @@
+{
+  "stage": "train-member",
+  "member_index": 7,
+  "attempt": 1,
+  "status": "INTERRUPTED_EXIT_CODE_UNAVAILABLE",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment",
+    "train-member",
+    "--member-index",
+    "7",
+    "--device",
+    "cuda"
+  ],
+  "working_directory": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T06:18:05.761356+00:00",
+  "start_time_source": "stdout file creation; exact original process timestamp unavailable",
+  "ended_utc": null,
+  "observed_interruption_utc": "2026-10-08T06:27:17.883428+00:00",
+  "runtime_seconds": null,
+  "exit_code": null,
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\train-member-07_attempt01.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g1_geometry_support\\run_audit\\train-member-07_attempt01.stderr.log",
+  "stdout_sha256": "a3be4bca76340f13449cf7217b572313c9ec5748770d6434f0b7985976be6221",
+  "stderr_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+  "last_logged_epoch": 15,
+  "fixed_total_epochs": 52,
+  "checkpoint_created": false,
+  "reason": "Turn interrupted; previous exec handle unavailable and no active G1 Python process found. Exact child exit code was not recoverable.",
+  "recovery": "Keep both partial logs, validate members 1..6, restart only member 7 with the same fixed seed and all 52 epochs as attempt 2."
+}

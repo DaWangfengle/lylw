@@ -1,0 +1,12 @@
+{
+  "started_utc": "2026-10-08T07:53:34.014299+00:00",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g1_experiment",
+    "confirm",
+    "--device",
+    "cuda"
+  ],
+  "attempt": 1
+}
