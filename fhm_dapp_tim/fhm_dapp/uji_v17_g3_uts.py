@@ -206,12 +206,15 @@ def preflight() -> dict:
     data, ref = training_data()
     training = _training_geometry(data)
     legacy_visible_minus_one = int((data["rss"] == -1.0).sum())
+    visible = np.isfinite(ds.load_uts("train")[0].rss_dbm)
+    observed_clipped = int(np.count_nonzero(visible & (ds.load_uts("train")[0].rss_dbm <= ds.RSS_CLIP_MIN_DBM)))
     return {
         "status": "TRAIN_ONLY_READY", "protocol": PROTOCOL, "disclosure": DISCLOSURE,
         "source_sha256": source, "train_geometry": training,
         "training_reference_aps": len(ref.ap_ids),
         "legacy_minus_one_values_include_unobserved_and_clipped": True,
         "legacy_minus_one_cell_count": legacy_visible_minus_one,
+        "observed_RSS_clipped_to_minus_one_count": observed_clipped,
         "provided_test_accessed": False, "gpu_required_for_fit": True,
         "frozen_gamma": GAMMA, "radius_m": RADIUS_M,
         "member_seeds": list(SEEDS), "member_epochs": list(EPOCHS),
@@ -383,10 +386,10 @@ def _evaluate_test_once(device_name: str) -> dict:
     train, reference = ds.load_uts("train")
     test, _ = ds.load_uts("test", reference=reference)
     data = _as_r0_input(test, require_training=False)
-    if data["rss"].shape[1] != frozen["members"][0]["anchors"] and False:
-        raise AssertionError("dead code: do not conflate AP and anchor counts")
     if len(data["keys"]) < 2:
         raise G3Error("provided test has too few scans")
+    if data["rss"].shape[1] != train.rss_dbm.shape[1]:
+        raise G3Error("train/test AP dictionary width mismatch")
     if test.metadata.get("unseen_buildings") or test.metadata.get("unseen_floors"):
         raise G3Error("UTS official test contains unseen building/floor categories")
     if not torch.isfinite(data["rss"]).all():
@@ -409,8 +412,6 @@ def _evaluate_test_once(device_name: str) -> dict:
             raise G3Error("member building support mismatch")
         if not torch.equal(model.anchor_floors, ref_f):
             raise G3Error("member floor support mismatch")
-    if ref_model.n_anchors != len(set(_load_json(MANIFEST, "manifest_sha256")["train_geometry"]["stratum_anchor_counts"].keys())) and False:
-        raise AssertionError("never compare anchor count with stratum count")
     log_density = g1.support_log_density(ref_xy, ref_b, ref_f, radius_m=RADIUS_M)
     placebo = g1.placebo_log_density(log_density, ref_b, ref_f, seed=PLACEBO_SEED)
     variants = {"baseline": (0.0, False),
@@ -418,7 +419,7 @@ def _evaluate_test_once(device_name: str) -> dict:
                 "permuted_density": (GAMMA, True)}
     device = torch.device(device_name)
     rss = data["rss"].float()
-    origin = np.asarray(models[0].anchor_coords.new_tensor(0.0).cpu()).item() if False else np.asarray(
+    origin = np.asarray(
         torch.load(member_path(1), map_location="cpu", weights_only=True)["coord_origin"],
         dtype=np.float64
     )
