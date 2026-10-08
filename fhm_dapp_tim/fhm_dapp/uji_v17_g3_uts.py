@@ -181,8 +181,8 @@ def _training_geometry(data: dict) -> dict:
             raise G3Error("two UTS physical sites collapse to one R0 anchor")
         forwards[a], reverse[b] = b, a
     count = len(forwards)
-    if count < 25:
-        raise G3Error("not enough distinct training physical anchors")
+    if count < 192:
+        raise G3Error("less than 192 training anchors: frozen R3 L192/K192 incompatible")
     by_stratum = {}
     for key in forwards:
         by_stratum.setdefault((key[0], key[1]), 0)
@@ -206,8 +206,12 @@ def preflight() -> dict:
     data, ref = training_data()
     training = _training_geometry(data)
     legacy_visible_minus_one = int((data["rss"] == -1.0).sum())
-    visible = np.isfinite(ds.load_uts("train")[0].rss_dbm)
-    observed_clipped = int(np.count_nonzero(visible & (ds.load_uts("train")[0].rss_dbm <= ds.RSS_CLIP_MIN_DBM)))
+    # Extract visible-RSS collision statistics using TRAINING data only.
+    canonical, _ = ds.load_uts("train")
+    visible = np.isfinite(canonical.rss_dbm)
+    observed_clipped = int(np.count_nonzero(
+        visible & (canonical.rss_dbm <= ds.RSS_CLIP_MIN_DBM)
+    ))
     return {
         "status": "TRAIN_ONLY_READY", "protocol": PROTOCOL, "disclosure": DISCLOSURE,
         "source_sha256": source, "train_geometry": training,
