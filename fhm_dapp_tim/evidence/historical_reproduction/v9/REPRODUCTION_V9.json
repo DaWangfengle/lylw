@@ -1,0 +1,46 @@
+{
+  "external_predictions": 0,
+  "historical_system": "V9",
+  "official_validation_predictions": 0,
+  "outer_coordinate_macro_mae_2d_m": 6.355559349060059,
+  "protocol_version": "historical_v9_v17_reproduction_v1_20261007",
+  "result_sha256": "9b1026f970899ba5cfb48be38f124084e7336b1667731c645942f94955cc37e5",
+  "selected": {
+    "E": 12,
+    "K": 24,
+    "candidate": "geometry_invariant",
+    "development_coordinate_macro_energy_score_2d_m": 4.575685977935791,
+    "development_coordinate_macro_mae_2d_m": 6.425357341766357,
+    "lambda": 0.5,
+    "member_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "member_seeds": [
+      9311,
+      9312,
+      9313,
+      9314,
+      9315,
+      9316,
+      9317,
+      9318,
+      9319,
+      9320,
+      9321,
+      9322
+    ]
+  },
+  "status": "FAIL",
+  "sub_six_gate_passed": false
+}

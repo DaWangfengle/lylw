@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from fhm_dapp_tim.fhm_dapp import uji_v9_experiment as v9
+from fhm_dapp_tim.fhm_dapp import historical_reproduction as repro
 
 
 def _synthetic_coordinate_data() -> tuple[set[tuple], dict]:
@@ -54,7 +55,9 @@ def test_nested_coordinate_roles_are_disjoint_complete_and_hull_covered() -> Non
 
 def test_registry_excludes_official_file_and_binds_design(tmp_path: Path) -> None:
     output = tmp_path / "registry.json"
-    registry = v9.register_protocol(output=output)
+    registry = v9.register_protocol(
+        train_data=repro.TRAIN_DATA, design_path=repro.V9_DESIGN, output=output
+    )
     loaded = v9.load_registry(output)
     assert loaded["registry_sha256"] == registry["registry_sha256"]
     assert loaded["official_validation_file_in_scope"] is False
@@ -67,7 +70,9 @@ def test_registry_excludes_official_file_and_binds_design(tmp_path: Path) -> Non
 
 def test_registry_tampering_is_rejected(tmp_path: Path) -> None:
     output = tmp_path / "registry.json"
-    v9.register_protocol(output=output)
+    v9.register_protocol(
+        train_data=repro.TRAIN_DATA, design_path=repro.V9_DESIGN, output=output
+    )
     payload = json.loads(output.read_text(encoding="utf-8"))
     payload["joint_grid"]["K"] = [1]
     output.write_text(json.dumps(payload), encoding="utf-8")

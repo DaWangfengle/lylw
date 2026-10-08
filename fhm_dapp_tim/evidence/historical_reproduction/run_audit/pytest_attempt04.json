@@ -1,0 +1,25 @@
+{
+  "attempt": 4,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_historical_reproduction.py",
+    "tests/test_uji_v9_experiment.py",
+    "tests/test_uji_v17_mother.py"
+  ],
+  "execution_started_utc": "2026-10-07T07:11:26.078258+00:00",
+  "exit_code": 0,
+  "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\pytest_attempt04.log",
+  "log_sha256": "1fe2cefb48ee196185e0d3521af5c65d9dc6c76f5c92caba5fea775b36113932",
+  "operational_environment_changes": {
+    "compile_bytecode_output_under_allowed_model_root": false,
+    "disable_implicit_bytecode_writes": true,
+    "disable_pytest_cacheprovider": true,
+    "unbuffered_stdout": true
+  },
+  "runtime_seconds": 12.884623799996916,
+  "scientific_parameters_modified": false,
+  "stage": "pytest"
+}

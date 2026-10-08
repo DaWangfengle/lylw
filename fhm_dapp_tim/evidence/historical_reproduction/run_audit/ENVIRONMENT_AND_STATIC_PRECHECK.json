@@ -1,0 +1,110 @@
+{
+  "all_formal_outputs_absent_before_prepare": true,
+  "compile": "PASS",
+  "environment": {
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 2060",
+    "gpu_total_memory_bytes": 6442123264,
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "torch": "2.10.0+cu128",
+    "torch_cuda": "12.8"
+  },
+  "preflight": {
+    "external_predictions_authorized": false,
+    "official_validation_predictions_authorized": false,
+    "protocol_version": "historical_v9_v17_reproduction_v1_20261007",
+    "source_hashes": {
+      "runner": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\historical_reproduction.py",
+        "sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269"
+      },
+      "v17_protocol": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_protocol.py",
+        "sha256": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be"
+      },
+      "v17_r0": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r0.py",
+        "sha256": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d"
+      },
+      "v17_r2b": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2b.py",
+        "sha256": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f"
+      },
+      "v17_r2f": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2f.py",
+        "sha256": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082"
+      },
+      "v17_r3": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3.py",
+        "sha256": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082"
+      },
+      "v17_r3_protocol": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3_protocol.py",
+        "sha256": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f"
+      },
+      "v9": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v9_experiment.py",
+        "sha256": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5"
+      }
+    },
+    "status": "ready",
+    "sub_six_gate_m": 6.0,
+    "successor_model_design_authorized": false,
+    "training_data": "D:\\liuyanlunwen\\data\\UJIndoorLoc\\trainingData.csv",
+    "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+    "v17_member_seeds": [
+      17301,
+      17302,
+      17303,
+      17304,
+      17305,
+      17306,
+      17307,
+      17308,
+      17309,
+      17310,
+      17311,
+      17312,
+      17313,
+      17314,
+      17315,
+      17316,
+      17317,
+      17318,
+      17319,
+      17320,
+      17321,
+      17322,
+      17323,
+      17324,
+      17325
+    ],
+    "v9_member_seeds": [
+      9311,
+      9312,
+      9313,
+      9314,
+      9315,
+      9316,
+      9317,
+      9318,
+      9319,
+      9320,
+      9321,
+      9322
+    ]
+  },
+  "pytest": {
+    "added_regression_tests": 1,
+    "failed": 0,
+    "log_sha256": "1fe2cefb48ee196185e0d3521af5c65d9dc6c76f5c92caba5fea775b36113932",
+    "original_tests": 16,
+    "passed": 17,
+    "skipped": 0,
+    "xfailed": 0
+  },
+  "recorded_utc": "2026-10-07T07:12:56.328663+00:00",
+  "strict_sub_six_gate_unchanged": true
+}

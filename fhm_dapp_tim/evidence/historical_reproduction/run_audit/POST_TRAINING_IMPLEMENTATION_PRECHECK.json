@@ -1,0 +1,115 @@
+{
+  "recorded_utc": "2026-10-07T12:22:50.582278+00:00",
+  "status": "POST_REPAIR_PRECHECK_PASS",
+  "compile": "PASS",
+  "pytest": {
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "original_cases": 16,
+    "registry_integration_regression_cases": 1,
+    "retained_mass_regression_cases": 2,
+    "log_sha256": "6b3a5b5763ddf86596ed3509a921a464664f0d6a4d4954099efa61dbf2b99971"
+  },
+  "preflight": {
+    "protocol_version": "historical_v9_v17_reproduction_v1_20261007",
+    "status": "ready",
+    "training_data": "D:\\liuyanlunwen\\data\\UJIndoorLoc\\trainingData.csv",
+    "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+    "source_hashes": {
+      "runner": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\historical_reproduction.py",
+        "sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee"
+      },
+      "v9": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v9_experiment.py",
+        "sha256": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5"
+      },
+      "v17_protocol": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_protocol.py",
+        "sha256": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be"
+      },
+      "v17_r0": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r0.py",
+        "sha256": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d"
+      },
+      "v17_r2b": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2b.py",
+        "sha256": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f"
+      },
+      "v17_r2f": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2f.py",
+        "sha256": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082"
+      },
+      "v17_r3": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3.py",
+        "sha256": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082"
+      },
+      "v17_r3_protocol": {
+        "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3_protocol.py",
+        "sha256": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f"
+      }
+    },
+    "v9_member_seeds": [
+      9311,
+      9312,
+      9313,
+      9314,
+      9315,
+      9316,
+      9317,
+      9318,
+      9319,
+      9320,
+      9321,
+      9322
+    ],
+    "v17_member_seeds": [
+      17301,
+      17302,
+      17303,
+      17304,
+      17305,
+      17306,
+      17307,
+      17308,
+      17309,
+      17310,
+      17311,
+      17312,
+      17313,
+      17314,
+      17315,
+      17316,
+      17317,
+      17318,
+      17319,
+      17320,
+      17321,
+      17322,
+      17323,
+      17324,
+      17325
+    ],
+    "sub_six_gate_m": 6.0,
+    "official_validation_predictions_authorized": false,
+    "external_predictions_authorized": false,
+    "successor_model_design_authorized": false
+  },
+  "registry_file_byte_hash_checks": {
+    "registry_historical_reproduction.json": true,
+    "v17\\registry_v17_reproduction.json": true
+  },
+  "registration_time_source_snapshot_deltas": {
+    "runner": {
+      "registered_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+      "current_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee"
+    }
+  },
+  "authorized_repair_record": "V17_RETAINED_MASS_IMPLEMENTATION_REPAIR.json",
+  "only_diagnostic_collection_changed": true,
+  "scientific_parameters_modified": false,
+  "checkpoint_retraining": false,
+  "accuracy_gate_waived": false
+}

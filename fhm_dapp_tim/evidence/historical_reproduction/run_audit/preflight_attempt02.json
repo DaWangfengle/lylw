@@ -1,0 +1,24 @@
+{
+  "attempt": 2,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+    "preflight",
+    "--device",
+    "cuda"
+  ],
+  "execution_started_utc": "2026-10-07T12:21:15.509097+00:00",
+  "exit_code": 0,
+  "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\preflight_attempt02.log",
+  "log_sha256": "81bb13a505bbcca68322a5aedff6587925493d10471db21049556b1704dc9437",
+  "operational_environment_changes": {
+    "compile_bytecode_output_under_allowed_model_root": false,
+    "disable_implicit_bytecode_writes": true,
+    "disable_pytest_cacheprovider": false,
+    "unbuffered_stdout": true
+  },
+  "runtime_seconds": 4.32277780000004,
+  "scientific_parameters_modified": false,
+  "stage": "preflight"
+}

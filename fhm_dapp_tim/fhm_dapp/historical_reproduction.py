@@ -48,7 +48,7 @@ PROTOCOL_VERSION = "historical_v9_v17_reproduction_v1_20261007"
 SUB_SIX_GATE_M = 6.0
 
 ROOT = Path(__file__).resolve().parents[1]
-TRAIN_DATA = ROOT / "data" / "UJIndoorLoc" / "trainingData.csv"
+TRAIN_DATA = ROOT.parent / "data" / "UJIndoorLoc" / "trainingData.csv"
 EVIDENCE = ROOT / "evidence" / "historical_reproduction"
 MODELS = ROOT / "models" / "historical_reproduction"
 DESIGN = EVIDENCE / "DESIGN_HISTORICAL_REPRODUCTION.md"
@@ -634,6 +634,17 @@ def check_v17_members() -> dict:
     }
 
 
+def _retained_mass_diagnostic(batches: Sequence[torch.Tensor]) -> dict[str, float]:
+    """Summarize every member-row mass, including short final batches."""
+    mass = torch.cat([batch.reshape(-1) for batch in batches]).double()
+    return {
+        "mean": float(mass.mean()),
+        "q10": float(torch.quantile(mass, 0.10)),
+        "median": float(torch.quantile(mass, 0.50)),
+        "q90": float(torch.quantile(mass, 0.90)),
+    }
+
+
 @torch.no_grad()
 def evaluate_v17(device_name: str = "cuda") -> dict:
     registry = prepare_v17()
@@ -809,13 +820,7 @@ def evaluate_v17(device_name: str = "cuda") -> dict:
             group_ids,
             len(group_keys),
         )
-        mass = torch.cat(retained[name]).double()
-        retained_mass[name] = {
-            "mean": float(mass.mean()),
-            "q10": float(torch.quantile(mass, 0.10)),
-            "median": float(torch.quantile(mass, 0.50)),
-            "q90": float(torch.quantile(mass, 0.90)),
-        }
+        retained_mass[name] = _retained_mass_diagnostic(retained[name])
 
     selected_name = v17_r3_protocol.SELECTED_NAME
     historical_name = v17_r3_protocol.HISTORICAL_NAME

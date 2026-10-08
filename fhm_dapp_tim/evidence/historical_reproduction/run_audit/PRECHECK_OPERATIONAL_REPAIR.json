@@ -1,0 +1,16 @@
+{
+  "formal_scientific_run_started": false,
+  "handling": [
+    "Retain pytest_attempt01.log unchanged.",
+    "Set pytest --basetemp via PYTEST_ADDOPTS to an absent, resolved path inside the allowed historical_reproduction model root; do not delete existing temp directories.",
+    "Set PYTHONIOENCODING=utf-8 for child stdout and reconfigure operational logger stdout/stderr as UTF-8.",
+    "Re-run compilation and the same specified test list before preflight/registration."
+  ],
+  "issue_1": "pytest tmp_path could not scan the Windows default pytest-of-LiuYan temporary directory; fixture setup failed.",
+  "issue_2": "Child output decoded as UTF-8 but used legacy code page; printing U+FFFD through parent GBK stdout interrupted operational logging.",
+  "original_logger_sha256": "01644e4b6cdcfca2bd0a4f38cd063da7f51a09d7f2c818c8e414a5c579960d9a",
+  "recorded_utc": "2026-10-07T07:02:09.246605+00:00",
+  "repaired_logger_sha256": "56db644d9eb6f64b9ff5a1cf583f23e8dad6823af23558d6634b9ecc4f033dd1",
+  "scientific_source_tests_constants_changed": false,
+  "stage": "static_precheck"
+}

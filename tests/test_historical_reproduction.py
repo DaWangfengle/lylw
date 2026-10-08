@@ -1,6 +1,9 @@
 import inspect
 from pathlib import Path
 
+import pytest
+import torch
+
 from fhm_dapp_tim.fhm_dapp import historical_reproduction as repro
 from fhm_dapp_tim.fhm_dapp import uji_v9_experiment as v9
 from fhm_dapp_tim.fhm_dapp import uji_v17_mother_r3_protocol as v17_r3_protocol
@@ -76,3 +79,39 @@ def test_accuracy_gate_is_sub_six_and_blocks_successor_design_until_both_pass():
     source = inspect.getsource(repro.summarize)
     assert "next_stage_authorized" in source
     assert "successor_model_implemented_in_this_stage" in source
+
+
+def test_v9_reproduction_registry_binds_isolated_design_without_changing_science(
+    tmp_path, monkeypatch
+):
+    output = tmp_path / "registry_v9_reproduction.json"
+    monkeypatch.setattr(repro, "V9_REGISTRY", output)
+    with repro._v9_workspace():
+        registry = repro._ensure_v9_registry()
+    loaded = v9.load_registry(output)
+    assert loaded["registry_sha256"] == registry["registry_sha256"]
+    assert loaded["design"] == str(repro.V9_DESIGN.resolve())
+    assert loaded["design_sha256"] == repro._sha256_file(repro.V9_DESIGN)
+    assert loaded["constants"]["member_seeds"] == list(range(9311, 9323))
+    assert loaded["constants"]["initial_member_count"] == 8
+    assert loaded["joint_grid"]["E"] == list(v9.E_GRID)
+    assert loaded["joint_grid"]["K"] == list(v9.K_GRID)
+    assert loaded["joint_grid"]["lambda"] == list(v9.LAMBDA_GRID)
+    assert loaded["candidates"] == list(v9.CANDIDATES)
+    assert loaded["official_validation_file_in_scope"] is False
+
+@pytest.mark.parametrize("row_count", [64, 4066])
+def test_retained_mass_diagnostic_preserves_all_member_row_values(row_count):
+    mass = torch.rand(
+        (25, row_count), generator=torch.Generator().manual_seed(1043)
+    )
+    batches = [mass[:, start : start + 32] for start in range(0, row_count, 32)]
+    # The independent reference includes every member and every row once.
+    full = mass.double()
+    expected = {
+        "mean": float(full.mean()),
+        "q10": float(torch.quantile(full, 0.10)),
+        "median": float(torch.quantile(full, 0.50)),
+        "q90": float(torch.quantile(full, 0.90)),
+    }
+    assert repro._retained_mass_diagnostic(batches) == expected

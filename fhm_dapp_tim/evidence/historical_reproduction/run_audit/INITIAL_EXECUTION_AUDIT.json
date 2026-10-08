@@ -1,0 +1,46 @@
+{
+  "authorized_boundary": {
+    "accuracy_gate_waiver_allowed": false,
+    "external_dataset_access": false,
+    "git_upload": false,
+    "official_validation_access": false,
+    "sub_six_gate_m": 6.0,
+    "successor_model_implementation": false,
+    "v18_v19_model_execution": false
+  },
+  "branch": "historical-v9-v17-reproduction",
+  "head": "be4ace44d38e92c665de8646337caf3e2398f098",
+  "operational_issues": [
+    {
+      "handling": "Continued through reviewed escalated local execution; initial inspection remained read-only. No scientific input, code or constant changed.",
+      "issue": "Sandbox exec startup failed twice with helper_unknown_error: setup refresh had errors."
+    }
+  ],
+  "original_source_file_sha256": {
+    "fhm_dapp_tim\\evidence\\historical_reproduction\\DESIGN_HISTORICAL_REPRODUCTION.md": "329bb5a0a42497b4979ce6f8ca764f74d14c09758d3faa3faf883d60b024a3e3",
+    "fhm_dapp_tim\\evidence\\historical_reproduction\\DESIGN_V9_REPRODUCTION.md": "c73db53ee34aff3c6224d75cdea6f2ce745e23d7c21a13d178bc0f901a98bd34",
+    "fhm_dapp_tim\\fhm_dapp\\coherent_marked_v9.py": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+    "fhm_dapp_tim\\fhm_dapp\\consensus.py": "86551de8e57b1e46085acd7eb2a42b39803beb9baf9a58d483486dc6d45d5121",
+    "fhm_dapp_tim\\fhm_dapp\\experiment_v7.py": "11b61753e1c511e4cd181085ac7c97a42dc188c1d25b805cf3a56d572c544d3a",
+    "fhm_dapp_tim\\fhm_dapp\\historical_reproduction.py": "7cc8a806251f21481851631b5e17699cad5f3d2a0f295d94d874d3159021acc4",
+    "fhm_dapp_tim\\fhm_dapp\\model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+    "fhm_dapp_tim\\fhm_dapp\\projected_ensemble.py": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+    "fhm_dapp_tim\\fhm_dapp\\train_anchor_v2.py": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v16_protocol.py": "422936efbacf5ff1b15e12bebe9928a21b69f0feae536e2ba666e55e0eec91f0",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_protocol.py": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r0.py": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r0_runtime_a2.py": "5d95d7a8455e61e906588c0ea7fe23251f3bdd2b347643b82f9b2dc727543c6f",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2b.py": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2f.py": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3.py": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3_protocol.py": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+    "fhm_dapp_tim\\fhm_dapp\\uji_v9_experiment.py": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5",
+    "tests\\test_historical_reproduction.py": "91ab5c91e5c492135511de6d7859156c078b6a68aa49274afb4bffda5df7d5b7",
+    "tests\\test_uji_v17_mother.py": "53b98fb79d6f0bbbbe1c986972c3f2663d326429492315018cea8850b2adb498",
+    "tests\\test_uji_v9_experiment.py": "9b680f7efe7c3fd79a4ec1fbfa306d809aa046099a0ee330a3cfd70b3d480b38"
+  },
+  "scientific_artifacts_absent_before_start": true,
+  "stage": "initial_execution_audit",
+  "started_utc": "2026-10-07T06:59:41.748562+00:00",
+  "tracked_source_clean": true
+}

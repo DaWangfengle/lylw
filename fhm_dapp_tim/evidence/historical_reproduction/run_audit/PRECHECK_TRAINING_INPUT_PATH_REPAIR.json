@@ -1,0 +1,21 @@
+{
+  "accuracy_gate_waived": false,
+  "changed_file_sha256": {
+    "fhm_dapp_tim/fhm_dapp/historical_reproduction.py": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+    "tests/test_historical_reproduction.py": "0e55926f12b0a4aa68df5205ab0f424e8d19b445a55f286ade98f4ee3fb2a7d5",
+    "tests/test_uji_v9_experiment.py": "de7110cb941ec33ba1fa60a8fe0b631c17e8ad6803fa4a487d24cbc8a211bf7b"
+  },
+  "formal_scientific_run_started": false,
+  "non_TRAIN_DATA_AST_unchanged": true,
+  "observed_test_result": "3 failed, 14 passed; training CSV path missing under fhm_dapp_tim/data",
+  "original_harness_sha256": "7cc8a806251f21481851631b5e17699cad5f3d2a0f295d94d874d3159021acc4",
+  "recorded_utc": "2026-10-07T07:10:46.401060+00:00",
+  "regression": "Real reproduction registry integration test added before this fix fails at the missing training path; after fix it must verify registry design/hash and all original seeds/candidates/grids.",
+  "repair": "Only reproduction harness TRAIN_DATA now uses repository data path. Original V9/V17 source and defaults remain untouched; tests explicitly pass reproduction TRAIN_DATA and provided design note.",
+  "repaired_harness_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+  "root_cause": "Harness TRAIN_DATA used package ROOT while the dataset is located in repository ROOT.parent/data. Legacy V9 register default uses the absent package-data path too.",
+  "stage": "static_precheck_before_registration",
+  "training_csv_path": "D:\\liuyanlunwen\\data\\UJIndoorLoc\\trainingData.csv",
+  "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "why_implementation_only": "Fixes only filesystem input binding to the existing user-provided trainingData.csv. Scientific functions, constants, seeds, splits, loss, scoring, selection and strict sub-6 gate are identical."
+}

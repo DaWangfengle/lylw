@@ -1,0 +1,45 @@
+{
+  "accuracy_gate_waived": false,
+  "changed_tests": {
+    "tests/test_historical_reproduction.py": {
+      "after_sha256": "0e55926f12b0a4aa68df5205ab0f424e8d19b445a55f286ade98f4ee3fb2a7d5",
+      "before_sha256": "91ab5c91e5c492135511de6d7859156c078b6a68aa49274afb4bffda5df7d5b7"
+    },
+    "tests/test_uji_v9_experiment.py": {
+      "after_sha256": "15dbfe4c0bac5f9c0c5df32cb158f399228bc16826e7522f3dc03d1d41a59181",
+      "before_sha256": "9b680f7efe7c3fd79a4ec1fbfa306d809aa046099a0ee330a3cfd70b3d480b38"
+    }
+  },
+  "new_logger_sha256": "bcd8553c7995f9aea8becc3a4e99dcd49eebf13ccc0acd1491bb736355a4f7d0",
+  "old_logger_sha256": "56db644d9eb6f64b9ff5a1cf583f23e8dad6823af23558d6634b9ecc4f033dd1",
+  "operational_path_issue": "pytest shlex consumed Windows backslashes in PYTEST_ADDOPTS; fix with Path.as_posix and preserve the accidentally created temp tree under allowed model runtime_cache.",
+  "original_test_result": "2 failed, 14 passed; both failures missing original evidence/v9_uji/design_v9.md",
+  "patch_tool_issue": "apply_patch rejected reparse-point path. Native inspection confirmed normal paths within the authorized workspace; used reviewed local file writes.",
+  "recorded_utc": "2026-10-07T07:08:26.146353+00:00",
+  "repair_precondition_issue": "Initial repair precondition used slash keys against Windows-backslash audit keys; it failed before any mutation. Normalize manifest paths in memory, without changing original audit.",
+  "scientific_source_changed": false,
+  "stage": "static_precheck_before_registration",
+  "test_repair": "Explicitly pass provided DESIGN_V9_REPRODUCTION.md to original registry tests; preserve assertions. Add real registry integration regression for isolated design and unchanged seeds/candidates/grids.",
+  "unchanged_scientific_source_and_design_bindings": [
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_HISTORICAL_REPRODUCTION.md",
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_V9_REPRODUCTION.md",
+    "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py",
+    "fhm_dapp_tim/fhm_dapp/consensus.py",
+    "fhm_dapp_tim/fhm_dapp/experiment_v7.py",
+    "fhm_dapp_tim/fhm_dapp/historical_reproduction.py",
+    "fhm_dapp_tim/fhm_dapp/model.py",
+    "fhm_dapp_tim/fhm_dapp/projected_ensemble.py",
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v2.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v16_protocol.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a2.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py",
+    "fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py",
+    "tests/test_uji_v17_mother.py"
+  ],
+  "why_implementation_only": "The design note is a pre-existing hashed audit dependency. Scientific constants, loss, splits, seeds, selection/scoring and sub-6 gates are untouched."
+}

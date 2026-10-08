@@ -1,0 +1,16 @@
+{
+  "both_historical_baselines_reproduced": false,
+  "external_predictions": 0,
+  "next_stage": "stop and diagnose reproduction mismatch",
+  "next_stage_authorized": false,
+  "official_validation_predictions": 0,
+  "protocol_version": "historical_v9_v17_reproduction_v1_20261007",
+  "status": "FAIL",
+  "sub_six_gate_m": 6.0,
+  "successor_model_implemented_in_this_stage": false,
+  "summary_sha256": "41bb0a1051e86715cc4fa1efa99af1035e9e8b7b26ed791547e1a0979cf70f5b",
+  "v17_coordinate_macro_mae_m": 5.72598503439547,
+  "v17_passed": true,
+  "v9_coordinate_macro_mae_m": 6.355559349060059,
+  "v9_passed": false
+}

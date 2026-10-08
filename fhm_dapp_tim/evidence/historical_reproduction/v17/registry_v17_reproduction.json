@@ -1,0 +1,303 @@
+{
+  "configuration_reselection": false,
+  "external_predictions_authorized": false,
+  "historical": {
+    "E": 5,
+    "K": 24,
+    "L": 24,
+    "alpha": 0.25
+  },
+  "member_seeds": [
+    17301,
+    17302,
+    17303,
+    17304,
+    17305,
+    17306,
+    17307,
+    17308,
+    17309,
+    17310,
+    17311,
+    17312,
+    17313,
+    17314,
+    17315,
+    17316,
+    17317,
+    17318,
+    17319,
+    17320,
+    17321,
+    17322,
+    17323,
+    17324,
+    17325
+  ],
+  "official_validation_predictions_authorized": false,
+  "protocol_version": "historical_v9_v17_reproduction_v1_20261007",
+  "registry_sha256": "15a42989c7fb3f4c92906cebefd08d4fa359d80bffe238ec3bdb9a8e268b450b",
+  "roles": {
+    "development": {
+      "coordinate_key_sha256": "fede50cb5f55740279ef79ee37df20185e464e51ac775304364c26cab3ad0728",
+      "coordinates": 151,
+      "row_index_sha256": "05069dbda72f389aef6e50874fbfa7082bf56b067e5232432afab156ff9b1b6d",
+      "rows": 3154
+    },
+    "early_stop": {
+      "coordinate_key_sha256": "fa0c6b149b505dfa5be3da8a240abfe0af3cdce952ae7ff1dfa552b251e83488",
+      "coordinates": 89,
+      "row_index_sha256": "92ad1ad5cda69a6a570f415b981877198f6484ebb02c60989e06a44cd6443e73",
+      "rows": 1834
+    },
+    "member_fit": {
+      "coordinate_key_sha256": "bc4e28df20aceff57130c07b9850e9db09d1f0e8c80b4389d7db3ef73b67a124",
+      "coordinates": 506,
+      "row_index_sha256": "f275378717cea671e49357d2e9f893a546613298ab2ae35e440f78d6201d8eb3",
+      "rows": 10883
+    },
+    "outer_refit": {
+      "coordinate_key_sha256": "eb426fe26098a783661c164a56087b11bb977beffe8be5eb5ed607c8213a3687",
+      "coordinates": 746,
+      "row_index_sha256": "7beeeca20e2c72c267b3167fb0c35be62e332b412811355889ae0dbdc61a3414",
+      "rows": 15871
+    },
+    "outer_test": {
+      "coordinate_key_sha256": "fc3511479e2d5415e8c1562db527723be5f1dcc77753648908c19a126eb6f375",
+      "coordinates": 187,
+      "row_index_sha256": "dc1b46687a20f611cd30aa803949d20d9fb35b5f90242fbfb79f6ad741fe279b",
+      "rows": 4066
+    },
+    "selection_refit": {
+      "coordinate_key_sha256": "dee73a63ed8c3eddcc789454852c34b8042baa4886c8ba944f6c11cd64b28eb6",
+      "coordinates": 595,
+      "row_index_sha256": "1c4d7c6e1da6339ee8fb6642ef6d2957c37a4822d388786b64d25a8f712b14f2",
+      "rows": 12717
+    }
+  },
+  "selected": {
+    "E": 16,
+    "K": 192,
+    "L": 192,
+    "alpha": 1.0
+  },
+  "split_details": {
+    "early_stop": {
+      "building_0_floor_0": {
+        "early_stop_coordinates": 5,
+        "fit_coordinates": 29,
+        "hull_coordinates_kept_in_fit": 5,
+        "surveyed_coordinates": 34
+      },
+      "building_0_floor_1": {
+        "early_stop_coordinates": 6,
+        "fit_coordinates": 37,
+        "hull_coordinates_kept_in_fit": 4,
+        "surveyed_coordinates": 43
+      },
+      "building_0_floor_2": {
+        "early_stop_coordinates": 7,
+        "fit_coordinates": 38,
+        "hull_coordinates_kept_in_fit": 4,
+        "surveyed_coordinates": 45
+      },
+      "building_0_floor_3": {
+        "early_stop_coordinates": 6,
+        "fit_coordinates": 37,
+        "hull_coordinates_kept_in_fit": 4,
+        "surveyed_coordinates": 43
+      },
+      "building_1_floor_0": {
+        "early_stop_coordinates": 7,
+        "fit_coordinates": 42,
+        "hull_coordinates_kept_in_fit": 11,
+        "surveyed_coordinates": 49
+      },
+      "building_1_floor_1": {
+        "early_stop_coordinates": 6,
+        "fit_coordinates": 32,
+        "hull_coordinates_kept_in_fit": 9,
+        "surveyed_coordinates": 38
+      },
+      "building_1_floor_2": {
+        "early_stop_coordinates": 8,
+        "fit_coordinates": 42,
+        "hull_coordinates_kept_in_fit": 10,
+        "surveyed_coordinates": 50
+      },
+      "building_1_floor_3": {
+        "early_stop_coordinates": 5,
+        "fit_coordinates": 27,
+        "hull_coordinates_kept_in_fit": 9,
+        "surveyed_coordinates": 32
+      },
+      "building_2_floor_0": {
+        "early_stop_coordinates": 6,
+        "fit_coordinates": 37,
+        "hull_coordinates_kept_in_fit": 10,
+        "surveyed_coordinates": 43
+      },
+      "building_2_floor_1": {
+        "early_stop_coordinates": 9,
+        "fit_coordinates": 48,
+        "hull_coordinates_kept_in_fit": 14,
+        "surveyed_coordinates": 57
+      },
+      "building_2_floor_2": {
+        "early_stop_coordinates": 7,
+        "fit_coordinates": 39,
+        "hull_coordinates_kept_in_fit": 13,
+        "surveyed_coordinates": 46
+      },
+      "building_2_floor_3": {
+        "early_stop_coordinates": 11,
+        "fit_coordinates": 61,
+        "hull_coordinates_kept_in_fit": 10,
+        "surveyed_coordinates": 72
+      },
+      "building_2_floor_4": {
+        "early_stop_coordinates": 6,
+        "fit_coordinates": 37,
+        "hull_coordinates_kept_in_fit": 8,
+        "surveyed_coordinates": 43
+      }
+    },
+    "inner_selection": {
+      "building_0_floor_0": {
+        "available_coordinates": 43,
+        "mandatory_hull_coordinates": 5,
+        "retained_coordinates": 34
+      },
+      "building_0_floor_1": {
+        "available_coordinates": 54,
+        "mandatory_hull_coordinates": 4,
+        "retained_coordinates": 43
+      },
+      "building_0_floor_2": {
+        "available_coordinates": 56,
+        "mandatory_hull_coordinates": 4,
+        "retained_coordinates": 45
+      },
+      "building_0_floor_3": {
+        "available_coordinates": 54,
+        "mandatory_hull_coordinates": 4,
+        "retained_coordinates": 43
+      },
+      "building_1_floor_0": {
+        "available_coordinates": 61,
+        "mandatory_hull_coordinates": 11,
+        "retained_coordinates": 49
+      },
+      "building_1_floor_1": {
+        "available_coordinates": 48,
+        "mandatory_hull_coordinates": 9,
+        "retained_coordinates": 38
+      },
+      "building_1_floor_2": {
+        "available_coordinates": 63,
+        "mandatory_hull_coordinates": 10,
+        "retained_coordinates": 50
+      },
+      "building_1_floor_3": {
+        "available_coordinates": 40,
+        "mandatory_hull_coordinates": 9,
+        "retained_coordinates": 32
+      },
+      "building_2_floor_0": {
+        "available_coordinates": 54,
+        "mandatory_hull_coordinates": 10,
+        "retained_coordinates": 43
+      },
+      "building_2_floor_1": {
+        "available_coordinates": 71,
+        "mandatory_hull_coordinates": 14,
+        "retained_coordinates": 57
+      },
+      "building_2_floor_2": {
+        "available_coordinates": 58,
+        "mandatory_hull_coordinates": 13,
+        "retained_coordinates": 46
+      },
+      "building_2_floor_3": {
+        "available_coordinates": 90,
+        "mandatory_hull_coordinates": 10,
+        "retained_coordinates": 72
+      },
+      "building_2_floor_4": {
+        "available_coordinates": 54,
+        "mandatory_hull_coordinates": 8,
+        "retained_coordinates": 43
+      }
+    },
+    "outer": {
+      "building_0_floor_0": {
+        "available_coordinates": 54,
+        "mandatory_hull_coordinates": 5,
+        "retained_coordinates": 43
+      },
+      "building_0_floor_1": {
+        "available_coordinates": 67,
+        "mandatory_hull_coordinates": 4,
+        "retained_coordinates": 54
+      },
+      "building_0_floor_2": {
+        "available_coordinates": 70,
+        "mandatory_hull_coordinates": 4,
+        "retained_coordinates": 56
+      },
+      "building_0_floor_3": {
+        "available_coordinates": 68,
+        "mandatory_hull_coordinates": 4,
+        "retained_coordinates": 54
+      },
+      "building_1_floor_0": {
+        "available_coordinates": 76,
+        "mandatory_hull_coordinates": 11,
+        "retained_coordinates": 61
+      },
+      "building_1_floor_1": {
+        "available_coordinates": 60,
+        "mandatory_hull_coordinates": 9,
+        "retained_coordinates": 48
+      },
+      "building_1_floor_2": {
+        "available_coordinates": 79,
+        "mandatory_hull_coordinates": 10,
+        "retained_coordinates": 63
+      },
+      "building_1_floor_3": {
+        "available_coordinates": 50,
+        "mandatory_hull_coordinates": 9,
+        "retained_coordinates": 40
+      },
+      "building_2_floor_0": {
+        "available_coordinates": 67,
+        "mandatory_hull_coordinates": 10,
+        "retained_coordinates": 54
+      },
+      "building_2_floor_1": {
+        "available_coordinates": 89,
+        "mandatory_hull_coordinates": 14,
+        "retained_coordinates": 71
+      },
+      "building_2_floor_2": {
+        "available_coordinates": 73,
+        "mandatory_hull_coordinates": 13,
+        "retained_coordinates": 58
+      },
+      "building_2_floor_3": {
+        "available_coordinates": 113,
+        "mandatory_hull_coordinates": 10,
+        "retained_coordinates": 90
+      },
+      "building_2_floor_4": {
+        "available_coordinates": 67,
+        "mandatory_hull_coordinates": 8,
+        "retained_coordinates": 54
+      }
+    }
+  },
+  "status": "v17_frozen_replay_registered",
+  "training_data": "D:\\liuyanlunwen\\data\\UJIndoorLoc\\trainingData.csv",
+  "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168"
+}

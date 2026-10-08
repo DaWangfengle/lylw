@@ -1,0 +1,535 @@
+{
+  "status": "PRE_COMMIT_EXPORT_VERIFICATION_PASS",
+  "recorded_utc": "2026-10-08T04:44:37.283455+00:00",
+  "authorization": "The user explicitly requested a local commit and GitHub push of this round on 2026-10-08, after experiment completion.",
+  "branch": "historical-v9-v17-reproduction",
+  "parent_commit": "be4ace44d38e92c665de8646337caf3e2398f098",
+  "remote": "https://github.com/DaWangfengle/lylw.git",
+  "experimental_report_and_registries_unchanged": true,
+  "registered_training_input_Git_blob_matches_raw_sha256": true,
+  "all_21_audited_source_Git_blobs_match_final_execution_hashes": true,
+  "all_recorded_result_Git_blobs_match_final_execution_hashes": true,
+  "all_experiment_staged_bytes_match_local_files": true,
+  "cache_ignore_rule": "**/runtime_cache/",
+  "weights_logs_and_caches_excluded": true,
+  "line_ending_only_export_changes": [
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_HISTORICAL_REPRODUCTION.md",
+      "change": "Restore the originally audited CRLF bytes in Git; source text is unchanged.",
+      "HEAD_blob_sha256": "281674514e9995f0fdd9e3e1f4a49774bf80169f3211537709f24417a8bb6db9",
+      "staged_blob_sha256": "329bb5a0a42497b4979ce6f8ca764f74d14c09758d3faa3faf883d60b024a3e3",
+      "original_working_file_untouched": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_V9_REPRODUCTION.md",
+      "change": "Restore the originally audited CRLF bytes in Git; source text is unchanged.",
+      "HEAD_blob_sha256": "f8e5e4115bdc168a5108f5e6c1342f7f50c5efdcbee5ac625668c74941bcb0db",
+      "staged_blob_sha256": "c73db53ee34aff3c6224d75cdea6f2ce745e23d7c21a13d178bc0f901a98bd34",
+      "original_working_file_untouched": true
+    },
+    {
+      "path": "fhm_dapp_tim/fhm_dapp/model.py",
+      "change": "Restore the originally audited CRLF bytes in Git; source text is unchanged.",
+      "HEAD_blob_sha256": "c3c09ed70e276fe8dc687b1bf147bb4cae9a26ad5f7df3eb06d9a41c4aa54202",
+      "staged_blob_sha256": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "original_working_file_untouched": true
+    },
+    {
+      "path": "fhm_dapp_tim/fhm_dapp/projected_ensemble.py",
+      "change": "Restore the originally audited CRLF bytes in Git; source text is unchanged.",
+      "HEAD_blob_sha256": "12fcb9eb60b6ec2b1f75dd33238f8474dcb3de0a0266f61e1ca7c80dc6b8639e",
+      "staged_blob_sha256": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+      "original_working_file_untouched": true
+    }
+  ],
+  "checkout_byte_preservation_rules_verified": [
+    "data/UJIndoorLoc/trainingData.csv: text: unset",
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_HISTORICAL_REPRODUCTION.md: text: unset",
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_V9_REPRODUCTION.md: text: unset",
+    "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/consensus.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/experiment_v7.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/historical_reproduction.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/model.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/projected_ensemble.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v2.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v16_protocol.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a2.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py: text: unset",
+    "fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py: text: unset",
+    "tests/test_historical_reproduction.py: text: unset",
+    "tests/test_uji_v17_mother.py: text: unset",
+    "tests/test_uji_v9_experiment.py: text: unset"
+  ],
+  "whitespace_check": {
+    "command": [
+      "git",
+      "-c",
+      "core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "exit_code": 0,
+    "note": "CRLF is accepted as a line ending; spaces and other whitespace errors remain checked."
+  },
+  "existing_completed_test_verification": {
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "original_cases": 16,
+    "registry_integration_regression_cases": 1,
+    "retained_mass_regression_cases": 2,
+    "log_sha256": "6b3a5b5763ddf86596ed3509a921a464664f0d6a4d4954099efa61dbf2b99971"
+  },
+  "scientific_run_repeated_for_this_Git_task": false,
+  "accuracy_gate_status": {
+    "status": "FAIL",
+    "v9_passed": false,
+    "v17_passed": true,
+    "next_stage_authorized": false
+  },
+  "operational_notes": [
+    "The sandbox process launcher failed before command startup; reviewed execution completed the same scoped repository operations.",
+    "apply_patch reported a reparse point; native Get-Item verified ordinary directory/archive attributes, so scoped Python byte writes updated the Git settings.",
+    "The default whitespace check flagged preserved CRLF as trailing whitespace; the CRLF-aware check passed without rewriting any experimental files.",
+    "This export record precedes the commit and intentionally does not claim push completion. The original experiment audit remains a record of the pre-Git phase."
+  ],
+  "staged_files_before_this_export_record": 61,
+  "staged_bytes_before_this_export_record": 35682549,
+  "file_records_before_this_export_record": [
+    {
+      "path": ".gitattributes",
+      "bytes": 3111,
+      "git_blob_sha256": "64f91930446e868b4c9e50aa243fa05db36fea198e517592616373269f777279",
+      "working_tree_sha256": "64f91930446e868b4c9e50aa243fa05db36fea198e517592616373269f777279",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 3228,
+      "git_blob_sha256": "378bdc29875b78cedb7ea3ba0c63be9f9692bd6b3b6dcc91b8c0a4fee54678fe",
+      "working_tree_sha256": "378bdc29875b78cedb7ea3ba0c63be9f9692bd6b3b6dcc91b8c0a4fee54678fe",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_HISTORICAL_REPRODUCTION.md",
+      "bytes": 2370,
+      "git_blob_sha256": "329bb5a0a42497b4979ce6f8ca764f74d14c09758d3faa3faf883d60b024a3e3",
+      "working_tree_sha256": "329bb5a0a42497b4979ce6f8ca764f74d14c09758d3faa3faf883d60b024a3e3",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_V9_REPRODUCTION.md",
+      "bytes": 699,
+      "git_blob_sha256": "c73db53ee34aff3c6224d75cdea6f2ce745e23d7c21a13d178bc0f901a98bd34",
+      "working_tree_sha256": "c73db53ee34aff3c6224d75cdea6f2ce745e23d7c21a13d178bc0f901a98bd34",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/REPRODUCTION_SUMMARY.json",
+      "bytes": 629,
+      "git_blob_sha256": "20594c307d79f32a48a007061a9de222f4faf361517321ff2fcb11f45175becd",
+      "working_tree_sha256": "20594c307d79f32a48a007061a9de222f4faf361517321ff2fcb11f45175becd",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/RUN_REPORT_HISTORICAL_REPRODUCTION.md",
+      "bytes": 12477,
+      "git_blob_sha256": "6b373ca8ceeab2f2e3232fb0891cfb178120b2051d48dc9e7255ae14c5be4d59",
+      "working_tree_sha256": "6b373ca8ceeab2f2e3232fb0891cfb178120b2051d48dc9e7255ae14c5be4d59",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/registry_historical_reproduction.json",
+      "bytes": 3164,
+      "git_blob_sha256": "ccadebebb8238a4262c6a08452f96299439d0ccf9681bd2500e8ea2cfc65144f",
+      "working_tree_sha256": "ccadebebb8238a4262c6a08452f96299439d0ccf9681bd2500e8ea2cfc65144f",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/ENVIRONMENT_AND_STATIC_PRECHECK.json",
+      "bytes": 3431,
+      "git_blob_sha256": "9749366991c989bf20a5a6338fc2832942669746d790cc6af39d8bbad87517d0",
+      "working_tree_sha256": "9749366991c989bf20a5a6338fc2832942669746d790cc6af39d8bbad87517d0",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/FINAL_EXECUTION_VERIFICATION.json",
+      "bytes": 37666,
+      "git_blob_sha256": "45fa7f50fc505493752df82f94d88e54e2ba21a264165b5cc1c9d62dca4deb2f",
+      "working_tree_sha256": "45fa7f50fc505493752df82f94d88e54e2ba21a264165b5cc1c9d62dca4deb2f",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/INITIAL_EXECUTION_AUDIT.json",
+      "bytes": 3477,
+      "git_blob_sha256": "99de7029b3139eb72ab16ce992181baeadff66be9f2e5efd71bcf78dd76cc817",
+      "working_tree_sha256": "99de7029b3139eb72ab16ce992181baeadff66be9f2e5efd71bcf78dd76cc817",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/POST_TRAINING_IMPLEMENTATION_PRECHECK.json",
+      "bytes": 3661,
+      "git_blob_sha256": "ecfd38627810a60b23839d208f0c2704e8da5dfd4a3360ddee3e3b31311ef95c",
+      "working_tree_sha256": "ecfd38627810a60b23839d208f0c2704e8da5dfd4a3360ddee3e3b31311ef95c",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/PRECHECK_DESIGN_FIXTURE_AND_PATH_REPAIR.json",
+      "bytes": 3016,
+      "git_blob_sha256": "1d8066226dccb2b5cb33409a66f969187e6004f89c94881aaa10bbb0fd4f2f2d",
+      "working_tree_sha256": "1d8066226dccb2b5cb33409a66f969187e6004f89c94881aaa10bbb0fd4f2f2d",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/PRECHECK_OPERATIONAL_REPAIR.json",
+      "bytes": 1088,
+      "git_blob_sha256": "a77d8cc6409ed61ebd79bfc9dfc596838181e123d1d691f361b761468635cb3e",
+      "working_tree_sha256": "a77d8cc6409ed61ebd79bfc9dfc596838181e123d1d691f361b761468635cb3e",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/PRECHECK_TRAINING_INPUT_PATH_REPAIR.json",
+      "bytes": 1891,
+      "git_blob_sha256": "028529806246a397b180f30f57a073893893ba33282eb5d851dfe0b274dfb54f",
+      "working_tree_sha256": "028529806246a397b180f30f57a073893893ba33282eb5d851dfe0b274dfb54f",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/REGISTRY_VERIFICATION.json",
+      "bytes": 405,
+      "git_blob_sha256": "9d96f8b54308237f38977db972945e5eb172ed91cada9c1846bab6748446ca02",
+      "working_tree_sha256": "9d96f8b54308237f38977db972945e5eb172ed91cada9c1846bab6748446ca02",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/V17_RETAINED_MASS_FAILURE_AND_REPAIR_PLAN.json",
+      "bytes": 7482,
+      "git_blob_sha256": "4566c43103d432ebafa734e91dace5824714000a5fbac7b1260846de39b1205e",
+      "working_tree_sha256": "4566c43103d432ebafa734e91dace5824714000a5fbac7b1260846de39b1205e",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/V17_RETAINED_MASS_IMPLEMENTATION_REPAIR.json",
+      "bytes": 2783,
+      "git_blob_sha256": "719ad021d1d00818c952b708d17b1e5130e82658a6c5e745b119c5681540de33",
+      "working_tree_sha256": "719ad021d1d00818c952b708d17b1e5130e82658a6c5e745b119c5681540de33",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/V9_COMPLETE_V17_REGISTRY_VERIFICATION.json",
+      "bytes": 2151,
+      "git_blob_sha256": "05a6ca69a16d92fd5d25acdbc1dee76d92ddde0891a738548e46b54c7a517ff1",
+      "working_tree_sha256": "05a6ca69a16d92fd5d25acdbc1dee76d92ddde0891a738548e46b54c7a517ff1",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/check-v17-members_attempt01.json",
+      "bytes": 809,
+      "git_blob_sha256": "0a1e4f3b2b273ba183f6824ee058b91fb5fe27bec104a33080ec4d17880e1d60",
+      "working_tree_sha256": "0a1e4f3b2b273ba183f6824ee058b91fb5fe27bec104a33080ec4d17880e1d60",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt01.json",
+      "bytes": 787,
+      "git_blob_sha256": "494148b0f23059334383a4d3831597c9f3ddd8bcfce786e38343f993b6f5d0ec",
+      "working_tree_sha256": "494148b0f23059334383a4d3831597c9f3ddd8bcfce786e38343f993b6f5d0ec",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt02.json",
+      "bytes": 787,
+      "git_blob_sha256": "0dca14a192aa60f2cb1046c86b1a84a4a487f9d96d0d19049503a0ba1224a31f",
+      "working_tree_sha256": "0dca14a192aa60f2cb1046c86b1a84a4a487f9d96d0d19049503a0ba1224a31f",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt03.json",
+      "bytes": 786,
+      "git_blob_sha256": "ff97be082834486a874b03a72397c66cac6e3d913a4bb991c708a617d725fe62",
+      "working_tree_sha256": "ff97be082834486a874b03a72397c66cac6e3d913a4bb991c708a617d725fe62",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt04.json",
+      "bytes": 787,
+      "git_blob_sha256": "f62a6f37c57e72d23be9aceac24fd979e2e5e36068db60130f519655b28cc980",
+      "working_tree_sha256": "f62a6f37c57e72d23be9aceac24fd979e2e5e36068db60130f519655b28cc980",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/compile_attempt05.json",
+      "bytes": 787,
+      "git_blob_sha256": "d7d374aea66adb4a5f7179e1f2fd480a0a785a30efa87cfb34cc858dc51f357f",
+      "working_tree_sha256": "d7d374aea66adb4a5f7179e1f2fd480a0a785a30efa87cfb34cc858dc51f357f",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/evaluate-v17_attempt01.json",
+      "bytes": 823,
+      "git_blob_sha256": "92fc9869e2239b7dd327d17d1499f0f0cc5d986e7e1bf2b10eb24bb4e4b33501",
+      "working_tree_sha256": "92fc9869e2239b7dd327d17d1499f0f0cc5d986e7e1bf2b10eb24bb4e4b33501",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/execute_stage.py",
+      "bytes": 4217,
+      "git_blob_sha256": "bcd8553c7995f9aea8becc3a4e99dcd49eebf13ccc0acd1491bb736355a4f7d0",
+      "working_tree_sha256": "bcd8553c7995f9aea8becc3a4e99dcd49eebf13ccc0acd1491bb736355a4f7d0",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/finalize_report.py",
+      "bytes": 27979,
+      "git_blob_sha256": "b0b14fd63050578d05f1ef40a4a281575b1bb7a6962fe5969fc45047ed03a287",
+      "working_tree_sha256": "b0b14fd63050578d05f1ef40a4a281575b1bb7a6962fe5969fc45047ed03a287",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/historical_runner_before_retained_mass_repair.py",
+      "bytes": 38249,
+      "git_blob_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+      "working_tree_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/historical_tests_before_retained_mass_repair.py",
+      "bytes": 3877,
+      "git_blob_sha256": "0e55926f12b0a4aa68df5205ab0f424e8d19b445a55f286ade98f4ee3fb2a7d5",
+      "working_tree_sha256": "0e55926f12b0a4aa68df5205ab0f424e8d19b445a55f286ade98f4ee3fb2a7d5",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/preflight_attempt01.json",
+      "bytes": 814,
+      "git_blob_sha256": "7cd055793d59111c51a286d4cd1b25dd5e3d47bb3d55b553c6dd4e3f31e21c62",
+      "working_tree_sha256": "7cd055793d59111c51a286d4cd1b25dd5e3d47bb3d55b553c6dd4e3f31e21c62",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/preflight_attempt02.json",
+      "bytes": 813,
+      "git_blob_sha256": "ea30f6a4f463acf5a89d791bf10d8e6b090f8e2c1e25f51db66abc6429488fa5",
+      "working_tree_sha256": "ea30f6a4f463acf5a89d791bf10d8e6b090f8e2c1e25f51db66abc6429488fa5",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/prepare-v17_attempt01.json",
+      "bytes": 793,
+      "git_blob_sha256": "baa17dfb925238c7e587da2873144aca691a41df815951f7117bedafc448a459",
+      "working_tree_sha256": "baa17dfb925238c7e587da2873144aca691a41df815951f7117bedafc448a459",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/prepare_attempt01.json",
+      "bytes": 808,
+      "git_blob_sha256": "2125c8d6fdc2ea73e414fef2375b78aad31b4eec49c3946ef5ba401ef034cac3",
+      "working_tree_sha256": "2125c8d6fdc2ea73e414fef2375b78aad31b4eec49c3946ef5ba401ef034cac3",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt02.json",
+      "bytes": 853,
+      "git_blob_sha256": "edd3dd8f4341b198a67002000c651f95156a0fcd59afbc008a9a28730c839ec7",
+      "working_tree_sha256": "edd3dd8f4341b198a67002000c651f95156a0fcd59afbc008a9a28730c839ec7",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt03.json",
+      "bytes": 853,
+      "git_blob_sha256": "557436d1e874e0e4ad05c7bc423cfaffc993beacce1b4e0dfc6478ce28aa16f2",
+      "working_tree_sha256": "557436d1e874e0e4ad05c7bc423cfaffc993beacce1b4e0dfc6478ce28aa16f2",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt04.json",
+      "bytes": 854,
+      "git_blob_sha256": "b95b6341f69487ebf31d643b7155b06c0c7ccd8cb98ce9aa9d66b39073053961",
+      "working_tree_sha256": "b95b6341f69487ebf31d643b7155b06c0c7ccd8cb98ce9aa9d66b39073053961",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt05.json",
+      "bytes": 854,
+      "git_blob_sha256": "1c5f398bb845e92a2bc6be07108f8f6f09a0f169ac69beab7f4df2382db95ae2",
+      "working_tree_sha256": "1c5f398bb845e92a2bc6be07108f8f6f09a0f169ac69beab7f4df2382db95ae2",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/pytest_attempt06.json",
+      "bytes": 854,
+      "git_blob_sha256": "a66e1923100fa761720163e0bacf4364b21f41fd137f8195c4833a007bbc68d0",
+      "working_tree_sha256": "a66e1923100fa761720163e0bacf4364b21f41fd137f8195c4833a007bbc68d0",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/run-v17_attempt01.json",
+      "bytes": 809,
+      "git_blob_sha256": "212c87a5bda25fe7c5988cfb0473ca39b41329409b8842020907aa7568994d82",
+      "working_tree_sha256": "212c87a5bda25fe7c5988cfb0473ca39b41329409b8842020907aa7568994d82",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/run-v9_attempt01.json",
+      "bytes": 805,
+      "git_blob_sha256": "cb5e04748c6075053c86c0bd020211727d1af94227979f7b93f843917d09a5db",
+      "working_tree_sha256": "cb5e04748c6075053c86c0bd020211727d1af94227979f7b93f843917d09a5db",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/run_audit/summarize_attempt01.json",
+      "bytes": 786,
+      "git_blob_sha256": "bff9eaebc1f3bf99a1410f78f4cedcc7a3e8552dd0d15929ff44718d8e6b16f4",
+      "working_tree_sha256": "bff9eaebc1f3bf99a1410f78f4cedcc7a3e8552dd0d15929ff44718d8e6b16f4",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v17/outer_refit_v17_reproduction.csv",
+      "bytes": 34012311,
+      "git_blob_sha256": "578d6584e50355a5f62fd4a978bbac67c402a6f2f96a9df8a2324a7a11e7cc83",
+      "working_tree_sha256": "578d6584e50355a5f62fd4a978bbac67c402a6f2f96a9df8a2324a7a11e7cc83",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v17/outer_result_v17_reproduction.json",
+      "bytes": 49926,
+      "git_blob_sha256": "f6c622588d1e1b347839c8d097918560518130489759d5044fe4a74cffc77868",
+      "working_tree_sha256": "f6c622588d1e1b347839c8d097918560518130489759d5044fe4a74cffc77868",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v17/registry_v17_reproduction.json",
+      "bytes": 9367,
+      "git_blob_sha256": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab",
+      "working_tree_sha256": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/REPRODUCTION_V9.json",
+      "bytes": 964,
+      "git_blob_sha256": "9dd187a8dce6a6f9d1b4129cd4dbc82f6a88e1250088f25240e1e704069fc5c7",
+      "working_tree_sha256": "9dd187a8dce6a6f9d1b4129cd4dbc82f6a88e1250088f25240e1e704069fc5c7",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E08.json",
+      "bytes": 6369,
+      "git_blob_sha256": "d28186529c92b94d9621e7ad0069caee96064edf33def3107ae80e56300e9363",
+      "working_tree_sha256": "d28186529c92b94d9621e7ad0069caee96064edf33def3107ae80e56300e9363",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E10.json",
+      "bytes": 7814,
+      "git_blob_sha256": "3dc9414ec1e40f1ee0e82b2361d84b3c8db38e500ca2931db80f63713e47890f",
+      "working_tree_sha256": "3dc9414ec1e40f1ee0e82b2361d84b3c8db38e500ca2931db80f63713e47890f",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_geometry_invariant_E12.json",
+      "bytes": 9258,
+      "git_blob_sha256": "bed6ff5c588243a413f6b768a4cb77c328d25ae66c7f3353dd1d2ccab81838e9",
+      "working_tree_sha256": "bed6ff5c588243a413f6b768a4cb77c328d25ae66c7f3353dd1d2ccab81838e9",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E08.json",
+      "bytes": 6342,
+      "git_blob_sha256": "0a5106b78eb8e34d90ba8c55621ec6dc0d7167251bf48e3fe9eb3ec883b435db",
+      "working_tree_sha256": "0a5106b78eb8e34d90ba8c55621ec6dc0d7167251bf48e3fe9eb3ec883b435db",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E10.json",
+      "bytes": 7777,
+      "git_blob_sha256": "973c88ce7175f8f52fc39db720633c502df99cd32e6c6fca585766cdfe995e62",
+      "working_tree_sha256": "973c88ce7175f8f52fc39db720633c502df99cd32e6c6fca585766cdfe995e62",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/development_grid_historical_affine_E12.json",
+      "bytes": 9218,
+      "git_blob_sha256": "2539febea9155901d96fc8eb16ddb0b7ed02ca3ca00cf1d9d9517aabd6b8538e",
+      "working_tree_sha256": "2539febea9155901d96fc8eb16ddb0b7ed02ca3ca00cf1d9d9517aabd6b8538e",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/outer_test_result_v9_uji.json",
+      "bytes": 15789,
+      "git_blob_sha256": "9b1026f970899ba5cfb48be38f124084e7336b1667731c645942f94955cc37e5",
+      "working_tree_sha256": "9b1026f970899ba5cfb48be38f124084e7336b1667731c645942f94955cc37e5",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/registry_v9_uji.json",
+      "bytes": 987814,
+      "git_blob_sha256": "088f4732cc352f8bdb2e45a8d17a0b4cbb6198c5fcaee4a126d2665a116edeb0",
+      "working_tree_sha256": "088f4732cc352f8bdb2e45a8d17a0b4cbb6198c5fcaee4a126d2665a116edeb0",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/selection_extension_required_through_E10_v9_uji.json",
+      "bytes": 8706,
+      "git_blob_sha256": "da9e328e1fe309275894197cfb20185ba8d4d32ec8d4cd0578e77aba35dfc755",
+      "working_tree_sha256": "da9e328e1fe309275894197cfb20185ba8d4d32ec8d4cd0578e77aba35dfc755",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/selection_extension_required_through_E8_v9_uji.json",
+      "bytes": 6629,
+      "git_blob_sha256": "85d96ec4c4022656c90406322dbbe1ad46db18df071f5cec90235d25e703c549",
+      "working_tree_sha256": "85d96ec4c4022656c90406322dbbe1ad46db18df071f5cec90235d25e703c549",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/historical_reproduction/v9/selection_freeze_v9_uji.json",
+      "bytes": 12258,
+      "git_blob_sha256": "703093dffdce66bf41cb78b52997d55b26b868c0cb3d8eb8286bf2d9cf7cdcc1",
+      "working_tree_sha256": "703093dffdce66bf41cb78b52997d55b26b868c0cb3d8eb8286bf2d9cf7cdcc1",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/fhm_dapp/historical_reproduction.py",
+      "bytes": 37477,
+      "git_blob_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee",
+      "working_tree_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/fhm_dapp/model.py",
+      "bytes": 72925,
+      "git_blob_sha256": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "working_tree_sha256": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "fhm_dapp_tim/fhm_dapp/projected_ensemble.py",
+      "bytes": 231335,
+      "git_blob_sha256": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+      "working_tree_sha256": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "tests/test_historical_reproduction.py",
+      "bytes": 4492,
+      "git_blob_sha256": "c1e6f51970a860a95589f932dc5494bcebd310326c1fb7a803bd675b73fe42b9",
+      "working_tree_sha256": "c1e6f51970a860a95589f932dc5494bcebd310326c1fb7a803bd675b73fe42b9",
+      "staged_byte_identical_to_working_tree": true
+    },
+    {
+      "path": "tests/test_uji_v9_experiment.py",
+      "bytes": 3265,
+      "git_blob_sha256": "de7110cb941ec33ba1fa60a8fe0b631c17e8ad6803fa4a487d24cbc8a211bf7b",
+      "working_tree_sha256": "de7110cb941ec33ba1fa60a8fe0b631c17e8ad6803fa4a487d24cbc8a211bf7b",
+      "staged_byte_identical_to_working_tree": true
+    }
+  ]
+}

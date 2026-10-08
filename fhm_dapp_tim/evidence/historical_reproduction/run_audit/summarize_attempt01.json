@@ -1,0 +1,22 @@
+{
+  "attempt": 1,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+    "summarize"
+  ],
+  "execution_started_utc": "2026-10-07T12:25:01.851198+00:00",
+  "exit_code": 0,
+  "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\summarize_attempt01.log",
+  "log_sha256": "49f581577ab910815441ebb9691175774b35b011da5762f81667069be0b742a0",
+  "operational_environment_changes": {
+    "compile_bytecode_output_under_allowed_model_root": false,
+    "disable_implicit_bytecode_writes": true,
+    "disable_pytest_cacheprovider": false,
+    "unbuffered_stdout": true
+  },
+  "runtime_seconds": 4.324590500007616,
+  "scientific_parameters_modified": false,
+  "stage": "summarize"
+}

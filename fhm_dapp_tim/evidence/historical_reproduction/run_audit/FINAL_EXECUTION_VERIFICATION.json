@@ -1,0 +1,954 @@
+{
+  "status": "FINAL_VERIFICATION_PASS",
+  "recorded_utc": "2026-10-07T12:28:27.943403+00:00",
+  "branch": "historical-v9-v17-reproduction",
+  "head": "be4ace44d38e92c665de8646337caf3e2398f098",
+  "git_mutations_performed": false,
+  "tracked_changed_files": [
+    "fhm_dapp_tim/fhm_dapp/historical_reproduction.py",
+    "tests/test_historical_reproduction.py",
+    "tests/test_uji_v9_experiment.py"
+  ],
+  "tracked_status": "M fhm_dapp_tim/fhm_dapp/historical_reproduction.py\n M tests/test_historical_reproduction.py\n M tests/test_uji_v9_experiment.py",
+  "source_file_hash_verification": {
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_HISTORICAL_REPRODUCTION.md": {
+      "original_sha256": "329bb5a0a42497b4979ce6f8ca764f74d14c09758d3faa3faf883d60b024a3e3",
+      "final_sha256": "329bb5a0a42497b4979ce6f8ca764f74d14c09758d3faa3faf883d60b024a3e3",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/evidence/historical_reproduction/DESIGN_V9_REPRODUCTION.md": {
+      "original_sha256": "c73db53ee34aff3c6224d75cdea6f2ce745e23d7c21a13d178bc0f901a98bd34",
+      "final_sha256": "c73db53ee34aff3c6224d75cdea6f2ce745e23d7c21a13d178bc0f901a98bd34",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py": {
+      "original_sha256": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+      "final_sha256": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/consensus.py": {
+      "original_sha256": "86551de8e57b1e46085acd7eb2a42b39803beb9baf9a58d483486dc6d45d5121",
+      "final_sha256": "86551de8e57b1e46085acd7eb2a42b39803beb9baf9a58d483486dc6d45d5121",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/experiment_v7.py": {
+      "original_sha256": "11b61753e1c511e4cd181085ac7c97a42dc188c1d25b805cf3a56d572c544d3a",
+      "final_sha256": "11b61753e1c511e4cd181085ac7c97a42dc188c1d25b805cf3a56d572c544d3a",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/historical_reproduction.py": {
+      "original_sha256": "7cc8a806251f21481851631b5e17699cad5f3d2a0f295d94d874d3159021acc4",
+      "final_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee",
+      "authorized_implementation_repair": true
+    },
+    "fhm_dapp_tim/fhm_dapp/model.py": {
+      "original_sha256": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "final_sha256": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/projected_ensemble.py": {
+      "original_sha256": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+      "final_sha256": "26f171c95d785a52933aa21bf08d20833758ef7ebe0fcc08d6ac188a60787423",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v2.py": {
+      "original_sha256": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb",
+      "final_sha256": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v16_protocol.py": {
+      "original_sha256": "422936efbacf5ff1b15e12bebe9928a21b69f0feae536e2ba666e55e0eec91f0",
+      "final_sha256": "422936efbacf5ff1b15e12bebe9928a21b69f0feae536e2ba666e55e0eec91f0",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py": {
+      "original_sha256": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be",
+      "final_sha256": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py": {
+      "original_sha256": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+      "final_sha256": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a2.py": {
+      "original_sha256": "5d95d7a8455e61e906588c0ea7fe23251f3bdd2b347643b82f9b2dc727543c6f",
+      "final_sha256": "5d95d7a8455e61e906588c0ea7fe23251f3bdd2b347643b82f9b2dc727543c6f",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b.py": {
+      "original_sha256": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f",
+      "final_sha256": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py": {
+      "original_sha256": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082",
+      "final_sha256": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py": {
+      "original_sha256": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+      "final_sha256": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py": {
+      "original_sha256": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+      "final_sha256": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+      "authorized_implementation_repair": false
+    },
+    "fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py": {
+      "original_sha256": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5",
+      "final_sha256": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5",
+      "authorized_implementation_repair": false
+    },
+    "tests/test_historical_reproduction.py": {
+      "original_sha256": "91ab5c91e5c492135511de6d7859156c078b6a68aa49274afb4bffda5df7d5b7",
+      "final_sha256": "c1e6f51970a860a95589f932dc5494bcebd310326c1fb7a803bd675b73fe42b9",
+      "authorized_implementation_repair": true
+    },
+    "tests/test_uji_v17_mother.py": {
+      "original_sha256": "53b98fb79d6f0bbbbe1c986972c3f2663d326429492315018cea8850b2adb498",
+      "final_sha256": "53b98fb79d6f0bbbbe1c986972c3f2663d326429492315018cea8850b2adb498",
+      "authorized_implementation_repair": false
+    },
+    "tests/test_uji_v9_experiment.py": {
+      "original_sha256": "9b680f7efe7c3fd79a4ec1fbfa306d809aa046099a0ee330a3cfd70b3d480b38",
+      "final_sha256": "de7110cb941ec33ba1fa60a8fe0b631c17e8ad6803fa4a487d24cbc8a211bf7b",
+      "authorized_implementation_repair": true
+    }
+  },
+  "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "member_check": {
+    "complete_members": 25,
+    "all_complete": true,
+    "members": [
+      {
+        "member_index": 1,
+        "exists": true,
+        "seed": 17301,
+        "selected_epoch": 65,
+        "checkpoint_sha256": "ceb30b091a4d948c18edd523b8d6a82ef8acd9a1559cd22084fd289b902ccde8"
+      },
+      {
+        "member_index": 2,
+        "exists": true,
+        "seed": 17302,
+        "selected_epoch": 69,
+        "checkpoint_sha256": "1db1746edf3aababf587f3167248f102d532eef5e482256d22901945e1970e80"
+      },
+      {
+        "member_index": 3,
+        "exists": true,
+        "seed": 17303,
+        "selected_epoch": 56,
+        "checkpoint_sha256": "7398086a0087e870cf7bdc9d7c3c0b3d85a4d93a331fd4e739202d007661d738"
+      },
+      {
+        "member_index": 4,
+        "exists": true,
+        "seed": 17304,
+        "selected_epoch": 67,
+        "checkpoint_sha256": "86e6df331f4983e5c0b6d9e91d7182872a966375021611f4944ddf4f71c2c8a4"
+      },
+      {
+        "member_index": 5,
+        "exists": true,
+        "seed": 17305,
+        "selected_epoch": 62,
+        "checkpoint_sha256": "4bce91a2562a266a986fffe49b80152e39a67aef42728591e502326a3317637b"
+      },
+      {
+        "member_index": 6,
+        "exists": true,
+        "seed": 17306,
+        "selected_epoch": 60,
+        "checkpoint_sha256": "2b4355c2116e6684dc64fc3e5682031818c32c9514c3989eaac146001a328123"
+      },
+      {
+        "member_index": 7,
+        "exists": true,
+        "seed": 17307,
+        "selected_epoch": 52,
+        "checkpoint_sha256": "9e9caf35d1300d85dd39d87aa48c49a09b979729de057fe957d44c06818116df"
+      },
+      {
+        "member_index": 8,
+        "exists": true,
+        "seed": 17308,
+        "selected_epoch": 74,
+        "checkpoint_sha256": "d6c4a45a2deb8873cc4b04ec640274c3cc0ab803cd1d21c45cb8e6a71aac2d7c"
+      },
+      {
+        "member_index": 9,
+        "exists": true,
+        "seed": 17309,
+        "selected_epoch": 79,
+        "checkpoint_sha256": "92a2cc2357a590077f3e356fb55f0b8fee4c6ebbd20533da4536bc252f5687c3"
+      },
+      {
+        "member_index": 10,
+        "exists": true,
+        "seed": 17310,
+        "selected_epoch": 62,
+        "checkpoint_sha256": "f5d26894b6917fe3972b10059a50beabb95f35f568b5d6a09299115572a0eb77"
+      },
+      {
+        "member_index": 11,
+        "exists": true,
+        "seed": 17311,
+        "selected_epoch": 65,
+        "checkpoint_sha256": "a0b2934831f794062e53b7ffa9554c129b805e7b3b9197f9e771306ea066797e"
+      },
+      {
+        "member_index": 12,
+        "exists": true,
+        "seed": 17312,
+        "selected_epoch": 57,
+        "checkpoint_sha256": "4a0c4d60cb71822ca8cb2bd815336788151cdb53fb6c216ff3367b95177aa471"
+      },
+      {
+        "member_index": 13,
+        "exists": true,
+        "seed": 17313,
+        "selected_epoch": 64,
+        "checkpoint_sha256": "09fb3dc8fb6e919f85696593f157e3379d7e48afc0d9016bd81b0b8d12ea0db2"
+      },
+      {
+        "member_index": 14,
+        "exists": true,
+        "seed": 17314,
+        "selected_epoch": 61,
+        "checkpoint_sha256": "836c17cc8f334733b2daa60a27457b69f51e82d3ca0f8c4c31930f1a75964181"
+      },
+      {
+        "member_index": 15,
+        "exists": true,
+        "seed": 17315,
+        "selected_epoch": 50,
+        "checkpoint_sha256": "ec0ebf0c3bc0c8090a622478ffa4ee3512a3dad6626db2cd221d7a2f1fc2052f"
+      },
+      {
+        "member_index": 16,
+        "exists": true,
+        "seed": 17316,
+        "selected_epoch": 74,
+        "checkpoint_sha256": "9c39c8815d7bcac4c7539f6c681a10602a7bbdcb8ad4f01cced794c456d76f38"
+      },
+      {
+        "member_index": 17,
+        "exists": true,
+        "seed": 17317,
+        "selected_epoch": 59,
+        "checkpoint_sha256": "5abd6763c5c1a8480f93f9ee64a31737ea323effe50ab98a41a0089218c3ef57"
+      },
+      {
+        "member_index": 18,
+        "exists": true,
+        "seed": 17318,
+        "selected_epoch": 73,
+        "checkpoint_sha256": "183c00d8d4bb135e17d80cb85e47dec0d1c25517b7142c8b5624967dae936bcf"
+      },
+      {
+        "member_index": 19,
+        "exists": true,
+        "seed": 17319,
+        "selected_epoch": 60,
+        "checkpoint_sha256": "215c56d46e73fcf299d4ad234300fe0a18effb041ecadddee78ec5d4d9b113e4"
+      },
+      {
+        "member_index": 20,
+        "exists": true,
+        "seed": 17320,
+        "selected_epoch": 68,
+        "checkpoint_sha256": "940c1157c2e855d2e88d9b99f1e6c1ddd805951a82142828c5d3f3a8925b2261"
+      },
+      {
+        "member_index": 21,
+        "exists": true,
+        "seed": 17321,
+        "selected_epoch": 52,
+        "checkpoint_sha256": "7685badc518840c1ed4131d9f838d9b253fc7d04eb730376a33d66e19b12ebbb"
+      },
+      {
+        "member_index": 22,
+        "exists": true,
+        "seed": 17322,
+        "selected_epoch": 58,
+        "checkpoint_sha256": "7952c399d7e42ca2617a4c7de5f245d6b31ddbcb43ab4447d334aee5a771bcad"
+      },
+      {
+        "member_index": 23,
+        "exists": true,
+        "seed": 17323,
+        "selected_epoch": 53,
+        "checkpoint_sha256": "9bbf2187e8446efddf2b34e19a7ed7e65f5fa3a1ab13924d0e51793a4476071c"
+      },
+      {
+        "member_index": 24,
+        "exists": true,
+        "seed": 17324,
+        "selected_epoch": 61,
+        "checkpoint_sha256": "f4acca165e820ee3d083fd98f91a9b6238146c03e70297fada795bf46fa35540"
+      },
+      {
+        "member_index": 25,
+        "exists": true,
+        "seed": 17325,
+        "selected_epoch": 56,
+        "checkpoint_sha256": "5afddaef5196e30a37b2c88bec72bcc7d9631b84d5a94fa2e3912e8cf1c12c3f"
+      }
+    ]
+  },
+  "v17_checkpoint_records": [
+    {
+      "member_index": 1,
+      "exists": true,
+      "seed": 17301,
+      "selected_epoch": 65,
+      "checkpoint_sha256": "ceb30b091a4d948c18edd523b8d6a82ef8acd9a1559cd22084fd289b902ccde8",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_01_seed17301.pt"
+    },
+    {
+      "member_index": 2,
+      "exists": true,
+      "seed": 17302,
+      "selected_epoch": 69,
+      "checkpoint_sha256": "1db1746edf3aababf587f3167248f102d532eef5e482256d22901945e1970e80",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_02_seed17302.pt"
+    },
+    {
+      "member_index": 3,
+      "exists": true,
+      "seed": 17303,
+      "selected_epoch": 56,
+      "checkpoint_sha256": "7398086a0087e870cf7bdc9d7c3c0b3d85a4d93a331fd4e739202d007661d738",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_03_seed17303.pt"
+    },
+    {
+      "member_index": 4,
+      "exists": true,
+      "seed": 17304,
+      "selected_epoch": 67,
+      "checkpoint_sha256": "86e6df331f4983e5c0b6d9e91d7182872a966375021611f4944ddf4f71c2c8a4",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_04_seed17304.pt"
+    },
+    {
+      "member_index": 5,
+      "exists": true,
+      "seed": 17305,
+      "selected_epoch": 62,
+      "checkpoint_sha256": "4bce91a2562a266a986fffe49b80152e39a67aef42728591e502326a3317637b",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_05_seed17305.pt"
+    },
+    {
+      "member_index": 6,
+      "exists": true,
+      "seed": 17306,
+      "selected_epoch": 60,
+      "checkpoint_sha256": "2b4355c2116e6684dc64fc3e5682031818c32c9514c3989eaac146001a328123",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_06_seed17306.pt"
+    },
+    {
+      "member_index": 7,
+      "exists": true,
+      "seed": 17307,
+      "selected_epoch": 52,
+      "checkpoint_sha256": "9e9caf35d1300d85dd39d87aa48c49a09b979729de057fe957d44c06818116df",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_07_seed17307.pt"
+    },
+    {
+      "member_index": 8,
+      "exists": true,
+      "seed": 17308,
+      "selected_epoch": 74,
+      "checkpoint_sha256": "d6c4a45a2deb8873cc4b04ec640274c3cc0ab803cd1d21c45cb8e6a71aac2d7c",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_08_seed17308.pt"
+    },
+    {
+      "member_index": 9,
+      "exists": true,
+      "seed": 17309,
+      "selected_epoch": 79,
+      "checkpoint_sha256": "92a2cc2357a590077f3e356fb55f0b8fee4c6ebbd20533da4536bc252f5687c3",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_09_seed17309.pt"
+    },
+    {
+      "member_index": 10,
+      "exists": true,
+      "seed": 17310,
+      "selected_epoch": 62,
+      "checkpoint_sha256": "f5d26894b6917fe3972b10059a50beabb95f35f568b5d6a09299115572a0eb77",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_10_seed17310.pt"
+    },
+    {
+      "member_index": 11,
+      "exists": true,
+      "seed": 17311,
+      "selected_epoch": 65,
+      "checkpoint_sha256": "a0b2934831f794062e53b7ffa9554c129b805e7b3b9197f9e771306ea066797e",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_11_seed17311.pt"
+    },
+    {
+      "member_index": 12,
+      "exists": true,
+      "seed": 17312,
+      "selected_epoch": 57,
+      "checkpoint_sha256": "4a0c4d60cb71822ca8cb2bd815336788151cdb53fb6c216ff3367b95177aa471",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_12_seed17312.pt"
+    },
+    {
+      "member_index": 13,
+      "exists": true,
+      "seed": 17313,
+      "selected_epoch": 64,
+      "checkpoint_sha256": "09fb3dc8fb6e919f85696593f157e3379d7e48afc0d9016bd81b0b8d12ea0db2",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_13_seed17313.pt"
+    },
+    {
+      "member_index": 14,
+      "exists": true,
+      "seed": 17314,
+      "selected_epoch": 61,
+      "checkpoint_sha256": "836c17cc8f334733b2daa60a27457b69f51e82d3ca0f8c4c31930f1a75964181",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_14_seed17314.pt"
+    },
+    {
+      "member_index": 15,
+      "exists": true,
+      "seed": 17315,
+      "selected_epoch": 50,
+      "checkpoint_sha256": "ec0ebf0c3bc0c8090a622478ffa4ee3512a3dad6626db2cd221d7a2f1fc2052f",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_15_seed17315.pt"
+    },
+    {
+      "member_index": 16,
+      "exists": true,
+      "seed": 17316,
+      "selected_epoch": 74,
+      "checkpoint_sha256": "9c39c8815d7bcac4c7539f6c681a10602a7bbdcb8ad4f01cced794c456d76f38",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_16_seed17316.pt"
+    },
+    {
+      "member_index": 17,
+      "exists": true,
+      "seed": 17317,
+      "selected_epoch": 59,
+      "checkpoint_sha256": "5abd6763c5c1a8480f93f9ee64a31737ea323effe50ab98a41a0089218c3ef57",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_17_seed17317.pt"
+    },
+    {
+      "member_index": 18,
+      "exists": true,
+      "seed": 17318,
+      "selected_epoch": 73,
+      "checkpoint_sha256": "183c00d8d4bb135e17d80cb85e47dec0d1c25517b7142c8b5624967dae936bcf",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_18_seed17318.pt"
+    },
+    {
+      "member_index": 19,
+      "exists": true,
+      "seed": 17319,
+      "selected_epoch": 60,
+      "checkpoint_sha256": "215c56d46e73fcf299d4ad234300fe0a18effb041ecadddee78ec5d4d9b113e4",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_19_seed17319.pt"
+    },
+    {
+      "member_index": 20,
+      "exists": true,
+      "seed": 17320,
+      "selected_epoch": 68,
+      "checkpoint_sha256": "940c1157c2e855d2e88d9b99f1e6c1ddd805951a82142828c5d3f3a8925b2261",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_20_seed17320.pt"
+    },
+    {
+      "member_index": 21,
+      "exists": true,
+      "seed": 17321,
+      "selected_epoch": 52,
+      "checkpoint_sha256": "7685badc518840c1ed4131d9f838d9b253fc7d04eb730376a33d66e19b12ebbb",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_21_seed17321.pt"
+    },
+    {
+      "member_index": 22,
+      "exists": true,
+      "seed": 17322,
+      "selected_epoch": 58,
+      "checkpoint_sha256": "7952c399d7e42ca2617a4c7de5f245d6b31ddbcb43ab4447d334aee5a771bcad",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_22_seed17322.pt"
+    },
+    {
+      "member_index": 23,
+      "exists": true,
+      "seed": 17323,
+      "selected_epoch": 53,
+      "checkpoint_sha256": "9bbf2187e8446efddf2b34e19a7ed7e65f5fa3a1ab13924d0e51793a4476071c",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_23_seed17323.pt"
+    },
+    {
+      "member_index": 24,
+      "exists": true,
+      "seed": 17324,
+      "selected_epoch": 61,
+      "checkpoint_sha256": "f4acca165e820ee3d083fd98f91a9b6238146c03e70297fada795bf46fa35540",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_24_seed17324.pt"
+    },
+    {
+      "member_index": 25,
+      "exists": true,
+      "seed": 17325,
+      "selected_epoch": 56,
+      "checkpoint_sha256": "5afddaef5196e30a37b2c88bec72bcc7d9631b84d5a94fa2e3912e8cf1c12c3f",
+      "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\models\\historical_reproduction\\v17\\member_25_seed17325.pt"
+    }
+  ],
+  "v17_checkpoints_byte_identical_to_before_diagnostic_repair": true,
+  "registries_byte_identical_to_before_diagnostic_repair": true,
+  "registration_time_source_snapshot_deltas": {
+    "runner": {
+      "registered_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+      "current_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee"
+    }
+  },
+  "post_training_implementation_repair": {
+    "recorded_utc": "2026-10-07T12:20:09.001923+00:00",
+    "status": "MINIMAL_DIAGNOSTIC_REPAIR_APPLIED",
+    "change": "Move original retained-mass statistics to a private diagnostic helper and flatten each batch to scalar member-row values before concatenation.",
+    "source_before_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+    "source_after_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee",
+    "changed_file_sha256": {
+      "fhm_dapp_tim/fhm_dapp/historical_reproduction.py": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee",
+      "tests/test_historical_reproduction.py": "c1e6f51970a860a95589f932dc5494bcebd310326c1fb7a803bd675b73fe42b9"
+    },
+    "non_retained_diagnostic_AST_unchanged": true,
+    "diagnostic_mean_and_quantile_definitions_unchanged": true,
+    "regression_before_fix": {
+      "attempt": 5,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_historical_reproduction.py",
+        "tests/test_uji_v9_experiment.py",
+        "tests/test_uji_v17_mother.py"
+      ],
+      "execution_started_utc": "2026-10-07T12:18:42.033814+00:00",
+      "exit_code": 1,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\pytest_attempt05.log",
+      "log_sha256": "c804da9e294f4a9f2bbd0f554a9fdaab22d15db219aef11e4d69ecf22142cfe3",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": true,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 13.470592800003942,
+      "scientific_parameters_modified": false,
+      "stage": "pytest"
+    },
+    "regression_expected_after_fix": "19 passed; full 64-row case unchanged and 4066-row final-short-batch case equals full matrix reference for mean/q10/median/q90 exactly.",
+    "registry_file_byte_hash_checks": {
+      "registry_historical_reproduction.json": true,
+      "v17\\registry_v17_reproduction.json": true
+    },
+    "checkpoint_file_byte_hash_checks": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": true,
+      "7": true,
+      "8": true,
+      "9": true,
+      "10": true,
+      "11": true,
+      "12": true,
+      "13": true,
+      "14": true,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": true,
+      "21": true,
+      "22": true,
+      "23": true,
+      "24": true,
+      "25": true
+    },
+    "checkpoint_retraining": false,
+    "scientific_parameters_modified": false,
+    "accuracy_gate_waived": false,
+    "runner_hash_in_original_registry_is_preserved_registration_time_snapshot": true,
+    "registered_source_hash_delta_recorded_without_registry_manual_edit": true
+  },
+  "final_static_precheck": {
+    "recorded_utc": "2026-10-07T12:22:50.582278+00:00",
+    "status": "POST_REPAIR_PRECHECK_PASS",
+    "compile": "PASS",
+    "pytest": {
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "original_cases": 16,
+      "registry_integration_regression_cases": 1,
+      "retained_mass_regression_cases": 2,
+      "log_sha256": "6b3a5b5763ddf86596ed3509a921a464664f0d6a4d4954099efa61dbf2b99971"
+    },
+    "preflight": {
+      "protocol_version": "historical_v9_v17_reproduction_v1_20261007",
+      "status": "ready",
+      "training_data": "D:\\liuyanlunwen\\data\\UJIndoorLoc\\trainingData.csv",
+      "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+      "source_hashes": {
+        "runner": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\historical_reproduction.py",
+          "sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee"
+        },
+        "v9": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v9_experiment.py",
+          "sha256": "ed80a51dac6321f0bfba0001c98c76f34a54a522d0d88092b9cac38db7a955b5"
+        },
+        "v17_protocol": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_protocol.py",
+          "sha256": "450d1182ac54ee1033e4949832354cf284439e4f35886fd3812476f1765768be"
+        },
+        "v17_r0": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r0.py",
+          "sha256": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d"
+        },
+        "v17_r2b": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2b.py",
+          "sha256": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f"
+        },
+        "v17_r2f": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r2f.py",
+          "sha256": "adc397ed32e3fc92da368f68791f9e7b4f0e2eb5b49980382d762d7ef8e74082"
+        },
+        "v17_r3": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3.py",
+          "sha256": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082"
+        },
+        "v17_r3_protocol": {
+          "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\uji_v17_mother_r3_protocol.py",
+          "sha256": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f"
+        }
+      },
+      "v9_member_seeds": [
+        9311,
+        9312,
+        9313,
+        9314,
+        9315,
+        9316,
+        9317,
+        9318,
+        9319,
+        9320,
+        9321,
+        9322
+      ],
+      "v17_member_seeds": [
+        17301,
+        17302,
+        17303,
+        17304,
+        17305,
+        17306,
+        17307,
+        17308,
+        17309,
+        17310,
+        17311,
+        17312,
+        17313,
+        17314,
+        17315,
+        17316,
+        17317,
+        17318,
+        17319,
+        17320,
+        17321,
+        17322,
+        17323,
+        17324,
+        17325
+      ],
+      "sub_six_gate_m": 6.0,
+      "official_validation_predictions_authorized": false,
+      "external_predictions_authorized": false,
+      "successor_model_design_authorized": false
+    },
+    "registry_file_byte_hash_checks": {
+      "registry_historical_reproduction.json": true,
+      "v17\\registry_v17_reproduction.json": true
+    },
+    "registration_time_source_snapshot_deltas": {
+      "runner": {
+        "registered_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+        "current_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee"
+      }
+    },
+    "authorized_repair_record": "V17_RETAINED_MASS_IMPLEMENTATION_REPAIR.json",
+    "only_diagnostic_collection_changed": true,
+    "scientific_parameters_modified": false,
+    "checkpoint_retraining": false,
+    "accuracy_gate_waived": false
+  },
+  "stage_executions": {
+    "compile": {
+      "attempt": 5,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "py_compile",
+        "fhm_dapp_tim/fhm_dapp/historical_reproduction.py"
+      ],
+      "execution_started_utc": "2026-10-07T12:20:28.082985+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\compile_attempt05.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": true,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 0.27168589999200776,
+      "scientific_parameters_modified": false,
+      "stage": "compile"
+    },
+    "pytest": {
+      "attempt": 6,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_historical_reproduction.py",
+        "tests/test_uji_v9_experiment.py",
+        "tests/test_uji_v17_mother.py"
+      ],
+      "execution_started_utc": "2026-10-07T12:20:43.565946+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\pytest_attempt06.log",
+      "log_sha256": "6b3a5b5763ddf86596ed3509a921a464664f0d6a4d4954099efa61dbf2b99971",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": true,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 13.148952100018505,
+      "scientific_parameters_modified": false,
+      "stage": "pytest"
+    },
+    "preflight": {
+      "attempt": 2,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "preflight",
+        "--device",
+        "cuda"
+      ],
+      "execution_started_utc": "2026-10-07T12:21:15.509097+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\preflight_attempt02.log",
+      "log_sha256": "81bb13a505bbcca68322a5aedff6587925493d10471db21049556b1704dc9437",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 4.32277780000004,
+      "scientific_parameters_modified": false,
+      "stage": "preflight"
+    },
+    "prepare": {
+      "attempt": 1,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "prepare",
+        "--device",
+        "cuda"
+      ],
+      "execution_started_utc": "2026-10-07T07:13:00.724714+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\prepare_attempt01.log",
+      "log_sha256": "821ee991c03fbc1b07ce546c8ef1173abf2be2ea8cb2b1153c7c660990e03a8c",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 4.206296799995471,
+      "scientific_parameters_modified": false,
+      "stage": "prepare"
+    },
+    "run-v9": {
+      "attempt": 1,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "run-v9",
+        "--device",
+        "cuda"
+      ],
+      "execution_started_utc": "2026-10-07T07:14:22.944946+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\run-v9_attempt01.log",
+      "log_sha256": "2ce5f57b188a6ca18e70100e124f79ec2aeb7d637d05a52defe8266fa359d56c",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 3310.289466999995,
+      "scientific_parameters_modified": false,
+      "stage": "run-v9"
+    },
+    "prepare-v17": {
+      "attempt": 1,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "prepare-v17"
+      ],
+      "execution_started_utc": "2026-10-07T08:10:18.645776+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\prepare-v17_attempt01.log",
+      "log_sha256": "211a876355009da897b81f703af5ed1fda341e02b29dc92a317445a4dd996a4b",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 11.081700299982913,
+      "scientific_parameters_modified": false,
+      "stage": "prepare-v17"
+    },
+    "run-v17": {
+      "attempt": 1,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "run-v17",
+        "--device",
+        "cuda"
+      ],
+      "execution_started_utc": "2026-10-07T08:10:48.045360+00:00",
+      "exit_code": 1,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\run-v17_attempt01.log",
+      "log_sha256": "c1bfcd2530aca31ae686714c70fb8f115c774736239663bcb5fdf1cd6054d65a",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 14466.051450700004,
+      "scientific_parameters_modified": false,
+      "stage": "run-v17"
+    },
+    "check-v17-members": {
+      "attempt": 1,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "check-v17-members"
+      ],
+      "execution_started_utc": "2026-10-07T12:15:36.410731+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\check-v17-members_attempt01.log",
+      "log_sha256": "42ecfe3824432d13f295b2a8a87126402aff89eefe81ff4101000607a70a18c9",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 6.69863020000048,
+      "scientific_parameters_modified": false,
+      "stage": "check-v17-members"
+    },
+    "evaluate-v17": {
+      "attempt": 1,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "evaluate-v17",
+        "--device",
+        "cuda"
+      ],
+      "execution_started_utc": "2026-10-07T12:21:45.736807+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\evaluate-v17_attempt01.log",
+      "log_sha256": "240d1130deeff24fd76417e696854038711423ebd31b0263cb12a39bf5fa33fa",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 63.10761440001079,
+      "scientific_parameters_modified": false,
+      "stage": "evaluate-v17"
+    },
+    "summarize": {
+      "attempt": 1,
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+        "summarize"
+      ],
+      "execution_started_utc": "2026-10-07T12:25:01.851198+00:00",
+      "exit_code": 0,
+      "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\summarize_attempt01.log",
+      "log_sha256": "49f581577ab910815441ebb9691175774b35b011da5762f81667069be0b742a0",
+      "operational_environment_changes": {
+        "compile_bytecode_output_under_allowed_model_root": false,
+        "disable_implicit_bytecode_writes": true,
+        "disable_pytest_cacheprovider": false,
+        "unbuffered_stdout": true
+      },
+      "runtime_seconds": 4.324590500007616,
+      "scientific_parameters_modified": false,
+      "stage": "summarize"
+    }
+  },
+  "artifact_file_sha256": {
+    "v9/REPRODUCTION_V9.json": "9dd187a8dce6a6f9d1b4129cd4dbc82f6a88e1250088f25240e1e704069fc5c7",
+    "v9/outer_test_result_v9_uji.json": "9b1026f970899ba5cfb48be38f124084e7336b1667731c645942f94955cc37e5",
+    "v9/selection_freeze_v9_uji.json": "703093dffdce66bf41cb78b52997d55b26b868c0cb3d8eb8286bf2d9cf7cdcc1",
+    "v17/outer_result_v17_reproduction.json": "f6c622588d1e1b347839c8d097918560518130489759d5044fe4a74cffc77868",
+    "v17/registry_v17_reproduction.json": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab",
+    "REPRODUCTION_SUMMARY.json": "20594c307d79f32a48a007061a9de222f4faf361517321ff2fcb11f45175becd"
+  },
+  "v9_gate": "FAIL",
+  "v17_gate": "PASS",
+  "next_stage_authorized": false,
+  "strict_gate_waived": false,
+  "successor_implemented": false,
+  "official_validation_predictions": 0,
+  "external_predictions": 0,
+  "v18_v19_model_execution": false,
+  "outer_outcome_tuning": false
+}

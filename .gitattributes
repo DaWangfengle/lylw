@@ -30,3 +30,28 @@ fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.json -text
 fhm_dapp_tim/evidence/v18_5/PRE_RUN_ACCEPTANCE_V18_5.md -text
 fhm_dapp_tim/evidence/v18_5/run_audit/*.json -text
 fhm_dapp_tim/evidence/v18_5/run_audit/*.md -text
+
+# Preserve exact bytes for historical V9/V17 reproduction sources and evidence.
+fhm_dapp_tim/fhm_dapp/historical_reproduction.py -text
+tests/test_historical_reproduction.py -text
+tests/test_uji_v9_experiment.py -text
+fhm_dapp_tim/evidence/historical_reproduction/** -text
+
+# Preserve every audited source and the registered training input on checkout.
+fhm_dapp_tim/fhm_dapp/coherent_marked_v9.py -text
+fhm_dapp_tim/fhm_dapp/consensus.py -text
+fhm_dapp_tim/fhm_dapp/experiment_v7.py -text
+fhm_dapp_tim/fhm_dapp/model.py -text
+fhm_dapp_tim/fhm_dapp/projected_ensemble.py -text
+fhm_dapp_tim/fhm_dapp/train_anchor_v2.py -text
+fhm_dapp_tim/fhm_dapp/uji_v16_protocol.py -text
+fhm_dapp_tim/fhm_dapp/uji_v17_mother_protocol.py -text
+fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0.py -text
+fhm_dapp_tim/fhm_dapp/uji_v17_mother_r0_runtime_a2.py -text
+fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2b.py -text
+fhm_dapp_tim/fhm_dapp/uji_v17_mother_r2f.py -text
+fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3.py -text
+fhm_dapp_tim/fhm_dapp/uji_v17_mother_r3_protocol.py -text
+fhm_dapp_tim/fhm_dapp/uji_v9_experiment.py -text
+tests/test_uji_v17_mother.py -text
+data/UJIndoorLoc/trainingData.csv -text

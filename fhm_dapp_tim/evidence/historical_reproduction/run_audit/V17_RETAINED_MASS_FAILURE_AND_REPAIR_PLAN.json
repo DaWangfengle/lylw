@@ -1,0 +1,220 @@
+{
+  "recorded_utc": "2026-10-07T12:18:13.984064+00:00",
+  "issue": "V17 evaluation processed all 4066 rows, then torch.cat of retained-mass tensors failed on the final width-2 batch after width-32 batches.",
+  "failed_stage_metadata": {
+    "attempt": 1,
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "fhm_dapp_tim.fhm_dapp.historical_reproduction",
+      "run-v17",
+      "--device",
+      "cuda"
+    ],
+    "execution_started_utc": "2026-10-07T08:10:48.045360+00:00",
+    "exit_code": 1,
+    "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\run-v17_attempt01.log",
+    "log_sha256": "c1bfcd2530aca31ae686714c70fb8f115c774736239663bcb5fdf1cd6054d65a",
+    "operational_environment_changes": {
+      "compile_bytecode_output_under_allowed_model_root": false,
+      "disable_implicit_bytecode_writes": true,
+      "disable_pytest_cacheprovider": false,
+      "unbuffered_stdout": true
+    },
+    "runtime_seconds": 14466.051450700004,
+    "scientific_parameters_modified": false,
+    "stage": "run-v17"
+  },
+  "result_file_absent_before_repair": true,
+  "complete_members_before_repair": {
+    "complete_members": 25,
+    "all_complete": true,
+    "members": [
+      {
+        "member_index": 1,
+        "exists": true,
+        "seed": 17301,
+        "selected_epoch": 65,
+        "checkpoint_sha256": "ceb30b091a4d948c18edd523b8d6a82ef8acd9a1559cd22084fd289b902ccde8"
+      },
+      {
+        "member_index": 2,
+        "exists": true,
+        "seed": 17302,
+        "selected_epoch": 69,
+        "checkpoint_sha256": "1db1746edf3aababf587f3167248f102d532eef5e482256d22901945e1970e80"
+      },
+      {
+        "member_index": 3,
+        "exists": true,
+        "seed": 17303,
+        "selected_epoch": 56,
+        "checkpoint_sha256": "7398086a0087e870cf7bdc9d7c3c0b3d85a4d93a331fd4e739202d007661d738"
+      },
+      {
+        "member_index": 4,
+        "exists": true,
+        "seed": 17304,
+        "selected_epoch": 67,
+        "checkpoint_sha256": "86e6df331f4983e5c0b6d9e91d7182872a966375021611f4944ddf4f71c2c8a4"
+      },
+      {
+        "member_index": 5,
+        "exists": true,
+        "seed": 17305,
+        "selected_epoch": 62,
+        "checkpoint_sha256": "4bce91a2562a266a986fffe49b80152e39a67aef42728591e502326a3317637b"
+      },
+      {
+        "member_index": 6,
+        "exists": true,
+        "seed": 17306,
+        "selected_epoch": 60,
+        "checkpoint_sha256": "2b4355c2116e6684dc64fc3e5682031818c32c9514c3989eaac146001a328123"
+      },
+      {
+        "member_index": 7,
+        "exists": true,
+        "seed": 17307,
+        "selected_epoch": 52,
+        "checkpoint_sha256": "9e9caf35d1300d85dd39d87aa48c49a09b979729de057fe957d44c06818116df"
+      },
+      {
+        "member_index": 8,
+        "exists": true,
+        "seed": 17308,
+        "selected_epoch": 74,
+        "checkpoint_sha256": "d6c4a45a2deb8873cc4b04ec640274c3cc0ab803cd1d21c45cb8e6a71aac2d7c"
+      },
+      {
+        "member_index": 9,
+        "exists": true,
+        "seed": 17309,
+        "selected_epoch": 79,
+        "checkpoint_sha256": "92a2cc2357a590077f3e356fb55f0b8fee4c6ebbd20533da4536bc252f5687c3"
+      },
+      {
+        "member_index": 10,
+        "exists": true,
+        "seed": 17310,
+        "selected_epoch": 62,
+        "checkpoint_sha256": "f5d26894b6917fe3972b10059a50beabb95f35f568b5d6a09299115572a0eb77"
+      },
+      {
+        "member_index": 11,
+        "exists": true,
+        "seed": 17311,
+        "selected_epoch": 65,
+        "checkpoint_sha256": "a0b2934831f794062e53b7ffa9554c129b805e7b3b9197f9e771306ea066797e"
+      },
+      {
+        "member_index": 12,
+        "exists": true,
+        "seed": 17312,
+        "selected_epoch": 57,
+        "checkpoint_sha256": "4a0c4d60cb71822ca8cb2bd815336788151cdb53fb6c216ff3367b95177aa471"
+      },
+      {
+        "member_index": 13,
+        "exists": true,
+        "seed": 17313,
+        "selected_epoch": 64,
+        "checkpoint_sha256": "09fb3dc8fb6e919f85696593f157e3379d7e48afc0d9016bd81b0b8d12ea0db2"
+      },
+      {
+        "member_index": 14,
+        "exists": true,
+        "seed": 17314,
+        "selected_epoch": 61,
+        "checkpoint_sha256": "836c17cc8f334733b2daa60a27457b69f51e82d3ca0f8c4c31930f1a75964181"
+      },
+      {
+        "member_index": 15,
+        "exists": true,
+        "seed": 17315,
+        "selected_epoch": 50,
+        "checkpoint_sha256": "ec0ebf0c3bc0c8090a622478ffa4ee3512a3dad6626db2cd221d7a2f1fc2052f"
+      },
+      {
+        "member_index": 16,
+        "exists": true,
+        "seed": 17316,
+        "selected_epoch": 74,
+        "checkpoint_sha256": "9c39c8815d7bcac4c7539f6c681a10602a7bbdcb8ad4f01cced794c456d76f38"
+      },
+      {
+        "member_index": 17,
+        "exists": true,
+        "seed": 17317,
+        "selected_epoch": 59,
+        "checkpoint_sha256": "5abd6763c5c1a8480f93f9ee64a31737ea323effe50ab98a41a0089218c3ef57"
+      },
+      {
+        "member_index": 18,
+        "exists": true,
+        "seed": 17318,
+        "selected_epoch": 73,
+        "checkpoint_sha256": "183c00d8d4bb135e17d80cb85e47dec0d1c25517b7142c8b5624967dae936bcf"
+      },
+      {
+        "member_index": 19,
+        "exists": true,
+        "seed": 17319,
+        "selected_epoch": 60,
+        "checkpoint_sha256": "215c56d46e73fcf299d4ad234300fe0a18effb041ecadddee78ec5d4d9b113e4"
+      },
+      {
+        "member_index": 20,
+        "exists": true,
+        "seed": 17320,
+        "selected_epoch": 68,
+        "checkpoint_sha256": "940c1157c2e855d2e88d9b99f1e6c1ddd805951a82142828c5d3f3a8925b2261"
+      },
+      {
+        "member_index": 21,
+        "exists": true,
+        "seed": 17321,
+        "selected_epoch": 52,
+        "checkpoint_sha256": "7685badc518840c1ed4131d9f838d9b253fc7d04eb730376a33d66e19b12ebbb"
+      },
+      {
+        "member_index": 22,
+        "exists": true,
+        "seed": 17322,
+        "selected_epoch": 58,
+        "checkpoint_sha256": "7952c399d7e42ca2617a4c7de5f245d6b31ddbcb43ab4447d334aee5a771bcad"
+      },
+      {
+        "member_index": 23,
+        "exists": true,
+        "seed": 17323,
+        "selected_epoch": 53,
+        "checkpoint_sha256": "9bbf2187e8446efddf2b34e19a7ed7e65f5fa3a1ab13924d0e51793a4476071c"
+      },
+      {
+        "member_index": 24,
+        "exists": true,
+        "seed": 17324,
+        "selected_epoch": 61,
+        "checkpoint_sha256": "f4acca165e820ee3d083fd98f91a9b6238146c03e70297fada795bf46fa35540"
+      },
+      {
+        "member_index": 25,
+        "exists": true,
+        "seed": 17325,
+        "selected_epoch": 56,
+        "checkpoint_sha256": "5afddaef5196e30a37b2c88bec72bcc7d9631b84d5a94fa2e3912e8cf1c12c3f"
+      }
+    ]
+  },
+  "source_before_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+  "tests_before_sha256": "0e55926f12b0a4aa68df5205ab0f424e8d19b445a55f286ade98f4ee3fb2a7d5",
+  "registry_file_sha256_before_repair": {
+    "registry_historical_reproduction.json": "ccadebebb8238a4262c6a08452f96299439d0ccf9681bd2500e8ea2cfc65144f",
+    "v17\\registry_v17_reproduction.json": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab"
+  },
+  "scientific_scope": "Only diagnostic scalar collection and its regression tests may change; training, loss, seeds, roles, predictive laws, scores, selections and strict gates remain unchanged.",
+  "checkpoint_retraining_authorized_or_needed": false,
+  "accuracy_gate_waived": false,
+  "registry_manual_edit_authorized": false
+}

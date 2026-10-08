@@ -1,0 +1,75 @@
+{
+  "recorded_utc": "2026-10-07T12:20:09.001923+00:00",
+  "status": "MINIMAL_DIAGNOSTIC_REPAIR_APPLIED",
+  "change": "Move original retained-mass statistics to a private diagnostic helper and flatten each batch to scalar member-row values before concatenation.",
+  "source_before_sha256": "e09c66606316336c9297cd7194936ce6cae498121e5ffa984d15c014af66a269",
+  "source_after_sha256": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee",
+  "changed_file_sha256": {
+    "fhm_dapp_tim/fhm_dapp/historical_reproduction.py": "99cdeade06a6a59235c87ff9d094993e2c9fe31cf034a43049739a58ca8edfee",
+    "tests/test_historical_reproduction.py": "c1e6f51970a860a95589f932dc5494bcebd310326c1fb7a803bd675b73fe42b9"
+  },
+  "non_retained_diagnostic_AST_unchanged": true,
+  "diagnostic_mean_and_quantile_definitions_unchanged": true,
+  "regression_before_fix": {
+    "attempt": 5,
+    "command": [
+      "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_historical_reproduction.py",
+      "tests/test_uji_v9_experiment.py",
+      "tests/test_uji_v17_mother.py"
+    ],
+    "execution_started_utc": "2026-10-07T12:18:42.033814+00:00",
+    "exit_code": 1,
+    "log_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\historical_reproduction\\run_audit\\pytest_attempt05.log",
+    "log_sha256": "c804da9e294f4a9f2bbd0f554a9fdaab22d15db219aef11e4d69ecf22142cfe3",
+    "operational_environment_changes": {
+      "compile_bytecode_output_under_allowed_model_root": false,
+      "disable_implicit_bytecode_writes": true,
+      "disable_pytest_cacheprovider": true,
+      "unbuffered_stdout": true
+    },
+    "runtime_seconds": 13.470592800003942,
+    "scientific_parameters_modified": false,
+    "stage": "pytest"
+  },
+  "regression_expected_after_fix": "19 passed; full 64-row case unchanged and 4066-row final-short-batch case equals full matrix reference for mean/q10/median/q90 exactly.",
+  "registry_file_byte_hash_checks": {
+    "registry_historical_reproduction.json": true,
+    "v17\\registry_v17_reproduction.json": true
+  },
+  "checkpoint_file_byte_hash_checks": {
+    "1": true,
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true,
+    "6": true,
+    "7": true,
+    "8": true,
+    "9": true,
+    "10": true,
+    "11": true,
+    "12": true,
+    "13": true,
+    "14": true,
+    "15": true,
+    "16": true,
+    "17": true,
+    "18": true,
+    "19": true,
+    "20": true,
+    "21": true,
+    "22": true,
+    "23": true,
+    "24": true,
+    "25": true
+  },
+  "checkpoint_retraining": false,
+  "scientific_parameters_modified": false,
+  "accuracy_gate_waived": false,
+  "runner_hash_in_original_registry_is_preserved_registration_time_snapshot": true,
+  "registered_source_hash_delta_recorded_without_registry_manual_edit": true
+}

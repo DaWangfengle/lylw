@@ -1,0 +1,77 @@
+{
+  "recorded_utc": "2026-10-07T08:18:24.515509+00:00",
+  "status": "AUDIT_PASS",
+  "registered_source_hash_checks": {
+    "runner": true,
+    "v17_protocol": true,
+    "v17_r0": true,
+    "v17_r2b": true,
+    "v17_r2f": true,
+    "v17_r3": true,
+    "v17_r3_protocol": true,
+    "v9": true
+  },
+  "training_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "v9": {
+    "stage_exit_code": 0,
+    "summary_file_sha256": "9dd187a8dce6a6f9d1b4129cd4dbc82f6a88e1250088f25240e1e704069fc5c7",
+    "result_file_sha256": "9b1026f970899ba5cfb48be38f124084e7336b1667731c645942f94955cc37e5",
+    "status": "FAIL",
+    "outer_coordinate_macro_mae_2d_m": 6.355559349060059,
+    "outer_test_access_number": 1,
+    "outer_test_accesses_before_freeze": 0,
+    "selected": {
+      "E": 12,
+      "K": 24,
+      "candidate": "geometry_invariant",
+      "development_coordinate_macro_energy_score_2d_m": 4.575685977935791,
+      "development_coordinate_macro_mae_2d_m": 6.425357341766357,
+      "lambda": 0.5,
+      "member_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "member_seeds": [
+        9311,
+        9312,
+        9313,
+        9314,
+        9315,
+        9316,
+        9317,
+        9318,
+        9319,
+        9320,
+        9321,
+        9322
+      ]
+    },
+    "saturation_claim": false,
+    "selection_basis": "budget_censored_development_risk_minimum",
+    "terminal_rule_already_in_original_unchanged_source": true
+  },
+  "v17_registry": {
+    "registry_sha256": "15a42989c7fb3f4c92906cebefd08d4fa359d80bffe238ec3bdb9a8e268b450b",
+    "registry_file_sha256": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab",
+    "self_hash_verified": true,
+    "seeds_verified": true,
+    "configurations_verified": true,
+    "outer_refit_coordinates": 746,
+    "outer_test_rows": 4066,
+    "outer_test_coordinates": 187,
+    "configuration_reselection": false,
+    "official_validation_predictions_authorized": false,
+    "external_predictions_authorized": false
+  },
+  "accuracy_gate_waived": false
+}
