@@ -72,12 +72,12 @@ def test_training_data_law_fails_when_bad(payload):
 
 
 def test_train_anchor_geometry_refuses_distinct_site_collisions():
-    coords=[(float(i),0.) for i in range(30)]
+    coords=[(float(i),0.) for i in range(220)]
     d=g3._as_r0_input(canon(coords),require_training=False)
     geometry=g3._training_geometry(d)
-    assert geometry["anchor_count"]==30
+    assert geometry["anchor_count"]==220
     assert geometry["rss_aps"]==3
-    assert geometry["stratum_anchor_counts"]=={"B0_F0":30}
+    assert geometry["stratum_anchor_counts"]=={"B0_F0":220}
     # Two original float64 positions at 1e-5 separation share legacy rounded key.
     # This is a documented resolution limitation and should not be fabricated
     # as a distinct-site safety failure when original key already merged.
@@ -85,7 +85,7 @@ def test_train_anchor_geometry_refuses_distinct_site_collisions():
 
 def test_geometry_requires_minimum_anchor_coverage():
     d=g3._as_r0_input(canon([(float(i),0.) for i in range(20)]),require_training=False)
-    with pytest.raises(g3.G3Error,match="not enough"):
+    with pytest.raises(g3.G3Error,match="less than 192"):
         g3._training_geometry(d)
 
 
@@ -100,7 +100,7 @@ def test_training_source_no_test_access_syntactic_guard():
     evaluating=inspect.getsource(g3.evaluate_test)
     assert evaluating.index("_write_once(LOCK")<evaluating.index("_evaluate_test_once")
     assert g3.DATA_TEST not in (g3.MANIFEST,g3.FREEZE)
-    assert "test labels and performance" in g3.DISCLOSURE
+    assert "test labels/outcomes" in g3.DISCLOSURE
 
 
 def test_model_rss_identical_for_same_synthetic_rows_baseline_and_g1():
