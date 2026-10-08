@@ -200,3 +200,58 @@ def test_expected_hash_contract_frozen():
     assert g2.SUPPORT_RADIUS_M == 10.
     assert g2.EXPECTED_ROLES == {"calibration":72,"confirmation":79}
     assert g2.METRICS == ("exact_mixture_mean_mae_m","energy_score_2d_m")
+
+
+
+def test_original_g1_stop_and_chain_cannot_be_rewritten(monkeypatch):
+    # Test the protocol chain with tiny synthetic payloads, no raw data files.
+    r={"registry_sha256":g2.EXPECTED_HASHES["registry"],
+       "historical_gate_waiver":False,"outer_test_predictions_authorized":False,
+       "roles":{"development":{"coordinate_count":151}}}
+    c={"result_sha256":g2.EXPECTED_HASHES["calibration"],
+       "registry_sha256":r["registry_sha256"],
+       "outer_test_predictions":0,"official_validation_predictions":0}
+    f={"result_sha256":g2.EXPECTED_HASHES["freeze"],
+       "registry_sha256":r["registry_sha256"],
+       "calibration_result_sha256":c["result_sha256"],
+       "calibration_file_sha256":"calfile","chosen_gamma":.7,
+       "outer_test_predictions":0,"official_validation_predictions":0}
+    q={"result_sha256":g2.EXPECTED_HASHES["confirmation"],
+       "registry_sha256":r["registry_sha256"],"chosen_gamma":.7,
+       "calibration_file_sha256":"calfile","freeze_file_sha256":"freezefile",
+       "decision":"STOP_GEOMETRY_DENSITY_MECHANISM",
+       "gate":{"passed":False},
+       "outer_test_predictions":0,"official_validation_predictions":0}
+    def fake_sha(path):
+        if path == g2.G1_INPUTS["calibration"]:
+            return "calfile"
+        if path == g2.G1_INPUTS["freeze"]:
+            return "freezefile"
+        raise AssertionError("unexpected file")
+    monkeypatch.setattr(g2,"_sha256_file",fake_sha)
+    source={"registry":r,"calibration":c,"freeze":f,"confirmation":q}
+    g2.verify_chain(source)
+    q["decision"]="GO"
+    with pytest.raises(g2.G2Error, match="STOP"):
+        g2.verify_chain(source)
+    q["decision"]="STOP_GEOMETRY_DENSITY_MECHANISM"
+    q["gate"]["passed"]=True
+    with pytest.raises(g2.G2Error, match="STOP"):
+        g2.verify_chain(source)
+    q["gate"]["passed"]=False
+    f["calibration_file_sha256"]="tampered"
+    with pytest.raises(g2.G2Error, match="byte hash"):
+        g2.verify_chain(source)
+
+
+def test_geometry_associations_are_descriptive_and_return_null_when_constant():
+    f=synthetic_records(12)
+    for rec in f:
+        rec["constant_proxy"]=2
+    base=np.arange(12, dtype=float)+2
+    gain=np.arange(12, dtype=float)*.1
+    out=g2.correlation_diagnostics(f,"constant_proxy",baseline=base,improvement=gain)
+    assert out["pearson_with_gain"] is None
+    assert out["spearman_with_gain"] is None
+    assert out["partial_rank_after_baseline_and_floor_building"] is None
+    assert "not causal" in out["meaning"]
