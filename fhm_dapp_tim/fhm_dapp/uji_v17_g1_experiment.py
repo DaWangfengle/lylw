@@ -491,11 +491,25 @@ def confirm(device_name: str = "cuda") -> dict:
         - np.asarray(vectors["baseline"][endpoint], dtype=np.float64)
         for endpoint in endpoints
     }
-    inference = r3.studentized_max_t_family(
-        differences, repetitions=g1.BOOTSTRAP_REPETITIONS,
-        confidence=g1.CONFIDENCE, seed=g1.BOOTSTRAP_SEED,
-        orientation="geometry_correction_minus_frozen_R3_baseline",
-    )
+    if gamma == 0.0:
+        # Identity candidate produces all-zero paired differences; studentized
+        # max-T is undefined (zero variance). Record a scientific STOP rather
+        # than fabricate an interval or divide by zero.
+        inference = {
+            "status": "not_applicable_identity_candidate",
+            "reason": "calibration selected original V17 gamma=0",
+            "comparisons": {
+                key: {"simultaneous_upper_bound_m": 0.0,
+                      "inference_applicable": False}
+                for key in endpoints
+            },
+        }
+    else:
+        inference = r3.studentized_max_t_family(
+            differences, repetitions=g1.BOOTSTRAP_REPETITIONS,
+            confidence=g1.CONFIDENCE, seed=g1.BOOTSTRAP_SEED,
+            orientation="geometry_correction_minus_frozen_R3_baseline",
+        )
     delta_mae = float(np.mean(differences["exact_mixture_mean_mae_m"]))
     delta_es = float(np.mean(differences["energy_score_2d_m"]))
     placebo_delta = float(np.mean(
