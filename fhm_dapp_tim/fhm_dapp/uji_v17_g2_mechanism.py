@@ -544,7 +544,11 @@ def make_report(result: dict) -> str:
         "| Geometry/proxy | Calibration Spearman | Confirmation Spearman | Cal partial rank | Conf partial rank |",
         "|---|---:|---:|---:|---:|",
     ]
-    for metric in c["associations"]:
+    for metric in (
+        "training_anchors_within_10m", "nearest_training_anchor_m",
+        "training_anchor_d3_m", "training_anchor_d5_m",
+        "query_rss_row_count", "training_anchor_count_same_stratum",
+    ):
         if not isinstance(c["associations"][metric], dict) or "partial_rank_after_baseline_and_floor_building" not in c["associations"][metric]:
             continue
         left, right = c["associations"][metric], t["associations"][metric]

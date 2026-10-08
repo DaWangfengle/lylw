@@ -140,3 +140,7 @@ local_notes/
 # Preserve failed pytest fixtures locally without publishing scratch data.
 /fhm_dapp_tim/models/v17_g1_geometry_support/pytest_tmp/
 /fhm_dapp_tim/models/v17_g1_geometry_support/pytest_tmp_preserved_before_attempt*/
+
+# V17-G2 scientific audit stdout/stderr evidence; runtime caches remain ignored.
+!/fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/*.stderr.log

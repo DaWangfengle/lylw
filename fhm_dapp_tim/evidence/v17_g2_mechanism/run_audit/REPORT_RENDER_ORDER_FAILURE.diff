@@ -1,0 +1,18 @@
+--- immutable_RUN_REPORT_V17_G2.md
++++ renderer_after_sorted_JSON_reload.md
+@@ -35,12 +35,12 @@
+ 
+ | Geometry/proxy | Calibration Spearman | Confirmation Spearman | Cal partial rank | Conf partial rank |
+ |---|---:|---:|---:|---:|
+-| training_anchors_within_10m | -0.4313 | -0.3958 | -0.3880 | -0.3521 |
+ | nearest_training_anchor_m | +0.1095 | +0.1591 | +0.0030 | +0.0363 |
++| query_rss_row_count | -0.0800 | -0.0255 | +0.1522 | -0.0054 |
++| training_anchor_count_same_stratum | -0.2379 | -0.1619 | +0.0002 | +0.0000 |
+ | training_anchor_d3_m | +0.3797 | +0.3089 | +0.2439 | +0.2276 |
+ | training_anchor_d5_m | +0.4205 | +0.3700 | +0.3179 | +0.2719 |
+-| query_rss_row_count | -0.0800 | -0.0255 | +0.1522 | -0.0054 |
+-| training_anchor_count_same_stratum | -0.2379 | -0.1619 | +0.0002 | +0.0000 |
++| training_anchors_within_10m | -0.4313 | -0.3958 | -0.3880 | -0.3521 |
+ 
+ ## Cross-split geometry sign checks (descriptive)
+ 

@@ -1,0 +1,28 @@
+{
+  "status": "READY_READ_ONLY_POSTHOC",
+  "protocol": "v17_g2_posthoc_support_risk_mechanism_v1_20261008",
+  "disclosure": "Post-outcome exploratory diagnosis of already opened G1 calibration and confirmation. NO fresh holdout, confirmatory p-values, new PASS, model selection, deployment gate, or proof of causality.",
+  "source_hashes": {
+    "registry": {
+      "file_sha256": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+      "self_sha256": "bfd44edf4f5f05f08dea2bc2c9972138b361fff529467c166c3e7ab333ebccf6"
+    },
+    "calibration": {
+      "file_sha256": "76a5379d43b93742587daea701948222014946fb1aaa2a7a5e8b5a01c9079f6e",
+      "self_sha256": "0729b512f74de0d607afb4f4717919a2f139c1110f62e798cd5c0c443045f86d"
+    },
+    "freeze": {
+      "file_sha256": "24e9a1599bce2e1bf76a4b4da1e6707d0c8967777502a316d7d0fa07a508c43c",
+      "self_sha256": "2bf7e709997f27ad83898e57f06cd63370dab508b622ea2577930b94050e75fe"
+    },
+    "confirmation": {
+      "file_sha256": "48806835eb64051a707fd52cd7e594baa1f7c68fda7a8f9db1f6b03bd0888a9d",
+      "self_sha256": "a54a0a8ff452adf3245bd5145afa52b56f9a2c8eedec650e3e29923b57a9b76c"
+    }
+  },
+  "train_data_sha256": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+  "g1_original_stop_preserved": true,
+  "external_and_official_predictions_authorized": false,
+  "requires_gpu": false,
+  "requires_checkpoints": false
+}

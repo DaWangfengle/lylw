@@ -1,0 +1,31 @@
+{
+  "status": "INDEPENDENT_COORDINATE_AND_VECTOR_REVIEW_PASS",
+  "hand_check_count": 6,
+  "all_physical_coordinates_verified": 151,
+  "role_counts": {
+    "calibration": {
+      "coordinates": 72,
+      "rows": 1529
+    },
+    "confirmation": {
+      "coordinates": 79,
+      "rows": 1625
+    }
+  },
+  "correlation_limitations": [
+    {
+      "role": "calibration",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 0.0001544902054395192,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    },
+    {
+      "role": "confirmation",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 1.2652925978020566e-05,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    }
+  ]
+}

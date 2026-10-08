@@ -1,0 +1,72 @@
+V17-G2 | Codex LOCAL EXECUTION + SCIENTIFIC AUDIT
+====================================================
+Repository: DaWangfengle/lylw
+Prepared branch: v17-g2-support-risk-mechanism-audit
+Source ancestor: v17-g1-geometry-support-pilot at cf03dc53cbe7378196526afcdd64582aa9a6cd59
+Design: fhm_dapp_tim/evidence/v17_g2_mechanism/DESIGN_V17_G2.md
+Program: fhm_dapp_tim/fhm_dapp/uji_v17_g2_mechanism.py
+Tests: tests/test_uji_v17_g2_mechanism.py
+Output (new): fhm_dapp_tim/evidence/v17_g2_mechanism/G2_MECHANISM_AUDIT.json
+Report (new): fhm_dapp_tim/evidence/v17_g2_mechanism/RUN_REPORT_V17_G2.md
+
+MISSION
+Complete the G2 CPU-only, READ-ONLY retrospective mechanism audit of the already frozen G1 stage. This stage tests whether a physical-geometry explanation is plausible or contradicted by the archived per-coordinate metrics; it is NOT a new localization model, not a new confirmation, not a statistically independent test, and cannot change the previous G1 STOP. No GPU/member training needed; do not ask to retrain or reload G1 .pt weights.
+
+ALL Git operations belong to the user. Do NOT perform or instruct Git add/commit/push/pull/checkout/branch/merge/upload; user independently selects and publishes the branch and artifacts.
+
+PRE-FLIGHT SCIENTIFIC CHECKS (MANDATORY)
+1. Verify exact GitHub files from specified branch and original G1 results exist locally:
+   fhm_dapp_tim/evidence/v17_g1_geometry_support/registry_v17_g1.json
+   fhm_dapp_tim/evidence/v17_g1_geometry_support/calibration_v17_g1.json
+   fhm_dapp_tim/evidence/v17_g1_geometry_support/freeze_v17_g1.json
+   fhm_dapp_tim/evidence/v17_g1_geometry_support/confirmation_v17_g1.json
+   fhm_dapp_tim/evidence/historical_reproduction/v17/registry_v17_reproduction.json
+   data/UJIndoorLoc/trainingData.csv
+   The raw data SHA256 must equal 45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168. The G1 checkpoint weights are NOT required.
+2. G1 formal STOP is frozen:
+   gamma 0.7; 79 confirmation coordinate groups; net MAE gain 0.143769762 m;
+   MAE simultaneous familywise upper +0.012352838 m; formal FAIL/STOP.
+   No threshold waiver, no new gamma, no new confirmation.
+3. The G1 calibration (72 groups) and confirmation (79 groups) are already used/disclosed. All G2 associations, bins and interpretations are POST-OUTCOME exploratory. DO NOT report G2 correlations as an independent p-value, causal inference, external validation, or JCR Q1 achievement. G2's analysis uses TRUE query coordinates for retrospective spatial geometry, which are unavailable to an online unlabeled predictor; never use them as a deployable gating feature.
+4. DO NOT edit original V9, V17, G1 scientific code; existing original G1 registry/calibration/freeze/confirmation; historical logs/models; data; or the stored G2 design after any run.
+5. Check that no original sources changed in tree diff. New files only under G2 code/tests/evidence/instructions and .gitattributes EOL protection.
+
+EXECUTION (repo root, existing Python environment; CPU is enough)
+Before running analysis, create a run log directory without changing frozen G1 assets:
+  fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/
+
+Run in this order; capture complete stdout, stderr, timestamps, SHA256 of every log, and exit codes:
+  python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g2_mechanism.py tests/test_uji_v17_g2_mechanism.py
+  python -m pytest -q tests/test_uji_v17_g2_mechanism.py
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g2_mechanism preflight
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g2_mechanism analyze
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g2_mechanism check
+
+Execute analyze only ONCE. Do not delete/overwrite output JSON or report if they exist. If a test fails BEFORE analyze, preserve failing logs, perform the minimum code-only repair WITHIN new G2 source/tests (not scientific definitions, grouping, or G1 data), add a regression test for the actual defect, rerun compile/tests/preflight, record byte-for-byte changes and reason before analyze. If a required scientific change is discovered, STOP and issue an amendment for review; do NOT silently alter design or results. If analyze runs partly and leaves an output, do not clear and rerun automatically; preserve the file and diagnose/report.
+
+The script should:
+- Verify original hashes and G1 freeze/confirmation byte chain;
+- Rebuild the exact 595 selection_refit training coordinates, G1 72/79 physical-coordinate grouping and sorted vector mapping;
+- Compute physical support proxies WITHIN matching building/floor from training anchor coordinates: within 10m anchor count, d1/d3/d5 training-anchor distances, stratum count; also original RSS scan count per physical query coordinate;
+- Attribute per-coordinate G1 gain, ES and weighted/unweighted summaries; describe whether best 1/2/3/5/10 gain outliers control the macro mean;
+- Give global Pearson/Spearman, partial rank correlation controlling baseline MAE + building/floor, and deterministic geometry/difficulty quartile summaries;
+- Compare both opened partitions without inferring new independent confirmation;
+- Write immutable G2 JSON and a descriptive Markdown report. Explicitly note absence of inference p-values and the non-causal nature of associations.
+
+REQUIRED FINAL EVIDENCE
+Create under evidence/v17_g2_mechanism/run_audit:
+- TESTS_AND_EXECUTION.json with Python/NumPy/Torch versions if installed, command stdout/stderr logs/hash, exit code and timings;
+- G2_INTEGRITY_REVIEW.json containing G1 registry/calibration/freeze/confirmation original hashes before and after G2, raw data SHA256, output and report SHA256; G1 original STOP unchanged; all original models and G1 code untouched;
+- optional FAILURE_REPAIR_NOTES.md for any pre-analysis fixture/API issue (keep failed logs);
+- an independent hand-check of at least 3 physical group keys against CSV training anchors and original G1 per-group MAE arrays, verifying order and 10m density calculations, plus exact row-count reconstructions.
+
+Add a final research interpretation section to RUN_REPORT_V17_G2.md only if it was NOT already generated and hashed; otherwise put interpretation in a NEW separate run_audit/G2_EXECUTION_INTERPRETATION.md. Do not overwrite the script-generated original report.
+
+REPORT INTERPRETATION FRAMEWORK (no cherry picking)
+A. If sparse support -> larger gain correlations agree between both opened roles and partially persist after conditioning, say "consistent with geometry bias" but NOT causal proof.
+B. If correlations disagree between roles or vanish after controlling baseline difficulty, explicitly report "simple spatial-sparsity hypothesis not supported" even if aggregate MAE improved.
+C. If removing best 1-5 group gains eliminates net improvement, report tail concentration as a limitation, not success.
+D. Regardless of outcome, DO NOT retrain or develop a G2 gated model on already observed confirmation. For JCR Q1 an independently frozen next hypothesis, literature novelty review, and truly fresh compatible validation (properly adapted external datasets) will be needed.
+E. Historical V17 5.725985m outer MAE is a different split/anchor model; never compare it directly as an equal-cohort result to G1/G2.
+
+Do not create a new model version, do not initiate official/external evaluation, and do not fabricate missing scores, CI, model weights or results. The user will upload logs and reports after local execution and request ChatGPT to review the G2 evidence and choose the next scientific stage.

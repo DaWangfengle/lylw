@@ -1,0 +1,24 @@
+{
+  "status": "AUDIT_HELPER_ONLY_REPAIR",
+  "recorded_utc": "2026-10-08T12:39:31.170870+00:00",
+  "stage": "finalize-audit",
+  "attempt": 1,
+  "exit_code": 1,
+  "runtime_seconds": null,
+  "command": [
+    "D:/miniminiconda/envs/liuyan/python.exe",
+    "runpy.run_path",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/finalize_audit.py"
+  ],
+  "cause": "Audit-summary glob also matched analyze access trace, incorrectly counting two executions.",
+  "resolution": "Filter .access.json only in audit helper; retain original helper, error and diff.",
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\finalize-audit_attempt01.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\finalize-audit_attempt01.stderr.log",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "628efc5162815b1353282e00917db48609b5cd064d800243e244a8508b0ef391",
+  "old_helper_sha256": "2360e303c6d98721bfd16b4eb0f153712b2bc98f93c6e43fb9ec4f148b6220ab",
+  "new_helper_sha256": "96d2ac9232dde620e908d69f2af10f345281cc9e5f61cb00a5d2b97615bffe2d",
+  "production_scientific_source_or_formal_outputs_changed": false,
+  "analyze_or_check_rerun": false,
+  "required_output_files_created_before_failure": false
+}

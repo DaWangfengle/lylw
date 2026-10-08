@@ -1,0 +1,7 @@
+{
+  "output": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\G2_MECHANISM_AUDIT.json",
+  "report": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\RUN_REPORT_V17_G2.md",
+  "result_sha256": "2063b8d3402d789e03965d2435f72d8661eeab3dd26bf7f5a6c77246050d0bfb",
+  "status": "DESCRIPTIVE_MECHANISM_AUDIT",
+  "g1_formal_stop_preserved": true
+}

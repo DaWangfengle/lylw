@@ -1,0 +1,10 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g2_mechanism",
+    "analyze"
+  ],
+  "started_utc": "2026-10-08T12:26:23.476728+00:00",
+  "attempt": 1
+}

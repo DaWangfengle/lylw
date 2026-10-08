@@ -1,0 +1,1006 @@
+{
+  "status": "IMMUTABLE_INPUTS_AND_COORDINATE_VALUES_VERIFIED_OFFICIAL_CHECK_FAILED",
+  "recorded_utc": "2026-10-08T12:39:31.317413+00:00",
+  "official_check_passed": false,
+  "formal_execution_stopped": true,
+  "official_failure_preserved": {
+    "status": "OFFICIAL_CHECK_FAILED_STOP_NO_RERUN",
+    "recorded_utc": "2026-10-08T12:28:50.082433+00:00",
+    "analyze_execution_count": 1,
+    "analyze_exit_code": 0,
+    "check_exit_code": 1,
+    "cause": "JSON writer sorts association dictionary keys; original report used construction insertion order. check reloads sorted JSON and renders a different row order.",
+    "all_report_lines_identical_as_multiset": true,
+    "difference_is_only_association_table_row_order": true,
+    "original_report_association_row_order": [
+      "macro_baseline_mae_m",
+      "training_anchors_within_10m",
+      "nearest_training_anchor_m",
+      "training_anchor_d3_m",
+      "training_anchor_d5_m",
+      "query_rss_row_count",
+      "training_anchor_count_same_stratum",
+      "training_anchors_within_10m",
+      "nearest_training_anchor_m",
+      "training_anchor_d3_m",
+      "query_rss_row_count"
+    ],
+    "reloaded_JSON_renderer_order": [
+      "macro_baseline_mae_m",
+      "nearest_training_anchor_m",
+      "query_rss_row_count",
+      "training_anchor_count_same_stratum",
+      "training_anchor_d3_m",
+      "training_anchor_d5_m",
+      "training_anchors_within_10m",
+      "training_anchors_within_10m",
+      "nearest_training_anchor_m",
+      "training_anchor_d3_m",
+      "query_rss_row_count"
+    ],
+    "immutable_output_sha256": "ef07d689a979833e0f7a2f58f810a90cf476af9188001d05a593bef941b13046",
+    "immutable_result_self_sha256": "2063b8d3402d789e03965d2435f72d8661eeab3dd26bf7f5a6c77246050d0bfb",
+    "immutable_report_sha256": "f022f677622cf0f9a4bdae1687ebd09dd92d5940dbb8e2e4aa482c6d8efe6924",
+    "G2_source_modified": false,
+    "G2_report_or_JSON_rewritten": false,
+    "analyze_retried": false,
+    "formal_stage_stopped_pending_authorized_amendment": true
+  },
+  "G1_input_sha256_before": {
+    "data/UJIndoorLoc/trainingData.csv": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+    "fhm_dapp_tim/evidence/historical_reproduction/v17/registry_v17_reproduction.json": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/registry_v17_g1.json": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/calibration_v17_g1.json": "76a5379d43b93742587daea701948222014946fb1aaa2a7a5e8b5a01c9079f6e",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/freeze_v17_g1.json": "24e9a1599bce2e1bf76a4b4da1e6707d0c8967777502a316d7d0fa07a508c43c",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/confirmation_v17_g1.json": "48806835eb64051a707fd52cd7e594baa1f7c68fda7a8f9db1f6b03bd0888a9d"
+  },
+  "G1_input_sha256_after": {
+    "data/UJIndoorLoc/trainingData.csv": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168",
+    "fhm_dapp_tim/evidence/historical_reproduction/v17/registry_v17_reproduction.json": "b667027ff121806dd7448a22b933b24d42a4a15c4a7831af5a861bccc834abab",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/registry_v17_g1.json": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/calibration_v17_g1.json": "76a5379d43b93742587daea701948222014946fb1aaa2a7a5e8b5a01c9079f6e",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/freeze_v17_g1.json": "24e9a1599bce2e1bf76a4b4da1e6707d0c8967777502a316d7d0fa07a508c43c",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/confirmation_v17_g1.json": "48806835eb64051a707fd52cd7e594baa1f7c68fda7a8f9db1f6b03bd0888a9d"
+  },
+  "all_G1_input_bytes_unchanged": true,
+  "G2_source_design_tests_protocol_sha256_before": {
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g2_mechanism.py": "ee6f66be4241615444581da78a9a78f8c8e9070621805656a5020609df5d7280",
+    "tests/test_uji_v17_g2_mechanism.py": "ec5285c94673a88889bd76b848b0605165a01cfe9fad68b79b961498a7c31468",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/DESIGN_V17_G2.md": "53a5010f6c44a35bd82d79f41b544c843d4b27170fb327f413d1a6ba8c96f1ab",
+    "V17_G2_CODEX_RUN.txt": "ef65f4b8df8497733ec5c86b9d8fb716bf7fd0fdadd16d2947253506409769ba"
+  },
+  "G2_source_design_tests_protocol_sha256_after": {
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g2_mechanism.py": "ee6f66be4241615444581da78a9a78f8c8e9070621805656a5020609df5d7280",
+    "tests/test_uji_v17_g2_mechanism.py": "ec5285c94673a88889bd76b848b0605165a01cfe9fad68b79b961498a7c31468",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/DESIGN_V17_G2.md": "53a5010f6c44a35bd82d79f41b544c843d4b27170fb327f413d1a6ba8c96f1ab",
+    "V17_G2_CODEX_RUN.txt": "ef65f4b8df8497733ec5c86b9d8fb716bf7fd0fdadd16d2947253506409769ba"
+  },
+  "all_G2_sources_unchanged": true,
+  "G2_output_sha256": "ef07d689a979833e0f7a2f58f810a90cf476af9188001d05a593bef941b13046",
+  "G2_result_self_sha256": "2063b8d3402d789e03965d2435f72d8661eeab3dd26bf7f5a6c77246050d0bfb",
+  "G2_report_sha256": "f022f677622cf0f9a4bdae1687ebd09dd92d5940dbb8e2e4aa482c6d8efe6924",
+  "G2_outputs_not_overwritten": true,
+  "protected_historical_text_assets_unchanged": 759,
+  "protected_model_metadata_unchanged": 136,
+  "model_verification_scope": "Size and mtime equality only; checkpoint content not opened and no weights loaded. Prior G1 checkpoint SHA256 records were not recalculated.",
+  "G1_original_stop_unchanged": true,
+  "G1_original_gamma": 0.7,
+  "G1_original_gain_m": 0.14376976245291254,
+  "G1_original_familywise_MAE_upper_m": 0.012352838477624,
+  "role_count_and_no_overlap_proof": {
+    "selection_refit": {
+      "coordinates": 595,
+      "rows": 12717,
+      "coordinate_key_sha256": "dee73a63ed8c3eddcc789454852c34b8042baa4886c8ba944f6c11cd64b28eb6",
+      "row_index_sha256": "1c4d7c6e1da6339ee8fb6642ef6d2957c37a4822d388786b64d25a8f712b14f2"
+    },
+    "roles": {
+      "calibration": {
+        "coordinates": 72,
+        "rows": 1529,
+        "coordinate_key_sha256": "31457ee770b9fc1ec4c19a5cb79a065141552788160bd476fc156f09dc1f4108",
+        "row_index_sha256": "16aac6406d751cfecd59aefa306cfd7428938e35c110a8099f52b845bc28af1e",
+        "all_coordinates_checked_independently": 72,
+        "all_geometry_and_G1_vector_matches": true,
+        "vector_macro_reconstruction": [
+          {
+            "variant": "gamma_0",
+            "endpoint": "exact_mixture_mean_mae_m",
+            "mean_from_vectors": 6.194178462166675,
+            "original_macro": 6.194178462166674
+          },
+          {
+            "variant": "gamma_0",
+            "endpoint": "energy_score_2d_m",
+            "mean_from_vectors": 5.134415287834126,
+            "original_macro": 5.134415287834126
+          },
+          {
+            "variant": "gamma_0p35",
+            "endpoint": "exact_mixture_mean_mae_m",
+            "mean_from_vectors": 6.11003037744842,
+            "original_macro": 6.11003037744842
+          },
+          {
+            "variant": "gamma_0p35",
+            "endpoint": "energy_score_2d_m",
+            "mean_from_vectors": 5.118244124415765,
+            "original_macro": 5.1182441244157655
+          },
+          {
+            "variant": "gamma_0p7",
+            "endpoint": "exact_mixture_mean_mae_m",
+            "mean_from_vectors": 6.072321895048307,
+            "original_macro": 6.072321895048307
+          },
+          {
+            "variant": "gamma_0p7",
+            "endpoint": "energy_score_2d_m",
+            "mean_from_vectors": 5.124763226621788,
+            "original_macro": 5.124763226621787
+          }
+        ],
+        "first_middle_last_hand_check_indices": [
+          0,
+          36,
+          71
+        ]
+      },
+      "confirmation": {
+        "coordinates": 79,
+        "rows": 1625,
+        "coordinate_key_sha256": "d3c44cb9443b1c04038629c3277319655ab74f437b4a57b0bf501baa38e32183",
+        "row_index_sha256": "20c46fe771129a5314e2f733951c515759931ed295ba65bbb1e6db42b5d48d06",
+        "all_coordinates_checked_independently": 79,
+        "all_geometry_and_G1_vector_matches": true,
+        "vector_macro_reconstruction": [
+          {
+            "variant": "baseline",
+            "endpoint": "exact_mixture_mean_mae_m",
+            "mean_from_vectors": 5.495018476092691,
+            "original_macro": 5.495018476092691
+          },
+          {
+            "variant": "baseline",
+            "endpoint": "energy_score_2d_m",
+            "mean_from_vectors": 4.401050694459681,
+            "original_macro": 4.401050694459681
+          },
+          {
+            "variant": "placebo",
+            "endpoint": "exact_mixture_mean_mae_m",
+            "mean_from_vectors": 5.566040140573715,
+            "original_macro": 5.5660401405737145
+          },
+          {
+            "variant": "placebo",
+            "endpoint": "energy_score_2d_m",
+            "mean_from_vectors": 4.383771821750568,
+            "original_macro": 4.383771821750568
+          },
+          {
+            "variant": "selected",
+            "endpoint": "exact_mixture_mean_mae_m",
+            "mean_from_vectors": 5.3512487136397775,
+            "original_macro": 5.3512487136397775
+          },
+          {
+            "variant": "selected",
+            "endpoint": "energy_score_2d_m",
+            "mean_from_vectors": 4.2779719395323275,
+            "original_macro": 4.277971939532327
+          }
+        ],
+        "first_middle_last_hand_check_indices": [
+          0,
+          39,
+          78
+        ]
+      }
+    },
+    "calibration_confirmation_coordinate_overlap": 0,
+    "calibration_confirmation_row_overlap": 0,
+    "development_groups": 151
+  },
+  "hand_check_count": 6,
+  "hand_check_records": [
+    {
+      "role": "calibration",
+      "sorted_vector_index_zero_based": 0,
+      "coordinate_key": [
+        0,
+        0,
+        -7638.84319999814,
+        4864999.3684
+      ],
+      "source_CSV_row_indices_zero_based": [
+        7139,
+        7594,
+        8021,
+        8455,
+        8912,
+        9369,
+        9825,
+        10281,
+        10739,
+        11195,
+        15792,
+        16327,
+        16591,
+        16868,
+        17149,
+        17418,
+        17699,
+        17975,
+        18250
+      ],
+      "source_RSS_row_count": 19,
+      "training_anchor_count_same_building_floor": 34,
+      "training_anchors_within_10m_count": 3,
+      "training_anchors_within_10m_keys": [
+        [
+          0,
+          0,
+          -7639.417199999094,
+          4865001.277099997
+        ],
+        [
+          0,
+          0,
+          -7641.03009999916,
+          4865006.826700002
+        ],
+        [
+          0,
+          0,
+          -7636.633000001311,
+          4864991.830600001
+        ]
+      ],
+      "nearest_five_anchors": [
+        {
+          "distance_m": 1.993141158764836,
+          "coordinate_key": [
+            0,
+            0,
+            -7639.417199999094,
+            4865001.277099997
+          ]
+        },
+        {
+          "distance_m": 7.772307928349656,
+          "coordinate_key": [
+            0,
+            0,
+            -7641.03009999916,
+            4865006.826700002
+          ]
+        },
+        {
+          "distance_m": 7.85515199424455,
+          "coordinate_key": [
+            0,
+            0,
+            -7636.633000001311,
+            4864991.830600001
+          ]
+        },
+        {
+          "distance_m": 11.490806250189523,
+          "coordinate_key": [
+            0,
+            0,
+            -7640.976199999452,
+            4865010.659500003
+          ]
+        },
+        {
+          "distance_m": 12.397819827844268,
+          "coordinate_key": [
+            0,
+            0,
+            -7639.077799998224,
+            4865011.763999999
+          ]
+        }
+      ],
+      "independently_calculated_d1_d3_d5_m": [
+        1.993141158764836,
+        7.85515199424455,
+        12.397819827844268
+      ],
+      "original_G1_baseline_MAE_ES": [
+        1.9751728147768055,
+        2.0988517990841147
+      ],
+      "original_G1_gamma0p7_MAE_ES": [
+        2.5129313273493725,
+        2.189199389429747
+      ],
+      "G2_per_coordinate_matches_original_vectors_and_manual_geometry": true
+    },
+    {
+      "role": "calibration",
+      "sorted_vector_index_zero_based": 36,
+      "coordinate_key": [
+        1,
+        3,
+        -7474.607500001788,
+        4864866.886100002
+      ],
+      "source_CSV_row_indices_zero_based": [
+        19312,
+        19332,
+        19349,
+        19370,
+        19386,
+        19408,
+        19429,
+        19447,
+        19467,
+        19486
+      ],
+      "source_RSS_row_count": 10,
+      "training_anchor_count_same_building_floor": 32,
+      "training_anchors_within_10m_count": 1,
+      "training_anchors_within_10m_keys": [
+        [
+          1,
+          3,
+          -7480.315432280302,
+          4864867.4245626405
+        ]
+      ],
+      "nearest_five_anchors": [
+        {
+          "distance_m": 5.733274187542721,
+          "coordinate_key": [
+            1,
+            3,
+            -7480.315432280302,
+            4864867.4245626405
+          ]
+        },
+        {
+          "distance_m": 10.967788641952332,
+          "coordinate_key": [
+            1,
+            3,
+            -7466.322678111494,
+            4864859.6990203485
+          ]
+        },
+        {
+          "distance_m": 13.389322582021453,
+          "coordinate_key": [
+            1,
+            3,
+            -7485.468600001186,
+            4864874.716200002
+          ]
+        },
+        {
+          "distance_m": 20.643731803050738,
+          "coordinate_key": [
+            1,
+            3,
+            -7478.544700000435,
+            4864887.150899999
+          ]
+        },
+        {
+          "distance_m": 21.865557482149754,
+          "coordinate_key": [
+            1,
+            3,
+            -7458.412799999118,
+            4864852.194799997
+          ]
+        }
+      ],
+      "independently_calculated_d1_d3_d5_m": [
+        5.733274187542721,
+        13.389322582021453,
+        21.865557482149754
+      ],
+      "original_G1_baseline_MAE_ES": [
+        41.022885202102486,
+        34.006902029395334
+      ],
+      "original_G1_gamma0p7_MAE_ES": [
+        40.73562342101573,
+        33.34128668458812
+      ],
+      "G2_per_coordinate_matches_original_vectors_and_manual_geometry": true
+    },
+    {
+      "role": "calibration",
+      "sorted_vector_index_zero_based": 71,
+      "coordinate_key": [
+        2,
+        4,
+        -7316.867199998349,
+        4864813.714900002
+      ],
+      "source_CSV_row_indices_zero_based": [
+        2355,
+        2455,
+        2554,
+        2653,
+        2751,
+        2846,
+        2944,
+        3045,
+        3141,
+        3240,
+        12113,
+        12200,
+        12280,
+        12367,
+        12449,
+        12531,
+        12616,
+        12700,
+        12786,
+        12873
+      ],
+      "source_RSS_row_count": 20,
+      "training_anchor_count_same_building_floor": 43,
+      "training_anchors_within_10m_count": 7,
+      "training_anchors_within_10m_keys": [
+        [
+          2,
+          4,
+          -7318.341099999845,
+          4864814.532499999
+        ],
+        [
+          2,
+          4,
+          -7314.109499998391,
+          4864816.739699997
+        ],
+        [
+          2,
+          4,
+          -7310.057300001383,
+          4864815.156599999
+        ],
+        [
+          2,
+          4,
+          -7309.517499998212,
+          4864813.293499999
+        ],
+        [
+          2,
+          4,
+          -7312.662200000137,
+          4864807.624899998
+        ],
+        [
+          2,
+          4,
+          -7321.037900000811,
+          4864820.583700001
+        ],
+        [
+          2,
+          4,
+          -7325.23409999907,
+          4864818.356799997
+        ]
+      ],
+      "nearest_five_anchors": [
+        {
+          "distance_m": 1.6854824144383453,
+          "coordinate_key": [
+            2,
+            4,
+            -7318.341099999845,
+            4864814.532499999
+          ]
+        },
+        {
+          "distance_m": 4.093204649205081,
+          "coordinate_key": [
+            2,
+            4,
+            -7314.109499998391,
+            4864816.739699997
+          ]
+        },
+        {
+          "distance_m": 6.960835930513947,
+          "coordinate_key": [
+            2,
+            4,
+            -7310.057300001383,
+            4864815.156599999
+          ]
+        },
+        {
+          "distance_m": 7.361770714621415,
+          "coordinate_key": [
+            2,
+            4,
+            -7309.517499998212,
+            4864813.293499999
+          ]
+        },
+        {
+          "distance_m": 7.400684091928315,
+          "coordinate_key": [
+            2,
+            4,
+            -7312.662200000137,
+            4864807.624899998
+          ]
+        }
+      ],
+      "independently_calculated_d1_d3_d5_m": [
+        1.6854824144383453,
+        6.960835930513947,
+        7.400684091928315
+      ],
+      "original_G1_baseline_MAE_ES": [
+        7.737557784139635,
+        5.048898762393106
+      ],
+      "original_G1_gamma0p7_MAE_ES": [
+        8.3461176059966,
+        5.21177990310517
+      ],
+      "G2_per_coordinate_matches_original_vectors_and_manual_geometry": true
+    },
+    {
+      "role": "confirmation",
+      "sorted_vector_index_zero_based": 0,
+      "coordinate_key": [
+        0,
+        0,
+        -7682.543800000101,
+        4864932.339500003
+      ],
+      "source_CSV_row_indices_zero_based": [
+        7157,
+        7611,
+        8039,
+        8473,
+        8930,
+        9386,
+        9838,
+        10299,
+        10756,
+        11212,
+        15761,
+        16040,
+        16293,
+        16565,
+        16840,
+        17118,
+        17391,
+        17670,
+        17945,
+        18224
+      ],
+      "source_RSS_row_count": 20,
+      "training_anchor_count_same_building_floor": 34,
+      "training_anchors_within_10m_count": 3,
+      "training_anchors_within_10m_keys": [
+        [
+          0,
+          0,
+          -7680.134599998593,
+          4864931.4921
+        ],
+        [
+          0,
+          0,
+          -7685.72349999845,
+          4864929.890299998
+        ],
+        [
+          0,
+          0,
+          -7674.955899998546,
+          4864934.514399998
+        ]
+      ],
+      "nearest_five_anchors": [
+        {
+          "distance_m": 2.5538855516571983,
+          "coordinate_key": [
+            0,
+            0,
+            -7680.134599998593,
+            4864931.4921
+          ]
+        },
+        {
+          "distance_m": 4.0136109353991385,
+          "coordinate_key": [
+            0,
+            0,
+            -7685.72349999845,
+            4864929.890299998
+          ]
+        },
+        {
+          "distance_m": 7.893441354902314,
+          "coordinate_key": [
+            0,
+            0,
+            -7674.955899998546,
+            4864934.514399998
+          ]
+        },
+        {
+          "distance_m": 13.846320816159894,
+          "coordinate_key": [
+            0,
+            0,
+            -7669.233500000089,
+            4864936.154799998
+          ]
+        },
+        {
+          "distance_m": 20.7723298684666,
+          "coordinate_key": [
+            0,
+            0,
+            -7661.896899998188,
+            4864934.618799999
+          ]
+        }
+      ],
+      "independently_calculated_d1_d3_d5_m": [
+        2.5538855516571983,
+        7.893441354902314,
+        20.7723298684666
+      ],
+      "original_G1_baseline_MAE_ES": [
+        3.0033852307405136,
+        2.0818409346691986
+      ],
+      "original_G1_gamma0p7_MAE_ES": [
+        2.7851737092414304,
+        2.0735963394016883
+      ],
+      "G2_per_coordinate_matches_original_vectors_and_manual_geometry": true
+    },
+    {
+      "role": "confirmation",
+      "sorted_vector_index_zero_based": 39,
+      "coordinate_key": [
+        1,
+        2,
+        -7457.75549999997,
+        4864815.285700001
+      ],
+      "source_CSV_row_indices_zero_based": [
+        5141,
+        5247,
+        5352,
+        5452,
+        5556,
+        5659,
+        5768,
+        5876,
+        5986,
+        6095,
+        6222,
+        6314,
+        6405,
+        6496,
+        6585,
+        6684,
+        6769,
+        6864,
+        6951,
+        7048
+      ],
+      "source_RSS_row_count": 20,
+      "training_anchor_count_same_building_floor": 50,
+      "training_anchors_within_10m_count": 1,
+      "training_anchors_within_10m_keys": [
+        [
+          1,
+          2,
+          -7460.767900001258,
+          4864810.030100003
+        ]
+      ],
+      "nearest_five_anchors": [
+        {
+          "distance_m": 6.05771286097973,
+          "coordinate_key": [
+            1,
+            2,
+            -7460.767900001258,
+            4864810.030100003
+          ]
+        },
+        {
+          "distance_m": 10.539554234867879,
+          "coordinate_key": [
+            1,
+            2,
+            -7466.963700000197,
+            4864820.413199998
+          ]
+        },
+        {
+          "distance_m": 12.135847582131827,
+          "coordinate_key": [
+            1,
+            2,
+            -7469.88919999823,
+            4864815.057400003
+          ]
+        },
+        {
+          "distance_m": 16.006120950623767,
+          "coordinate_key": [
+            1,
+            2,
+            -7457.927200000733,
+            4864831.290899999
+          ]
+        },
+        {
+          "distance_m": 22.09751672872376,
+          "coordinate_key": [
+            1,
+            2,
+            -7469.328741654754,
+            4864834.110160768
+          ]
+        }
+      ],
+      "independently_calculated_d1_d3_d5_m": [
+        6.05771286097973,
+        12.135847582131827,
+        22.09751672872376
+      ],
+      "original_G1_baseline_MAE_ES": [
+        4.7374042640663125,
+        4.883375631068128
+      ],
+      "original_G1_gamma0p7_MAE_ES": [
+        5.221916880433366,
+        5.0989000265750315
+      ],
+      "G2_per_coordinate_matches_original_vectors_and_manual_geometry": true
+    },
+    {
+      "role": "confirmation",
+      "sorted_vector_index_zero_based": 78,
+      "coordinate_key": [
+        2,
+        4,
+        -7311.919399999082,
+        4864808.963799998
+      ],
+      "source_CSV_row_indices_zero_based": [
+        2338,
+        2439,
+        2535,
+        2636,
+        2733,
+        2828,
+        2929,
+        3026,
+        3122,
+        3221,
+        12116,
+        12198,
+        12276,
+        12360,
+        12445,
+        12529,
+        12611,
+        12701,
+        12785,
+        12872
+      ],
+      "source_RSS_row_count": 20,
+      "training_anchor_count_same_building_floor": 43,
+      "training_anchors_within_10m_count": 6,
+      "training_anchors_within_10m_keys": [
+        [
+          2,
+          4,
+          -7312.662200000137,
+          4864807.624899998
+        ],
+        [
+          2,
+          4,
+          -7309.517499998212,
+          4864813.293499999
+        ],
+        [
+          2,
+          4,
+          -7310.057300001383,
+          4864815.156599999
+        ],
+        [
+          2,
+          4,
+          -7315.743400000036,
+          4864802.071500003
+        ],
+        [
+          2,
+          4,
+          -7314.109499998391,
+          4864816.739699997
+        ],
+        [
+          2,
+          4,
+          -7318.341099999845,
+          4864814.532499999
+        ]
+      ],
+      "nearest_five_anchors": [
+        {
+          "distance_m": 1.5311450131141233,
+          "coordinate_key": [
+            2,
+            4,
+            -7312.662200000137,
+            4864807.624899998
+          ]
+        },
+        {
+          "distance_m": 4.951305455053099,
+          "coordinate_key": [
+            2,
+            4,
+            -7309.517499998212,
+            4864813.293499999
+          ]
+        },
+        {
+          "distance_m": 6.46669840465793,
+          "coordinate_key": [
+            2,
+            4,
+            -7310.057300001383,
+            4864815.156599999
+          ]
+        },
+        {
+          "distance_m": 7.882053997910478,
+          "coordinate_key": [
+            2,
+            4,
+            -7315.743400000036,
+            4864802.071500003
+          ]
+        },
+        {
+          "distance_m": 8.078437893490824,
+          "coordinate_key": [
+            2,
+            4,
+            -7314.109499998391,
+            4864816.739699997
+          ]
+        }
+      ],
+      "independently_calculated_d1_d3_d5_m": [
+        1.5311450131141233,
+        6.46669840465793,
+        8.078437893490824
+      ],
+      "original_G1_baseline_MAE_ES": [
+        11.41368069771355,
+        7.671917686281903
+      ],
+      "original_G1_gamma0p7_MAE_ES": [
+        11.72338239776915,
+        7.660459159435646
+      ],
+      "G2_per_coordinate_matches_original_vectors_and_manual_geometry": true
+    }
+  ],
+  "file_access_trace_reviews": [
+    {
+      "stage": "compile",
+      "trace_sha256": "0c39cb5cbd802b472ccbc896cb47be0950c5d84aa7062446ab958b578dd3c2d4",
+      "checkpoint_or_official_file_open_attempts": 0,
+      "blocked_accesses": 0,
+      "repository_read_count": 30,
+      "repository_write_count": 2,
+      "descriptor_open_events_without_path": 2
+    },
+    {
+      "stage": "pytest",
+      "trace_sha256": "c2f912898da188c97a73ca1e9cfe333b0757ac14116d69a5a67b523f40fc21e1",
+      "checkpoint_or_official_file_open_attempts": 0,
+      "blocked_accesses": 0,
+      "repository_read_count": 1984,
+      "repository_write_count": 0,
+      "descriptor_open_events_without_path": 0
+    },
+    {
+      "stage": "preflight",
+      "trace_sha256": "b974a93ee630683c3a8ee9f0ade2ee981b0915ba5de7cf5859c2271eeecdd1a7",
+      "checkpoint_or_official_file_open_attempts": 0,
+      "blocked_accesses": 0,
+      "repository_read_count": 1885,
+      "repository_write_count": 0,
+      "descriptor_open_events_without_path": 0
+    },
+    {
+      "stage": "analyze",
+      "trace_sha256": "ded4f0b5fc48271d081ba4b53b21cb6429d0814544271c9dec111036fb46ffe8",
+      "checkpoint_or_official_file_open_attempts": 0,
+      "blocked_accesses": 0,
+      "repository_read_count": 1902,
+      "repository_write_count": 2,
+      "descriptor_open_events_without_path": 0
+    },
+    {
+      "stage": "check",
+      "trace_sha256": "86c28393e00f0bd8a7ced2a0fd8d2ff6153f732ae3dec26cdaed018c22c135a7",
+      "checkpoint_or_official_file_open_attempts": 0,
+      "blocked_accesses": 0,
+      "repository_read_count": 1872,
+      "repository_write_count": 0,
+      "descriptor_open_events_without_path": 0
+    },
+    {
+      "stage": "independent-review",
+      "trace_sha256": "e4a1eca1abb10337c0539f05a4990d7d20f64d72a57ae8dff83e930dc416a475",
+      "checkpoint_or_official_file_open_attempts": 0,
+      "blocked_accesses": 0,
+      "repository_read_count": 1836,
+      "repository_write_count": 2,
+      "descriptor_open_events_without_path": 0
+    }
+  ],
+  "new_models_trained": 0,
+  "checkpoint_files_opened_or_loaded": 0,
+  "new_model_predictions": 0,
+  "official_validation_file_opens": 0,
+  "official_validation_predictions": 0,
+  "outer_test_predictions": 0,
+  "external_predictions": 0,
+  "new_confirmation_performed": false,
+  "new_PASS_or_waiver": false,
+  "unidentifiable_partial_rank_proxy_limitation": [
+    {
+      "role": "calibration",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 0.0001544902054395192,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    },
+    {
+      "role": "confirmation",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 1.2652925978020566e-05,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    }
+  ],
+  "proposal_not_applied": true,
+  "Git_commands_executed": 0,
+  "artifact_sha256": {
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/G2_MECHANISM_AUDIT.json": "ef07d689a979833e0f7a2f58f810a90cf476af9188001d05a593bef941b13046",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/RUN_REPORT_V17_G2.md": "f022f677622cf0f9a4bdae1687ebd09dd92d5940dbb8e2e4aa482c6d8efe6924",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/INDEPENDENT_COORDINATE_REVIEW.json": "b20c6d37093945eda6f6fcf5e8d945e79bc3295d531a42cc1f5c2f1ec3ed17dd",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/CORRELATION_RESIDUAL_REVIEW.json": "e61e00dede3ae81f898db2fdf3941a10799d7b9fefe1efe1ec729acf61ef6947",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/REPORT_RENDER_ORDER_FAILURE.json": "8b40e70151cc81fe3055df4d4b98354a79e22e578b09ff12814d96a060036025",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/REPORT_RENDER_ORDER_FAILURE.diff": "bd2d80eaf0bcfad7641b780bfd80902cb6d81f503462b12258c287208d87c498",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/PROPOSED_RENDER_ORDER_SOURCE_FIX.diff": "bff23848bb4fb6491963ead383c88bd0e230d11a1cbf3438552f24e3d7e4267d",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/PROPOSED_RENDER_ORDER_REGRESSION_TEST.diff": "78490c45ac15a0839b9465660c75585fbc0567f9533bc03236e5be247b157c24",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/PROPOSED_RENDER_ORDER_REPAIR.json": "ecb91f6fa4b8a1655a7fe73e6acca1bfcce25fc53cb5b0fd838525ac5ff1d071"
+  },
+  "tests_and_execution_sha256": "d4fd3010845d0e03385939cf0547538f8c5b43976b7cdbe915f6d9d8b33ca70c"
+}

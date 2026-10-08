@@ -1,0 +1,43 @@
+{
+  "status": "OFFICIAL_CHECK_FAILED_STOP_NO_RERUN",
+  "recorded_utc": "2026-10-08T12:28:50.082433+00:00",
+  "analyze_execution_count": 1,
+  "analyze_exit_code": 0,
+  "check_exit_code": 1,
+  "cause": "JSON writer sorts association dictionary keys; original report used construction insertion order. check reloads sorted JSON and renders a different row order.",
+  "all_report_lines_identical_as_multiset": true,
+  "difference_is_only_association_table_row_order": true,
+  "original_report_association_row_order": [
+    "macro_baseline_mae_m",
+    "training_anchors_within_10m",
+    "nearest_training_anchor_m",
+    "training_anchor_d3_m",
+    "training_anchor_d5_m",
+    "query_rss_row_count",
+    "training_anchor_count_same_stratum",
+    "training_anchors_within_10m",
+    "nearest_training_anchor_m",
+    "training_anchor_d3_m",
+    "query_rss_row_count"
+  ],
+  "reloaded_JSON_renderer_order": [
+    "macro_baseline_mae_m",
+    "nearest_training_anchor_m",
+    "query_rss_row_count",
+    "training_anchor_count_same_stratum",
+    "training_anchor_d3_m",
+    "training_anchor_d5_m",
+    "training_anchors_within_10m",
+    "training_anchors_within_10m",
+    "nearest_training_anchor_m",
+    "training_anchor_d3_m",
+    "query_rss_row_count"
+  ],
+  "immutable_output_sha256": "ef07d689a979833e0f7a2f58f810a90cf476af9188001d05a593bef941b13046",
+  "immutable_result_self_sha256": "2063b8d3402d789e03965d2435f72d8661eeab3dd26bf7f5a6c77246050d0bfb",
+  "immutable_report_sha256": "f022f677622cf0f9a4bdae1687ebd09dd92d5940dbb8e2e4aa482c6d8efe6924",
+  "G2_source_modified": false,
+  "G2_report_or_JSON_rewritten": false,
+  "analyze_retried": false,
+  "formal_stage_stopped_pending_authorized_amendment": true
+}

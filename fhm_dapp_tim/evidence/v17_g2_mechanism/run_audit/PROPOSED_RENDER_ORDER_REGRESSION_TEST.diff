@@ -1,0 +1,31 @@
+--- a/tests/test_uji_v17_g2_mechanism.py
++++ b/tests/test_uji_v17_g2_mechanism.py
+@@ -255,3 +255,28 @@
+     assert out["spearman_with_gain"] is None
+     assert out["partial_rank_after_baseline_and_floor_building"] is None
+     assert "not causal" in out["meaning"]
++
++
++def test_report_association_order_survives_sorted_json_roundtrip():
++    features = synthetic_records(12)
++    base = np.arange(12) + 2.0
++    cal = g2.risk_diagnostics(features, base, base - 0.2, base * 0.7, base * 0.7 - 0.1, None)
++    conf = g2.risk_diagnostics(features, base, base - 0.3, base * 0.7, base * 0.7 - 0.2, base + 0.1)
++    payload = {
++        "disclosure": g2.DISCLOSURE,
++        "geometry": {"anchors": 595},
++        "g1_formal_outcome_unchanged": {
++            "gamma": 0.7, "status": "STOP_GEOMETRY_DENSITY_MECHANISM",
++            "confirmation_mae_familywise_upper_m": 0.012352838,
++        },
++        "result_sha256": "synthetic-formatting-fixture",
++        "roles": {"calibration": cal, "confirmation": conf},
++        "cross_role_analysis": g2.compare_partitions(cal, conf),
++    }
++    expected = g2.make_report(payload)
++    reloaded = json.loads(json.dumps(payload, sort_keys=True))
++    assert g2.make_report(reloaded) == expected
++    for role in reloaded["roles"].values():
++        role["associations"] = dict(reversed(list(role["associations"].items())))
++    assert g2.make_report(reloaded) == expected
++    assert reloaded["roles"]["confirmation"]["macro_gain_m"] == conf["macro_gain_m"]

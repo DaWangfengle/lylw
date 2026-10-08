@@ -1,0 +1,25 @@
+{
+  "stage": "analyze",
+  "attempt": 1,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g2_mechanism",
+    "analyze"
+  ],
+  "working_directory": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T12:26:23.476728+00:00",
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\analyze_attempt01.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\analyze_attempt01.stderr.log",
+  "access_trace_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\analyze_attempt01.access.json",
+  "cpu_only_environment": true,
+  "scientific_arguments_unchanged": true,
+  "guard_sha256": "06f356e91d054cf57821ca71a824a5c16a410e0b5e2ac4d24864be0a0da35378",
+  "child_pid": 16788,
+  "exit_code": 0,
+  "runtime_seconds": 12.798687900000004,
+  "ended_utc": "2026-10-08T12:26:36.275763+00:00",
+  "stdout_sha256": "4f57ead8d0d441f94b14aeed2fb2113e24f754269389c18f9946993c2a81e73e",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_trace_sha256": "ded4f0b5fc48271d081ba4b53b21cb6429d0814544271c9dec111036fb46ffe8"
+}

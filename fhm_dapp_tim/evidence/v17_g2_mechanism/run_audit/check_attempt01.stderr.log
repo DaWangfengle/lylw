@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\uji_v17_g2_mechanism.py", line 602, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\uji_v17_g2_mechanism.py", line 593, in main
+    raise G2Error("G2 report does not match immutable result")
+G2Error: G2 report does not match immutable result

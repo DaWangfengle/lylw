@@ -1,0 +1,19 @@
+{
+  "status": "UNAPPLIED_MINIMAL_PRESENTATION_REPAIR_PROPOSAL",
+  "recorded_utc": "2026-10-08T12:34:32.954206+00:00",
+  "change": "Fix make_report association traversal to the original six-proxy order so sorted/reversed JSON mappings render the existing immutable report exactly.",
+  "production_source_or_tests_modified": false,
+  "isolated_candidate_render_matches_existing_immutable_report": true,
+  "isolated_candidate_render_invariant_under_sorted_and_reversed_association_order": true,
+  "proposed_regression_test_added_to_live_tests": false,
+  "scientific_metric_formula_grouping_or_data_changed": false,
+  "existing_G2_JSON_or_report_modified": false,
+  "analyze_rerun_required": false,
+  "proposed_if_user_authorizes_exception": [
+    "apply only renderer-order source diff and synthetic regression-test diff",
+    "rerun compile, full G2 pytest and preflight with new attempts",
+    "rerun check only; never rerun analyze",
+    "preserve all original hashes, check failure and formal outputs"
+  ],
+  "reason_authorization_required": "User instruction permits source/test repairs before the first analyze and requires stopping once outputs have been produced."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "REQUIRED_AUDITS_WRITTEN_FORMAL_CHECK_FAIL_PRESERVED",
+  "recorded_utc": "2026-10-08T12:39:31.885747+00:00",
+  "formal_check_passed": false,
+  "analyze_execution_count": 1,
+  "hand_checked_coordinates": 6,
+  "artifact_sha256": {
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/G2_MECHANISM_AUDIT.json": "ef07d689a979833e0f7a2f58f810a90cf476af9188001d05a593bef941b13046",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/RUN_REPORT_V17_G2.md": "f022f677622cf0f9a4bdae1687ebd09dd92d5940dbb8e2e4aa482c6d8efe6924",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/TESTS_AND_EXECUTION.json": "d4fd3010845d0e03385939cf0547538f8c5b43976b7cdbe915f6d9d8b33ca70c",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/G2_INTEGRITY_REVIEW.json": "5b2f79cf2892a87798e49f441c0ae1a5e048f4432606d5cc9542e44d429a2595",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/G2_EXECUTION_INTERPRETATION.md": "a35522813123aa10047b9fe5baa20e521b5c326e2772d136f6531586214669a8"
+  },
+  "no_result_or_source_overwrite": true,
+  "no_Git_operations": true
+}

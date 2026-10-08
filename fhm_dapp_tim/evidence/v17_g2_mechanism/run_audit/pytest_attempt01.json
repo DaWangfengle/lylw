@@ -1,0 +1,26 @@
+{
+  "stage": "pytest",
+  "attempt": 1,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_uji_v17_g2_mechanism.py"
+  ],
+  "working_directory": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T12:23:44.907567+00:00",
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\pytest_attempt01.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\pytest_attempt01.stderr.log",
+  "access_trace_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\pytest_attempt01.access.json",
+  "cpu_only_environment": true,
+  "scientific_arguments_unchanged": true,
+  "guard_sha256": "06f356e91d054cf57821ca71a824a5c16a410e0b5e2ac4d24864be0a0da35378",
+  "child_pid": 9108,
+  "exit_code": 0,
+  "runtime_seconds": 19.204151899999488,
+  "ended_utc": "2026-10-08T12:24:04.111910+00:00",
+  "stdout_sha256": "c0774a2c2c027d200c31a12648ce1cf54520263307001e1e008e5abe701019b7",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_trace_sha256": "c2f912898da188c97a73ca1e9cfe333b0757ac14116d69a5a67b523f40fc21e1"
+}

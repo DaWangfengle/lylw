@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/finalize_audit.py", line 99, in <module>
+    if __name__=='__main__': main()
+                             ^^^^^^
+  File "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/finalize_audit.py", line 37, in main
+    assert len(list(AUDIT.glob('analyze_attempt*.json')))==1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

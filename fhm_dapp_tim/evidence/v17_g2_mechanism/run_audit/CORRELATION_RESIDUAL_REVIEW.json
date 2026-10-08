@@ -1,0 +1,157 @@
+{
+  "status": "DESCRIPTIVE_CORRELATIONS_RECONSTRUCTED_WITH_DISCLOSED_UNIDENTIFIABLE_PROXY",
+  "method": "SciPy average ranks; NumPy Pearson and QR projection onto baseline-rank/building/floor nuisance space. No p-values, bootstrap or new confirmation.",
+  "roles": {
+    "calibration": {
+      "baseline_mae_m": {
+        "pearson_independently_reconstructed": 0.6474999716823837,
+        "spearman_independently_reconstructed": 0.2322978969708663
+      },
+      "nearest_training_anchor_m": {
+        "pearson_independently_reconstructed": 0.19443899510061102,
+        "spearman_independently_reconstructed": 0.10945225662380265,
+        "rank_predictor_residual_norm": 51.224119203137064,
+        "relative_rank_predictor_residual_norm": 0.1437295740006358,
+        "raw_G2_partial_rank": 0.0030135688782839958,
+        "independent_QR_partial_rank": 0.0030135688782840387,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "query_rss_row_count": {
+        "pearson_independently_reconstructed": -0.17546717363932796,
+        "spearman_independently_reconstructed": -0.07997100601959725,
+        "rank_predictor_residual_norm": 137.46756985434598,
+        "relative_rank_predictor_residual_norm": 0.39017954832429613,
+        "raw_G2_partial_rank": 0.15215146613268274,
+        "independent_QR_partial_rank": 0.1521514661326828,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "training_anchor_count_same_stratum": {
+        "pearson_independently_reconstructed": -0.19697550476003953,
+        "spearman_independently_reconstructed": -0.2378949528474499,
+        "rank_predictor_residual_norm": 1.8347012419317619e-13,
+        "relative_rank_predictor_residual_norm": 5.164905137444528e-16,
+        "raw_G2_partial_rank": 0.0001544902054395192,
+        "independent_QR_partial_rank": null,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": true,
+        "interpretation": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+      },
+      "training_anchor_d3_m": {
+        "pearson_independently_reconstructed": 0.36769108921651467,
+        "spearman_independently_reconstructed": 0.3797380839572509,
+        "rank_predictor_residual_norm": 107.42349347225469,
+        "relative_rank_predictor_residual_norm": 0.3014144524391418,
+        "raw_G2_partial_rank": 0.24393506506813736,
+        "independent_QR_partial_rank": 0.24393506506813725,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "training_anchor_d5_m": {
+        "pearson_independently_reconstructed": 0.26772323683876853,
+        "spearman_independently_reconstructed": 0.4205194994349426,
+        "rank_predictor_residual_norm": 100.45219976994993,
+        "relative_rank_predictor_residual_norm": 0.28185514171450926,
+        "raw_G2_partial_rank": 0.3179105951349996,
+        "independent_QR_partial_rank": 0.31791059513499953,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "training_anchors_within_10m": {
+        "pearson_independently_reconstructed": -0.2525442279248351,
+        "spearman_independently_reconstructed": -0.43134617823557364,
+        "rank_predictor_residual_norm": 79.01980358179513,
+        "relative_rank_predictor_residual_norm": 0.2224304416103164,
+        "raw_G2_partial_rank": -0.3879907950019568,
+        "independent_QR_partial_rank": -0.3879907950019568,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      }
+    },
+    "confirmation": {
+      "baseline_mae_m": {
+        "pearson_independently_reconstructed": 0.4492936128457683,
+        "spearman_independently_reconstructed": 0.2547224926971763
+      },
+      "nearest_training_anchor_m": {
+        "pearson_independently_reconstructed": 0.22029888688319632,
+        "spearman_independently_reconstructed": 0.1591109651927988,
+        "rank_predictor_residual_norm": 51.780753354211456,
+        "relative_rank_predictor_residual_norm": 0.126529393566574,
+        "raw_G2_partial_rank": 0.03628852099426269,
+        "independent_QR_partial_rank": 0.036288520994262746,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "query_rss_row_count": {
+        "pearson_independently_reconstructed": 0.3889348627832289,
+        "spearman_independently_reconstructed": -0.02553691597137541,
+        "rank_predictor_residual_norm": 164.29359740513252,
+        "relative_rank_predictor_residual_norm": 0.40695540476234837,
+        "raw_G2_partial_rank": -0.005433710626104379,
+        "independent_QR_partial_rank": -0.0054337106261043355,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "training_anchor_count_same_stratum": {
+        "pearson_independently_reconstructed": -0.12234695914568168,
+        "spearman_independently_reconstructed": -0.1618952571054293,
+        "rank_predictor_residual_norm": 1.444744445280734e-13,
+        "relative_rank_predictor_residual_norm": 3.544528763080602e-16,
+        "raw_G2_partial_rank": 1.2652925978020566e-05,
+        "independent_QR_partial_rank": null,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": true,
+        "interpretation": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+      },
+      "training_anchor_d3_m": {
+        "pearson_independently_reconstructed": 0.25991939321688085,
+        "spearman_independently_reconstructed": 0.30891508491793285,
+        "rank_predictor_residual_norm": 152.31541061139868,
+        "relative_rank_predictor_residual_norm": 0.3721896691921715,
+        "raw_G2_partial_rank": 0.22762921579676576,
+        "independent_QR_partial_rank": 0.22762921579676573,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "training_anchor_d5_m": {
+        "pearson_independently_reconstructed": 0.18542070381288733,
+        "spearman_independently_reconstructed": 0.3700142407070658,
+        "rank_predictor_residual_norm": 142.32047534027245,
+        "relative_rank_predictor_residual_norm": 0.34776606880129046,
+        "raw_G2_partial_rank": 0.27192900468285547,
+        "independent_QR_partial_rank": 0.2719290046828556,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      },
+      "training_anchors_within_10m": {
+        "pearson_independently_reconstructed": -0.37764296694651067,
+        "spearman_independently_reconstructed": -0.3957637168803953,
+        "rank_predictor_residual_norm": 132.92270899996015,
+        "relative_rank_predictor_residual_norm": 0.3259138325465879,
+        "raw_G2_partial_rank": -0.3520865099424749,
+        "independent_QR_partial_rank": -0.35208650994247503,
+        "nuisance_design_rank": 14,
+        "residual_zero_to_machine_precision": false
+      }
+    }
+  },
+  "limitations": [
+    {
+      "role": "calibration",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 0.0001544902054395192,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    },
+    {
+      "role": "confirmation",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 1.2652925978020566e-05,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    }
+  ],
+  "G2_original_values_preserved": true
+}

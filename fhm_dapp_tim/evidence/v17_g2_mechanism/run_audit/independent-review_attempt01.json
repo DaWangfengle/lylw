@@ -1,0 +1,20 @@
+{
+  "stage": "independent-review",
+  "attempt": 1,
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-c",
+    "import sys,runpy;sys.dont_write_bytecode=True;runpy.run_path('fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/independent_review.py',run_name='__main__')"
+  ],
+  "started_utc": "2026-10-08T12:31:50.788736+00:00",
+  "ended_utc": "2026-10-08T12:32:01.350795+00:00",
+  "runtime_seconds": 10.576898100000108,
+  "exit_code": 0,
+  "stdout_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\independent-review_attempt01.stdout.log",
+  "stderr_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\independent-review_attempt01.stderr.log",
+  "access_trace_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g2_mechanism\\run_audit\\independent-review_attempt01.access.json",
+  "stdout_sha256": "b4735632a14f49902ff5f46810341833b10b82357ff108d6f784f22926649d15",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_trace_sha256": "e4a1eca1abb10337c0539f05a4990d7d20f64d72a57ae8dff83e930dc416a475",
+  "audit_only_no_analyze_rerun": true
+}

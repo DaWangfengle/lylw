@@ -1,0 +1,44 @@
+{
+  "status": "V17_G2_EXECUTION_COMPLETE_DESCRIPTIVE_ONLY",
+  "recorded_utc": "2026-10-08T12:45:20.542251+00:00",
+  "recorded_local_time": "2026-10-08T20:45:19.057099+08:00",
+  "tests_passed": 20,
+  "official_check_status": "VERIFIED",
+  "analyze_execution_count": 1,
+  "initial_check_failure_retained": true,
+  "authorized_non_scientific_renderer_repair_applied": true,
+  "immutable_G2_JSON_and_report_bytes_unchanged": true,
+  "all_G1_inputs_unchanged": true,
+  "all_historical_text_assets_verified": 759,
+  "historical_model_metadata_verified_without_loading": 136,
+  "hand_checked_coordinates": 6,
+  "all_151_physical_coordinates_independently_verified": true,
+  "G1_formal_STOP_preserved": true,
+  "new_CONFIRMATION_or_PASS": false,
+  "new_models_or_predictions": 0,
+  "Git_commands_executed": 0,
+  "scientific_interpretation_limitations_disclosed": [
+    {
+      "role": "calibration",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 0.0001544902054395192,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    },
+    {
+      "role": "confirmation",
+      "proxy": "training_anchor_count_same_stratum",
+      "raw_value": 1.2652925978020566e-05,
+      "interpretable_as_partial_correlation": false,
+      "reason": "N/A: stratum anchor total is exactly determined by building/floor controls; raw tiny nonzero value is numerical residual, not identifiable partial association."
+    }
+  ],
+  "artifact_sha256": {
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/G2_MECHANISM_AUDIT.json": "ef07d689a979833e0f7a2f58f810a90cf476af9188001d05a593bef941b13046",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/RUN_REPORT_V17_G2.md": "f022f677622cf0f9a4bdae1687ebd09dd92d5940dbb8e2e4aa482c6d8efe6924",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/TESTS_AND_EXECUTION_AFTER_AUTHORIZED_REPAIR.json": "e5dcb549c5518bdc09327016399a2d6bd1e987f4cab9170bea6d3eeec5d31d2c",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/G2_INTEGRITY_REVIEW_AFTER_AUTHORIZED_REPAIR.json": "5da11d4ecb2665131fc2f3fd05aab0a35b450a5afcac2dc6789a940613d2a525",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/G2_EXECUTION_INTERPRETATION_AFTER_AUTHORIZED_REPAIR.md": "60856a540a00133474a1535b788c4013caf09de994e3e4d63b3e7071ec288952",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/AUTHORIZED_RENDER_ORDER_AMENDMENT.json": "f0a664486a3b9540a95effd0157a93b4813c58980cd18884e4ae1aa96c87abbf"
+  }
+}
