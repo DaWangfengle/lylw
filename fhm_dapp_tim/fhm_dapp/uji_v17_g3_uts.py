@@ -90,6 +90,37 @@ def _write_once(path: Path, obj: dict, self_hash: str = "result_sha256") -> dict
     return item
 
 
+def g3_transfer_gate(
+    delta_mae: float,
+    upper_mae: float,
+    delta_es: float,
+    upper_es: float,
+    placebo_minus_baseline_mae: float,
+) -> dict:
+    """Apply the frozen G3 UTS criterion, distinct from UJI G1 confirm_gate.
+
+    G1 checked candidate MAE < placebo MAE. G3 prospectively requires
+    placebo MAE > *baseline* MAE. The two rules must not be interchanged.
+    """
+    inputs = (delta_mae, upper_mae, delta_es, upper_es,
+              placebo_minus_baseline_mae)
+    if not all(math.isfinite(float(value)) for value in inputs):
+        raise ValueError("G3 transfer gate requires finite paired metrics")
+    checks = {
+        "mae_gain_at_least_0p15m": delta_mae <= -g1.MIN_CONFIRM_GAIN_M,
+        "mae_familywise_upper_below_zero": upper_mae < 0.0,
+        "energy_familywise_upper_not_positive": upper_es <= 0.0,
+        "placebo_worse_than_baseline": placebo_minus_baseline_mae > 0.0,
+    }
+    return {
+        "passed": all(checks.values()),
+        "checks": checks,
+        "comparison": "frozen_G1_minus_V17_baseline",
+        "placebo_comparison": "permuted_density_minus_V17_baseline",
+        "note": "One-shot UTS transfer; never revise the historical UJI G1 STOP",
+    }
+
+
 def member_path(index: int) -> Path:
     if not 1 <= int(index) <= PANEL_SIZE:
         raise ValueError("member index must be 1..25")
@@ -515,7 +546,7 @@ def _evaluate_test_once(device_name: str) -> dict:
     des = float(differences["energy_score_2d_m"].mean())
     placebo_mae = float(metrics["permuted_density"]["mae_2d_m"])
     baseline_mae = float(metrics["baseline"]["mae_2d_m"])
-    gate = g1.confirm_gate(
+    gate = g3_transfer_gate(
         dmae,
         inference["comparisons"]["exact_mixture_mean_mae_m"]["simultaneous_upper_bound_m"],
         des,
@@ -613,7 +644,7 @@ def make_report(obj: dict) -> str:
         f"- G1 minus baseline macro ES: {obj['delta_coordinate_macro_energy_m']:+.6f} m",
         f"- Paired familywise MAE upper: {obj['paired_familywise_inference']['comparisons']['exact_mixture_mean_mae_m']['simultaneous_upper_bound_m']:+.6f} m",
         f"- Paired familywise ES upper: {obj['paired_familywise_inference']['comparisons']['energy_score_2d_m']['simultaneous_upper_bound_m']:+.6f} m",
-        f"- Freeze gate: {obj['fixed_transfer_gate']['passed']}; decision: {obj['decision']}",
+        f"- Pre-registered G3 gate (including placebo MAE > baseline MAE): {obj['fixed_transfer_gate']['passed']}; decision: {obj['decision']}",
         "- The 25 cyclic E16 realizations share panel members and test coordinates; they are NOT independent replications.",
         "- UJI G1 formal decision remains STOP regardless of these test outcomes.",
         "- No post-test parameter selection or second attempt is authorized.",
