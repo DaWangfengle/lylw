@@ -1,0 +1,151 @@
+V17-G3 | CODEX LOCAL EXPERIMENT: UTS BLIND EXTERNAL TRANSFER
+========================================================
+GitHub branch: v17-g3-uts-frozen-transfer
+Repo: DaWangfengle/lylw
+Design: fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/DESIGN_V17_G3_UTS.md
+Code: fhm_dapp_tim/fhm_dapp/uji_v17_g3_uts.py
+Tests: tests/test_uji_v17_g3_uts.py
+Results: fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/
+
+Research question:
+Can FIXED UJI-developed G1 10m/gamma=0.70 transfer to UTS and improve
+V17's 2D coordinate-macro MAE and Energy Score on the provided blind test?
+NO architecture search, NO gamma/radius tuning, NO adaptive gating.
+
+Scientific provenance correction:
+The user confirms UTS, Tampere and TUJI *provided test labels / performance*
+have never been viewed or used in development. Historical access was to
+adapter/file format. Do NOT assert that test scores were pre-exposed solely
+because an earlier README calls schemas "pre-exposed." Treat as
+USER-ATTESTED PERFORMANCE-BLIND, not never-opened-bytes.
+
+Only UTS_training.csv is permitted in preparation / training.
+UTS_test.csv must NOT be read, hashed, opened, scanned, or accessed before
+the FULL training and freeze are complete, and the irreversible lock is
+created by evaluate-test. Other datasets' test files remain untouched.
+
+This test is NOT an opportunity to overturn G1's original UJI STOP.
+The 25 overlapping E16 realizations are not independent repetitions.
+Historical V17 outer 5.726m cannot be compared directly with UTS scores.
+
+ABSOLUTE GIT RULE:
+The user personally handles all Git operations. Do NOT run or propose
+checkout, pull, add, commit, push, upload, branch, merge or other Git commands.
+Operate only on the files already available locally; do not rewrite G1/G2
+source or historical results. If required G3 code isn't locally visible,
+report missing files instead of performing Git actions.
+
+EXECUTION PRIORITY: SCIENTIFIC QUALITY, MINIMAL BUREAUCRACY
+- Avoid massive tooling, cross-dataset expansion or extra graphs.
+- Keep scientific comparability and test information separation rigorous.
+- Fix only clear compatibility/runtime defects detected BEFORE test scoring,
+  and add one focused regression per defect. Never quietly alter gamma,
+  radius, E/L/K/alpha, epoch list, training loss, dataset cohort, seed or gate.
+- Do NOT build a new V19/V20 architecture, and do NOT tune on G1 confirmation
+  or UTS test. No external test resampling to manufacture a significant gain.
+- Preserve runtime logs and source hashes; a short focused experiment report
+  beats elaborate audit scaffolding.
+
+PRE-FLIGHT TESTS (before manifest/any training)
+From repository root, inside user's existing Python environment:
+  python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g3_uts.py tests/test_uji_v17_g3_uts.py
+  python -m pytest -q tests/test_uji_v17_g3_uts.py tests/test_uji_v17_g1.py tests/test_uji_v17_mother_r3.py
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts preflight
+
+Fail-closed checks:
+- UTS_training.csv exists and source hash frozen; no test file read.
+- UTS training uses existing canonical v18_4_datasets UTS adapter,
+  original normalized legacy V17 RSS scale and original V17 R0 loss.
+- >=192 distinct TRAINING anchor coordinates, valid building/floor and metre
+  geometry, no collisions after V17 centered float32 rounding.
+- Disclose visible RSS clipping-to-(-1) collision, AP count, B/F groups,
+  and report whether non-observed RSS is correctly missing.
+- G1 and G2 self hashes verify; gamma0.70, radius10m and original G1 STOP.
+- 25 fixed member seeds and UJI-frozen epochs are unchanged; no new UTS
+  epoch optimization. This is a deliberate frozen transfer recipe.
+
+If preflight/tests fail: preserve failure log, repair ONLY the specific new
+G3 source/test implementation issue, add a regression, rerun test/preflight
+BEFORE manifest creation. If a frozen scientific contract (data split,
+hyperparameters, model loss, 10m geometry, epoch values, scoring method)
+requires revision, STOP and present a proposed new protocol for review.
+Never silently relax science to make it run.
+
+PREPARE (only after all tests/preflight pass)
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts prepare
+
+The immutable manifest binds data/source/density law/R3 score settings.
+After prepare, changes to source will fail the manifest check. Do not delete
+or regenerate manifest to permit silent tuning.
+
+TRAIN 25 ORIGINAL V17-R0 MEMBERS ON UTS TRAIN ONLY
+Run sequentially, one member at a time (6GB GPU friendly). For PowerShell:
+  1..25 | ForEach-Object {
+      python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts train-member --member-index $_ --device cuda
+      if ($LASTEXITCODE -ne 0) { throw "G3 member $_ failed" }
+  }
+This may use several hours depending on GPU and UTS source size; do not
+change scientific design to meet a time budget. The code reuses a complete
+checkpoint only after its frozen manifest is validated. A mid-epoch
+interruption without a checkpoint may restart that same member with the
+same seed/epochs before freeze; log any interruption.
+
+BEFORE FIRST TEST ACCESS
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts check-members
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts freeze
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts check
+
+Check requires:
+- all_complete=true, exactly 25 unique member checkpoint hashes;
+- every checkpoint trained exclusively on UTS_training.csv;
+- all 25 member anchor dictionaries match;
+- manifest and freeze hashes exist and are immutable;
+- no UTS_test file access in earlier stage logs.
+
+On a GPU-memory concern BEFORE scoring, check CUDA free memory and file sizes
+without reading UTS_test. Never scale down E/L/K/number of members post freeze.
+
+ONE-SHOT BLIND PROVIDED TEST
+Only after freeze integrity has passed, run ONCE:
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts evaluate-test --device cuda
+
+This call must write external_test_invocation.lock BEFORE the first call to
+the provided UTS_test loader, then score V17 baseline, fixed G1 gamma0.7 and
+within-stratum shuffled-density placebo using identical member predictions,
+common Student-t noise, 25 balanced subsets and same test groups.
+It reports coordinate-macro MAE and Energy Score, row metrics, per-group
+vectors, paired 5,000-repeat maxT simultaneous bounds. Inference direction:
+G1 minus baseline, so a negative value is improvement.
+
+Formal fixed UTS transfer criterion:
+  mean_G1_minus_baseline_MAE <= -0.15m;
+  95% familywise MAE upper <0;
+  95% familywise Energy Score upper <=0;
+  placebo_MAE minus baseline_MAE >0.
+If any condition fails, report TRANSFER_NOT_ESTABLISHED_ON_UTS.
+Positive result supports transfer on THIS benchmark only; does not turn
+historical G1 STOP into GO or independently prove JCR Q1 novelty.
+
+After successful evaluation:
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts check
+
+If the one-shot command fails AFTER the lock exists, STOP and preserve the
+lock/error without rerunning the test or deleting files. Distinguish
+pre-scoring engineering failure from a scientifically failed result; ask for
+a documented specific repair authorization if needed.
+
+MINIMAL BUT COMPLETE DELIVERABLES
+Commit/upload are USER operations, not yours. Leave these ready locally:
+- fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/manifest_v17_g3_uts.json
+- fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/freeze_v17_g3_uts.json
+- fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/external_test_invocation.lock
+- fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/external_result_v17_g3_uts.json
+- fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/RUN_REPORT_V17_G3_UTS.md
+- concise run_audit/EXECUTION_SUMMARY.md with test outputs, command exit
+  codes, 25 checkpoint file SHA256 hashes, any crash, warnings and checks.
+- 25 .pt weights remain safe locally; do NOT upload weight files by default.
+
+No extra external datasets, no revised architecture, no secondary test
+attempts. After the user uploads the artifacts to GitHub, ChatGPT will
+analyze the transfer result, paired confidence limits, exposure boundaries,
+bias in dense/sparse regions and any necessary scientific next step.
