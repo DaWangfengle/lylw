@@ -68,3 +68,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g2_mechanism.py -text
 tests/test_uji_v17_g2_mechanism.py -text
 fhm_dapp_tim/evidence/v17_g2_mechanism/** -text
 V17_G2_CODEX_RUN.txt -text
+
+# G3 frozen scientific artifacts: preserve source and manifest byte hashes across Windows checkout.
+fhm_dapp_tim/fhm_dapp/uji_v17_g3_uts.py -text
+tests/test_uji_v17_g3_uts.py -text
+fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/** -text
+V17_G3_CODEX_RUN.txt -text
