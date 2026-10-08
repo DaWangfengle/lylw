@@ -18,7 +18,8 @@ import numpy as np
 from fhm_dapp_tim.fhm_dapp import uji_v17_g1_experiment as g1run
 from fhm_dapp_tim.fhm_dapp import uji_v17_g1_protocol as g1
 from fhm_dapp_tim.fhm_dapp.experiment_v7 import (
-    _canonical_json_sha256, _sha256_file, _sha256_keys, _write_json_new,
+    _canonical_json_sha256, _rows_for_keys, _sha256_file,
+    _sha256_indices, _sha256_keys, _write_json_new,
 )
 from fhm_dapp_tim.fhm_dapp.uji_v16_protocol import load_uji_v16
 
@@ -87,9 +88,9 @@ def verify_chain(inputs: Mapping[str, dict]) -> None:
         raise G2Error("historical G1 STOP changed")
     if reg["historical_gate_waiver"] is not False or reg["outer_test_predictions_authorized"] is not False:
         raise G2Error("historical leakage guard changed")
-    if any(inputs[x].get("official_validation_predictions", 0) != 0 for x in ("calibration", "freeze", "confirmation")):
+    if any(inputs[x]["official_validation_predictions"] != 0 for x in ("calibration", "freeze", "confirmation")):
         raise G2Error("official validation was consumed")
-    if any(inputs[x].get("outer_test_predictions", 0) != 0 for x in ("calibration", "freeze", "confirmation")):
+    if any(inputs[x]["outer_test_predictions"] != 0 for x in ("calibration", "freeze", "confirmation")):
         raise G2Error("outer test was consumed")
     if reg["roles"]["development"]["coordinate_count"] != 151:
         raise G2Error("development role differs from preregistered G1")
@@ -112,6 +113,17 @@ def load_inputs() -> dict[str, dict]:
         raise G2Error("G1 registry raw dataset hash changed")
     if loaded["registry"]["radius_m"] != SUPPORT_RADIUS_M:
         raise G2Error("G1 support radius differs")
+    # A geometry diagnosis is invalid if the original protocol/role/scorer
+    # source changed after the G1 registry was frozen.
+    old_sources = loaded["registry"]["source_sha256"]
+    for name, source in (
+        ("g1_execution", Path(g1run.__file__)),
+        ("g1_protocol", Path(g1.__file__)),
+        ("r0_training", Path(g1run.r0.__file__)),
+        ("r3_scoring", Path(g1run.r3.__file__)),
+    ):
+        if _sha256_file(source) != old_sources[name]:
+            raise G2Error(f"frozen G1 scientific source changed: {name}")
     return loaded
 
 
@@ -135,6 +147,11 @@ def ordered_groups(data: dict, registry: dict) -> tuple[list[tuple], dict[str, l
             raise G2Error(f"{role} coordinate hash/count mismatch")
         if set(coordinates) & roles["selection_refit"]:
             raise G2Error("G1 diagnosis leaked training coordinates")
+        # Both coordinate key identity and the actual source CSV row indices
+        # are necessary to prevent a silent loss-vector/row alignment drift.
+        physical_rows = _rows_for_keys(data["keys"], set(coordinates))
+        if _sha256_indices(physical_rows) != reg["row_index_sha256"]:
+            raise G2Error(f"{role} raw-row index hash mismatch")
     count = Counter(data["keys"])
     if sum(count[k] for k in groups["calibration"]) != 1529:
         raise G2Error("G1 calibration row count mismatch")
