@@ -194,3 +194,49 @@ def test_member_path_out_of_range():
     for n in (0,-1,26):
         with pytest.raises(ValueError):
             g3.member_path(n)
+
+
+
+def test_g3_transfer_gate_uses_placebo_vs_baseline_not_g1_placebo_rule():
+    # baseline=6.0, candidate=5.7, placebo=5.9:
+    # The original G1 comparison PASSES because candidate < placebo,
+    # but the frozen G3 criterion FAILS because placebo < baseline.
+    g1_gate = g1.confirm_gate(-.30, -.10, -.20, -.05, -.10)
+    g3_gate = g3.g3_transfer_gate(-.30, -.10, -.20, -.05, -.10)
+    assert g1_gate["passed"] is True
+    assert g3_gate["passed"] is False
+    assert g3_gate["checks"]["placebo_worse_than_baseline"] is False
+    assert "geometry_better_than_permuted_density" not in g3_gate["checks"]
+    assert g3_gate["placebo_comparison"] == "permuted_density_minus_V17_baseline"
+
+
+def test_g3_transfer_gate_strict_placebo_boundary_and_original_thresholds():
+    # G3 requires strictly positive placebo-minus-baseline.
+    assert g3.g3_transfer_gate(-.20,-.01,-.20,-.01,.10)["passed"] is True
+    assert g3.g3_transfer_gate(-.20,-.01,-.20,-.01,0.)["passed"] is False
+    assert g3.g3_transfer_gate(-.20,-.01,-.20,-.01,-.001)["passed"] is False
+    # MAE gain at least 0.15 includes its boundary; MAE upper is strict.
+    assert g3.g3_transfer_gate(-.15,-.01,0.,0.,.01)["passed"] is True
+    assert g3.g3_transfer_gate(-.149999,-.01,-.1,0.,.01)["passed"] is False
+    assert g3.g3_transfer_gate(-.20,0.,-.20,-.01,.01)["passed"] is False
+    # ES familywise upper is non-positive (inclusive), just as frozen.
+    assert g3.g3_transfer_gate(-.20,-.01,.02,0.,.01)["passed"] is True
+    assert g3.g3_transfer_gate(-.20,-.01,-.1,.001,.01)["passed"] is False
+
+
+@pytest.mark.parametrize("which",range(5))
+@pytest.mark.parametrize("bad",[float("nan"),float("inf"),-float("inf")])
+def test_g3_transfer_gate_rejects_nonfinite(which,bad):
+    metrics=[-.20,-.01,-.10,-.01,.01]
+    metrics[which]=bad
+    with pytest.raises(ValueError,match="finite"):
+        g3.g3_transfer_gate(*metrics)
+
+
+def test_report_and_evaluator_bind_actual_g3_gate():
+    source=inspect.getsource(g3._evaluate_test_once)
+    assert "gate = g3_transfer_gate(" in source
+    assert "g1.confirm_gate(" not in source
+    assert '"fixed_transfer_gate": gate' in source
+    report_src=inspect.getsource(g3.make_report)
+    assert "including placebo MAE > baseline MAE" in report_src
