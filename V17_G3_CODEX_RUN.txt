@@ -7,6 +7,26 @@ Code: fhm_dapp_tim/fhm_dapp/uji_v17_g3_uts.py
 Tests: tests/test_uji_v17_g3_uts.py
 Results: fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/
 
+PRE-TEST CORRECTION TO ORIGINAL G3 CODE (2026-10-08)
+- Codex correctly found that g1.confirm_gate() checks candidate MAE against
+  permuted placebo, but G3 was prospectively defined as placebo MAE STRICTLY
+  GREATER THAN baseline MAE. These are different scientific criteria.
+- G3 now has a dedicated g3_transfer_gate() function. Do NOT substitute
+  g1.confirm_gate() or rewrite original G1.
+- Before prepare, verify focused tests:
+  python -m pytest -q tests/test_uji_v17_g3_uts.py -k g3_transfer_gate
+- The test case baseline=6.0, G1=5.7, placebo=5.9 MUST FAIL the G3
+  placebo condition although it passes the old G1 comparison.
+- The frozen G3 condition remains placebo_mae_minus_baseline_mae > 0;
+  equality FAILS. Original MAE/ES and familywise criteria are unchanged.
+- If the local G3 manifest already exists, it may bind the pre-correction
+  source hash. STOP and report stage status before doing anything else.
+  Do not delete manifest, freeze, test lock or result to suppress provenance.
+  No UTS provided-test access is authorized until the revised scientific
+  source and the original freeze protocol are reconciled.
+- This is a pre-outcome code/protocol consistency repair, not permission
+  to tune anything using UTS provided-test labels or performance.
+
 Research question:
 Can FIXED UJI-developed G1 10m/gamma=0.70 transfer to UTS and improve
 V17's 2D coordinate-macro MAE and Energy Score on the provided blind test?
