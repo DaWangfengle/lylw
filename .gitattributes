@@ -62,3 +62,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g1_experiment.py -text
 tests/test_uji_v17_g1.py -text
 fhm_dapp_tim/evidence/v17_g1_geometry_support/** -text
 V17_G1_CODEX_RUN.txt -text
+
+# G2: pin byte-level evidence/source integrity through Windows checkout.
+fhm_dapp_tim/fhm_dapp/uji_v17_g2_mechanism.py -text
+tests/test_uji_v17_g2_mechanism.py -text
+fhm_dapp_tim/evidence/v17_g2_mechanism/** -text
+V17_G2_CODEX_RUN.txt -text
