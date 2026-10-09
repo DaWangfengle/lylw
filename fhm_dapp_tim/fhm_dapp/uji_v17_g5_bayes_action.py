@@ -407,6 +407,18 @@ def _randomness_slice(payload:dict,start:int,stop:int,device:torch.device)->dict
                 and v.ndim>0 else v) for k,v in payload.items()}
 
 
+def g5_confirmation_gate(delta_mae_m:float, simultaneous_upper_m:float) -> dict:
+    """Prerecorded, primary-only MAE gate; ES is unchanged by action."""
+    if not all(math.isfinite(float(v)) for v in (delta_mae_m,simultaneous_upper_m)):
+        raise G5Error("invalid nonfinite G5 paired inference")
+    checks={"mae_gain_at_least_0p15m":delta_mae_m<=-MIN_GAIN_M,
+            "simultaneous_mae_upper_below_zero":simultaneous_upper_m<0.0}
+    return {"passed":all(checks.values()),"checks":checks,
+            "min_mae_gain_m":MIN_GAIN_M,
+            "mean_diff_m":float(delta_mae_m),
+            "maxT_upper_m":float(simultaneous_upper_m)}
+
+
 def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
     # This function is never called before irreversible lock is created.
     if not LOCK.exists() or RESULT.exists():
@@ -522,10 +534,10 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
     )
     delta=float(differences["continuous_median_minus_mean"].mean())
     upper=float(inference["comparisons"]["continuous_median_minus_mean"]["simultaneous_upper_bound_m"])
-    pass_gate=(delta<=-MIN_GAIN_M and upper<0)
+    gate=g5_confirmation_gate(delta,upper)
     return {
         "protocol":PROTOCOL,"status":"TRAINING_FILE_INTERNAL_CONFIRMATION_COMPLETE",
-        "decision":"PROMISING_ACTION_ALIGNMENT" if pass_gate else "NO_INTERNAL_PROMOTION",
+        "decision":"PROMISING_ACTION_ALIGNMENT" if gate["passed"] else "NO_INTERNAL_PROMOTION",
         "role":"confirmation",
         "rows":n,"coordinates":len(ordered_keys),
         "coordinate_keys":[list(x) for x in ordered_keys],
@@ -540,8 +552,7 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
         "expected_posterior_euclidean_risk_m":risk_record,
         "coordinate_macro_median_mean_displacement_m":float(shift["coordinate_macro_m"]),
         "paired_familywise_inference":inference,
-        "gate":{"passed":bool(pass_gate),"min_mae_gain_m":MIN_GAIN_M,
-                "mean_diff_m":delta,"maxT_upper_m":upper},
+        "gate":gate,
         "manifest_sha256":manifest["manifest_sha256"],
         "manifest_file_sha256":_sha256_file(MANIFEST),
         "freeze_file_sha256":_sha256_file(FREEZE),
