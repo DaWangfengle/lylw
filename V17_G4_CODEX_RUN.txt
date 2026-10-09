@@ -1,0 +1,133 @@
+V17-G4 | CODEX: OBSERVABLE POSTERIOR-SUPPORT SCIENTIFIC PILOT
+=========================================================
+Repo: DaWangfengle/lylw
+Branch already prepared by user: v17-g4-uts-observable-support-pilot
+Design: fhm_dapp_tim/evidence/v17_g4_observable_support/DESIGN_V17_G4.md
+Code: fhm_dapp_tim/fhm_dapp/uji_v17_g4_observable_support.py
+Tests: tests/test_uji_v17_g4_observable_support.py
+
+WHY THIS EXPERIMENT
+G1 (UJI) original STOP; G2 retrospective geometry association; G3 (UTS
+provided test) fixed-gamma FAILED (MAE +0.071m, ES +0.158m). G3 UTS_test
+has ALREADY BEEN SCORED ONCE. Do not reuse G3's provided test results
+to select G4 parameters or present it as untouched future validation.
+
+This G4 asks one precise scientific question: does an ONLINE-AVAILABLE
+posterior-weighted TRAIN-ANCHOR support statistic predict whether gamma
+0.70 helps, and can a selectively activated fixed G1 mechanism improve
+a previously unseen INTERNAL confirmation fold?
+
+SCIENTIFIC COMPARISON, MINIMAL ENGINEERING
+- UTS_training.csv ONLY. NEVER open UTS_test.csv, Tampere/TUJI provided
+  test files, UJI official/outer or G3 UTS external result for G4 modeling.
+- Physical-coordinate-disjoint 65% FIT / 17.5% CAL / 17.5% confirmation,
+  reproducible stratum SHA256 split from UTS_training.csv only.
+- 5 historical V17 R0 models, seeds 17301..17305, frozen UJI epoch
+  counts (65,69,56,67,62), no new early-stop/architectural search.
+- All policies use SAME 5 member predictions and SAME E5/L192/K192/
+  alpha1 R3 scorer; do not compare absolute errors to G3's E16/25 panel.
+- Variants: original V17 identity baseline, G1 global gamma=0.70 10m,
+  within-stratum density-shuffled placebo, and 3 gated policies that
+  apply gamma=.70 only if the baseline posterior expected log support
+  is in calibration sites' bottom q25/q50/q75.
+- Select ONE policy using CAL only: candidate best coordinate macro MAE
+  with >=0.05m gain and ES increase <=0.02m; else baseline. Do not pick
+  thresholds/variants using confirmation metrics. Placebo cannot win.
+- Confirmation exactly once, selected-vs-baseline coordinate macro 2D
+  MAE & Energy Score, paired 5000-repetition studentized max-T.
+  PROMISING_INTERNAL_PILOT requires MAE gain >=.15m and 95% familywise
+  upper MAE <0, ES upper <=0. Otherwise NO_INTERNAL_PROMOTION.
+- Negative control: shuffled density. Competing explanations measured:
+  posterior entropy and visible AP count. Spearman association is
+  descriptive, not causal. This is NOT a matched train-density intervention.
+- Never turn G3 external STOP into GO or claim Q1 validation with this pilot.
+
+ABSOLUTE GIT RULE
+User performs all Git actions manually. Codex MUST NOT call Git or write
+git checkout/pull/add/commit/push/branch/upload/merge instructions. Do
+not overwrite any G1/G2/G3 result, checkpoint, source or frozen evidence.
+
+STAGE 1: FAST CPU SMOKE + TRAINING-ONLY PREFLIGHT
+From repository root (inside current CUDA-compatible environment):
+  python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g4_observable_support.py tests/test_uji_v17_g4_observable_support.py
+  python -m pytest -q tests/test_uji_v17_g4_observable_support.py tests/test_uji_v17_g3_uts.py
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support preflight
+
+Before writing the manifest, check:
+* UTS_training.csv is the only data read; no other test file referenced.
+* training coordinate keys physically disjoint across the 3 roles;
+  no scan leakage, including every physical coordinate shared by scans;
+  each floor has FIT, CAL and CONFIRM sites;
+* fit anchors >=192; verify 5-member E5 R3 joint law is correct,
+  candidate and baseline differ ONLY via posterior density weights;
+* gating statistic uses baseline prior and training anchor geometry,
+  NEVER query ground-truth x/y; q thresholds from CAL site features;
+* observed AP/entropy controls cannot influence selected policy;
+* original hyperparameters, gamma, 10m, scoring method, epochs, seeds,
+  original G1/G3 results remain unchanged.
+
+Before MANIFEST only: fix new G4 implementation errors if needed and
+rerun the focused CPU test plus preflight. Do not silently change
+scientific selection rule, cutoffs, split roles, model loss or scorer.
+Escalate scientific-contract incompatibility rather than relaxing it.
+
+STAGE 2: PREPARE ONCE
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support prepare
+
+This creates manifest_v17_g4.json with source/data/split/algorithm
+hashes and the exact original coordinates assigned to each role.
+Do not delete/recreate this manifest to allow silent source changes.
+
+STAGE 3: TRAIN 5 ORIGINAL V17 MEMBERS (SEQUENTIAL CUDA)
+PowerShell:
+  1..5 | ForEach-Object {
+      python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support train-member --member-index $_ --device cuda
+      if ($LASTEXITCODE -ne 0) { throw "G4 member $_ failed" }
+  }
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support check-members
+
+Train ONLY FIT group rows within UTS_training.csv, preserve original V17
+R0 loss/augmentations/optimizer, inspect member log and 5 checkpoint
+hashes. Cal and confirmation labels must not participate in training.
+Do not switch to the G3 original 25 members: they trained on ALL UTS
+training coordinates, so their use would leak these internal labels.
+
+STAGE 4: CALIBRATION + SCIENTIFIC FREEZE
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support calibrate --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support check
+
+Calibrate reads only CAL physical sites, evaluates identity, global,
+placebo, q25/q50/q75. Saves raw per-coordinate paired vectors, label-
+free support feature, entropy/AP controls, selected policy and threshold,
+member hashes. The chosen threshold must NOT be hand-edited after
+inspecting the result. If calibration selects baseline, still run
+confirmation to study fixed gamma's descriptive association; don't
+force a non-baseline policy.
+
+STAGE 5: INTERNAL CONFIRMATION EXACTLY ONCE
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support confirm --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support check
+
+The confirmation command writes internal_confirmation.lock before
+scoring. Report MAE, ES, group vectors, bootstrap simultaneous upper
+bounds, support-vs-gain Spearman, competing entropy/visible AP Spearman,
+and per-floor numbers descriptively. Do not tune on confirmation.
+If lock is present but result absent after an exception: STOP, preserve
+failure, do not delete the lock or silently rerun.
+
+MINIMUM ARTIFACTS UNDER evidence/v17_g4_observable_support
+- manifest_v17_g4.json
+- calibration_v17_g4.json
+- internal_confirmation.lock
+- confirmation_v17_g4.json
+- RUN_REPORT_V17_G4.md
+- run_audit/EXECUTION_SUMMARY.md (short: commands, exit codes,
+  5 checkpoint SHA256s, any errors/repairs, key interpretation).
+Keep 5 checkpoint .pt files locally; no need to upload huge files.
+User owns all git uploads.
+
+After user uploads results, ChatGPT will independently re-evaluate
+coordinate vectors, compare support/entropy/AP controls, examine floor
+heterogeneity and decide either (A) reject simple gate, (B) full-panel
+new-development experiment or (C) a matched re-training reference
+density intervention. No additional external testing is authorized yet.
