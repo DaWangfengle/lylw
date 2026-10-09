@@ -1,0 +1,26 @@
+{
+  "all_complete": true,
+  "members": [
+    {
+      "index": 1,
+      "sha256": "8af93392f81c8cc71c7e44664da8aa3c62356f1eb8e067feff072dba3e67e60b"
+    },
+    {
+      "index": 2,
+      "sha256": "37c8af1d611586456e6200d3fe196f111f4e93249613d4997ccdef6f9541e294"
+    },
+    {
+      "index": 3,
+      "sha256": "c1e173049c37ef26858ada993f8d3fa62ea150ff55b7c6ccd34bd31eb0b04f2d"
+    },
+    {
+      "index": 4,
+      "sha256": "0f53c19750169c95327f501172e2da60a690b08dcf19db677a78365b848280f1"
+    },
+    {
+      "index": 5,
+      "sha256": "ccd93aee342b27b67b3f971f157286886d7090556bd28cdbdb4af82f350ef3b5"
+    }
+  ],
+  "manifest_sha256": "0ce50ed637ef6987b915a4a94169400782eb1a4b638c32869c450eb40319bfbc"
+}

@@ -387,7 +387,8 @@ def three_actions(
     if scale.shape!=location.shape or not torch.isfinite(scale).all() or (scale<=0).any():
         raise G5Error("student-t mixture scales must be positive finite")
     p=probability/probability.sum(dim=1,keepdim=True).clamp_min(1e-30)
-    mean=(p[...,None]*location).sum(dim=1)
+    # Preserve the original R3 linear combination, including float32 roundoff.
+    mean=torch.sum(probability[:, :, None]*location,dim=1)
     centres=weighted_component_geometric_median(p,location)
     first=sample_continuous_mixture(
         p,location,scale,action_randomness["uniform_1"],action_randomness["noise_1"]
@@ -449,6 +450,7 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
     predicted_risk={v:torch.empty(n,dtype=torch.float64) for v in VARIANTS}
     energy=torch.empty(n,dtype=torch.float64)
     decision_shift=torch.empty(n,dtype=torch.float64)
+    median_gap=torch.empty(n,dtype=torch.float64)
     ref=models[0]
     anchors=ref.n_anchors
     for start in range(0,n,BATCH):
@@ -476,7 +478,8 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
                 top,top_indices,radial,torch.stack(loc),torch.stack(scale),
                 tuple(range(PANEL)),top_k=K,alpha=ALPHA
             )
-            p=prob/prob.sum(dim=1,keepdim=True).clamp_min(1e-30)
+            # Same unmodified R3 law for all actions and the one shared ES.
+            p=prob
             actions=three_actions(
                 p,centre,spread,_randomness_slice(random_action,start,end,device)
             )
@@ -503,6 +506,9 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
             decision_shift[start:end]=torch.linalg.vector_norm(
                 actions["continuous_median"]-actions["mean"],dim=-1
             ).double().detach().cpu()
+            median_gap[start:end]=torch.linalg.vector_norm(
+                actions["continuous_median"]-actions["component_median"],dim=-1
+            ).double().detach().cpu()
             energy[start:end]=r3._score_joint_law(
                 p,centre,spread,actual[start:end],
                 _randomness_slice(random_energy,start,end,device)
@@ -521,6 +527,7 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
         rr,_=r3._metric_record(predicted_risk[name],coordinate_ids,len(ordered_keys))
         risk_record[name]=float(rr["coordinate_macro_m"])
     shift,_=r3._metric_record(decision_shift,coordinate_ids,len(ordered_keys))
+    gap_record,gap_groups=r3._metric_record(median_gap,coordinate_ids,len(ordered_keys))
     differences={
         "component_median_minus_mean":np.asarray(vectors["component_median"])
                                       -np.asarray(vectors["mean"]),
@@ -572,6 +579,11 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
         },
         "expected_posterior_euclidean_risk_m":risk_record,
         "coordinate_macro_median_mean_displacement_m":float(shift["coordinate_macro_m"]),
+        "continuous_component_median_displacement":{
+            "coordinate_macro_m":float(gap_record["coordinate_macro_m"]),
+            "row_mean_m":float(gap_record["row_mean_m"]),
+            "coordinate_vector_m":gap_groups.tolist(),
+        },
         "paired_familywise_inference":inference,
         "gate":gate,
         "descriptive":descriptive,
@@ -630,7 +642,8 @@ def make_report(result:dict) -> str:
         f"Secondary component-centre-median minus mean: {inf['component_median_minus_mean']['mean_difference_m']:+.6f} m",
         f"Shared energy score: {result['common_energy_score']['coordinate_macro_energy_m']:.6f} m",
         "Energy Score is identical across point actions by construction, not an independent improvement.",
-        f"Independent-draw expected predictive Euclidean risk: {result['expected_posterior_euclidean_risk_m']}",
+        "Independent-draw expected predictive Euclidean risk: "+json.dumps(
+            result["expected_posterior_euclidean_risk_m"],sort_keys=True),
         f"Mean geometric-median point displacement: {result['coordinate_macro_median_mean_displacement_m']:.6f} m",
         "",
         "Both median algorithms use no query labels. Student-t continuous-median is Monte Carlo approximate;",

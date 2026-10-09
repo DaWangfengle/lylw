@@ -1,0 +1,93 @@
+{
+  "status": "PRE_MANIFEST_DATA_AND_ENVIRONMENT_VERIFIED",
+  "environment": {
+    "python": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "torch": "2.10.0+cu128",
+    "cuda": "12.8",
+    "numpy": "2.4.4",
+    "pandas": "3.0.1",
+    "scipy": "1.17.1",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "gpu": "NVIDIA GeForce RTX 2060",
+    "gpu_total_bytes": 6442123264,
+    "cuda_free_total_bytes": [
+      5361369088,
+      6442123264
+    ]
+  },
+  "source_sha256": {
+    "training_rss": "7922efcd4ea14b1a5453a69ba35bc021a67b915b1b3076fa4ccf6da3e98e31b3",
+    "training_xyz": "22f0894e80966ef12d5f4e73f6e0b466d5a5781dda1f76c35ae6d276a929afff",
+    "g5_design": "d0756575000de5f69a772a94cfb27703b753d7b78ef478912f91a59ad972041b",
+    "g5_code": "0953f4726d7b769b140f9d0e20e8ed7481a2d2b144ecc875368e5bc764945d8b",
+    "tampere_adapter": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+    "v17_training": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "v17_score": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+    "v17_score_protocol": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+    "v17_anchor_loader": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+    "v9_continuous_sampler_and_median": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d"
+  },
+  "rows": 446,
+  "aps": 489,
+  "role_groups": {
+    "fit": 334,
+    "confirmation": 112
+  },
+  "role_rows": {
+    "fit": 334,
+    "confirmation": 112
+  },
+  "role_sorted_keys_sha256": {
+    "fit": "d917c5efe32c714267dd2b6785c79965d7948f3f484d8a02f8ab19d1c9798468",
+    "confirmation": "905866e37596155ee6131b271686a69ce3e0692f9d67d61b978d2c109e411b67"
+  },
+  "physical_overlap": 0,
+  "row_overlap": 0,
+  "raw_to_adapter_coordinate_key_bijection": 446,
+  "adapter_to_centered_float32_key_bijection_all_roles": 446,
+  "fit_anchor_count": 334,
+  "fit_origin_float32": [
+    195.4998779296875,
+    126.66690063476562
+  ],
+  "by_floor": {
+    "0": {
+      "fit": 92,
+      "confirmation": 31
+    },
+    "1": {
+      "fit": 164,
+      "confirmation": 55
+    },
+    "2": {
+      "fit": 78,
+      "confirmation": 26
+    }
+  },
+  "floor_height_mapping": {
+    "0.0": 0,
+    "3.5": 1,
+    "7.0": 2
+  },
+  "unknown_device_ids": [
+    -1
+  ],
+  "xy_bounds_m": [
+    [
+      117.94,
+      52.043
+    ],
+    [
+      267.94,
+      217.04
+    ]
+  ],
+  "rss_model_bounds": [
+    -1.0,
+    1.0
+  ],
+  "query_target_dimension": 2,
+  "z_is_floor_category": true,
+  "no_confirmation_prediction_or_error_computed": true
+}

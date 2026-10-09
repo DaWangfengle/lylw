@@ -1,0 +1,45 @@
+{
+  "scope": "Python open events; not an OS-wide monitor",
+  "allowed_data_paths": [
+    "D:\\liuyanlunwen\\data\\Tampere\\Training_coordinates.csv",
+    "D:\\liuyanlunwen\\data\\Tampere\\Training_rss.csv"
+  ],
+  "data_open_events": [
+    {
+      "path": "D:\\liuyanlunwen\\data\\Tampere\\Training_rss.csv",
+      "mode": "r",
+      "writing": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\data\\Tampere\\Training_coordinates.csv",
+      "mode": "r",
+      "writing": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\data\\Tampere\\Training_coordinates.csv",
+      "mode": "r",
+      "writing": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\data\\Tampere\\Training_rss.csv",
+      "mode": "r",
+      "writing": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\data\\Tampere\\Training_coordinates.csv",
+      "mode": "r",
+      "writing": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\data\\Tampere\\Training_rss.csv",
+      "mode": "r",
+      "writing": false
+    },
+    {
+      "path": "D:\\liuyanlunwen\\data\\Tampere\\Training_coordinates.csv",
+      "mode": "r",
+      "writing": false
+    }
+  ],
+  "denied_attempts": []
+}

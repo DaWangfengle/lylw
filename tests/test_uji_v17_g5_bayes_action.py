@@ -210,9 +210,23 @@ def test_report_disclaims_novelty_and_energy_invariance():
     assert "Energy Score is identical" in report
     assert "Tampere TRAIN-only" in report
     assert "PROMISING_ACTION_ALIGNMENT" in report
+    # Frozen JSON uses sorted keys; the report must survive that round trip.
+    assert g5.make_report(json.loads(json.dumps(candidate, sort_keys=True))) == report
 
 
 @pytest.mark.parametrize("i",[-1,0,6,10])
 def test_invalid_member_index(i):
     with pytest.raises(g5.G5Error):
         g5.member_path(i)
+
+
+def test_mean_action_is_bitwise_original_r3_linear_combination():
+    # Real float32 unit-probability laws have tiny summation roundoff.
+    rng = torch.Generator().manual_seed(530)
+    probability = torch.softmax(torch.randn(4, 960, generator=rng), dim=1)
+    location = torch.randn(4, 960, 2, generator=rng) * 17.0
+    scale = torch.ones_like(location)
+    draws = common_student_t_randomness(4, draws=128, seed=19503)
+    actions = g5.three_actions(probability, location, scale, draws)
+    original = torch.sum(probability[:, :, None] * location, dim=1)
+    assert torch.equal(actions["mean"], original)

@@ -1,0 +1,16 @@
+{
+  "freeze_file_sha256": "d1e0d97f102fd85931332a4dbf5139dcd368667366068d9d8903910c96b4523b",
+  "manifest_file_sha256": "f3c92a952566787039cab02ec42fbcf3a493aa3b34b7194ba4b26989d450c812",
+  "member_sha256": [
+    "8af93392f81c8cc71c7e44664da8aa3c62356f1eb8e067feff072dba3e67e60b",
+    "37c8af1d611586456e6200d3fe196f111f4e93249613d4997ccdef6f9541e294",
+    "c1e173049c37ef26858ada993f8d3fa62ea150ff55b7c6ccd34bd31eb0b04f2d",
+    "0f53c19750169c95327f501172e2da60a690b08dcf19db677a78365b848280f1",
+    "ccd93aee342b27b67b3f971f157286886d7090556bd28cdbdb4af82f350ef3b5"
+  ],
+  "protocol": "v17_g5_tampere_train_only_bayes_action_v1_20261009",
+  "result_sha256": "1427b3baa91db5c5206f313d4fe3bd17073b851e6baec46d8d869d517796ef10",
+  "status": "INTERNAL_CONFIRMATION_STARTS_AFTER_MODEL_FREEZE",
+  "test_file_accessed": false,
+  "warning": "Keep this file if evaluation fails. Never remove to retry."
+}

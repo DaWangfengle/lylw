@@ -1,0 +1,22 @@
+{"confirmation_scored_rows": 16, "total_rows": 112}
+{"confirmation_scored_rows": 32, "total_rows": 112}
+{"confirmation_scored_rows": 48, "total_rows": 112}
+{"confirmation_scored_rows": 64, "total_rows": 112}
+{"confirmation_scored_rows": 80, "total_rows": 112}
+{"confirmation_scored_rows": 96, "total_rows": 112}
+{"confirmation_scored_rows": 112, "total_rows": 112}
+{
+  "status": "TRAINING_FILE_INTERNAL_CONFIRMATION_COMPLETE",
+  "decision": "NO_INTERNAL_PROMOTION",
+  "gate": {
+    "passed": false,
+    "checks": {
+      "mae_gain_at_least_0p15m": true,
+      "simultaneous_mae_upper_below_zero": false
+    },
+    "min_mae_gain_m": 0.15,
+    "mean_diff_m": -0.3816934412522958,
+    "maxT_upper_m": 0.3502483919287008
+  },
+  "result_sha256": "16d622c8604ad9dd1a79663b129767370e5357ce91db2d2a3477c2f394271c71"
+}

@@ -1,0 +1,83 @@
+{
+  "status": "FROZEN_FIT_ONLY_GPU_COMPATIBILITY_VERIFIED",
+  "seconds": 0.9945565000089118,
+  "fit_scan_rows": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    10,
+    11,
+    13,
+    14,
+    15,
+    16,
+    17,
+    19
+  ],
+  "confirmation_scans_used": 0,
+  "confirmation_labels_scored": 0,
+  "scorer_target": "synthetic all-zero target only",
+  "joint_law_shape": [
+    16,
+    960
+  ],
+  "action_draws_per_stream": 128,
+  "probability_sums_bounds": [
+    0.9999998807907104,
+    1.000000238418579
+  ],
+  "original_r3_mean_bitwise_equal": true,
+  "shared_fit_anchors_and_origin": true,
+  "all_fixed_epochs_complete": true,
+  "all_model_grads_none": true,
+  "checkpoints_unchanged": true,
+  "members": [
+    {
+      "member": 1,
+      "seed": 17301,
+      "epochs": 65,
+      "history_epochs": 65,
+      "sha256": "8af93392f81c8cc71c7e44664da8aa3c62356f1eb8e067feff072dba3e67e60b"
+    },
+    {
+      "member": 2,
+      "seed": 17302,
+      "epochs": 69,
+      "history_epochs": 69,
+      "sha256": "37c8af1d611586456e6200d3fe196f111f4e93249613d4997ccdef6f9541e294"
+    },
+    {
+      "member": 3,
+      "seed": 17303,
+      "epochs": 56,
+      "history_epochs": 56,
+      "sha256": "c1e173049c37ef26858ada993f8d3fa62ea150ff55b7c6ccd34bd31eb0b04f2d"
+    },
+    {
+      "member": 4,
+      "seed": 17304,
+      "epochs": 67,
+      "history_epochs": 67,
+      "sha256": "0f53c19750169c95327f501172e2da60a690b08dcf19db677a78365b848280f1"
+    },
+    {
+      "member": 5,
+      "seed": 17305,
+      "epochs": 62,
+      "history_epochs": 62,
+      "sha256": "ccd93aee342b27b67b3f971f157286886d7090556bd28cdbdb4af82f350ef3b5"
+    }
+  ],
+  "origin": [
+    195.4998779296875,
+    126.66690063476562
+  ],
+  "manifest_sha256": "0ce50ed637ef6987b915a4a94169400782eb1a4b638c32869c450eb40319bfbc",
+  "cuda_peak_allocated_bytes": 65982464,
+  "cuda_peak_reserved_bytes": 75497472
+}

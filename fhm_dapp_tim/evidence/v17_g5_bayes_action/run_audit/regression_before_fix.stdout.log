@@ -1,0 +1,57 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_____________ test_report_disclaims_novelty_and_energy_invariance _____________
+
+    def test_report_disclaims_novelty_and_energy_invariance():
+        candidate={
+            "metrics":{
+                "mean":{"coordinate_macro_mae_m":6.0},
+                "component_median":{"coordinate_macro_mae_m":5.9},
+                "continuous_median":{"coordinate_macro_mae_m":5.8}},
+            "paired_familywise_inference":{"comparisons":{
+                "component_median_minus_mean":{"mean_difference_m":-.1}}},
+            "gate":{"mean_diff_m":-.2,"maxT_upper_m":-.03,
+                    "min_mae_gain_m":.15},
+            "decision":"PROMISING_ACTION_ALIGNMENT",
+            "common_energy_score":{"coordinate_macro_energy_m":4.5},
+            "expected_posterior_euclidean_risk_m":{"mean":5.,"continuous_median":4.9},
+            "coordinate_macro_median_mean_displacement_m":.3,
+            "result_sha256":"synthetic"
+        }
+        report=g5.make_report(candidate)
+        assert "already implements" in report
+        assert "Energy Score is identical" in report
+        assert "Tampere TRAIN-only" in report
+        assert "PROMISING_ACTION_ALIGNMENT" in report
+        # Frozen JSON uses sorted keys; the report must survive that round trip.
+>       assert g5.make_report(json.loads(json.dumps(candidate, sort_keys=True))) == report
+E       AssertionError: assert '# V17 G5-A |...: synthetic\n' == '# V17 G5-A |...: synthetic\n'
+E         
+E         Skipping 729 identical leading characters in diff, use -v to show
+E         Skipping 537 identical trailing characters in diff, use -v to show
+E         - n risk: {'mean': 5.0, 'continuous_median': 4.9}
+E         + n risk: {'continuous_median': 4.9, 'mean': 5.0}
+E           Mean ge
+
+tests\test_uji_v17_g5_bayes_action.py:214: AssertionError
+_________ test_mean_action_is_bitwise_original_r3_linear_combination __________
+
+    def test_mean_action_is_bitwise_original_r3_linear_combination():
+        # Real float32 unit-probability laws have tiny summation roundoff.
+        rng = torch.Generator().manual_seed(530)
+        probability = torch.softmax(torch.randn(4, 960, generator=rng), dim=1)
+        location = torch.randn(4, 960, 2, generator=rng) * 17.0
+        scale = torch.ones_like(location)
+        draws = common_student_t_randomness(4, draws=128, seed=19503)
+        actions = g5.three_actions(probability, location, scale, draws)
+        original = torch.sum(probability[:, :, None] * location, dim=1)
+>       assert torch.equal(actions["mean"], original)
+E       assert False
+E        +  where False = <built-in method equal of type object at 0x00007FFF67DDFA70>(tensor([[ 1.2356,  0.6145],\n        [ 0.9639,  0.6717],\n        [-0.7644, -0.3910],\n        [ 0.0553, -0.2255]]), tensor([[ 1.2356,  0.6145],\n        [ 0.9639,  0.6717],\n        [-0.7644, -0.3910],\n        [ 0.0553, -0.2255]]))
+E        +    where <built-in method equal of type object at 0x00007FFF67DDFA70> = torch.equal
+
+tests\test_uji_v17_g5_bayes_action.py:232: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_uji_v17_g5_bayes_action.py::test_report_disclaims_novelty_and_energy_invariance
+FAILED tests/test_uji_v17_g5_bayes_action.py::test_mean_action_is_bitwise_original_r3_linear_combination
+2 failed, 23 deselected in 13.38s

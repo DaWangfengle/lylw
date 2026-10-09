@@ -1,0 +1,115 @@
+{
+  "reviewed_utc": "2026-10-09T09:03:06.089862+00:00",
+  "status": "FINAL_SAVED_ARTIFACTS_AND_INTEGRITY_VERIFIED",
+  "no_new_prediction_or_bootstrap": true,
+  "historical_files_verified": 654,
+  "historical_changed_files": [],
+  "artifact_sha256": {
+    "manifest_v17_g5.json": "f3c92a952566787039cab02ec42fbcf3a493aa3b34b7194ba4b26989d450c812",
+    "freeze_v17_g5.json": "d1e0d97f102fd85931332a4dbf5139dcd368667366068d9d8903910c96b4523b",
+    "internal_confirmation.lock": "bfbb660b2cc8b28b9329f16f14e187db3f4ec7c3918c5e6c812e1aff782fafe0",
+    "confirmation_v17_g5.json": "d60bb5c25a577ed637be49613f0218b6d6c328acd18cd4d725873406342a8b09",
+    "RUN_REPORT_V17_G5.md": "ebfb41d8b71c60557223fca93f86bf0a582ee84b798ed37cc64b31a16157c9ce"
+  },
+  "source_sha256": {
+    "g5_code": "0953f4726d7b769b140f9d0e20e8ed7481a2d2b144ecc875368e5bc764945d8b",
+    "g5_design": "d0756575000de5f69a772a94cfb27703b753d7b78ef478912f91a59ad972041b",
+    "tampere_adapter": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+    "training_rss": "7922efcd4ea14b1a5453a69ba35bc021a67b915b1b3076fa4ccf6da3e98e31b3",
+    "training_xyz": "22f0894e80966ef12d5f4e73f6e0b466d5a5781dda1f76c35ae6d276a929afff",
+    "v17_anchor_loader": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+    "v17_score": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+    "v17_score_protocol": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+    "v17_training": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "v9_continuous_sampler_and_median": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d"
+  },
+  "frozen_g5_test_sha256": "92eccc06ee907a5e216f7af39baf314e8e98a4817b938430a9a56bbc69d511a3",
+  "members": [
+    {
+      "member": 1,
+      "seed": 17301,
+      "epochs": 65,
+      "history_epochs": 65,
+      "sha256": "8af93392f81c8cc71c7e44664da8aa3c62356f1eb8e067feff072dba3e67e60b"
+    },
+    {
+      "member": 2,
+      "seed": 17302,
+      "epochs": 69,
+      "history_epochs": 69,
+      "sha256": "37c8af1d611586456e6200d3fe196f111f4e93249613d4997ccdef6f9541e294"
+    },
+    {
+      "member": 3,
+      "seed": 17303,
+      "epochs": 56,
+      "history_epochs": 56,
+      "sha256": "c1e173049c37ef26858ada993f8d3fa62ea150ff55b7c6ccd34bd31eb0b04f2d"
+    },
+    {
+      "member": 4,
+      "seed": 17304,
+      "epochs": 67,
+      "history_epochs": 67,
+      "sha256": "0f53c19750169c95327f501172e2da60a690b08dcf19db677a78365b848280f1"
+    },
+    {
+      "member": 5,
+      "seed": 17305,
+      "epochs": 62,
+      "history_epochs": 62,
+      "sha256": "ccd93aee342b27b67b3f971f157286886d7090556bd28cdbdb4af82f350ef3b5"
+    }
+  ],
+  "role_groups": {
+    "confirmation": 112,
+    "fit": 334
+  },
+  "role_rows": {
+    "confirmation": 112,
+    "fit": 334
+  },
+  "physical_and_row_overlap": 0,
+  "coordinate_key_order_and_vector_means_verified": true,
+  "paired_means_standard_errors_and_stored_critical_bounds_reconstructed": {
+    "component_median": {
+      "mean_difference_m": -0.5220019864510538,
+      "standard_error_m": 0.37900218861496937,
+      "simultaneous_upper_bound_m": 0.17948883449063435
+    },
+    "continuous_median": {
+      "mean_difference_m": -0.3816934412522958,
+      "standard_error_m": 0.3954542931040152,
+      "simultaneous_upper_bound_m": 0.350248391928701
+    }
+  },
+  "all_command_log_hashes_verified": true,
+  "command_count": 20,
+  "provided_test_access_attempts": 0,
+  "historical_outcomes_used_for_tuning": false,
+  "confirmation_invocations": 1,
+  "model_restarts_or_reuse": 0,
+  "test_count": 40,
+  "decision": "NO_INTERNAL_PROMOTION",
+  "gate": {
+    "checks": {
+      "mae_gain_at_least_0p15m": true,
+      "simultaneous_mae_upper_below_zero": false
+    },
+    "maxT_upper_m": 0.3502483919287008,
+    "mean_diff_m": -0.3816934412522958,
+    "min_mae_gain_m": 0.15,
+    "passed": false
+  },
+  "cuda_warning_stages": [
+    "train_member_01",
+    "train_member_02",
+    "train_member_03",
+    "train_member_04",
+    "train_member_05"
+  ],
+  "start_utc": "2026-10-09T08:46:20.239945+00:00",
+  "final_check_utc": "2026-10-09T08:59:43.258402+00:00",
+  "elapsed_to_final_check_seconds": 803.018457,
+  "five_training_command_seconds": 140.95985049997398
+}

@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-09T08:50:05.275227+00:00",
+  "manifest_exists": false,
+  "issues": [
+    {
+      "issue": "G5 re-normalized a float32 R3 law before its baseline action",
+      "evidence": "regression_before_fix: original R3 bitwise mean assertion failed",
+      "fix": "Preserve the R3 joint weights and original sum(probability * centres) operation; median/sampler normalization stays inside the existing helpers."
+    },
+    {
+      "issue": "Report rendered risk dictionary in insertion order; JSON save sorts keys",
+      "evidence": "regression_before_fix: report JSON round-trip assertion failed",
+      "fix": "Render the risk dictionary via json.dumps(sort_keys=True)."
+    },
+    {
+      "issue": "Requested displacement between both geometric medians was not saved",
+      "fix": "Save the existing two actions' Euclidean displacement, grouped vector and means; no new action, model, random stream or gate."
+    }
+  ],
+  "unchanged": [
+    "design",
+    "split/role formula",
+    "seeds/epochs",
+    "R0 model/loss/optimizer/augmentation",
+    "E5/L192/K192/alpha1",
+    "Student-t df4",
+    "draw counts/seeds",
+    "median steps/tolerance",
+    "MAE gate and maxT",
+    "historical code/evidence"
+  ],
+  "before_sha256": {
+    "code": "7b7251a3d9781b60175e193d74d2bc5626ef1295d6a5a9e8c5d2412a978e34c2",
+    "tests": "b2f36db4fe197ea53aa0a75c3c8811542a6b204da6a0d1033c0272c90b5acaaf"
+  },
+  "after_sha256": {
+    "code": "0953f4726d7b769b140f9d0e20e8ed7481a2d2b144ecc875368e5bc764945d8b",
+    "tests": "92eccc06ee907a5e216f7af39baf314e8e98a4817b938430a9a56bbc69d511a3"
+  },
+  "diff_sha256": "eefecd62dd563eb97a74111c0fe5b06b9444578970bcd520aa4b48190ec9fd81"
+}

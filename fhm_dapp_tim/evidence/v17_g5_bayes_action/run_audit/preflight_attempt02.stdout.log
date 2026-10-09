@@ -1,0 +1,49 @@
+{
+  "status": "TAMPERE_TRAIN_ONLY_READY",
+  "protocol": "v17_g5_tampere_train_only_bayes_action_v1_20261009",
+  "source_sha256": {
+    "training_rss": "7922efcd4ea14b1a5453a69ba35bc021a67b915b1b3076fa4ccf6da3e98e31b3",
+    "training_xyz": "22f0894e80966ef12d5f4e73f6e0b466d5a5781dda1f76c35ae6d276a929afff",
+    "g5_design": "d0756575000de5f69a772a94cfb27703b753d7b78ef478912f91a59ad972041b",
+    "g5_code": "0953f4726d7b769b140f9d0e20e8ed7481a2d2b144ecc875368e5bc764945d8b",
+    "tampere_adapter": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+    "v17_training": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "v17_score": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+    "v17_score_protocol": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+    "v17_anchor_loader": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+    "v9_continuous_sampler_and_median": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d"
+  },
+  "train_rows": 446,
+  "train_aps": 489,
+  "train_coordinate_groups": 446,
+  "floor_count": 3,
+  "role_groups": {
+    "fit": 334,
+    "confirmation": 112
+  },
+  "role_rows": {
+    "fit": 334,
+    "confirmation": 112
+  },
+  "physical_site_overlap": 0,
+  "frozen_seeds": [
+    17301,
+    17302,
+    17303,
+    17304,
+    17305
+  ],
+  "frozen_epochs": [
+    65,
+    69,
+    56,
+    67,
+    62
+  ],
+  "model_count": 5,
+  "L": 192,
+  "K": 192,
+  "alpha": 1.0,
+  "action_draws_per_stream": 128,
+  "other_provided_test_files_accessed": false
+}
