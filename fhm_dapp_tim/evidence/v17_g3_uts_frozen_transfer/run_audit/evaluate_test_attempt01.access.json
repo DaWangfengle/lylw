@@ -1,0 +1,14 @@
+{
+  "stage": "evaluate_test_attempt01",
+  "python_data_open_counts": {
+    "d:\\liuyanlunwen\\data\\utsindoorloc\\uts_training.csv": 10,
+    "d:\\liuyanlunwen\\data\\utsindoorloc\\uts_test.csv": 2
+  },
+  "first_UTS_test_open": {
+    "utc": "2026-10-08T15:13:38.947507+00:00",
+    "lock_sha256_before_first_open": "e1ca9cd845e74fc75eb6e5391073dd0b4dab55efe859467f78943358cbc49ed5",
+    "freeze_sha256_before_first_open": "4cfda131e0342a39ccf7ee043eed78f4ed59389bad831d5d6b6c77a391b1f1a4",
+    "lock_and_freeze_existed_before_first_open": true
+  },
+  "denied_attempts": []
+}

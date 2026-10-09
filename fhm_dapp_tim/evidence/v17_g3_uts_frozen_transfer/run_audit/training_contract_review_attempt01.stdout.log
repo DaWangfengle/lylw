@@ -1,0 +1,46 @@
+{
+  "status": "TRAINING_CONTRACT_VERIFIED",
+  "training_rows": 9108,
+  "exact_raw_training_physical_sites": 1466,
+  "legacy_training_anchors": 1466,
+  "coordinate_group_collisions": 0,
+  "coordinate_units_contract": "metres as specified by UTS Pos_x/Pos_y adapter and frozen design; numeric range checked, no external unit verification claimed",
+  "raw_x_range": [
+    5.05268,
+    109.031
+  ],
+  "raw_y_range": [
+    0.229367,
+    32.7063
+  ],
+  "building_mapping": {
+    "New IT": 0
+  },
+  "floor_mapping": {
+    "-1": 0,
+    "-2": 1,
+    "-3": 2,
+    "0": 3,
+    "1": 4,
+    "10": 5,
+    "11": 6,
+    "12": 7,
+    "2": 8,
+    "3": 9,
+    "4": 10,
+    "5": 11,
+    "6": 12,
+    "7": 13,
+    "8": 14,
+    "9": 15
+  },
+  "AP_count": 589,
+  "missing_cells_correctly_minus_one": 5045233,
+  "visible_RSS_range_dbm": [
+    -96.0,
+    -37.0
+  ],
+  "float32_RSS_valid": true,
+  "restricted_checkpoint_origin_roundtrip_bitwise_equal": true,
+  "provided_test_accessed": false
+}

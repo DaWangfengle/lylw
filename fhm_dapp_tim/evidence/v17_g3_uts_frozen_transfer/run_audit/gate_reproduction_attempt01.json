@@ -1,0 +1,17 @@
+{
+  "stage": "gate_reproduction_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/run_audit/gate_contract_reproduction.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T13:34:37.089375+00:00",
+  "ended_utc": "2026-10-08T13:34:46.910782+00:00",
+  "runtime_seconds": 9.820820799999638,
+  "exit_code": 1,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\gate_reproduction_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\gate_reproduction_attempt01.stderr.log",
+  "stdout_sha256": "8e3b15e1da206b4611403709e0ca46c4afb5cb4b9aee631b26355f898de0ad3e",
+  "stderr_sha256": "ea412c57ece75d20ab6f7f154dcfbbd921fd08d5971352c9e5dcd479dfb7c3fb",
+  "access_guard_sha256": "1131682ffe199e377abc3eeac7456d3ce7d6d04160b084a56e7f1c7658ef6edc"
+}

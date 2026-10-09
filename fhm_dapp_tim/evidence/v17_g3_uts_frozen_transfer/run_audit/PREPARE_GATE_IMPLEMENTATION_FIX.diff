@@ -1,0 +1,48 @@
+--- before/uji_v17_g3_uts.py
++++ after/uji_v17_g3_uts.py
+@@ -375,6 +375,19 @@
+         "disclosure": DISCLOSURE,
+     }
+     return _write_once(FREEZE, content)
++
++
++def _fixed_transfer_gate(delta_mae: float, upper_mae: float,
++                         delta_es: float, upper_es: float,
++                         placebo_delta_mae: float) -> dict:
++    """Implement the preregistered G3 placebo-vs-baseline criterion."""
++    gate = g1.confirm_gate(delta_mae, upper_mae, delta_es, upper_es,
++                           placebo_delta_mae)
++    gate["checks"].pop("geometry_better_than_permuted_density")
++    gate["checks"]["placebo_worse_than_baseline"] = placebo_delta_mae > 0.0
++    gate["passed"] = all(gate["checks"].values())
++    gate["note"] = "Frozen UTS transfer criteria; historical UJI G1 STOP unchanged"
++    return gate
+ 
+ 
+ @torch.no_grad()
+@@ -515,7 +528,7 @@
+     des = float(differences["energy_score_2d_m"].mean())
+     placebo_mae = float(metrics["permuted_density"]["mae_2d_m"])
+     baseline_mae = float(metrics["baseline"]["mae_2d_m"])
+-    gate = g1.confirm_gate(
++    gate = _fixed_transfer_gate(
+         dmae,
+         inference["comparisons"]["exact_mixture_mean_mae_m"]["simultaneous_upper_bound_m"],
+         des,
+--- before/test_uji_v17_g3_uts.py
++++ after/test_uji_v17_g3_uts.py
+@@ -194,3 +194,14 @@
+     for n in (0,-1,26):
+         with pytest.raises(ValueError):
+             g3.member_path(n)
++
++
++@pytest.mark.parametrize("placebo_delta, expected", [(-0.10, False), (0.0, False), (0.10, True)])
++def test_g3_transfer_requires_placebo_strictly_worse_than_baseline(placebo_delta, expected):
++    # Candidate already beats baseline and placebo; G3 still requires placebo harm.
++    result = g3._fixed_transfer_gate(-0.20, -0.01, -0.10, -0.02, placebo_delta)
++    assert result["passed"] is expected
++    assert result["checks"]["placebo_worse_than_baseline"] is expected
++    assert len(result["checks"]) == 4
++    # The original G1 development gate remains a different, unchanged contract.
++    assert g1.confirm_gate(-0.20, -0.01, -0.10, -0.02, placebo_delta)["passed"]

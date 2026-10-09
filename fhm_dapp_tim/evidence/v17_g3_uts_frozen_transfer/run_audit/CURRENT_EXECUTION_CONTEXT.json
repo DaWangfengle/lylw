@@ -1,0 +1,40 @@
+{
+  "recorded_utc": "2026-10-08T13:46:24.284664+00:00",
+  "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "python_version": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "versions": {
+    "numpy": "2.4.4",
+    "pandas": "3.0.1",
+    "scipy": "1.17.1",
+    "pytest": "9.0.3",
+    "torch": "2.10.0+cu128"
+  },
+  "torch_cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 2060",
+  "gpu_total_bytes": 6442123264,
+  "gpu_free_total_bytes": [
+    5361369088,
+    6442123264
+  ],
+  "disk_free_bytes": 94212100096,
+  "branch_from_native_HEAD": "ref: refs/heads/v17-g3-uts-frozen-transfer",
+  "user_attestation": "User confirms results/labels of UTS/Tampere/TUJI tests were not used for research development; file format/interface previously known.",
+  "prior_preprepare_logs_retained": true,
+  "prior_context_sha256": "66ebe267c4910e430fd8ececdfe0e06f5e75e0d5529ae3d1f8aa1465bf3ed470",
+  "manifest_freeze_lock_result_absent_before_current_preflight": true,
+  "prior_G1_G2_hashes_verified": true,
+  "provided_test_files_read_or_hashed_by_this_context": false,
+  "current_source_hashes": {
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g3_uts.py": "b7a7097fa3654dfc516d01c6aa2ab5acca80b7ca3d1ab87c463f085494576676",
+    "tests/test_uji_v17_g3_uts.py": "f347a8c3a67c184e15a7569c453f751a4decbc5436a06cc9d31166ff23589f60",
+    "fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/DESIGN_V17_G3_UTS.md": "2deda4ac5256341244c04c6989c61c091b99398c68e45aab483c48509b873793",
+    "V17_G3_CODEX_RUN.txt": "e60acc738621c07d66a8dc5049a6ad5ffe9abe6c1d323bbf81f64d3a16dc3454",
+    "fhm_dapp_tim/fhm_dapp/anchor.py": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+    "fhm_dapp_tim/fhm_dapp/experiment_v7.py": "11b61753e1c511e4cd181085ac7c97a42dc188c1d25b805cf3a56d572c544d3a",
+    "fhm_dapp_tim/fhm_dapp/model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+    "fhm_dapp_tim/fhm_dapp/train_anchor_v2.py": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb"
+  },
+  "scientific_stage_Git_operations_authorized": false,
+  "current_execution_changes_to_sources": false
+}

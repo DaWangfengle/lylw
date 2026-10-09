@@ -1,0 +1,19 @@
+{
+  "stage": "prepare_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g3_uts",
+    "prepare"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T13:49:10.308350+00:00",
+  "ended_utc": "2026-10-08T13:49:22.385361+00:00",
+  "runtime_seconds": 12.091660599999159,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\prepare_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\prepare_attempt01.stderr.log",
+  "stdout_sha256": "0658173116c2fb0340ee7fd7ae8b48e78e5c939c5fa3b309cac671bd77c1e387",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "e25dc179ccfb6da171255052dc4c35894d67a40d73f5851d5780cda1e5309d42"
+}

@@ -144,3 +144,9 @@ local_notes/
 # V17-G2 scientific audit stdout/stderr evidence; runtime caches remain ignored.
 !/fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/*.stdout.log
 !/fhm_dapp_tim/evidence/v17_g2_mechanism/run_audit/*.stderr.log
+
+# V17-G3 scientific audit stdout/stderr evidence; models and runtime caches remain ignored.
+!/fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/run_audit/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/run_audit/*.stderr.log
+# Retain local pytest fixtures whose Windows paths were flattened; do not publish them.
+/liuyanlunwenfhm_dapp_timevidencev17_g3_uts_frozen_transferrun_auditruntime_cachepytestpytest_attempt*/

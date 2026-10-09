@@ -1,0 +1,17 @@
+{
+  "stage": "finalize_summary_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/run_audit/finalize_summary.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T15:20:04.477378+00:00",
+  "ended_utc": "2026-10-08T15:20:14.464299+00:00",
+  "runtime_seconds": 9.997184500000003,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\finalize_summary_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\finalize_summary_attempt01.stderr.log",
+  "stdout_sha256": "a06f823c5d4a5289f5086c418cb34a7ef338666307aa41fd8cb018f890a89dce",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "e70e9978da1d868bda9fb9b99e033f6f64ddf9aaad6c094287c3e71918770da7"
+}

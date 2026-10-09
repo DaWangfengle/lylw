@@ -1,0 +1,182 @@
+{
+  "all_complete": true,
+  "complete": 25,
+  "members": [
+    {
+      "member": 1,
+      "seed": 17301,
+      "epoch": 65,
+      "anchors": 1466,
+      "sha256": "bbcf0a2b61fe871ace46ef84bb701e1badd7b505b572b41b19f1914f2a71fb65"
+    },
+    {
+      "member": 2,
+      "seed": 17302,
+      "epoch": 69,
+      "anchors": 1466,
+      "sha256": "bb21e7962f9820ef4a235bf27bc37fc853d68547bf6fdfa4d3fb387aa057dec2"
+    },
+    {
+      "member": 3,
+      "seed": 17303,
+      "epoch": 56,
+      "anchors": 1466,
+      "sha256": "d3c6cf6cc67bff90d18eaf7294a3cc25fdf3c18e70a1090f0bb7361841f0424a"
+    },
+    {
+      "member": 4,
+      "seed": 17304,
+      "epoch": 67,
+      "anchors": 1466,
+      "sha256": "362866b224519eb5b3d6ea7b845596131bb3f8529ade556dbf9e4abf1fab9dec"
+    },
+    {
+      "member": 5,
+      "seed": 17305,
+      "epoch": 62,
+      "anchors": 1466,
+      "sha256": "51ab7b76b4036cdfa66cef638ae933f4beabb865a3d57f66ecf8092aaec85b67"
+    },
+    {
+      "member": 6,
+      "seed": 17306,
+      "epoch": 60,
+      "anchors": 1466,
+      "sha256": "d6cabaee426cf109a92d8a2653e3a12a305829b0dc2620a8042d6090e2ef133d"
+    },
+    {
+      "member": 7,
+      "seed": 17307,
+      "epoch": 52,
+      "anchors": 1466,
+      "sha256": "4877a91cd7ee62fd6005379245f474bd70f1ebabc95da6b5649553dea0579068"
+    },
+    {
+      "member": 8,
+      "seed": 17308,
+      "epoch": 74,
+      "anchors": 1466,
+      "sha256": "8a0b82640df8acba27c81e4522ec376893f102c48fc65557410ebe49fcd67a41"
+    },
+    {
+      "member": 9,
+      "seed": 17309,
+      "epoch": 79,
+      "anchors": 1466,
+      "sha256": "d63d16d8f7a04a2d423d3a8e4dbedabf0d600089204bda75280d66eb13958a02"
+    },
+    {
+      "member": 10,
+      "seed": 17310,
+      "epoch": 62,
+      "anchors": 1466,
+      "sha256": "c4da9eba3cb3cab8385511b1442a1094debc627659960ed7297a4fd46d6650d2"
+    },
+    {
+      "member": 11,
+      "seed": 17311,
+      "epoch": 65,
+      "anchors": 1466,
+      "sha256": "615df46e255ed7f37618e7fea47cf10d8d9a4979b9f67fe80a84b58f528a3d90"
+    },
+    {
+      "member": 12,
+      "seed": 17312,
+      "epoch": 57,
+      "anchors": 1466,
+      "sha256": "3d9785dc9256924d61d57b2813b95f7a67bbc79ab3bcf426605678c5aa6d957d"
+    },
+    {
+      "member": 13,
+      "seed": 17313,
+      "epoch": 64,
+      "anchors": 1466,
+      "sha256": "ee0f308a8994ec51f4ccc34affafed9525182dae647416ff8b5c8a71118255ac"
+    },
+    {
+      "member": 14,
+      "seed": 17314,
+      "epoch": 61,
+      "anchors": 1466,
+      "sha256": "4f15f87dc12cbc80287b4a03bd9eac0c196d9201bde9dc62ac8fa403de34956e"
+    },
+    {
+      "member": 15,
+      "seed": 17315,
+      "epoch": 50,
+      "anchors": 1466,
+      "sha256": "7b3302ca8ce3a9cc65c2267036805478860aaa18bcbaa84406045fa98b0d87ac"
+    },
+    {
+      "member": 16,
+      "seed": 17316,
+      "epoch": 74,
+      "anchors": 1466,
+      "sha256": "8aacab850d32b3589131c7317b72b3bbd0f71c47bd9f50482a7c3639682a12a3"
+    },
+    {
+      "member": 17,
+      "seed": 17317,
+      "epoch": 59,
+      "anchors": 1466,
+      "sha256": "49cc00c65b1fc357add3766de7625370b8a953a903ffd03f540ae4a16f031a75"
+    },
+    {
+      "member": 18,
+      "seed": 17318,
+      "epoch": 73,
+      "anchors": 1466,
+      "sha256": "340853938d2e466ae29f370aa8671fa4b1f4c174f11450b648029d4023cba1a7"
+    },
+    {
+      "member": 19,
+      "seed": 17319,
+      "epoch": 60,
+      "anchors": 1466,
+      "sha256": "ce8e2f5d0d4dea2001bcbb5522ba38f2265d99cda791a4621ee873a75f1085e0"
+    },
+    {
+      "member": 20,
+      "seed": 17320,
+      "epoch": 68,
+      "anchors": 1466,
+      "sha256": "76a5d8e3550978deafddd0f9df5056f494216741ed6e1e7454edf278b06e0f26"
+    },
+    {
+      "member": 21,
+      "seed": 17321,
+      "epoch": 52,
+      "anchors": 1466,
+      "sha256": "50beff71f3ef7aa4665549a55ccfc07155c2e9d0fe77bb640c8ff23e6d0a2437"
+    },
+    {
+      "member": 22,
+      "seed": 17322,
+      "epoch": 58,
+      "anchors": 1466,
+      "sha256": "e62582179cde69bf5b6d2b68a05613a0ab6e7b5a0e30110439206ae54b5630b7"
+    },
+    {
+      "member": 23,
+      "seed": 17323,
+      "epoch": 53,
+      "anchors": 1466,
+      "sha256": "51fb6508218328b6e1a0638b8aa4af945c065c5a159d7f56073b57af0f5b758f"
+    },
+    {
+      "member": 24,
+      "seed": 17324,
+      "epoch": 61,
+      "anchors": 1466,
+      "sha256": "b1edb2236c4ab0662a00f3dd9e14e1ec9a24a4322cb5591d0cf2059bdc7e3d24"
+    },
+    {
+      "member": 25,
+      "seed": 17325,
+      "epoch": 56,
+      "anchors": 1466,
+      "sha256": "bd34525cfb299ec3531f68bfd92ba1744d1734b885724b76a8d61a37d90e9c85"
+    }
+  ],
+  "manifest_sha256": "ba71edcc44ffe8caefa350e9ac733e5d62e9336d30bb4c540f400e3020d3d356"
+}

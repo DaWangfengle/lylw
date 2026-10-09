@@ -1,0 +1,22 @@
+{
+  "stage": "pytest_attempt02",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_uji_v17_g3_uts.py",
+    "tests/test_uji_v17_g1.py",
+    "tests/test_uji_v17_mother_r3.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T13:36:54.236809+00:00",
+  "ended_utc": "2026-10-08T13:37:05.965066+00:00",
+  "runtime_seconds": 11.729014999997162,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\pytest_attempt02.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\pytest_attempt02.stderr.log",
+  "stdout_sha256": "cc020043e820275e809201c931bff33a57e903ec415ae0c548c3b467c2342ec9",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "0745ce1ad24826235a472edf0ae2bade5f12ab8af66147d16229e816e92eb981"
+}

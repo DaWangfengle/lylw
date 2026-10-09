@@ -1,0 +1,17 @@
+{
+  "stage": "pretest_panel_review_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/run_audit/pretest_panel_review.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-08T15:10:33.261165+00:00",
+  "ended_utc": "2026-10-08T15:10:43.931028+00:00",
+  "runtime_seconds": 10.666428600001382,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\pretest_panel_review_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g3_uts_frozen_transfer\\run_audit\\pretest_panel_review_attempt01.stderr.log",
+  "stdout_sha256": "f3593211b9db7961e6c685c042f27dc42e4e15ee2e37575e01fe7cd3f11920a5",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "a231efbd2088cfd5d9673976a1cd85c1d2c56fed619e275c12c469cf1826de94"
+}

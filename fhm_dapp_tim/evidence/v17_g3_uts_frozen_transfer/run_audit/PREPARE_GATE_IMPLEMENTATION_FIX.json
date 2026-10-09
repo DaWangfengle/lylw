@@ -1,0 +1,17 @@
+{
+  "recorded_utc": "2026-10-08T13:36:53.775218+00:00",
+  "type": "Pre-prepare implementation repair to match existing G3 scientific gate",
+  "failure_log": "gate_reproduction_attempt01.stderr.log",
+  "counterexample": "Synthetic candidate delta=-0.20m; placebo delta=-0.10m. Old G3 inherited G1 candidate-better-than-placebo check, incorrectly passed G3.",
+  "required_fixed_G3_criterion": "placebo_minus_baseline_mae_m > 0.0",
+  "repair": "Replace only inherited placebo criterion in new G3 wrapper; preserve first three frozen G1 criteria. No G1 historical code changed.",
+  "new_regression": "One parametrized regression, negative/zero/positive placebo deltas",
+  "manifest_created": false,
+  "real_test_file_accessed": false,
+  "scientific_design_gamma_radius_model_epochs_splits_scores_unchanged": true,
+  "all_original_G3_functions_except_gate_call_AST_unchanged": true,
+  "source_sha256_before": "d58d755a1207e5757ca1a210bf208c9017f974d58c266d9b07f6199c0776c167",
+  "source_sha256_after": "d44c74ddc1f8c04660e18160667baf7fd6291a73dd5135371a3897aa68209875",
+  "test_sha256_before": "3095f4c46d5b4c3a8fe8ccfd770e810d66263ec38753fe3610a65e9f358f24c5",
+  "test_sha256_after": "fb78408909579ff6b2bc18b24b735422ed1562415f2ec18104e3daa52753ca94"
+}

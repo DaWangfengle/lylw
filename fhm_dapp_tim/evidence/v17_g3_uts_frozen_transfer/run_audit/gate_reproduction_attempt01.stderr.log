@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_g3_uts_frozen_transfer\run_audit\gate_contract_reproduction.py", line 8, in <module>
+    assert original["passed"]==required, "G3 implementation accepts improving placebo contrary to fixed design"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: G3 implementation accepts improving placebo contrary to fixed design

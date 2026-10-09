@@ -1,0 +1,13 @@
+{
+  "status": "FULL_PANEL_READY_FOR_FREEZE_WITH_NO_TEST_OPEN",
+  "recorded_utc": "2026-10-08T15:11:16.749068+00:00",
+  "members_complete": 25,
+  "all_25_training_commands_exit_zero": true,
+  "all_25_unique_hashes": true,
+  "anchor_dictionary_origin_prototype_equal": true,
+  "data_access_trace_count": 38,
+  "all_traces_no_test_open_or_denied_attempt": true,
+  "current_source_hashes_unchanged": true,
+  "manifest_file_sha256": "5387ae4e07dc01fc16dbc0c15c21e01a034c2d4efe6cd908f34a3b97dfcdf09b",
+  "manifest_self_sha256": "ba71edcc44ffe8caefa350e9ac733e5d62e9336d30bb4c540f400e3020d3d356"
+}

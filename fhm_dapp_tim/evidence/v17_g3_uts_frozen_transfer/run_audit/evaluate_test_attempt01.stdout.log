@@ -1,0 +1,50 @@
+{"scored_rows": 32, "total_rows": 388}
+{"scored_rows": 64, "total_rows": 388}
+{"scored_rows": 96, "total_rows": 388}
+{"scored_rows": 128, "total_rows": 388}
+{"scored_rows": 160, "total_rows": 388}
+{"scored_rows": 192, "total_rows": 388}
+{"scored_rows": 224, "total_rows": 388}
+{"scored_rows": 256, "total_rows": 388}
+{"scored_rows": 288, "total_rows": 388}
+{"scored_rows": 320, "total_rows": 388}
+{"scored_rows": 352, "total_rows": 388}
+{"scored_rows": 384, "total_rows": 388}
+{"scored_rows": 388, "total_rows": 388}
+{
+  "status": "ONE_SHOT_EXTERNAL_TEST_COMPLETE",
+  "decision": "TRANSFER_NOT_ESTABLISHED_ON_UTS",
+  "result_sha256": "8e9953ec4191676d1cc070bda757b83f1f5382703a39a2a4d0e4de97c1add0a0",
+  "metrics": {
+    "baseline": {
+      "mae_2d_m": 7.684425322701141,
+      "energy_score_2d_m": 5.468975076063796,
+      "mae_row_mean_m": 7.687076142120572,
+      "energy_row_mean_m": 5.470877735369615
+    },
+    "g1_gamma_0p7": {
+      "mae_2d_m": 7.755909200345086,
+      "energy_score_2d_m": 5.62700014471412,
+      "mae_row_mean_m": 7.7613799420381575,
+      "energy_row_mean_m": 5.630207485313071
+    },
+    "permuted_density": {
+      "mae_2d_m": 7.702339346049081,
+      "energy_score_2d_m": 5.496777411411175,
+      "mae_row_mean_m": 7.701151053978815,
+      "energy_row_mean_m": 5.497178135232637
+    }
+  },
+  "fixed_transfer_gate": {
+    "passed": false,
+    "checks": {
+      "mae_gain_at_least_0p15m": false,
+      "mae_familywise_upper_below_zero": false,
+      "energy_familywise_upper_not_positive": false,
+      "placebo_worse_than_baseline": true
+    },
+    "comparison": "frozen_G1_minus_V17_baseline",
+    "placebo_comparison": "permuted_density_minus_V17_baseline",
+    "note": "One-shot UTS transfer; never revise the historical UJI G1 STOP"
+  }
+}

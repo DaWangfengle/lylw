@@ -1,0 +1,21 @@
+{
+  "recorded_utc": "2026-10-08T13:30:41.574716+00:00",
+  "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "python_version": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+  "branch_from_HEAD": "ref: refs/heads/v17-g3-uts-frozen-transfer",
+  "user_attestation": "User confirms UTS/Tampere/TUJI test labels and performance outcomes were never used in development; file format/interface previously known.",
+  "UTS_test_access_before_full_training_freeze": "Forbidden, including content and hashing; no test access made by this initialization.",
+  "Git_operations_authorized": false,
+  "source_and_prior_evidence_sha256": {
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g3_uts.py": "d58d755a1207e5757ca1a210bf208c9017f974d58c266d9b07f6199c0776c167",
+    "tests/test_uji_v17_g3_uts.py": "3095f4c46d5b4c3a8fe8ccfd770e810d66263ec38753fe3610a65e9f358f24c5",
+    "fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/DESIGN_V17_G3_UTS.md": "2deda4ac5256341244c04c6989c61c091b99398c68e45aab483c48509b873793",
+    "V17_G3_CODEX_RUN.txt": "bb94f0145852284fdd6ce2b3a086c883a87fccb1944dc41f2247d00efae3f2a3",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/registry_v17_g1.json": "c01ec1df8916f7c980c3640b012e2b4b3600781c74a26bb967276952e267db49",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/calibration_v17_g1.json": "76a5379d43b93742587daea701948222014946fb1aaa2a7a5e8b5a01c9079f6e",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/freeze_v17_g1.json": "24e9a1599bce2e1bf76a4b4da1e6707d0c8967777502a316d7d0fa07a508c43c",
+    "fhm_dapp_tim/evidence/v17_g1_geometry_support/confirmation_v17_g1.json": "48806835eb64051a707fd52cd7e594baa1f7c68fda7a8f9db1f6b03bd0888a9d",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/G2_MECHANISM_AUDIT.json": "ef07d689a979833e0f7a2f58f810a90cf476af9188001d05a593bef941b13046",
+    "fhm_dapp_tim/evidence/v17_g2_mechanism/RUN_REPORT_V17_G2.md": "f022f677622cf0f9a4bdae1687ebd09dd92d5940dbb8e2e4aa482c6d8efe6924"
+  }
+}

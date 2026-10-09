@@ -1,0 +1,21 @@
+{
+  "status": "READY_FOR_SINGLE_LOCKED_TEST_INVOCATION",
+  "recorded_utc": "2026-10-08T15:12:57.123775+00:00",
+  "pretest_check": {
+    "status": "FROZEN_NO_TEST_YET",
+    "manifest_sha256": "ba71edcc44ffe8caefa350e9ac733e5d62e9336d30bb4c540f400e3020d3d356",
+    "members": 25
+  },
+  "pretest_data_open_traces": 40,
+  "pretest_traces_no_test_open": true,
+  "manifest_file_sha256": "5387ae4e07dc01fc16dbc0c15c21e01a034c2d4efe6cd908f34a3b97dfcdf09b",
+  "freeze_file_sha256": "4cfda131e0342a39ccf7ee043eed78f4ed59389bad831d5d6b6c77a391b1f1a4",
+  "freeze_self_sha256": "e1f1ac8c8e1f3f8bbb10c4abba4181b1c549b2ba4911cc3a094ee0e53386e81d",
+  "gpu_free_total_bytes": [
+    5361369088,
+    6442123264
+  ],
+  "checkpoint_total_bytes": 159755633,
+  "test_file_SHA256_before_lock": null,
+  "provided_test_outcomes_blind_prior_to_freeze": "User-attested; format previously known"
+}
