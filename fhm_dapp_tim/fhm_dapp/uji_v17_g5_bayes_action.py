@@ -535,6 +535,27 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
     delta=float(differences["continuous_median_minus_mean"].mean())
     upper=float(inference["comparisons"]["continuous_median_minus_mean"]["simultaneous_upper_bound_m"])
     gate=g5_confirmation_gate(delta,upper)
+    # Descriptive only: do not condition model selection on these observed labels.
+    site_delta=differences["continuous_median_minus_mean"]
+    by_floor={}
+    for floor in sorted(set(int(k[1]) for k in ordered_keys)):
+        positions=[i for i,k in enumerate(ordered_keys) if int(k[1])==floor]
+        by_floor[str(floor)]={
+            "coordinate_groups":len(positions),
+            "mean_delta_m":float(np.mean(site_delta[positions])),
+            "median_delta_m":float(np.median(site_delta[positions]))
+        }
+    descriptive={
+        "continuous_median_better_coordinate_groups":int(np.count_nonzero(site_delta<-1e-9)),
+        "continuous_median_worse_coordinate_groups":int(np.count_nonzero(site_delta>1e-9)),
+        "unchanged_coordinate_groups":int(np.count_nonzero(np.abs(site_delta)<=1e-9)),
+        "median_paired_difference_m":float(np.median(site_delta)),
+        "by_encoded_floor":by_floor,
+        "row_error_p90_m":{name:float(np.quantile(row_loss[name].numpy(),.90))
+                           for name in VARIANTS},
+        "row_error_p95_m":{name:float(np.quantile(row_loss[name].numpy(),.95))
+                           for name in VARIANTS},
+    }
     return {
         "protocol":PROTOCOL,"status":"TRAINING_FILE_INTERNAL_CONFIRMATION_COMPLETE",
         "decision":"PROMISING_ACTION_ALIGNMENT" if gate["passed"] else "NO_INTERNAL_PROMOTION",
@@ -553,6 +574,7 @@ def _evaluate_confirmation(device_name:str,frozen:dict) -> dict:
         "coordinate_macro_median_mean_displacement_m":float(shift["coordinate_macro_m"]),
         "paired_familywise_inference":inference,
         "gate":gate,
+        "descriptive":descriptive,
         "manifest_sha256":manifest["manifest_sha256"],
         "manifest_file_sha256":_sha256_file(MANIFEST),
         "freeze_file_sha256":_sha256_file(FREEZE),
