@@ -258,6 +258,11 @@ def member_path(i:int) -> Path:
 
 def preflight() -> dict:
     data,roles,rows=_training()
+    device_rows={k:{str(i):int(np.count_nonzero(data["phone"][idx]==i))
+                    for i in range(len(EXPECTED_DEVICES))}
+                 for k,idx in rows.items()}
+    if any(v==0 for counts in device_rows.values() for v in counts.values()):
+        raise G6Error("physical role split omits a TUJI training device; stop without resplitting")
     return {
         "protocol":PROTOCOL,"status":"TUJI_RESULTS_TRAIN_VARIABLE_ONLY_READY",
         "source_sha256":_source_hashes(),
@@ -265,9 +270,7 @@ def preflight() -> dict:
         "ap_count":int(data["rss"].shape[1]),
         "role_site_counts":{k:len(v) for k,v in roles.items()},
         "role_row_counts":{k:len(v) for k,v in rows.items()},
-        "role_device_rows":{k:{str(i):int(np.count_nonzero(
-            data["phone"][idx]==i)) for i in range(len(EXPECTED_DEVICES))}
-            for k,idx in rows.items()},
+        "role_device_rows":device_rows,
         "physical_site_overlap":0,
         "mat_containers_physically_include_provided_test":True,
         "results_test_deserialized":False,
