@@ -86,3 +86,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g5_bayes_action.py -text
 tests/test_uji_v17_g5_bayes_action.py -text
 fhm_dapp_tim/evidence/v17_g5_bayes_action/** -text
 V17_G5_CODEX_RUN.txt -text
+
+# Preserve G6 source, tests, design and scientific evidence bytes on Windows.
+fhm_dapp_tim/fhm_dapp/uji_v17_g6_calibration.py -text
+tests/test_uji_v17_g6_calibration.py -text
+fhm_dapp_tim/evidence/v17_g6_distribution_calibration/** -text
+V17_G6_CODEX_RUN.txt -text
