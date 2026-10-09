@@ -228,15 +228,16 @@ def _roles(data:dict):
     centred=(data["raw_xy"]-origin[None,:]).astype(np.float32)
     alias={}
     reverse={}
-    for i in rows["fit"]:
-        k=data["keys"][int(i)]
+    # Verify the entire original-to-centred float32 key dictionary, not
+    # merely FIT: otherwise a confirmation site could alias a FIT anchor.
+    for i,k in enumerate(data["keys"]):
         c=location_keys(centred[i:i+1],
                         data["building"][i:i+1],data["floor"][i:i+1])[0]
         if (k in alias and alias[k]!=c) or (c in reverse and reverse[c]!=k):
-            raise G6Error("R0 coordinate centring merges/distorts anchors")
+            raise G6Error("R0 centring collapses or divides a physical site")
         alias[k]=c;reverse[c]=k
-    if len(alias)!=len(roles["fit"]):
-        raise G6Error("R0 FIT anchor count collapsed")
+    if len(alias)!=len(set(data["keys"])):
+        raise G6Error("R0 centring breaks cross-role physical coordinate isolation")
     return roles,rows
 
 
@@ -557,8 +558,10 @@ def confirm(device_name:str="cuda") -> dict:
     manifest=prepare()
     cal=_read(CALIBRATION)
     members=check_members()
+    if not members["all_complete"]:
+        raise G6Error("five original members not complete at confirmation")
     sha=[m["sha256"] for m in members["members"]]
-    if not members["all_complete"] or sha!=cal["member_sha256"] or cal["manifest_sha256"]!=manifest["manifest_sha256"]:
+    if sha!=cal["member_sha256"] or cal["manifest_sha256"]!=manifest["manifest_sha256"]:
         raise G6Error("manifest/members changed since calibration")
     policy=cal["selected_policy"]
     lock=_write(LOCK,{
