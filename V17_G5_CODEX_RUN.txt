@@ -1,0 +1,130 @@
+V17-G5-A | CODEX CUDA LOCAL SCIENTIFIC PILOT
+==========================================
+Prepared GitHub branch: v17-g5-tampere-bayes-action-pilot
+Design: fhm_dapp_tim/evidence/v17_g5_bayes_action/DESIGN_V17_G5.md
+Core: fhm_dapp_tim/fhm_dapp/uji_v17_g5_bayes_action.py
+Tests: tests/test_uji_v17_g5_bayes_action.py
+
+SCIENCE FIRST
+Experiment G5-A tests a different primitive than G4: identical frozen V17
+predictive Student-t distribution, but different point decisions for 2D
+Euclidean MAE. Compare ORIGINAL exact mixture mean, weighted component-centre
+median (secondary control), and full continuous-mixture Monte Carlo spatial
+median (primary). Student-t sampling / spatial-median algorithms ALREADY
+EXIST in V9. This is hypothesis testing, NOT a new theorem or Q1 novelty.
+
+Only Tampere TRAINING files: data/Tampere/Training_rss.csv and
+data/Tampere/Training_coordinates.csv. NEVER read Test_rss.csv,
+Test_coordinates.csv, UTS_test.csv, UJI official/outer, TUJI test, or
+G3/G4 labelled outcome artifacts for developing or choosing this method.
+This is a new physical-coordinate-disjoint 75% FIT / 25% CONFIRM internal
+training-file split, deterministic SHA256 stratified by floor. All scans at
+a physical coordinate stay together. Validation/confirmation scores are
+one-shot, and hyperparameters are fixed before outcomes.
+
+5 V17 R0 members: seeds 17301..17305, epochs 65/69/56/67/62; train
+original architecture, frozen loss, optimizer and augmentations on FIT only.
+Use exact same E5/L192/K192/alpha=1 Student-t df4 mixture for every point
+action. Baseline action is the exact mixture mean. Component-centre spatial
+median ignores component scale; full predictive median uses TWO 128-draw
+fixed Student-t samples per query with existing V9 Weiszfeld algorithm.
+Independent 2x128 fresh draws estimate predicted Euclidean Bayes risk,
+without query labels. No model or density changes. ES is IDENTICAL between
+actions by definition; compute only one original V17 ES diagnostic.
+
+PROMISING_ACTION_ALIGNMENT requires BOTH: continuous-median minus mean
+coordinate macro MAE <= -0.15m and familywise simultaneous 95% maxT
+MAE upper <0. Bootstrap 5000x paired physical coordinate groups, one
+two-contrast family: continuous median and component-centre median each
+versus baseline. ES has no change; never put ES in the action-only gate.
+Other outcomes must be reported, not tuned after confirmation. Spatial
+dependence within floor may reduce effective sample count.
+
+ABSOLUTE GIT RULE
+The user alone manages Git branch switching, uploads, commits, pushes.
+Codex MUST NOT execute Git commands or add them to batch scripts, and
+must not modify G1/G2/G3/G4 code or historical evidence. Keep large five
+G5 checkpoint files local; upload only compact JSON/MD/logs as user wishes.
+
+1. PREPARE STAGE -- BEFORE SCIENTIFIC MANIFEST
+At repository root in original CUDA environment:
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g5_bayes_action.py tests/test_uji_v17_g5_bayes_action.py
+python -m pytest -q tests/test_uji_v17_g5_bayes_action.py tests/test_uji_v17_g4_observable_support.py
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action preflight
+
+Codex must verify:
+- only two Tampere TRAINING files opened; no provided-test files.
+- adapter z is categorical floor, x/y are 2D target; unknown device fixed.
+- floor-stratified FIT and confirmation sites disjoint; coordinate-centering
+  round-trip does not collapse distinct site keys; fit anchors >=192.
+- frozen seeds/epochs / 5 E5 R3 scorer / exact original V17 mean.
+- Student-t continuous median actually uses V9 sample_continuous_mixture
+  and spatial_median_from_draws; NOT median of centres mislabeled continuous.
+- strict Student-t probabilities sum to 1; sampling is deterministic for
+  given fixed RNG streams; no true query coordinate used inside action.
+- point actions alone cannot change Energy Score.
+- original G1/G3/G4 results and TEST sources remain unchanged.
+
+Before manifest only, if tests reveal pure implementation flaws, fix only
+G5 code and tests, rerun tests and preflight, record exact change and
+reason. Never silently alter fixed scientific thresholds, seeding, roles,
+model training recipe, draw budget or data. Escalate scientific/data
+incompatibility. There is no authorization to read provided test files.
+
+2. FREEZE DESIGN + FIT 5 MEMBERS SEQUENTIALLY
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action prepare
+PowerShell:
+1..5 | ForEach-Object {
+    python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action train-member --member-index $_ --device cuda
+    if ($LASTEXITCODE -ne 0) { throw "G5 member $_ failed" }
+}
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action check-members
+
+Check model metadata (seed, epoch, manifest hash), unique checkpoints,
+shared FIT anchor dictionary, prototype memory and coordinate origin.
+Confirmation labels must not affect model weights. If training fails,
+preserve original logs; repair code only if scientific protocol unchanged
+and manifest source hashes can be reconciled without falsifying provenance.
+
+3. PRE-CONFIRMATION FREEZE
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action freeze
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action check
+
+Before confirmation, review GPU capacity (RTX2060 6GB), verify that
+5 models + 16x960 component law + fixed 256 median draws fit memory.
+Do smoke tests ONLY on synthetic or FIT rows, never confirmation labels.
+Once lock is made, a failed evaluation cannot be silently rerun.
+
+4. ONE-SHOT INTERNAL CONFIRMATION
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action confirm --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g5_bayes_action check
+
+The code irreversibly writes internal_confirmation.lock before reading
+confirmation scores. Do NOT remove lock to rerun, do NOT retune median
+draw count, iterations, loss, epochs or training split from outcomes.
+Save every original error if something fails after lock.
+
+Check outputs: baseline exact mean, weighted-centre median and Student-t
+continuous median coordinate-macro MAE and per-coordinate vectors; one
+common ES; independent-draw expected L2 Bayes risk; action displacement;
+paired 5000x maxT upper bound; strict predefined gate; original FIT/
+confirmation site overlap exactly zero.
+
+5. MINIMUM EVIDENCE FILES TO UPLOAD (user handles Git)
+fhm_dapp_tim/evidence/v17_g5_bayes_action/manifest_v17_g5.json
+fhm_dapp_tim/evidence/v17_g5_bayes_action/freeze_v17_g5.json
+fhm_dapp_tim/evidence/v17_g5_bayes_action/internal_confirmation.lock
+fhm_dapp_tim/evidence/v17_g5_bayes_action/confirmation_v17_g5.json
+fhm_dapp_tim/evidence/v17_g5_bayes_action/RUN_REPORT_V17_G5.md
+fhm_dapp_tim/evidence/v17_g5_bayes_action/run_audit/EXECUTION_SUMMARY.md
+
+In execution summary include original exit codes, 5 checkpoint hashes,
+test count, source hashes, any pre-manifest repairs, confirmation score
+and gate, energy invariance, and numerical/spatial dependency limitations.
+No massive artifact scaffolding; preserve only useful logs. Checkpoints
+stay on user's local machine.
+
+If code smokes but scientific accuracy is not strong: stop point-action
+branch, not tune on confirmation; return data for ChatGPT to analyze.
+If it passes: still only an INTERNAL exploratory pilot; later freeze an
+independent full-panel and new-domain external verification plan.
