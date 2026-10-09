@@ -1,0 +1,12 @@
+{
+  "scope": "Python open events and scipy.io.loadmat calls, not OS-wide monitoring",
+  "data_open_counts": {
+    "data\\TUJI1\\Formatted_data_A12.mat": 1,
+    "data\\TUJI1\\Formatted_data_POCO.mat": 1,
+    "data\\TUJI1\\Formatted_data_S20.mat": 1,
+    "data\\TUJI1\\Formatted_data_S7.mat": 1,
+    "data\\TUJI1\\Formatted_data_tabS7.mat": 1
+  },
+  "restricted_mat_calls": [],
+  "denied": []
+}

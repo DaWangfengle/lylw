@@ -1,0 +1,208 @@
+{
+  "scope": "Python open events and scipy.io.loadmat calls, not OS-wide monitoring",
+  "data_open_counts": {
+    "data\\TUJI1\\Formatted_data_A12.mat": 4,
+    "data\\TUJI1\\Formatted_data_POCO.mat": 4,
+    "data\\TUJI1\\Formatted_data_S20.mat": 4,
+    "data\\TUJI1\\Formatted_data_S7.mat": 4,
+    "data\\TUJI1\\Formatted_data_tabS7.mat": 4
+  },
+  "restricted_mat_calls": [
+    {
+      "file": "Formatted_data_A12.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_POCO.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_S20.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_S7.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_tabS7.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_A12.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_POCO.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_S20.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_S7.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_tabS7.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_A12.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_POCO.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_S20.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_S7.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "file": "Formatted_data_tabS7.mat",
+      "variable_names": [
+        "results_train"
+      ],
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    }
+  ],
+  "denied": []
+}

@@ -1,0 +1,194 @@
+--- before/fhm_dapp_tim/fhm_dapp/uji_v17_g6_calibration.py
++++ after/fhm_dapp_tim/fhm_dapp/uji_v17_g6_calibration.py
+@@ -150,9 +150,11 @@
+     pos={k:i for i,k in enumerate(ap_ids)}
+     rss=np.full((len(rows),len(ap_ids)),np.nan,dtype=np.float32)
+     xy=np.empty((len(rows),2),dtype=np.float32)
++    original_xy=np.empty((len(rows),2),dtype=np.float64)
+     phone=np.empty(len(rows),dtype=np.int64)
+     for i,(name,scan) in enumerate(rows):
+-        xy[i]=np.asarray(scan.coords,dtype=np.float32).reshape(2)
++        original_xy[i]=np.asarray(scan.coords,dtype=np.float64).reshape(2)
++        xy[i]=original_xy[i].astype(np.float32)
+         phone[i]=reference.device_mapping[name]
+         for ap,value in ds._tuji_measurements(scan):
+             v=float(value);col=pos[ds._tuji_ap_id(ap)]
+@@ -176,6 +178,20 @@
+         }
+     )
+     data.validate()
++    original_keys=location_keys(original_xy,data.building,data.floor)
++    canonical_keys=location_keys(xy,data.building,data.floor)
++    forward={};reverse={}
++    for original,canonical in zip(original_keys,canonical_keys):
++        if ((original in forward and forward[original]!=canonical)
++            or (canonical in reverse and reverse[canonical]!=original)):
++            raise G6Error("float32 conversion collapses or divides an original TUJI physical site")
++        forward[original]=canonical;reverse[canonical]=original
++    data.metadata.update({
++        "original_to_float32_site_bijection":True,
++        "original_physical_site_count":len(forward),
++        "float32_physical_site_count":len(reverse),
++        "float32_key_value_changes":sum(a!=b for a,b in forward.items()),
++    })
+     return data
+ 
+ 
+@@ -191,6 +207,12 @@
+         raise G6Error("invalid TUJI training row count, phone IDs, or model RSS")
+     return {"rss":rss,"raw_xy":raw,"building":building,"floor":floor,
+             "phone":phone,"keys":location_keys(raw,building,floor),
++            "coordinate_identity_audit":{
++                key:canonical.metadata[key] for key in (
++                    "original_to_float32_site_bijection",
++                    "original_physical_site_count","float32_physical_site_count",
++                    "float32_key_value_changes")
++            },
+             "stats":{"n_aps":rss.shape[1],"n_buildings":1,"n_floors":1,
+                      "adapted_from":"TUJI1 results_train only"}}
+ 
+@@ -272,6 +294,8 @@
+         "role_row_counts":{k:len(v) for k,v in rows.items()},
+         "role_device_rows":device_rows,
+         "physical_site_overlap":0,
++        "coordinate_identity_audit":{**data["coordinate_identity_audit"],
++                                     "all_role_centred_bijection":True},
+         "mat_containers_physically_include_provided_test":True,
+         "results_test_deserialized":False,
+         "seeds":list(SEEDS),"epochs":list(EPOCHS),
+@@ -287,6 +311,7 @@
+         "role_site_counts":info["role_site_counts"],
+         "role_row_counts":info["role_row_counts"],
+         "role_device_rows":info["role_device_rows"],
++        "coordinate_identity_audit":info["coordinate_identity_audit"],
+         "seeds":list(SEEDS),"epochs":list(EPOCHS),
+         "model_count":PANEL,"L":L,"K":K,"alpha":ALPHA,
+         "grid":[{"name":candidate_name(t,s),"T":t,"scale":s}
+@@ -464,8 +489,10 @@
+     calibration_diag={k:{"predicted_radius":torch.empty(n,dtype=torch.float64),
+                          "observed_error":torch.empty(n,dtype=torch.float64),
+                          "coverage":{str(level):torch.empty(n,dtype=torch.float64)
++                                     for level in COVERAGE_LEVELS},
++                         "credible_radius":{str(level):torch.empty(n,dtype=torch.float64)
+                                      for level in COVERAGE_LEVELS}}
+-                      for k in names if k in (BASE,(selected or {}).get("policy"))}
++                      for k in names}
+     ref=models[0];anchors=ref.n_anchors
+     with r3.r2f_a1._deterministic_algorithms():
+         for start in range(0,n,BATCH):
+@@ -512,6 +539,7 @@
+                     diag["observed_error"][start:end]=observed.cpu()
+                     for level in COVERAGE_LEVELS:
+                         threshold=torch.quantile(distances,level,dim=1)
++                        diag["credible_radius"][str(level)][start:end]=threshold.double().cpu()
+                         diag["coverage"][str(level)][start:end]=(
+                             observed<=threshold.double()).double().cpu()
+         metrics={};vectors={};by_device={}
+@@ -541,6 +569,17 @@
+                 "coverage":{level:float(r3._metric_record(
+                     vec,group_ids,len(group_keys))[0]["coordinate_macro_m"])
+                     for level,vec in diag["coverage"].items()},
++                "macro_credible_radius_m":{
++                    level:float(r3._metric_record(vec,group_ids,len(group_keys))[0]["coordinate_macro_m"])
++                    for level,vec in diag["credible_radius"].items()},
++                "coordinate_vectors":{
++                    "predicted_radius":r3._metric_record(diag["predicted_radius"],group_ids,len(group_keys))[1].tolist(),
++                    "observed_error":r3._metric_record(diag["observed_error"],group_ids,len(group_keys))[1].tolist(),
++                    "coverage":{level:r3._metric_record(vec,group_ids,len(group_keys))[1].tolist()
++                                for level,vec in diag["coverage"].items()},
++                    "credible_radius":{level:r3._metric_record(vec,group_ids,len(group_keys))[1].tolist()
++                                       for level,vec in diag["credible_radius"].items()},
++                },
+             }
+     return {"role":role,"rows":n,"coordinate_groups":len(group_keys),
+             "coordinate_keys":[list(k) for k in group_keys],
+@@ -642,7 +681,7 @@
+ 
+ def make_report(result:dict) -> str:
+     out=[
+-        "# G6 | TUJI1 training-variable-only two-axis distribution calibration",
++        "# G6 | TUJI1 TRAIN-variable-only two-axis distribution calibration",
+         "",
+         "5-member frozen original V17; FIT/CAL/CONFIRM split by physical coordinates.",
+         "TUJI MAT files include results_test but only results_train is parsed. No external benchmark used.",
+@@ -652,7 +691,8 @@
+         "| CONFIRM variant | Macro MAE (m) | Energy Score (m) |",
+         "|---|---:|---:|",
+     ]
+-    for name,m in result["candidate_metrics"].items():
++    for name in sorted(result["candidate_metrics"]):
++        m=result["candidate_metrics"][name]
+         out.append(f"| {name} | {m['mae_2d_m']:.6f} | {m['energy_score_2d_m']:.6f} |")
+     gate=result["gate"]
+     out.extend([
+--- before/tests/test_uji_v17_g6_calibration.py
++++ after/tests/test_uji_v17_g6_calibration.py
+@@ -238,3 +238,68 @@
+ def test_invalid_member_index(i):
+     with pytest.raises(g6.G6Error):
+         g6.member_path(i)
++
++
++def test_original_double_sites_cannot_merge_during_float32_adapter(monkeypatch):
++    scans = [
++        SimpleNamespace(coords=np.array([100000000., 1.], dtype=np.float64),
++                        measured=np.array([[11., -65.], [12., -75.]])),
++        SimpleNamespace(coords=np.array([100000001., 1.], dtype=np.float64),
++                        measured=np.array([[11., -65.], [12., -75.]])),
++    ]
++    monkeypatch.setattr(g6, "loadmat", lambda *a, **k: {
++        "results_train": SimpleNamespace(Wifi=scans)})
++    with pytest.raises(g6.G6Error, match="float32.*physical site"):
++        g6.load_tuji_train_variable_only()
++
++
++def test_report_is_identical_after_sorted_json_roundtrip():
++    record = {
++        "selected_policy": {"policy": "T0.8_S0.75"},
++        "candidate_metrics": {
++            "T1_S1": {"mae_2d_m": 5., "energy_score_2d_m": 4.},
++            "T0.8_S0.75": {"mae_2d_m": 4.7, "energy_score_2d_m": 3.8},
++        },
++        "gate": {"mae_delta_m": -.3, "es_delta_m": -.2,
++                 "mae_upper_m": -.1, "es_upper_m": -.05, "passed": True},
++        "decision": "PROMISING_JOINT_CALIBRATION", "result_sha256": "synthetic",
++    }
++    assert g6.make_report(record) == g6.make_report(json.loads(
++        json.dumps(record, sort_keys=True)))
++
++
++def test_actual_role_scoring_retains_all_candidate_reliability(monkeypatch):
++    class Model(torch.nn.Module):
++        def __init__(self):
++            super().__init__()
++            self.dummy = torch.nn.Parameter(torch.zeros(()), requires_grad=False)
++            self.n_anchors = 210
++            self.encoder = torch.nn.Identity()
++            self.register_buffer("centres", torch.column_stack((
++                torch.linspace(-8, 8, self.n_anchors),
++                torch.zeros(self.n_anchors))))
++        def retrieval_logits_from_embedding(self, embedding):
++            return -self.centres[:, 0].square()[None, :].expand(len(embedding), -1)/10
++        def _components(self, embedding, anchor_ix):
++            loc = self.centres[None, :, :].expand(len(embedding), -1, -1)
++            return loc, torch.ones_like(loc)
++    monkeypatch.setattr(g6.r2b, "_prototype_distance",
++                        lambda ref, rss: torch.zeros(len(rss), ref.n_anchors))
++    data = {"keys": [(0, 0, 2., 1.), (0, 0, 2., 1.), (0, 0, 3., 1.)],
++            "raw_xy": np.array([[2., 1.], [2., 1.], [3., 1.]]),
++            "phone": np.zeros(3, dtype=np.int64), "rss": torch.zeros(3, 2)}
++    scored = g6._score_role("calibration", [Model() for _ in range(5)],
++                           data, np.arange(3), np.zeros(2))
++    names = {g6.candidate_name(*pair) for pair in g6.CANDIDATES}
++    assert set(scored["reliability"]) == names
++    assert scored["coordinate_groups"] == 2
++    for name in names:
++        diag = scored["reliability"][name]
++        assert len(diag["coordinate_vectors"]["predicted_radius"]) == 2
++        assert len(diag["coordinate_vectors"]["observed_error"]) == 2
++        assert set(diag["coverage"]) == {"0.5", "0.8", "0.9"}
++        assert set(diag["macro_credible_radius_m"]) == {"0.5", "0.8", "0.9"}
++    for t in g6.T_VALUES:
++        mae = [scored["coordinate_vectors"][g6.candidate_name(t, s)]["mae"]
++               for s in g6.S_VALUES]
++        assert mae[0] == mae[1] == mae[2]

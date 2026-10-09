@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_g6_distribution_calibration\run_audit\run_stage.py", line 122, in <module>
+    child(sys.argv[2], sys.argv[3:])
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_g6_distribution_calibration\run_audit\run_stage.py", line 80, in child
+    runpy.run_module(args[1], run_name="__main__", alter_sys=True)
+  File "<frozen runpy>", line 226, in run_module
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_g6_distribution_calibration\run_audit\runtime_review.py", line 159, in <module>
+    main(sys.argv[1])
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_g6_distribution_calibration\run_audit\runtime_review.py", line 147, in main
+    assert all(torch.equal(model.seen_ap_mask,models[0].seen_ap_mask) for model in models)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_g6_distribution_calibration\run_audit\runtime_review.py", line 147, in <genexpr>
+    assert all(torch.equal(model.seen_ap_mask,models[0].seen_ap_mask) for model in models)
+                           ^^^^^^^^^^^^^^^^^^
+  File "D:\miniminiconda\envs\liuyan\Lib\site-packages\torch\nn\modules\module.py", line 1965, in __getattr__
+    raise AttributeError(
+AttributeError: 'AnchorStudentTModel' object has no attribute 'seen_ap_mask'

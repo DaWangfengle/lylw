@@ -1,0 +1,12 @@
+{
+  "decision": "PROMISING_JOINT_CALIBRATION",
+  "gate": {
+    "passed": true,
+    "min_mae_gain_m": 0.15,
+    "mae_delta_m": -0.31135066211140694,
+    "es_delta_m": -0.2358058337930156,
+    "mae_upper_m": -0.23904467787599976,
+    "es_upper_m": -0.1988126041055468
+  },
+  "result_sha256": "e068b40149201b7c9d32577e0771a1c1cf27c271a2170da555cee0dd78c292b4"
+}

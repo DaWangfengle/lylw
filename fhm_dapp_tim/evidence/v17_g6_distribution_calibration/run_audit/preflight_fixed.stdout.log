@@ -1,0 +1,94 @@
+{
+  "protocol": "v17_g6_tuji1_train_var_only_dist_calibration_v1_20261009",
+  "status": "TUJI_RESULTS_TRAIN_VARIABLE_ONLY_READY",
+  "source_sha256": {
+    "design": "a336fd3e9af9d8e68d95139daefdb32d145d9fc01a74ea1d509e5ace52ec4cd3",
+    "g6_code": "e8f42637b24a69c664dd8726c9b15974fb51f219d2c373d1d0b3fce8d42cffe1",
+    "v17_r0": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "v17_r3": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+    "v17_r3_protocol": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+    "canonical_adapter": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63",
+    "v17_anchor": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+    "v17_r2b": "18fbd4a281b80a78566b37466265fb1c477716dd99becbd98962bf6ad11c934f",
+    "frozen_training_recipe": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb",
+    "historical_seed_source": "43c19ff5db2b3cc4e6c3487ef999aa73f0458738d89fef3537bf2f7c2a53521b",
+    "g6_tests": "12fafc6fee8a630ac482adfca52fe8be440bc90b618b19dd40dea5ab060ad9f4",
+    "v9_sampling": "937d7c6d6b2e094322d16ba6d5fb79108a7e1d49aaa6ebf0fb80bfca954f853d",
+    "train_container_A12": "73c59c6a8a12c45c4b6bf9b93b45cb89d0cfb7bb147260dc763f0d5f5af314a5",
+    "train_container_POCO": "9973384ac04365a55a2e6b33b16b61724cf41869e828b1544c7c4bc61c9d2495",
+    "train_container_S20": "e3e327243852ba38087c4e8f07c4d94c7b8acc0987e961d5dc6e8fcf23dd354e",
+    "train_container_S7": "c33ac65f9b61f6b24272b256b091c54747d5bce3f186a8a96e83cbc3e9f9fdab",
+    "train_container_tabS7": "f8a9bf0a94367f2255a3c94b2bd4b633d73d7000a8f1a0cf5c25e90d231b0e23"
+  },
+  "train_rows": 4595,
+  "unique_train_sites": 919,
+  "ap_count": 259,
+  "role_site_counts": {
+    "fit": 643,
+    "calibration": 137,
+    "confirmation": 139
+  },
+  "role_row_counts": {
+    "fit": 3199,
+    "calibration": 695,
+    "confirmation": 701
+  },
+  "role_device_rows": {
+    "fit": {
+      "0": 641,
+      "1": 619,
+      "2": 685,
+      "3": 638,
+      "4": 616
+    },
+    "calibration": {
+      "0": 137,
+      "1": 135,
+      "2": 152,
+      "3": 137,
+      "4": 134
+    },
+    "confirmation": {
+      "0": 139,
+      "1": 137,
+      "2": 149,
+      "3": 139,
+      "4": 137
+    }
+  },
+  "physical_site_overlap": 0,
+  "coordinate_identity_audit": {
+    "original_to_float32_site_bijection": true,
+    "original_physical_site_count": 919,
+    "float32_physical_site_count": 919,
+    "float32_key_value_changes": 0,
+    "all_role_centred_bijection": true
+  },
+  "mat_containers_physically_include_provided_test": true,
+  "results_test_deserialized": false,
+  "seeds": [
+    17301,
+    17302,
+    17303,
+    17304,
+    17305
+  ],
+  "epochs": [
+    65,
+    69,
+    56,
+    67,
+    62
+  ],
+  "candidates": [
+    "T1_S1",
+    "T1_S0.75",
+    "T1_S0.5",
+    "T0.8_S1",
+    "T0.8_S0.75",
+    "T0.8_S0.5",
+    "T0.6_S1",
+    "T0.6_S0.75",
+    "T0.6_S0.5"
+  ]
+}

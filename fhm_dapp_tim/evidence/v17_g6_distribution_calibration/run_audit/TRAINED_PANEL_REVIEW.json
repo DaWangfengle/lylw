@@ -1,0 +1,87 @@
+{
+  "stage": "trained_panel",
+  "members": [
+    {
+      "member": 1,
+      "seed": 17301,
+      "epoch": 65,
+      "history_entries": 65,
+      "sha256": "20415c513976bbdd2e6aaf911c284d5a3aca271b037c41b859dce7cf89195f2a",
+      "data_provenance": {
+        "variable": "results_train",
+        "fit_only": true,
+        "test_variable_loaded": false
+      }
+    },
+    {
+      "member": 2,
+      "seed": 17302,
+      "epoch": 69,
+      "history_entries": 69,
+      "sha256": "febeb7b185cee8b05e748616d99342f352b77d6bd0a8a0f758ad3c5a484b44e8",
+      "data_provenance": {
+        "variable": "results_train",
+        "fit_only": true,
+        "test_variable_loaded": false
+      }
+    },
+    {
+      "member": 3,
+      "seed": 17303,
+      "epoch": 56,
+      "history_entries": 56,
+      "sha256": "73ac17a495574be6ea80989982463083ab4db58b5f87f521fed82846a53ecf0a",
+      "data_provenance": {
+        "variable": "results_train",
+        "fit_only": true,
+        "test_variable_loaded": false
+      }
+    },
+    {
+      "member": 4,
+      "seed": 17304,
+      "epoch": 67,
+      "history_entries": 67,
+      "sha256": "58bd77a131b59dae28d9e0d513055746383f6f7edf973650fa155cc94ff7611b",
+      "data_provenance": {
+        "variable": "results_train",
+        "fit_only": true,
+        "test_variable_loaded": false
+      }
+    },
+    {
+      "member": 5,
+      "seed": 17305,
+      "epoch": 62,
+      "history_entries": 62,
+      "sha256": "124626cbf93dd9b834a5325b61c6ff7735ed89254c9a16fae174d0a9bd79d26c",
+      "data_provenance": {
+        "variable": "results_train",
+        "fit_only": true,
+        "test_variable_loaded": false
+      }
+    }
+  ],
+  "all_five_complete_distinct_hashes": true,
+  "identical_FIT_anchors_buildings_floors_prototype_RSS_origin_seen_AP_mask": true,
+  "coordinate_origin": [
+    7.13189697265625,
+    15.915324211120605
+  ],
+  "manifest_and_source_unchanged": true,
+  "CUDA_smoke": {
+    "input": "first 16 FIT RSS rows; all scorer targets are synthetic zeros",
+    "query_rows": 16,
+    "joint_components": 960,
+    "candidate_count": 9,
+    "draws_per_stream": 64,
+    "paired_common_randomness": true,
+    "baseline_law_mean_MAE_ES_draws_bitwise_original_R3": true,
+    "same_T_all_s_MAE_bitwise_equal": true,
+    "finite_probabilities_centres_scales_scores": true,
+    "network_gradients_none": true,
+    "CAL_CONFIRM_predictions_or_errors_computed": false,
+    "peak_allocated_bytes": 83371520,
+    "peak_reserved_bytes": 94371840
+  }
+}

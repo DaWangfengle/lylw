@@ -1,0 +1,141 @@
+{
+  "stage": "before_manifest",
+  "environment": {
+    "python": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "torch": "2.10.0+cu128",
+    "cuda_runtime": "12.8",
+    "numpy": "2.4.4",
+    "pandas": "3.0.1",
+    "scipy": "1.17.1",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "gpu": "NVIDIA GeForce RTX 2060",
+    "gpu_total_memory_bytes": 6442123264
+  },
+  "mat_variable_review": [
+    {
+      "device": "A12",
+      "train_rows": 917,
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "device": "POCO",
+      "train_rows": 891,
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "device": "S20",
+      "train_rows": 986,
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "device": "S7",
+      "train_rows": 914,
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    },
+    {
+      "device": "tabS7",
+      "train_rows": 887,
+      "returned_keys": [
+        "__globals__",
+        "__header__",
+        "__version__",
+        "results_train"
+      ],
+      "results_test_returned": false
+    }
+  ],
+  "coordinate_identity": {
+    "mat_variable_only": "results_train",
+    "files_physically_contain_results_test": true,
+    "mat_file_count": 5,
+    "test_data_decoded": false,
+    "original_to_float32_site_bijection": true,
+    "original_physical_site_count": 919,
+    "float32_physical_site_count": 919,
+    "float32_key_value_changes": 0,
+    "raw_original_keys_equal_canonical_keys": true,
+    "original_to_centred_all_role_bijection": true,
+    "original_sites": 919,
+    "centred_sites": 919,
+    "coordinate_origin_fit_only": [
+      7.13189697265625,
+      15.915324211120605
+    ],
+    "raw_xy_bounds": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        22.64,
+        32.792
+      ]
+    ]
+  },
+  "role_key_sha256": {
+    "fit": "0f166645db1c6bd58d101fc661a0ec62a589b6d89229989224c569092bb6ab95",
+    "calibration": "e1ad91fd38a086e445426f502bf24d5a3224823e48f46e6f99ea486c31c32e22",
+    "confirmation": "1c46af2f1336fcc8e664f7c214ef876418a1c288df942db9d6f517e88d22542c"
+  },
+  "role_sites": {
+    "fit": 643,
+    "calibration": 137,
+    "confirmation": 139
+  },
+  "role_rows": {
+    "fit": 3199,
+    "calibration": 695,
+    "confirmation": 701
+  },
+  "rss_dbm_visible_bounds": [
+    -101.0,
+    0.0
+  ],
+  "model_rss_bounds": [
+    -1.0,
+    1.0
+  ],
+  "ap_count": 259,
+  "ap_dictionary_sha256": "6c5b3ae15493c2f68b7f3729242c34851246c0317fd3749a4d0d533609bb04a6",
+  "model_weights": "fresh untrained original R0 FIT-memory models, not saved",
+  "CUDA_smoke": {
+    "input": "first 16 FIT RSS rows; all scorer targets are synthetic zeros",
+    "query_rows": 16,
+    "joint_components": 960,
+    "candidate_count": 9,
+    "draws_per_stream": 64,
+    "paired_common_randomness": true,
+    "baseline_law_mean_MAE_ES_draws_bitwise_original_R3": true,
+    "same_T_all_s_MAE_bitwise_equal": true,
+    "finite_probabilities_centres_scales_scores": true,
+    "network_gradients_none": true,
+    "CAL_CONFIRM_predictions_or_errors_computed": false,
+    "peak_allocated_bytes": 122369024,
+    "peak_reserved_bytes": 165675008
+  }
+}

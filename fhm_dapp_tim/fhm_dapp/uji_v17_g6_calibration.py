@@ -150,9 +150,11 @@ def load_tuji_train_variable_only() -> ds.CanonicalFingerprintData:
     pos={k:i for i,k in enumerate(ap_ids)}
     rss=np.full((len(rows),len(ap_ids)),np.nan,dtype=np.float32)
     xy=np.empty((len(rows),2),dtype=np.float32)
+    original_xy=np.empty((len(rows),2),dtype=np.float64)
     phone=np.empty(len(rows),dtype=np.int64)
     for i,(name,scan) in enumerate(rows):
-        xy[i]=np.asarray(scan.coords,dtype=np.float32).reshape(2)
+        original_xy[i]=np.asarray(scan.coords,dtype=np.float64).reshape(2)
+        xy[i]=original_xy[i].astype(np.float32)
         phone[i]=reference.device_mapping[name]
         for ap,value in ds._tuji_measurements(scan):
             v=float(value);col=pos[ds._tuji_ap_id(ap)]
@@ -176,6 +178,20 @@ def load_tuji_train_variable_only() -> ds.CanonicalFingerprintData:
         }
     )
     data.validate()
+    original_keys=location_keys(original_xy,data.building,data.floor)
+    canonical_keys=location_keys(xy,data.building,data.floor)
+    forward={};reverse={}
+    for original,canonical in zip(original_keys,canonical_keys):
+        if ((original in forward and forward[original]!=canonical)
+            or (canonical in reverse and reverse[canonical]!=original)):
+            raise G6Error("float32 conversion collapses or divides an original TUJI physical site")
+        forward[original]=canonical;reverse[canonical]=original
+    data.metadata.update({
+        "original_to_float32_site_bijection":True,
+        "original_physical_site_count":len(forward),
+        "float32_physical_site_count":len(reverse),
+        "float32_key_value_changes":sum(a!=b for a,b in forward.items()),
+    })
     return data
 
 
@@ -191,6 +207,12 @@ def _as_r0_input(canonical:ds.CanonicalFingerprintData) -> dict:
         raise G6Error("invalid TUJI training row count, phone IDs, or model RSS")
     return {"rss":rss,"raw_xy":raw,"building":building,"floor":floor,
             "phone":phone,"keys":location_keys(raw,building,floor),
+            "coordinate_identity_audit":{
+                key:canonical.metadata[key] for key in (
+                    "original_to_float32_site_bijection",
+                    "original_physical_site_count","float32_physical_site_count",
+                    "float32_key_value_changes")
+            },
             "stats":{"n_aps":rss.shape[1],"n_buildings":1,"n_floors":1,
                      "adapted_from":"TUJI1 results_train only"}}
 
@@ -272,6 +294,8 @@ def preflight() -> dict:
         "role_row_counts":{k:len(v) for k,v in rows.items()},
         "role_device_rows":device_rows,
         "physical_site_overlap":0,
+        "coordinate_identity_audit":{**data["coordinate_identity_audit"],
+                                     "all_role_centred_bijection":True},
         "mat_containers_physically_include_provided_test":True,
         "results_test_deserialized":False,
         "seeds":list(SEEDS),"epochs":list(EPOCHS),
@@ -287,6 +311,7 @@ def prepare() -> dict:
         "role_site_counts":info["role_site_counts"],
         "role_row_counts":info["role_row_counts"],
         "role_device_rows":info["role_device_rows"],
+        "coordinate_identity_audit":info["coordinate_identity_audit"],
         "seeds":list(SEEDS),"epochs":list(EPOCHS),
         "model_count":PANEL,"L":L,"K":K,"alpha":ALPHA,
         "grid":[{"name":candidate_name(t,s),"T":t,"scale":s}
@@ -464,8 +489,10 @@ def _score_role(role:str,models,data:dict,row_ids:np.ndarray,origin:np.ndarray,
     calibration_diag={k:{"predicted_radius":torch.empty(n,dtype=torch.float64),
                          "observed_error":torch.empty(n,dtype=torch.float64),
                          "coverage":{str(level):torch.empty(n,dtype=torch.float64)
+                                     for level in COVERAGE_LEVELS},
+                         "credible_radius":{str(level):torch.empty(n,dtype=torch.float64)
                                      for level in COVERAGE_LEVELS}}
-                      for k in names if k in (BASE,(selected or {}).get("policy"))}
+                      for k in names}
     ref=models[0];anchors=ref.n_anchors
     with r3.r2f_a1._deterministic_algorithms():
         for start in range(0,n,BATCH):
@@ -512,6 +539,7 @@ def _score_role(role:str,models,data:dict,row_ids:np.ndarray,origin:np.ndarray,
                     diag["observed_error"][start:end]=observed.cpu()
                     for level in COVERAGE_LEVELS:
                         threshold=torch.quantile(distances,level,dim=1)
+                        diag["credible_radius"][str(level)][start:end]=threshold.double().cpu()
                         diag["coverage"][str(level)][start:end]=(
                             observed<=threshold.double()).double().cpu()
         metrics={};vectors={};by_device={}
@@ -541,6 +569,17 @@ def _score_role(role:str,models,data:dict,row_ids:np.ndarray,origin:np.ndarray,
                 "coverage":{level:float(r3._metric_record(
                     vec,group_ids,len(group_keys))[0]["coordinate_macro_m"])
                     for level,vec in diag["coverage"].items()},
+                "macro_credible_radius_m":{
+                    level:float(r3._metric_record(vec,group_ids,len(group_keys))[0]["coordinate_macro_m"])
+                    for level,vec in diag["credible_radius"].items()},
+                "coordinate_vectors":{
+                    "predicted_radius":r3._metric_record(diag["predicted_radius"],group_ids,len(group_keys))[1].tolist(),
+                    "observed_error":r3._metric_record(diag["observed_error"],group_ids,len(group_keys))[1].tolist(),
+                    "coverage":{level:r3._metric_record(vec,group_ids,len(group_keys))[1].tolist()
+                                for level,vec in diag["coverage"].items()},
+                    "credible_radius":{level:r3._metric_record(vec,group_ids,len(group_keys))[1].tolist()
+                                       for level,vec in diag["credible_radius"].items()},
+                },
             }
     return {"role":role,"rows":n,"coordinate_groups":len(group_keys),
             "coordinate_keys":[list(k) for k in group_keys],
@@ -642,7 +681,7 @@ def confirm(device_name:str="cuda") -> dict:
 
 def make_report(result:dict) -> str:
     out=[
-        "# G6 | TUJI1 training-variable-only two-axis distribution calibration",
+        "# G6 | TUJI1 TRAIN-variable-only two-axis distribution calibration",
         "",
         "5-member frozen original V17; FIT/CAL/CONFIRM split by physical coordinates.",
         "TUJI MAT files include results_test but only results_train is parsed. No external benchmark used.",
@@ -652,7 +691,8 @@ def make_report(result:dict) -> str:
         "| CONFIRM variant | Macro MAE (m) | Energy Score (m) |",
         "|---|---:|---:|",
     ]
-    for name,m in result["candidate_metrics"].items():
+    for name in sorted(result["candidate_metrics"]):
+        m=result["candidate_metrics"][name]
         out.append(f"| {name} | {m['mae_2d_m']:.6f} | {m['energy_score_2d_m']:.6f} |")
     gate=result["gate"]
     out.extend([

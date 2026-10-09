@@ -1,0 +1,5 @@
+--- before/run_audit/runtime_review.py
++++ after/run_audit/runtime_review.py
+@@ -147,1 +147,1 @@
+-        assert all(torch.equal(model.seen_ap_mask,models[0].seen_ap_mask) for model in models)
++        assert all(torch.equal(model.encoder.seen_ap_mask,models[0].encoder.seen_ap_mask) for model in models)

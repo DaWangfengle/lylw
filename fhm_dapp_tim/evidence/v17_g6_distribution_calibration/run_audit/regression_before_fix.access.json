@@ -1,0 +1,6 @@
+{
+  "scope": "Python open events and scipy.io.loadmat calls, not OS-wide monitoring",
+  "data_open_counts": {},
+  "restricted_mat_calls": [],
+  "denied": []
+}

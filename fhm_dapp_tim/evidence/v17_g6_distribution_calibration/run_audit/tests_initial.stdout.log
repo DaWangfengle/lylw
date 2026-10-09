@@ -1,0 +1,22 @@
+..............F.............................                             [100%]
+================================== FAILURES ===================================
+________ test_report_does_not_overstate_causality_or_external_testing _________
+
+    def test_report_does_not_overstate_causality_or_external_testing():
+        selected={"policy":"T0.8_S0.75"}
+        j={"selected_policy":selected,
+           "candidate_metrics":{
+               "T1_S1":{"mae_2d_m":5.,"energy_score_2d_m":4.},
+               "T0.8_S0.75":{"mae_2d_m":4.7,"energy_score_2d_m":3.8},
+           },
+           "gate":{"mae_delta_m":-.3,"es_delta_m":-.2,
+                   "mae_upper_m":-.1,"es_upper_m":-.05,"passed":True},
+           "decision":"PROMISING_JOINT_CALIBRATION","result_sha256":"synthetic"}
+        txt=g6.make_report(j)
+>       assert "TRAIN" in txt
+E       AssertionError: assert 'TRAIN' in '# G6 | TUJI1 training-variable-only two-axis distribution calibration\n\n5-member frozen original V17; FIT/CAL/CONFIR...hmarks.\nNo new independent external provided-test result. No G1/G3/G4/G5 result overturned.\nResult hash: synthetic\n'
+
+tests\test_uji_v17_g6_calibration.py:231: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_uji_v17_g6_calibration.py::test_report_does_not_overstate_causality_or_external_testing
+1 failed, 43 passed in 14.99s

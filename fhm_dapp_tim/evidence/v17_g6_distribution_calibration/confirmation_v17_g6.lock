@@ -1,0 +1,29 @@
+{
+  "calibration_file_sha256": "77ae0e137335dc6e99f1bf9d26b135fc9979bfc89ae26c881c207dae4fc2b17a",
+  "confirmation_outcome_seen": false,
+  "frozen_policy": {
+    "T": 0.6,
+    "eligible": [
+      "T0.8_S1",
+      "T0.8_S0.75",
+      "T0.8_S0.5",
+      "T0.6_S1",
+      "T0.6_S0.75",
+      "T0.6_S0.5"
+    ],
+    "fell_back_to_baseline": false,
+    "frozen_calibration_only": true,
+    "policy": "T0.6_S0.5",
+    "scale": 0.5
+  },
+  "manifest_file_sha256": "45896bed26ca192ad35422efd657e373b8878d6e7870eac8f17447d5b26d08c7",
+  "member_sha256": [
+    "20415c513976bbdd2e6aaf911c284d5a3aca271b037c41b859dce7cf89195f2a",
+    "febeb7b185cee8b05e748616d99342f352b77d6bd0a8a0f758ad3c5a484b44e8",
+    "73ac17a495574be6ea80989982463083ab4db58b5f87f521fed82846a53ecf0a",
+    "58bd77a131b59dae28d9e0d513055746383f6f7edf973650fa155cc94ff7611b",
+    "124626cbf93dd9b834a5325b61c6ff7735ed89254c9a16fae174d0a9bd79d26c"
+  ],
+  "protocol": "v17_g6_tuji1_train_var_only_dist_calibration_v1_20261009",
+  "result_sha256": "d15c5f136408930b1ba77f11bd96404f5e425273e50c4ea3c94b90fba4c88b9b"
+}
