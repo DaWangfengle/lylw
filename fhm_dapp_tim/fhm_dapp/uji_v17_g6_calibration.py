@@ -216,7 +216,7 @@ def split_physical_keys(keys:Sequence[tuple],seed:int=SPLIT_SEED
         roles["confirmation"].update(ordered[a+b:])
     if (set.union(*roles.values())!=set(keys)
         or any(roles[x]&roles[y] for x,y in
-               (("fit","calibration"),("fit","confirmation"),("calibration","confirmation"))):
+               (("fit","calibration"),("fit","confirmation"),("calibration","confirmation")))):
         raise G6Error("train/cal/confirm site overlap or omission")
     return roles
 
