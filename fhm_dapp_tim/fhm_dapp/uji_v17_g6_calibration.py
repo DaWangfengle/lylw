@@ -100,6 +100,11 @@ def _source_hashes() -> dict:
         "design":DESIGN,"g6_code":Path(__file__),"v17_r0":Path(r0.__file__),
         "v17_r3":Path(r3.__file__),"v17_r3_protocol":Path(r3p.__file__),
         "canonical_adapter":Path(ds.__file__),
+        "v17_anchor":Path(load_anchor_checkpoint.__code__.co_filename),
+        "v17_r2b":Path(r2b.__file__),
+        "frozen_training_recipe":ROOT / "fhm_dapp/train_anchor_v2.py",
+        "historical_seed_source":Path(g1.__file__),
+        "g6_tests":REPO / "tests/test_uji_v17_g6_calibration.py",
         "v9_sampling":Path(sample_continuous_mixture.__code__.co_filename),
     }
     for dev,name in ds.TUJI_DEVICE_FILES.items():
@@ -230,9 +235,8 @@ def _roles(data:dict):
     reverse={}
     # Verify the entire original-to-centred float32 key dictionary, not
     # merely FIT: otherwise a confirmation site could alias a FIT anchor.
-    for i,k in enumerate(data["keys"]):
-        c=location_keys(centred[i:i+1],
-                        data["building"][i:i+1],data["floor"][i:i+1])[0]
+    transformed=location_keys(centred,data["building"],data["floor"])
+    for k,c in zip(data["keys"],transformed):
         if (k in alias and alias[k]!=c) or (c in reverse and reverse[c]!=k):
             raise G6Error("R0 centring collapses or divides a physical site")
         alias[k]=c;reverse[c]=k
@@ -507,7 +511,7 @@ def _score_role(role:str,models,data:dict,row_ids:np.ndarray,origin:np.ndarray,
                         threshold=torch.quantile(distances,level,dim=1)
                         diag["coverage"][str(level)][start:end]=(
                             observed<=threshold.double()).double().cpu()
-        metrics={};vectors={}
+        metrics={};vectors={};by_device={}
         for name in names:
             m,mv=r3._metric_record(losses[name],group_ids,len(group_keys))
             e,ev=r3._metric_record(energy[name],group_ids,len(group_keys))
@@ -516,6 +520,14 @@ def _score_role(role:str,models,data:dict,row_ids:np.ndarray,origin:np.ndarray,
                            "row_mae_m":float(m["row_mean_m"]),
                            "row_es_m":float(e["row_mean_m"])}
             vectors[name]={"mae":mv.tolist(),"es":ev.tolist()}
+            by_device[name]={}
+            for device_id in sorted(set(int(v) for v in data["phone"][row_ids])):
+                mask=torch.as_tensor(data["phone"][row_ids]==device_id,dtype=torch.bool)
+                by_device[name][str(device_id)]={
+                    "rows":int(mask.sum()),
+                    "row_mae_m":float(losses[name][mask].mean()),
+                    "row_es_m":float(energy[name][mask].mean()),
+                }
         reliability={}
         for name,diag in calibration_diag.items():
             observed=r3._metric_record(diag["observed_error"],group_ids,len(group_keys))[0]
@@ -530,6 +542,7 @@ def _score_role(role:str,models,data:dict,row_ids:np.ndarray,origin:np.ndarray,
     return {"role":role,"rows":n,"coordinate_groups":len(group_keys),
             "coordinate_keys":[list(k) for k in group_keys],
             "candidate_metrics":metrics,"coordinate_vectors":vectors,
+            "row_metrics_by_device":by_device,
             "reliability":reliability,"random_draws_per_stream":r3p.PREDICTIVE_DRAWS_PER_STREAM}
 
 
