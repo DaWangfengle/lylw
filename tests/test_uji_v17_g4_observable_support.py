@@ -166,7 +166,10 @@ def test_confirmation_lock_refuses_duplicate_or_prior_attempt(monkeypatch,tmp_pa
     lock=tmp_path/"exists"
     lock.write_text("already attempted")
     monkeypatch.setattr(g4,"CONFIRM_LOCK",lock)
-    with pytest.raises(g4.G4Error,match="already"):
+    def forbidden_prepare():
+        pytest.fail("prepare called after irreversible confirmation lock")
+    monkeypatch.setattr(g4,"prepare",forbidden_prepare)
+    with pytest.raises(g4.G4Error,match="confirmation attempted"):
         g4.confirm("cpu")
 
 

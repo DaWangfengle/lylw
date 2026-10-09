@@ -1,0 +1,12 @@
+--- RUN_REPORT_V17_G4.md original
++++ RUN_REPORT_V17_G4.md canonical JSON order
+@@ -14,8 +14,8 @@
+ |---|---:|---:|
+ | baseline | 6.819208 | 4.788740 |
+ | g1 | 6.818034 | 4.848047 |
++| gate_q25 | 6.688934 | 4.741960 |
+ | placebo | 6.905431 | 4.852990 |
+-| gate_q25 | 6.688934 | 4.741960 |
+ 
+ Selected policy minus baseline MAE: -0.130274m
+ Selected policy minus baseline ES: -0.046780m

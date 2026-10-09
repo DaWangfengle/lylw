@@ -1,0 +1,13 @@
+{
+  "recorded_utc": "2026-10-09T05:51:35.850655+00:00",
+  "failed_stage": "pytest_attempt02",
+  "observed": "47 passed, 1 failed: regex already does not match actual G4 confirmation attempted error",
+  "cause": "New G4 test fixture error-message expectation; irreversible confirmation guard is correct",
+  "fix": "Match actual confirmation attempted message; require prepare is never called behind existing lock",
+  "old_test_sha256": "61acfad9298d6e13290c5dd4e7c3f4e9841535ea4f2fde55cc61918a8525aabc",
+  "new_test_sha256": "87b0321871fb9e977a04d74bcf568876e8f0e2567f5455f3f2b91be66beafdce",
+  "experiment_code_changed": false,
+  "scientific_protocol_changed": false,
+  "manifest_exists": false,
+  "original_failure_log_sha256": "fc7e512a7d82fc296a8eba4e14036b6cae8677720a80be84493ad7fb17c67b4b"
+}

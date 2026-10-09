@@ -1,0 +1,17 @@
+{
+  "stage": "finish_summary_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/finish_summary.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-09T06:18:42.195529+00:00",
+  "ended_utc": "2026-10-09T06:18:42.951422+00:00",
+  "runtime_seconds": 0.761786499992013,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\finish_summary_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\finish_summary_attempt01.stderr.log",
+  "stdout_sha256": "68c64fb6c68a3b563a770c8ed7642e4183e1d39d07ea1541ffafe1bc865b8e39",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "5b10719345f3b5f4c428c6b4f904b950cdec86fb63badf1f0317489169e6c7c7"
+}

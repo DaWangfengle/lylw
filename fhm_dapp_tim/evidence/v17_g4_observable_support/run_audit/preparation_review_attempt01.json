@@ -1,0 +1,17 @@
+{
+  "stage": "preparation_review_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/review_preparation.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-09T05:53:09.973250+00:00",
+  "ended_utc": "2026-10-09T05:53:21.766847+00:00",
+  "runtime_seconds": 11.793555900003412,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\preparation_review_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\preparation_review_attempt01.stderr.log",
+  "stdout_sha256": "1119eabb33cfc482f6f625b1a44f5ced840140cd293b8cb56c63dd915ffd2761",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "248b3fa96cb1a9655fba178fdeb61366380278b9a28223f29bccd6314e5dc3da"
+}

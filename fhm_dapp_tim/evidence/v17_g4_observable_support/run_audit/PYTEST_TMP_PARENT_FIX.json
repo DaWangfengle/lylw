@@ -1,0 +1,13 @@
+{
+  "recorded_utc": "2026-10-09T05:49:50.412132+00:00",
+  "failed_stage": "pytest_attempt01",
+  "observed": "43 passed, 5 setup errors; WinError 3 creating --basetemp because parent path did not exist",
+  "cause": "G4 execution logger omitted pytest basetemp parent mkdir",
+  "fix": "Create runtime_cache/pytest parent before launching stage; leave attempt01 logs untouched and rerun tests with attempt02 basetemp",
+  "old_logger_sha256": "f699a6584b4cec562a688f64265dc8df02049c07dce77ddcccc726dfcdee4d7d",
+  "new_logger_sha256": "5ca72e26a233ec8bb4127e011f0052721052dc5e8e10308bed72e306a0ed3f2c",
+  "scientific_sources_or_tests_changed": false,
+  "scientific_protocol_changed": false,
+  "manifest_exists": false,
+  "original_failure_log_sha256": "8346fcdbee86fdcddfd0ce68eef266df43a19d21e355d338ef78002baaad231a"
+}

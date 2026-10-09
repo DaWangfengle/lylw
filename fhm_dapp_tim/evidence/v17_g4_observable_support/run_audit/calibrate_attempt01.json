@@ -1,0 +1,21 @@
+{
+  "stage": "calibrate_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support",
+    "calibrate",
+    "--device",
+    "cuda"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-09T06:07:47.196554+00:00",
+  "ended_utc": "2026-10-09T06:08:12.776959+00:00",
+  "runtime_seconds": 25.58873040000617,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\calibrate_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\calibrate_attempt01.stderr.log",
+  "stdout_sha256": "c6505fee1fcc7901aa5697c077cb1a73392a0c0b473fd8bf19ef65ffbf48fc7d",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "b30cfef69184775b3526358a4cbf9b4a6feb28d2f57d0104cd4971ce38d7b2e8"
+}

@@ -1,0 +1,17 @@
+{
+  "stage": "report_table_order_repair_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/repair_report_table_order.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-09T06:15:48.151432+00:00",
+  "ended_utc": "2026-10-09T06:15:58.043427+00:00",
+  "runtime_seconds": 9.903172299993457,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\report_table_order_repair_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\report_table_order_repair_attempt01.stderr.log",
+  "stdout_sha256": "5f90cfb221342b3632b899b47b0a5c9f87714160beeea52fe0d5504b8882eccd",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "access_guard_sha256": "cbb6094cf835433184cf27437e182a2c6b52cccb086555999e9b63954b4411c2"
+}

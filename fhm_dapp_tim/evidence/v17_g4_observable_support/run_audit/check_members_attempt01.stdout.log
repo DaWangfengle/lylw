@@ -1,0 +1,26 @@
+{
+  "all_complete": true,
+  "complete": 5,
+  "members": [
+    {
+      "member": 1,
+      "sha256": "299b5955967acc333fccef45d6a83ca45af4a6e073bf64a909ba9889dabb4fb5"
+    },
+    {
+      "member": 2,
+      "sha256": "3bf3db6c88d3189529623106af2e1463e44b17408965eeecd98a739efa8d9b48"
+    },
+    {
+      "member": 3,
+      "sha256": "4e56c499c837a40d45c9a40b984ec12eb7bc9f10dd8db5ae2b549103d05e7548"
+    },
+    {
+      "member": 4,
+      "sha256": "695b0afbc0c282f20f6f7f41d385b842b169ef366c75f0c010e5f27f24bd1224"
+    },
+    {
+      "member": 5,
+      "sha256": "0067c6a6f4d88c5dc49a9159d26304802be14e31f6cbcf23b91c29555c5ef25c"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "calibration_file_sha256": "341155ed96ca7a75a12293a7741d0fc1d8d6e7f79a3942b33124e144fab0071a",
+  "confirmation_opened_before_lock": false,
+  "manifest_sha256": "9c430315b50c7457e9af2da2e0cc0a8569cba9e8f03247f9ef4a5e15bf966b31",
+  "member_sha256": [
+    "299b5955967acc333fccef45d6a83ca45af4a6e073bf64a909ba9889dabb4fb5",
+    "3bf3db6c88d3189529623106af2e1463e44b17408965eeecd98a739efa8d9b48",
+    "4e56c499c837a40d45c9a40b984ec12eb7bc9f10dd8db5ae2b549103d05e7548",
+    "695b0afbc0c282f20f6f7f41d385b842b169ef366c75f0c010e5f27f24bd1224",
+    "0067c6a6f4d88c5dc49a9159d26304802be14e31f6cbcf23b91c29555c5ef25c"
+  ],
+  "protocol": "v17_g4_uts_train_internal_observable_support_v1_20261009",
+  "result_sha256": "e4a7ee8a388f1e651cbbdee375abfdf4c26490f7fa3c47c590a367aaf8e19148",
+  "selected_policy": {
+    "calibration_rule_frozen": true,
+    "fallback_baseline": false,
+    "feasible_policies": [
+      "gate_q25"
+    ],
+    "policy": "gate_q25",
+    "threshold": 2.180776695410411,
+    "thresholds": {
+      "gate_q25": 2.180776695410411,
+      "gate_q50": 2.289001067479451,
+      "gate_q75": 2.3526904756824174
+    }
+  }
+}

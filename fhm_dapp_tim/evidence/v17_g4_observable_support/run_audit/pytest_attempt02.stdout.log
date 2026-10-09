@@ -1,0 +1,47 @@
+.........F......................................                         [100%]
+================================== FAILURES ===================================
+__________ test_confirmation_lock_refuses_duplicate_or_prior_attempt __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000273D11FABA0>
+tmp_path = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/runtime_cache/pytest/pytest_attempt02/test_confirmation_lock_refuses0')
+
+    def test_confirmation_lock_refuses_duplicate_or_prior_attempt(monkeypatch,tmp_path):
+        # Confirm checks irreversible lock before making any calls to prepare.
+        lock=tmp_path/"exists"
+        lock.write_text("already attempted")
+        monkeypatch.setattr(g4,"CONFIRM_LOCK",lock)
+        with pytest.raises(g4.G4Error,match="already"):
+>           g4.confirm("cpu")
+
+tests\test_uji_v17_g4_observable_support.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+device_name = 'cpu'
+
+    def confirm(device_name:str="cuda") -> dict:
+        if CONFIRM_LOCK.exists() or CONFIRMATION.exists() or REPORT.exists():
+>           raise G4Error("G4 confirmation attempted; no retuning or rescore")
+E           fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support.G4Error: G4 confirmation attempted; no retuning or rescore
+
+fhm_dapp_tim\fhm_dapp\uji_v17_g4_observable_support.py:524: G4Error
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000273D11FABA0>
+tmp_path = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/runtime_cache/pytest/pytest_attempt02/test_confirmation_lock_refuses0')
+
+    def test_confirmation_lock_refuses_duplicate_or_prior_attempt(monkeypatch,tmp_path):
+        # Confirm checks irreversible lock before making any calls to prepare.
+        lock=tmp_path/"exists"
+        lock.write_text("already attempted")
+        monkeypatch.setattr(g4,"CONFIRM_LOCK",lock)
+>       with pytest.raises(g4.G4Error,match="already"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'already'
+E         Actual message: 'G4 confirmation attempted; no retuning or rescore'
+
+tests\test_uji_v17_g4_observable_support.py:169: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_uji_v17_g4_observable_support.py::test_confirmation_lock_refuses_duplicate_or_prior_attempt
+1 failed, 47 passed in 9.36s

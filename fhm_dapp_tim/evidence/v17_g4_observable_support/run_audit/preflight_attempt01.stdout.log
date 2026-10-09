@@ -1,0 +1,55 @@
+{
+  "status": "UTS_TRAIN_ONLY_READY",
+  "protocol": "v17_g4_uts_train_internal_observable_support_v1_20261009",
+  "source_sha256": {
+    "training_csv": "a7cc7d12169be4d6cd9197f5761e463ecdd9e0e798b4f67790ca468d3028785b",
+    "design": "4bd8ba01d9d589bdf21178a7e8c7352620b96f94a8a6ba0c03d39bf95e066bf2",
+    "g4_code": "e91cf79a3d691e5b932b6387f9ed7150278f53de003dc6a67a19d114854913f3",
+    "g3_adapter_code": "b7a7097fa3654dfc516d01c6aa2ab5acca80b7ca3d1ab87c463f085494576676",
+    "v17_training": "9b8afdbdd5475d0a94cb8e3cacfc66a62796b72964c3f5414eb7bf524c050b4d",
+    "v17_score": "4e17632041fe1364e253a6e8275772f45479b6cca454ce8351b6211e87139082",
+    "g1_density": "43c19ff5db2b3cc4e6c3487ef999aa73f0458738d89fef3537bf2f7c2a53521b",
+    "v17_anchor": "a580ddd80bd9adef18953c66e3ce295c6c200e6d6d387184fcd3ec89f8fd10dd",
+    "v17_model": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+    "v17_train_optimizer": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb",
+    "v17_score_joint": "6300eaed612cebde5a84c3c4ce6127b78646d036844955cb04cfa91bddfbaf1f",
+    "r3_frozen_protocol": "7d2ae1aa0a8c1e72d8ffc4adff8c784ad68a0726b6f0d1d259cfbd28cdeae03f",
+    "train_only_uts_adapter": "3464d3d131cfaa74a10cc67ee8cdf60b5a5497addaf910d828ab4af65d9b0f63"
+  },
+  "training_rows": 9108,
+  "role_groups": {
+    "fit": 945,
+    "calibration": 258,
+    "confirmation": 263
+  },
+  "role_rows": {
+    "fit": 5791,
+    "calibration": 1625,
+    "confirmation": 1692
+  },
+  "coordinates_disjoint": true,
+  "panel": 5,
+  "seeds": [
+    17301,
+    17302,
+    17303,
+    17304,
+    17305
+  ],
+  "epochs": [
+    65,
+    69,
+    56,
+    67,
+    62
+  ],
+  "gamma": 0.7,
+  "radius_m": 10.0,
+  "predictive_budget": {
+    "E": 5,
+    "L": 192,
+    "K": 192,
+    "alpha": 1.0
+  },
+  "provided_test_files_accessed": false
+}

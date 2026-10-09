@@ -1,0 +1,79 @@
+........EE.............E..EE....................                         [100%]
+=================================== ERRORS ====================================
+__________ ERROR at setup of test_json_chain_rejects_modified_result __________
+
+self = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/runtime_cache/pytest/pytest_attempt01')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\runtime_cache\\pytest\\pytest_attempt01'
+
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_confirmation_lock_refuses_duplicate_or_prior_attempt _
+
+self = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/runtime_cache/pytest/pytest_attempt01')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\runtime_cache\\pytest\\pytest_attempt01'
+
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1311: FileNotFoundError
+_____ ERROR at setup of test_immutable_manifest_hash_and_repeated_create ______
+
+self = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/runtime_cache/pytest/pytest_attempt01')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\runtime_cache\\pytest\\pytest_attempt01'
+
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1311: FileNotFoundError
+______ ERROR at setup of test_lock_blocks_second_test_without_loading_it ______
+
+self = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/runtime_cache/pytest/pytest_attempt01')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\runtime_cache\\pytest\\pytest_attempt01'
+
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1311: FileNotFoundError
+___ ERROR at setup of test_no_train_after_freeze_even_if_checkpoint_missing ___
+
+self = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_g4_observable_support/run_audit/runtime_cache/pytest/pytest_attempt01')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\runtime_cache\\pytest\\pytest_attempt01'
+
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1311: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR tests/test_uji_v17_g4_observable_support.py::test_json_chain_rejects_modified_result
+ERROR tests/test_uji_v17_g4_observable_support.py::test_confirmation_lock_refuses_duplicate_or_prior_attempt
+ERROR tests/test_uji_v17_g3_uts.py::test_immutable_manifest_hash_and_repeated_create
+ERROR tests/test_uji_v17_g3_uts.py::test_lock_blocks_second_test_without_loading_it
+ERROR tests/test_uji_v17_g3_uts.py::test_no_train_after_freeze_even_if_checkpoint_missing
+43 passed, 5 errors in 13.55s

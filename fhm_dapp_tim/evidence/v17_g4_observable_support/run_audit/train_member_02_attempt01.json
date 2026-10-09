@@ -1,0 +1,23 @@
+{
+  "stage": "train_member_02_attempt01",
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.uji_v17_g4_observable_support",
+    "train-member",
+    "--member-index",
+    "2",
+    "--device",
+    "cuda"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_utc": "2026-10-09T05:57:17.150930+00:00",
+  "ended_utc": "2026-10-09T05:59:37.660192+00:00",
+  "runtime_seconds": 140.50888409999607,
+  "exit_code": 0,
+  "stdout": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\train_member_02_attempt01.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_g4_observable_support\\run_audit\\train_member_02_attempt01.stderr.log",
+  "stdout_sha256": "92163101e23716c301285d6d250343746e4d2c4775373ec2b8773e5d4c161144",
+  "stderr_sha256": "d99e0ded63790f79cf66c3492a84c2a2f574455ca6f5e4f8deed1d1f3e693048",
+  "access_guard_sha256": "8eca5cf1ab359fe7c7d18807702f0b20ae7334ec97e0602f8d7bcab2a766f369"
+}

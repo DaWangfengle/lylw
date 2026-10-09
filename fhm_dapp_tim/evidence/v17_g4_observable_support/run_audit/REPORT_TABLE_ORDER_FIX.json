@@ -1,0 +1,33 @@
+{
+  "recorded_utc": "2026-10-09T06:15:57.511700+00:00",
+  "failed_stage": "check_after_confirm_attempt01",
+  "cause": "Original writer uses baseline,g1,placebo,selected insertion order; sorted JSON decoder changes metrics key order",
+  "fix": "Only rearrange derived current G4 Markdown table to frozen JSON readback order; preserve exact original report and diff",
+  "report_before_sha256": "3764a5e6a218902de29c86fab01824a1c5d20336c4b5d6036bdfe975d7d2bdf8",
+  "report_after_sha256": "319337740dc92c02a79afe7f8fd8f8b05cc702c1ff68cbc5d826bad4615b29d9",
+  "all_numeric_values_and_non_table_text_identical": true,
+  "serialization_roundtrip_regression_passed": true,
+  "frozen_files_before_sha256": {
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/manifest_v17_g4.json": "24b5de94db3c2539daef4fb28b808eccf762b795709db8430bd5a967f86699f5",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/calibration_v17_g4.json": "341155ed96ca7a75a12293a7741d0fc1d8d6e7f79a3942b33124e144fab0071a",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/internal_confirmation.lock": "b7c56fac705fd9cac978f8e6c1f0300066e8291e09806be90d056bd7cd9b7533",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/confirmation_v17_g4.json": "cb37c9e40327a6e89b89aaec3bf0a49bd31cbc04de826b80676f14af30c8cd2d",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g4_observable_support.py": "e91cf79a3d691e5b932b6387f9ed7150278f53de003dc6a67a19d114854913f3",
+    "tests/test_uji_v17_g4_observable_support.py": "87b0321871fb9e977a04d74bcf568876e8f0e2567f5455f3f2b91be66beafdce",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/DESIGN_V17_G4.md": "4bd8ba01d9d589bdf21178a7e8c7352620b96f94a8a6ba0c03d39bf95e066bf2"
+  },
+  "frozen_files_after_sha256": {
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/manifest_v17_g4.json": "24b5de94db3c2539daef4fb28b808eccf762b795709db8430bd5a967f86699f5",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/calibration_v17_g4.json": "341155ed96ca7a75a12293a7741d0fc1d8d6e7f79a3942b33124e144fab0071a",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/internal_confirmation.lock": "b7c56fac705fd9cac978f8e6c1f0300066e8291e09806be90d056bd7cd9b7533",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/confirmation_v17_g4.json": "cb37c9e40327a6e89b89aaec3bf0a49bd31cbc04de826b80676f14af30c8cd2d",
+    "fhm_dapp_tim/fhm_dapp/uji_v17_g4_observable_support.py": "e91cf79a3d691e5b932b6387f9ed7150278f53de003dc6a67a19d114854913f3",
+    "tests/test_uji_v17_g4_observable_support.py": "87b0321871fb9e977a04d74bcf568876e8f0e2567f5455f3f2b91be66beafdce",
+    "fhm_dapp_tim/evidence/v17_g4_observable_support/DESIGN_V17_G4.md": "4bd8ba01d9d589bdf21178a7e8c7352620b96f94a8a6ba0c03d39bf95e066bf2"
+  },
+  "experiment_source_modified": false,
+  "manifest_models_calibration_confirmation_lock_or_results_modified": false,
+  "calibration_or_confirmation_rerun": false,
+  "scientific_decision": "NO_INTERNAL_PROMOTION",
+  "source_render_iteration_bug_not_changed_after_manifest": true
+}

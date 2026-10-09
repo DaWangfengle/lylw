@@ -1,0 +1,8 @@
+{
+  "status": "TRAINING_FILE_INTERNAL_CONFIRMATION_COMPLETE",
+  "decision": "NO_INTERNAL_PROMOTION",
+  "selected_policy": "gate_q25",
+  "delta_mae_m": -0.13027425864975725,
+  "delta_es_m": -0.04678009465966604,
+  "result_sha256": "f0bd0416fa6d2c7c8665b760a4e8eb687085bdb9c478af4fcb22338ae433a765"
+}

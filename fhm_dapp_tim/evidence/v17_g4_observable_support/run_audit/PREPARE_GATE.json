@@ -1,0 +1,18 @@
+{
+  "recorded_utc": "2026-10-09T05:54:20.141628+00:00",
+  "ready": true,
+  "current_tests": "48 passed",
+  "preflight_exit": 0,
+  "preparation_review_exit": 0,
+  "past_sources_and_evidence_unchanged": true,
+  "only_scientific_fixture_change": [
+    "tests/test_uji_v17_g4_observable_support.py"
+  ],
+  "experiment_code_changed": false,
+  "access_trace_count": 7,
+  "denied_attempts": 0,
+  "non_training_dataset_opens": 0,
+  "prior_G1_G2_G3_artifact_opens_during_commands": 0,
+  "test_fix_before_manifest": true,
+  "initial_context_sha256": "8213ed999bf1d475d638005482af139c3f2f58d1d6b6a52a5326771b0a868de6"
+}

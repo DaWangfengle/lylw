@@ -1,0 +1,10 @@
+--- run_stage.py before
++++ run_stage.py after
+@@ -4,6 +4,7 @@
+ import hashlib,json,os,subprocess,sys,time
+ root=Path(__file__).resolve().parents[4];audit=Path(__file__).resolve().parent
+ label=sys.argv[1];command=[sys.executable,*sys.argv[2:]]
++(audit/'runtime_cache/pytest').mkdir(parents=True,exist_ok=True)
+ stdout=audit/(label+'.stdout.log');stderr=audit/(label+'.stderr.log');metadata=audit/(label+'.json')
+ assert not any(p.exists() for p in (stdout,stderr,metadata,audit/(label+'.access.json')))
+ env=os.environ.copy()

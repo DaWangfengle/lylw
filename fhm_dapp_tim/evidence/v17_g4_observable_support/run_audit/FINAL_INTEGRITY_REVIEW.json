@@ -1,0 +1,49 @@
+{
+  "recorded_utc": "2026-10-09T06:18:42.117567+00:00",
+  "verified": true,
+  "final_check": "VERIFIED",
+  "decision": "NO_INTERNAL_PROMOTION",
+  "role_groups": {
+    "calibration": 258,
+    "confirmation": 263,
+    "fit": 945
+  },
+  "role_rows": {
+    "calibration": 1625,
+    "confirmation": 1692,
+    "fit": 5791
+  },
+  "physical_coordinate_overlap": 0,
+  "coordinate_order_and_macro_vector_means_verified": true,
+  "CAL_quantiles_and_selection_reconstructed_without_confirmation": true,
+  "frozen_policy_and_lock_chain_verified": true,
+  "paired_differences_and_fixed_gates_verified": true,
+  "new_member_count": 5,
+  "new_member_hashes_unique": true,
+  "all_fixed_epoch_terminal_logs_verified": true,
+  "existing_G3_weights_loaded": false,
+  "historical_sources_and_evidence_unchanged": true,
+  "G4_scientific_source_unchanged": true,
+  "only_pre_manifest_test_change": "87b0321871fb9e977a04d74bcf568876e8f0e2567f5455f3f2b91be66beafdce",
+  "formal_output_file_sha256": {
+    "manifest_v17_g4.json": "24b5de94db3c2539daef4fb28b808eccf762b795709db8430bd5a967f86699f5",
+    "calibration_v17_g4.json": "341155ed96ca7a75a12293a7741d0fc1d8d6e7f79a3942b33124e144fab0071a",
+    "internal_confirmation.lock": "b7c56fac705fd9cac978f8e6c1f0300066e8291e09806be90d056bd7cd9b7533",
+    "confirmation_v17_g4.json": "cb37c9e40327a6e89b89aaec3bf0a49bd31cbc04de826b80676f14af30c8cd2d",
+    "RUN_REPORT_V17_G4.md": "319337740dc92c02a79afe7f8fd8f8b05cc702c1ff68cbc5d826bad4615b29d9"
+  },
+  "command_record_count": 20,
+  "Python_data_open_traces_only_UTS_training": true,
+  "data_access_denied_attempts": 0,
+  "prior_G1_G2_G3_outcomes_or_weights_loaded_during_commands": false,
+  "known_failed_stages_retained": [
+    "check_after_confirm_attempt01",
+    "pytest_attempt01",
+    "pytest_attempt02"
+  ],
+  "calibration_invocations": 1,
+  "confirmation_invocations": 1,
+  "bootstrap_rerun_for_this_review": false,
+  "derived_report_table_order_fix_only": true,
+  "Git_commands_run": false
+}
