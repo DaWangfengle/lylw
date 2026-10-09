@@ -25,6 +25,11 @@ import numpy as np
 import torch
 from scipy.stats import spearmanr
 
+from fhm_dapp_tim.fhm_dapp import anchor as anchor_impl
+from fhm_dapp_tim.fhm_dapp import model as model_impl
+from fhm_dapp_tim.fhm_dapp import train_anchor_v2 as train_impl
+from fhm_dapp_tim.fhm_dapp import v18_4_datasets as datasets_impl
+from fhm_dapp_tim.fhm_dapp import uji_v17_mother_r2c as scorer_impl
 from fhm_dapp_tim.fhm_dapp import uji_v17_g3_uts as g3
 from fhm_dapp_tim.fhm_dapp import uji_v17_g1_protocol as g1
 from fhm_dapp_tim.fhm_dapp import uji_v17_mother_r0 as r0
@@ -99,6 +104,12 @@ def _source_hashes() -> dict:
         "v17_training": Path(r0.__file__),
         "v17_score": Path(r3.__file__),
         "g1_density": Path(g1.__file__),
+        "v17_anchor": Path(anchor_impl.__file__),
+        "v17_model": Path(model_impl.__file__),
+        "v17_train_optimizer": Path(train_impl.__file__),
+        "v17_score_joint": Path(scorer_impl.__file__),
+        "r3_frozen_protocol": Path(r3p.__file__),
+        "train_only_uts_adapter": Path(datasets_impl.__file__),
     }
     return {name: _sha256_file(path) for name, path in paths.items()}
 
