@@ -80,3 +80,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g4_observable_support.py -text
 tests/test_uji_v17_g4_observable_support.py -text
 fhm_dapp_tim/evidence/v17_g4_observable_support/** -text
 V17_G4_CODEX_RUN.txt -text
+
+# G5-A fixed byte-level manifest/source identity for Windows runs.
+fhm_dapp_tim/fhm_dapp/uji_v17_g5_bayes_action.py -text
+tests/test_uji_v17_g5_bayes_action.py -text
+fhm_dapp_tim/evidence/v17_g5_bayes_action/** -text
+V17_G5_CODEX_RUN.txt -text
