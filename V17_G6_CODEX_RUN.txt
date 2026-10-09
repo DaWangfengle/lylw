@@ -1,0 +1,144 @@
+V17-G6 | CODEX RUN CONTRACT — TUJI1 TRAIN VARIABLE ONLY
+==================================================
+Prepared repo/branch: DaWangfengle/lylw / v17-g6-tuji-calibration-pilot
+Source: fhm_dapp_tim/fhm_dapp/uji_v17_g6_calibration.py
+Tests: tests/test_uji_v17_g6_calibration.py
+Design: fhm_dapp_tim/evidence/v17_g6_distribution_calibration/DESIGN_V17_G6.md
+
+SCIENCE, NOT VERSION CHURN
+G5 showed model-implied expected distance ~2x observed MAE in an internally
+held-out small Tampere cohort, but this alone does NOT prove overdispersion.
+G6 evaluates whether spread arises from (A) probability mass across remote
+Student-t mixture locations, or (B) conditional component spatial scales.
+Keep original V17 R0 model/likelihood/AdamW/augmentations; only calibrate
+post-prediction continuous R3 law. This is NOT yet a new Q1 architecture.
+
+DATA ISOLATION: PLEASE READ CAREFULLY
+The five TUJI1 .mat files physically contain BOTH results_train and
+results_test. Do NOT call the existing ds.load_tuji1('train'): its
+unfiltered scipy.loadmat deserializes both variable trees. G6 has a
+dedicated loader with scipy.io.loadmat(variable_names=('results_train',)).
+Inspect the returned payload; results_test MUST NOT appear. It is
+truthful to claim TRAIN-VARIABLE ONLY; do NOT claim the physical .mat
+container bytes were inaccessible or never opened. Never deserialize,
+inspect, plot or compute metrics on results_test. Never score Tampere
+Test, UJI official/outer, UTS_test, previous G3/G4/G5 confirmation,
+or any provided test dataset. No external benchmark work in this run.
+
+TUJI TRAIN site split: stable SHA256, keyed by physical
+(building,floor,x,y rounded 4 decimals), 70% FIT / 15% CAL / remainder
+CONFIRM; scans from same physical location MUST stay in one role
+even across five TUJI devices. Verify unique site counts, device-wise
+role distributions, centered float32 coordinate-key injectivity for
+ALL roles, >=192 FIT anchors, zero leakage.
+Five V17 R0 seeds 17301..17305, fixed epochs 65/69/56/67/62.
+E5/L192/K192/alpha1 Student-t df4 common model and joint law.
+
+ONLY NINE FROZEN CALIBRATORS
+Joint-mode temperature T in {1,0.8,0.6}, Student-t component scale
+s in {1,0.75,0.5}; product grid 9 variants including exactly-original
+baseline T1_S1. q_j(T)=softmax(log(p_j)/T) applied AFTER R3 consensus
+to whole 960-component law; sigma'=s*sigma; centers unchanged.
+T=1,s=1 must preserve original R3 mean bitwise. T=1,s different
+must leave MAE identical (only energy/spread changes). Same Student-t
+common random numbers for 9 candidates.
+Calibration selection = smallest CAL site-macro MAE among candidates
+with CAL MAE improvement >=0.10m AND CAL Energy Score improvement
+>=0.02m. Tie by ES/name. No eligible -> baseline fallback.
+NO floor/device-specific tuning, no G4 gamma, no G5 median.
+
+Once policy saved, NEVER tune from CONFIRM. One-shot CONFIRM compares
+only the CAL-frozen candidate vs baseline formally; additional T-only
+and s-only ablations are descriptive and CAN'T be promoted. Statistical
+family = two one-sided paired site-macro differences MAE + ES; 5000x
+studentized maxT, confidence 95%, bootstrap seed19603.
+PROMISING_JOINT_CALIBRATION only if candidate nonbaseline, MAE gain
+>=0.15m, simultaneous upper(MAE)<0, simultaneous upper(ES)<=0.
+Else NO_INTERNAL_PROMOTION. Keep coordinate vectors, device-wise
+scores, nominal 50/80/90% radial coverage and tail diagnostics.
+Coverage is NOT conformal and isn't used for policy selection.
+
+GIT / HISTORICAL RULE
+User exclusively handles Git switching, pull, stage, commit, upload/push.
+Codex must NOT run Git or include Git commands in the execution.
+Do not modify G1-G5 historical code/evidence/weights, V18.4 adapter or
+official/provided test files. Model checkpoints may stay locally.
+Do not use 25-member historical models that saw the new holdout sites.
+
+PHASE 1: CPU STATIC AND SCIENTIFIC PREFLIGHT
+At repository root (existing CUDA PyTorch env):
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g6_calibration.py tests/test_uji_v17_g6_calibration.py
+python -m pytest -q tests/test_uji_v17_g6_calibration.py tests/test_uji_v17_g5_bayes_action.py
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration preflight
+
+BEFORE manifest: verify SciPy variable_names restriction truly works for
+ALL five MAT files; verify no 'results_test' returned by loader; inspect
+reference dimensions and TUJI scanned AP dictionary; physical-site
+per-device role report; transformed-key injectivity and at least 192
+FIT anchors. Confirm 9 candidate exact scoring, coordinate macro site
+aggregation, shared common-randomness, baseline bitwise V17 compatibility,
+and s-only invariance. Run synthetic + FIT-only CUDA smoke if needed
+BEFORE making manifest or opening CAL labels. Do not inspect CAL/CONFIRM
+labels except frozen command's scoring stages. If an implementation error
+arises, only repair new G6 files and tests BEFORE manifest and retest.
+Document exact source diff and reason. Do not silently change grid, role
+split, frozen epochs, loss, score, or selection thresholds.
+
+PHASE 2: IMMUTABLE PREPARE AND FIT FIVE MEMBERS
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration prepare
+PowerShell:
+1..5 | ForEach-Object {
+    python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration train-member --member-index $_ --device cuda
+    if ($LASTEXITCODE -ne 0) { throw "G6 member $_ failed" }
+}
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration check-members
+
+Verify all five epochs complete, distinct checkpoint SHA256, identical
+frozen FIT prototypes and anchor coordinates, original R0 optimizer/
+loss/augmentation. DO NOT train on CAL/CONFIRM scans or use their
+ground truth for early stopping. No change of source hashes after
+manifest. Never delete/recreate manifest to evade a source mismatch.
+
+PHASE 3: CALIBRATE ON CAL ONLY AND FREEZE POLICY
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration calibrate --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration check
+
+The calibration file permanently records ALL nine site-macro MAE/ES
+and per-coordinate vectors, predicted radius, coverage, selected T/s,
+manifest and member hashes. Do not choose a policy by visually
+inspecting scores; code's fixed algorithm decides. Baseline fallback
+is a legitimate scientific outcome; still confirm once to document.
+
+PHASE 4: ONE-SHOT CONFIRM; IRREVERSIBLE LOCK
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration confirm --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g6_calibration check
+
+The confirm command writes confirmation_v17_g6.lock BEFORE scoring
+CONFIRM labels. If it fails after lock is present: STOP, keep lock/logs,
+do NOT remove lock/retry, do NOT change thresholds or use old confirm
+data as a new development set. Final output must show VERIFIED plus
+correct fixed gate status. MaxT family jointly covers MAE & ES.
+
+MUST RETAIN AS COMPACT EVIDENCE
+fhm_dapp_tim/evidence/v17_g6_distribution_calibration/
+  DESIGN_V17_G6.md                  [already in GitHub]
+  manifest_v17_g6.json
+  calibration_v17_g6.json
+  confirmation_v17_g6.lock
+  confirmation_v17_g6.json
+  RUN_REPORT_V17_G6.md
+  run_audit/EXECUTION_SUMMARY.md    [create short, informative]
+
+The concise audit should include stages/exit codes, CPU test counts,
+five SHA256s, exact MAT variable restriction and file container caveat,
+train/CAL/CONFIRM site counts and all devices represented, GPU warnings,
+any pre-manifest source fixes, selected CAL policy, CONFIRM joint MAE/ES
+effect/bounds, severe tails, and scientific limitations. Models .pt
+can be kept locally; user owns all Git uploads. Do not build vast audit
+frameworks or change historical experiment files.
+
+After user uploads G6 artifacts, ChatGPT will independently recompute
+all site-paired vectors, compare temperature-only vs scale-only and
+observed-vs-predicted radius/coverage, identify extreme failures,
+and decide whether global post-hoc calibration is promising or the
+underlying V17 representation/probability law requires retraining.
