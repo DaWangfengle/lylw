@@ -335,6 +335,8 @@ def _cache_role(models, data:dict, indices:np.ndarray, device:torch.device):
     locations=torch.empty((PANEL,n,anchors,2),dtype=torch.float32)
     scales=torch.empty_like(locations)
     features=torch.empty(n,dtype=torch.float64)
+    entropy=torch.empty(n,dtype=torch.float64)
+    visible_aps=torch.empty(n,dtype=torch.float64)
     for start in range(0,n,BATCH):
         stop=min(start+BATCH,n);index=indices[start:stop]
         rss=data["rss"][index].float().to(device)
@@ -354,8 +356,15 @@ def _cache_role(models, data:dict, indices:np.ndarray, device:torch.device):
         locations[:,start:stop]=torch.stack(locs).detach().cpu()
         scales[:,start:stop]=torch.stack(scal).detach().cpu()
         features[start:stop]=posterior_observable(prior,logd).double().detach().cpu()
+        mean_prior=prior.mean(dim=0)
+        entropy[start:stop]=(
+            -(mean_prior*mean_prior.clamp_min(1e-30).log()).sum(dim=-1)
+            /math.log(anchors)
+        ).double().detach().cpu()
+        visible_aps[start:stop]=(rss > -0.999).sum(dim=1).double().detach().cpu()
     return {"prior":logits,"location":locations,"scale":scales,
-            "support":features,"logdensity":logd,"shuffled":shuffled}
+            "support":features,"entropy":entropy,"visible_aps":visible_aps,
+            "logdensity":logd,"shuffled":shuffled}
 
 
 def _group_means(rows:np.ndarray, data:dict, values:np.ndarray):
@@ -457,10 +466,20 @@ def _evaluate_role(role:str,models,data:dict,rows:np.ndarray,
     gain=np.asarray(vectors["baseline"]["mae"])-np.asarray(vectors["g1"]["mae"])
     corr=spearmanr(feature_vector,gain).statistic
     if not math.isfinite(float(corr)):corr=None
+    controls={}
+    for key in ("entropy","visible_aps"):
+        group_values=_group_means(rows,data,cache[key].numpy())
+        control_vector=np.asarray([group_values[k] for k in gkeys])
+        association=spearmanr(control_vector,gain).statistic
+        controls[key]={
+            "by_coordinate":control_vector.tolist(),
+            "spearman_vs_g1_gain":float(association) if math.isfinite(float(association)) else None
+        }
     return {"role":role,"coordinate_keys":[list(x) for x in gkeys],
             "metrics":metrics,"coordinate_vectors":vectors,
             "observable_expected_log_support_by_coordinate":feature_vector.tolist(),
             "observable_support_vs_fixed_g1_gain_spearman":corr,
+            "competing_observable_controls":controls,
             "thresholds_applied":thresholds,"rows":n,"coordinates":len(gkeys),
             "role_contains_no_training_coordinate":True}
 
@@ -577,6 +596,10 @@ def make_report(cal:dict,conf:dict)->str:
         f"{cal['observable_support_vs_fixed_g1_gain_spearman']}",
         f"Confirmation fixed G1 support-vs-gain Spearman: "
         f"{conf['observable_support_vs_fixed_g1_gain_spearman']}",
+        f"Confirmation entropy-vs-gain Spearman (competing proxy): "
+        f"{conf['competing_observable_controls']['entropy']['spearman_vs_g1_gain']}",
+        f"Confirmation visible-AP-count-vs-gain Spearman (competing proxy): "
+        f"{conf['competing_observable_controls']['visible_aps']['spearman_vs_g1_gain']}",
         "",
         "| Confirmation variant | Coordinate macro MAE (m) | Energy Score (m) |",
         "|---|---:|---:|"
