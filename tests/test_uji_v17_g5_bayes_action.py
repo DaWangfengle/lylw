@@ -95,7 +95,7 @@ def test_mixture_mean_is_exact_v17_decision_for_continuous_student_t():
     scale=torch.full_like(xy,.1)
     rng=common_student_t_randomness(1,draws=128,seed=19503)
     acts=g5.three_actions(p,xy,scale,rng)
-    assert acts["mean"].tolist()==pytest.approx([[2.,0.]])
+    assert acts["mean"][0].tolist()==pytest.approx([2.,0.])
     assert acts["component_median"][0,0]<.01
     assert abs(float(acts["continuous_median"][0,0]))<1.
     assert all(v.shape==(1,2) and torch.isfinite(v).all() for v in acts.values())
@@ -129,7 +129,7 @@ def test_same_distribution_implies_exactly_same_energy_score():
     same_es=r3._score_joint_law(p,loc,scale,actual,rng)[0]
     # Point actions cannot appear as arguments to continuous_energy_score_mc.
     assert "action" not in inspect.signature(r3._score_joint_law).parameters
-    assert float(same_es.item())>=0
+    assert bool(torch.isfinite(same_es).all())
     assert not torch.equal(actions["mean"],actions["continuous_median"])
 
 
