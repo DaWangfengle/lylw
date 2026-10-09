@@ -74,3 +74,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g3_uts.py -text
 tests/test_uji_v17_g3_uts.py -text
 fhm_dapp_tim/evidence/v17_g3_uts_frozen_transfer/** -text
 V17_G3_CODEX_RUN.txt -text
+
+# G4 local Windows checkout must preserve code/evidence bytes for the scientific manifest.
+fhm_dapp_tim/fhm_dapp/uji_v17_g4_observable_support.py -text
+tests/test_uji_v17_g4_observable_support.py -text
+fhm_dapp_tim/evidence/v17_g4_observable_support/** -text
+V17_G4_CODEX_RUN.txt -text
