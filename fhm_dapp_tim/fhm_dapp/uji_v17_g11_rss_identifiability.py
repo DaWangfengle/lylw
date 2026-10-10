@@ -411,11 +411,36 @@ def score_role(models:list,data:dict,rows:np.ndarray,origin:np.ndarray,
             "v17_mae_miss_sites_m":float(np.mean([sites[name][i] for i in miss]))
                                    if miss else None,
         }
+    quadrants={}
+    raw=sites["raw_l2_top1_in_10m"]
+    neural=sites["v17_top1_in_10m"]
+    ap=sites["ap_visibility_top1_in_10m"]
+    for category,fn in (
+        ("both_near",lambda r,v:r>=.5 and v>=.5),
+        ("raw_near_v17_far",lambda r,v:r>=.5 and v<.5),
+        ("raw_far_v17_near",lambda r,v:r<.5 and v>=.5),
+        ("both_far",lambda r,v:r<.5 and v<.5)):
+        ids=[i for i,(r,v) in enumerate(zip(raw,neural)) if fn(r,v)]
+        def mean_for(metric):
+            return float(np.mean([sites[metric][i] for i in ids])) if ids else None
+        quadrants[category]={
+            "sites":len(ids),
+            "v17_mean_mae_m":mean_for("v17_anchor_t06_point_mae_m"),
+            "raw_1nn_mean_mae_m":mean_for("raw_l2_1nn_point_mae_m"),
+            "ap_1nn_mean_mae_m":mean_for("ap_visibility_1nn_point_mae_m"),
+        }
+    ap_rescue=[i for i in range(len(ordered))
+               if raw[i]<.5 and neural[i]<.5 and ap[i]>=.5]
+    quadrants["ap_visibility_near_both_raw_and_v17_far"]={
+        "sites":len(ap_rescue),
+        "coordinate_keys":[list(ordered[i]) for i in ap_rescue],
+    }
     return {
         "rows":n,"physical_sites":len(ordered),
         "physical_coordinate_keys":[list(v) for v in ordered],
         "summary":summaries,"site_vectors":sites,
         "conditional_descriptive_only":conditional,
+        "paired_ranking_quadrants":quadrants,
         "label_use":"posthoc ranking diagnostics and error metrics ONLY",
     }
 
@@ -445,6 +470,20 @@ def _report(result:dict)->str:
                 f"{v('ap_visibility_1nn_point_mae_m')} | "
                 f"{v('raw_l2_top1_in_10m')} | "
                 f"{v('v17_top1_in_10m')} |")
+    lines.extend(["","## Paired 10m ranking quadrants (post-hoc true XY)",""])
+    for domain in DOMAINS:
+        for role,item in result["by_domain"][domain].items():
+            q=item["paired_ranking_quadrants"]
+            for name in ("both_near","raw_near_v17_far",
+                         "raw_far_v17_near","both_far"):
+                r=q[name]
+                lines.append(
+                    f"- {domain}/{role} / {name}: {r['sites']} sites; "
+                    f"V17 MAE {r['v17_mean_mae_m']}; "
+                    f"raw 1NN MAE {r['raw_1nn_mean_mae_m']}")
+            lines.append(
+                f"- {domain}/{role}: AP-detection near when both raw and "
+                f"V17 far = {q['ap_visibility_near_both_raw_and_v17_far']['sites']}")
     lines.extend(["",
         "## Scientific boundary","",
         "1. All three point baselines rank ALL original FIT anchors; no true",
