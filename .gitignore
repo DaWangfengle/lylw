@@ -178,3 +178,8 @@ local_notes/
 !/fhm_dapp_tim/evidence/v17_g9_anchor_support_diagnostic/RUN_STDOUT.log
 !/fhm_dapp_tim/evidence/v17_g9_anchor_support_diagnostic/RUN_STDERR.log
 /fhm_dapp_tim/models/v17_g9_anchor_support_diagnostic/pytest_tmp_*/
+
+# V17-G10 scientific stdout/stderr evidence; local pytest fixtures stay ignored.
+!/fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/RUN_STDOUT.log
+!/fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/RUN_STDERR.log
+/fhm_dapp_tim/models/v17_g10_evidence_corrected_law/pytest_tmp_*/

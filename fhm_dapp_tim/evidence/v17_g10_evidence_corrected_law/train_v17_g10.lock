@@ -1,0 +1,11 @@
+{
+  "CAL_only_training": [
+    "tuji",
+    "uts"
+  ],
+  "confirmation_previous_exposure": true,
+  "manifest_file_sha256": "e118b2733a06718b5904e830eb078a81c2a361bd431c9ad5cd038eac126f2ff3",
+  "protocol": "v17_g10_cross_domain_evidence_corrected_anchor_law_20261010",
+  "result_sha256": "3d361051b30c02ccea7b8c30fae6b3f9d615e8b3b8e51be13a349def094d4ed4",
+  "single_run": true
+}

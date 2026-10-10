@@ -4,6 +4,7 @@ from __future__ import annotations
 import inspect
 import json
 
+import numpy as np
 import pytest
 import torch
 
@@ -42,7 +43,9 @@ def test_features_are_computed_without_labels_and_bounded():
     assert feat.abs().max()<=3.00001
     # Constant shift in prototype distances per query has no effect.
     shifted=list(args)
-    shifted[0]=args[0]+torch.tensor([[3.],[100.]])
+    # A large float32 offset quantizes the input before centering; use
+    # representable-scale offsets to test the feature's invariance.
+    shifted[0]=args[0]+torch.tensor([[3.],[10.]])
     feat2=g10.label_free_features(*shifted)
     assert torch.allclose(feat,feat2,atol=1e-5)
     # Anchor-only features never access query target or true floor.
@@ -57,10 +60,12 @@ def test_zero_parameters_exactly_recover_fixed_anchor_baseline():
     q=g10.anchor_posterior(c,features,theta)
     assert torch.allclose(q,torch.softmax(c.log()/g10.T,dim=1),atol=1e-7)
     wm=torch.softmax(torch.randn(2,5),dim=1)
-    q_joint=g10.original_joint(wm,q)
     p=g10.original_joint(wm,c)
-    assert torch.allclose(q_joint,g10.g8.hierarchical_laws(p,5,192)["anchor"],
-                          atol=2e-6,rtol=2e-6)
+    member=p.reshape(2,5,192).sum(2)
+    anchor=p.reshape(2,5,192).sum(1)
+    q=g10.anchor_posterior(anchor,features,theta)
+    q_joint=g10.original_joint(member,q)
+    assert torch.equal(q_joint,g10.g8.hierarchical_laws(p,5,192)["anchor"])
 
 
 def test_four_parameters_cannot_exceed_fixed_coefficient_cap():
@@ -165,6 +170,7 @@ def test_full_continuous_es_scoring_and_coordinate_keys_cpu():
         "rows":n,"sites":2,"keys":[[0,0,0,0],[0,0,1,1]],
         "gid":torch.tensor([0,1]),
         "c":c,"wm":wm,"features":features,
+        "component_probability":g10.original_joint(wm,c),
         "component_location":locations,"component_scale":scales,
         "target":target,
     }
@@ -175,10 +181,81 @@ def test_full_continuous_es_scoring_and_coordinate_keys_cpu():
         assert info["coordinate_macro_es_m"]>=0
         assert len(info["coordinate_vector_mae_m"])==2
         assert len(info["coordinate_vector_es_m"])==2
-    assert out["methods"]["anchor_t06"]["coordinate_macro_mae_m"]==pytest.approx(
-        out["methods"]["evidence_correction"]["coordinate_macro_mae_m"],abs=1e-6)
-    assert out["methods"]["anchor_t06"]["coordinate_macro_es_m"]==pytest.approx(
-        out["methods"]["evidence_correction"]["coordinate_macro_es_m"],abs=1e-6)
+    assert out["methods"]["anchor_t06"]==out["methods"]["evidence_correction"]
+
+
+def test_scoring_preserves_r3_probabilities_and_exact_zero_theta(monkeypatch):
+    torch.manual_seed(31)
+    n,a=3,209
+    priors=torch.softmax(torch.randn(5,n,a),dim=-1)
+    locations=torch.randn(5,n,a,2)*7
+    scales=torch.rand(5,n,a,2)+.2
+    top,indices,radial,_=g10.r3._member_top_l(
+        priors,locations,scales,192,student_df=4.)
+    joint,xy,sigma=g10.r3._dense_joint_law(
+        top,indices,radial,locations,scales,tuple(range(5)),
+        top_k=192,alpha=1.)
+    pack={
+        "rows":n,"sites":2,"keys":[[0,0,1.,2.],[0,0,3.,4.]],
+        "gid":torch.tensor([0,0,1]),
+        "c":joint.reshape(n,5,192).sum(1),
+        "wm":joint.reshape(n,5,192).sum(2),
+        "features":torch.randn(n,192,4),
+        "component_probability":joint,
+        "component_location":xy,"component_scale":sigma,
+        "target":torch.tensor([[1.123456789,2.987654321],
+                                [1.123456789,2.987654321],
+                                [3.987654321,4.123456789]],dtype=torch.float64),
+    }
+    anchor=g10.g8.hierarchical_laws(joint)["anchor"]
+    score=g10.r3._score_joint_law
+    observed=[]
+    def capture(prob,*args):
+        observed.append(prob.detach().clone())
+        return score(prob,*args)
+    monkeypatch.setattr(g10.r3,"_score_joint_law",capture)
+    out=g10.score_confirmation(pack,[0.]*4,"cpu")
+    assert len(observed)==3
+    assert torch.equal(observed[0],joint)
+    assert torch.equal(observed[1],anchor)
+    assert torch.equal(observed[2],anchor)
+    for metric in ("coordinate_vector_mae_m","coordinate_vector_es_m"):
+        assert out["methods"]["anchor_t06"][metric] == out["methods"]["evidence_correction"][metric]
+
+
+def test_run_uses_only_cal_targets_before_immutable_fit(tmp_path,monkeypatch):
+    for name in ("MANIFEST","LOCK","FIT","RESULT","REPORT"):
+        monkeypatch.setattr(g10,name,tmp_path/name.lower())
+    g10.MANIFEST.write_text("synthetic frozen plan")
+    monkeypatch.setattr(g10,"prepare",lambda:{"panels":{}})
+    calls=[]
+    def pack(domain):
+        return {"data":{"domain":domain},"rows":{
+            "calibration":np.array([0,1]),"confirmation":np.array([2,3])}}
+    monkeypatch.setattr(g10.g8,"_pack",pack)
+    monkeypatch.setattr(g10.g8,"_load_models",lambda *args:([],None))
+    def extract(models,data,rows,origin,scoring=False):
+        calls.append((data["domain"],scoring))
+        assert g10.LOCK.exists()
+        if scoring:
+            assert g10.FIT.exists()
+            assert g10._read(g10.FIT)["fit"]["bounded_coefficients"]==[0.]*4
+            assert rows.tolist()==[2,3]
+        else:
+            assert data["domain"] in g10.LEARN_DOMAINS
+            assert not g10.FIT.exists() and rows.tolist()==[0,1]
+        return {"domain":data["domain"]}
+    monkeypatch.setattr(g10,"extract",extract)
+    def fit(cal,device):
+        assert set(cal)==set(g10.LEARN_DOMAINS)
+        assert calls==[("tuji",False),("uts",False)]
+        return {"bounded_coefficients":[0.]*4}
+    monkeypatch.setattr(g10,"fit_once",fit)
+    monkeypatch.setattr(g10,"score_confirmation",lambda *args:{"relative_to_frozen_anchor":{}})
+    monkeypatch.setattr(g10,"_report",lambda result:"synthetic report")
+    g10.run("cpu")
+    assert calls==[("tuji",False),("uts",False),("tuji",True),
+                   ("uts",True),("tampere",True)]
 
 
 def test_immutable_fit_and_lock_refuse_rerun(tmp_path,monkeypatch):

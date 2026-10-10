@@ -231,7 +231,7 @@ def extract(models:list,data:dict,rows:np.ndarray,origin:np.ndarray,
     gid,unique=r2b._coordinate_groups(keys)
     target=torch.as_tensor(data["raw_xy"][rows]-origin[None,:],
                            dtype=torch.float64,device=device)
-    out={name:[] for name in ("c","wm","features","centres",
+    out={name:[] for name in ("c","wm","features","centres","component_probability",
                              "component_location","component_scale")}
     origin_tensor=torch.as_tensor(origin,dtype=torch.float32,device=device)
     if (int(ref.n_anchors)<K or not torch.isfinite(target).all()
@@ -280,9 +280,10 @@ def extract(models:list,data:dict,rows:np.ndarray,origin:np.ndarray,
                 raise G10Error("original member-anchor law was not factorizable")
             for name,item in (("c",c),("wm",wm),("features",feats),
                               ("centres",centre),
+                              ("component_probability",joint if scoring else torch.empty(0)),
                               ("component_location",xy if scoring else torch.empty(0)),
                               ("component_scale",sigma if scoring else torch.empty(0))):
-                if scoring or name not in ("component_location","component_scale"):
+                if scoring or name not in ("component_probability","component_location","component_scale"):
                     out[name].append(item.detach().cpu().contiguous())
     result={name:torch.cat(v,dim=0) for name,v in out.items() if v}
     result.update({"target":target.detach().cpu(),"gid":gid,
@@ -370,8 +371,9 @@ def fit_once(cal:dict[str,dict],device_name:str)->dict:
 def score_confirmation(pack:dict,theta:list[float],device_name:str)->dict:
     dev=torch.device(device_name)
     n=pack["rows"]
-    q_raw=pack["c"].float()
-    wm=pack["wm"].float()
+    # Preserve the original R3 float32 law; multiplying rounded marginals
+    # a second time changes the baseline and zero-coefficient comparator.
+    original_probability=pack["component_probability"]
     coeff=torch.tensor(theta,dtype=torch.float32,device=dev)
     rnd=common_student_t_randomness(
         n,draws=r3p.PREDICTIVE_DRAWS_PER_STREAM,
@@ -381,15 +383,17 @@ def score_confirmation(pack:dict,theta:list[float],device_name:str)->dict:
     with r3.r2f_a1._deterministic_algorithms():
         for start in range(0,n,INFER_BATCH):
             end=min(start+INFER_BATCH,n)
-            w=wm[start:end].to(dev)
-            c=q_raw[start:end].to(dev)
+            original=original_probability[start:end].to(dev)
+            w=original.reshape(end-start,E,K).sum(dim=2)
+            c=original.reshape(end-start,E,K).sum(dim=1)
             f=pack["features"][start:end].to(dev)
             locations=pack["component_location"][start:end].to(dev)
             scales=pack["component_scale"][start:end].to(dev)
             target=pack["target"][start:end].to(dev)
-            original=original_joint(w,c)
             frozen=g8.hierarchical_laws(original,E,K)["anchor"]
             corrected=original_joint(w,anchor_posterior(c,f,coeff))
+            if not torch.count_nonzero(coeff) and not torch.equal(corrected,frozen):
+                raise G10Error("zero coefficients do not exactly reproduce Anchor T=.6")
             laws={"base":original,"anchor_t06":frozen,
                   "evidence_correction":corrected}
             random=g8.g6._random_slice(rnd,start,end,dev)

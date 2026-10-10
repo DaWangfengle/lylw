@@ -1,0 +1,70 @@
+{
+  "calibration_only": true,
+  "fit": {
+    "bounded_coefficients": [
+      0.26295772194862366,
+      0.15190871059894562,
+      0.061252161860466,
+      0.16921362280845642
+    ],
+    "calibration_rows": {
+      "tuji": 695,
+      "uts": 1625
+    },
+    "calibration_sites": {
+      "tuji": 137,
+      "uts": 258
+    },
+    "epochs": 24,
+    "feature_names": [
+      "rss_prototype_agreement",
+      "member_topL_support",
+      "member_prior_log_agreement",
+      "local_spatial_probability_coherence"
+    ],
+    "learner_domains": [
+      "tuji",
+      "uts"
+    ],
+    "no_confirmation_gradients": true,
+    "raw_coefficients": [
+      0.17713481187820435,
+      0.10162083059549332,
+      0.04085749387741089,
+      0.11329129338264465
+    ],
+    "seed": 20261010,
+    "train_loss_by_epoch": [
+      0.41277044429443777,
+      0.40737573301885277,
+      0.40618395182536915,
+      0.40671563876094297,
+      0.40744415001245216,
+      0.4077800263185054,
+      0.407653825415764,
+      0.4072224640985951,
+      0.4067030308651738,
+      0.40628251363523304,
+      0.4060671207262203,
+      0.40606739377835765,
+      0.40620818914612755,
+      0.4063605099217966,
+      0.4064133070060052,
+      0.4063425399363041,
+      0.40620486269472167,
+      0.40607393631944433,
+      0.4059906997717917,
+      0.40595700324047357,
+      0.4059532459359616,
+      0.40595604648115113,
+      0.40594985894858837,
+      0.4059320270898752
+    ]
+  },
+  "lock_file_sha256": "ce1df19d8d020d302132740a1b74e41fd38305db450db2b5669c3c5aadd4dce6",
+  "manifest_file_sha256": "e118b2733a06718b5904e830eb078a81c2a361bd431c9ad5cd038eac126f2ff3",
+  "no_confirmation_seen_at_fit": true,
+  "protocol": "v17_g10_cross_domain_evidence_corrected_anchor_law_20261010",
+  "result_sha256": "5e20c0df3343ed3e8cb461168a44cb52873af0bfced79b4df0df72368cab325b",
+  "tampere_label_free": true
+}
