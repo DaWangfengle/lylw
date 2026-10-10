@@ -187,7 +187,10 @@ def map_fit_rows_to_model_anchors(
         raise G11Error("FIT anchor geometry changed")
     matched=(expected_build[:,None]==ab[None,:])&(
         expected_floor[:,None]==af[None,:])
-    dist=torch.cdist(expected_xy,reference_xy)
+    # Avoid float32 GEMM cancellation inventing distances above the
+    # unchanged 0.03m mapping gate for identical checkpoint coordinates.
+    dist=torch.cdist(expected_xy.double(),reference_xy.double(),
+                     compute_mode="donot_use_mm_for_euclid_dist")
     dist.masked_fill_(~matched,float("inf"))
     indices=dist.argmin(dim=1)
     errors=dist.gather(1,indices[:,None]).squeeze(1)

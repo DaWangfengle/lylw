@@ -91,6 +91,27 @@ def test_fit_anchor_mapping_rejects_wrong_floor():
             BadRef(),np.zeros(2))
 
 
+def test_fit_anchor_mapping_avoids_float32_cdist_cancellation():
+    # More than 25 anchors selects cdist's GEMM path by default. Its
+    # float32 norm expansion can invent >0.03m distances for identical XY.
+    index=torch.arange(64,dtype=torch.float32)
+    xy=torch.stack((137.437+index*.71,121.193+torch.sin(index)),dim=1)
+    order=torch.arange(63,-1,-1)
+    ref=SimpleNamespace(
+        n_anchors=64,anchor_coords=xy[order],
+        anchor_buildings=torch.zeros(64,dtype=torch.long),
+        anchor_floors=torch.ones(64,dtype=torch.long))
+    keys=[(0,1,float(x),float(y)) for x,y in xy.tolist()]
+    groups,_=g11.map_fit_rows_to_model_anchors(
+        np.arange(64),{"keys":keys},ref,np.zeros(2))
+    assert groups.tolist()==order.tolist()
+    # Keep the scientific 0.03m gate: a real displacement still fails.
+    ref.anchor_coords=ref.anchor_coords+torch.tensor([.031,0.])
+    with pytest.raises(g11.G11Error,match="bijection"):
+        g11.map_fit_rows_to_model_anchors(
+            np.arange(64),{"keys":keys},ref,np.zeros(2))
+
+
 def test_1nn_and_5nn_point_predictions_no_true_labels():
     xy=torch.stack((torch.arange(6,dtype=torch.float32)*10,
                     torch.zeros(6)),dim=1)

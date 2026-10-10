@@ -183,3 +183,8 @@ local_notes/
 !/fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/RUN_STDOUT.log
 !/fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/RUN_STDERR.log
 /fhm_dapp_tim/models/v17_g10_evidence_corrected_law/pytest_tmp_*/
+
+# V17-G11 scientific stdout/stderr evidence; local pytest fixtures stay ignored.
+!/fhm_dapp_tim/evidence/v17_g11_rss_identifiability/RUN_STDOUT.log
+!/fhm_dapp_tim/evidence/v17_g11_rss_identifiability/RUN_STDERR.log
+/fhm_dapp_tim/models/v17_g11_rss_identifiability/pytest_tmp_*/

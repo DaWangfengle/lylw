@@ -1,0 +1,7 @@
+{
+  "manifest_file_sha256": "a65e5dfe608b46ad101893627f700378c5779a18677f1e273a00cfc2afe0176d",
+  "old_confirmation_labels_already_seen": true,
+  "one_retrospective_execution": true,
+  "protocol": "v17_g11_raw_rss_vs_learned_ranking_train_internal_20261010",
+  "result_sha256": "47ca7f47dbb46527c7b968b4d8613d3cf38287f1bff715a34939da1bcc36bd53"
+}
