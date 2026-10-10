@@ -102,6 +102,29 @@ def test_two_exact_nested_variance_decompositions():
     assert (inner>0).all() and (outer>0).all()
 
 
+def test_actual_r3_dense_joint_factorization_cpu():
+    # Use the real frozen R3 assembly function rather than relying only
+    # on synthetic q=w*c construction.
+    torch.manual_seed(190)
+    member_prior=torch.softmax(torch.randn(5,2,210),dim=-1)
+    full_location=torch.randn(5,2,210,2)
+    full_scale=0.2+torch.rand_like(full_location)
+    top,ix,radial,_=g8.r3._member_top_l(
+        member_prior,full_location,full_scale,192,student_df=4.)
+    joint,xy,sig=g8.r3._dense_joint_law(
+        top,ix,radial,full_location,full_scale,
+        tuple(range(5)),top_k=192,alpha=1.)
+    assert joint.shape==(2,960)
+    assert xy.shape==sig.shape==(2,960,2)
+    methods=g8.hierarchical_laws(joint)
+    assert methods["base"] is joint
+    assert torch.isfinite(methods["both"]).all()
+    # Disentangling the probability transform must never move component
+    # locations or change conditional Student-t scales.
+    expected=g8.g6.calibrate_joint_law(joint,xy,sig,.6,1.)[0]
+    assert torch.allclose(methods["both"],expected,atol=1e-6)
+
+
 def test_analytic_two_mode_variance_and_scale():
     # Only anchor variation, no member variation. Different nesting
     # identities must each recover precisely Var(anchor centroid).
