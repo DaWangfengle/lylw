@@ -44,7 +44,7 @@ E,L,K=5,192,192
 NEAR=10.0
 FAR=20.0
 AP_MISSING=-1.0
-AP_EPS=1e-6
+AP_EPS=1e-3
 KNN=5
 KNN_EPS=1e-3
 BETA_PRIOR=.5
@@ -110,7 +110,7 @@ def prepare()->dict:
         "roles":checked["roles"],"domains":list(DOMAINS),
         "batch":BATCH,"ensemble":E,"top_l":L,"top_k":K,
         "temperature":g8.T,"near_radius_m":NEAR,"far_radius_m":FAR,
-        "ap_present_when":"model RSS > -1 + 1e-6; clipped -110 dBm indistinguishable from missing",
+        "ap_present_when":"model RSS > -0.999 (original FIT rule); clipped -110 dBm indistinguishable from missing",
         "missing_rss_value":AP_MISSING,"ap_missing_epsilon":AP_EPS,
         "visibility_beta_prior_each_side":BETA_PRIOR,
         "baseline_5nn_count":KNN,"baseline_5nn_eps":KNN_EPS,
@@ -137,10 +137,10 @@ def fit_site_ap_frequency(
     fit_rss:torch.Tensor, fit_group:torch.Tensor, anchors:int,
     seen_ap_mask:torch.Tensor,
 )->torch.Tensor:
-    """Only FIT scans; use Beta(.5,.5) Bernoulli smoothing per FIT anchor/AP.
+    """Reproduce original FIT per-anchor AP detection probabilities exactly.
 
-    RSS=-1 means either missing or clipped at the lowest RSS threshold.
-    Detection channel cannot distinguish those cases; report this limit.
+    Uses the original FIT rule RSS > -0.999 and Beta(.5,.5) smoothing.
+    The channel is already in the frozen anchor checkpoint, not new sensing.
     """
     if (fit_rss.ndim!=2 or fit_group.shape!=(len(fit_rss),)
         or seen_ap_mask.shape!=(fit_rss.shape[1],)
@@ -492,6 +492,11 @@ def run(device_name:str="cuda")->dict:
         fit_rss=data["data"]["rss"][fit_rows].detach().cpu().float()
         frequencies=fit_site_ap_frequency(
             fit_rss,group_index,int(ref.n_anchors),seen)
+        original_detection=ref.anchor_detection_prob.detach().cpu()[:,seen]
+        if (original_detection.shape!=frequencies.shape or
+            not torch.allclose(original_detection,frequencies,atol=1e-6,rtol=1e-6)):
+            raise G11Error("FIT AP detection reconstruction differs from checkpoint memory")
+        frequencies=original_detection
         by_domain[domain]={}
         for role in ROLES[domain]:
             by_domain[domain][role]=score_role(
