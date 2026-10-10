@@ -37,7 +37,6 @@ T = 0.6
 E, L, K = 5, 192, 192
 BATCH = 16
 EPS = 1e-5
-MISSING = 1e8
 
 
 class G9Error(RuntimeError):
@@ -298,10 +297,7 @@ def score_role(models:list,data:dict,rows:np.ndarray,origin:np.ndarray)->dict:
         # consensus anchor marginal. Never silently switch R3 operators.
         if not torch.allclose(p.reshape(b,E,K).sum(1),c,atol=3e-6,rtol=3e-6):
             raise G9Error("G9 consensus probability differs from frozen R3 law")
-        reconstructed=(
-            torch.stack(centres).permute(1,0,2,3)
-            [:, :, :, :] # original member coordinates in same model frame
-        )
+        reconstructed=torch.stack(centres).permute(1,0,2,3)
         # Full component centre array has the original member-major/anchor-
         # minor order. Verify each final selected ID by exact gather.
         expected=torch.gather(
