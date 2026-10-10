@@ -1,0 +1,112 @@
+V17-G8-A | Codex：分解成员权重和锚点权重的机制归因实验
+=======================================================
+研究代码：
+fhm_dapp_tim/fhm_dapp/uji_v17_g8_hierarchical_attribution.py
+预注册科学设计：
+fhm_dapp_tim/evidence/v17_g8_hierarchical_attribution/DESIGN_V17_G8.md
+单元测试：
+tests/test_uji_v17_g8_hierarchical_attribution.py
+目标GitHub分支：v17-g8-hierarchical-probability-attribution
+
+【绝对科研目标】
+不要再训练网络、搜索新T、引入可学习gate或微调s。
+G6/G7在TUJI/UTS/Tampere上证实T=0.6全球混合权重锐化
+能改善内部坐标宏MAE；但无法知道真正的误差源来自
+A. 五个成员权重 w_m，还是
+B. 192个共同锚点共识概率 c_k。
+原R3联合分布结构是 q_mk=w_m*c_k。G8是2×2控制消融：
+base：    T成员=1，  T锚点=1；
+member：  T成员=.6， T锚点=1；
+anchor：  T成员=1，  T锚点=.6；
+both：    T成员=.6， T锚点=.6。
+固定旧五成员E5/L192/K192/alpha1、df4、原分量中心/尺度，
+Energy Score同随机流两次64样本，seed19602。
+BOTH必须在浮点误差范围内等价于G6的T0.6、s=1联合
+temperature操作；与G7固定s=.5的ES不可直接数值等同。
+同T不同s的MAE理论应相同。
+
+【实验性质：严格声明】
+TUJI G6、UTS G4、Tampere G5内部CAL/CONFIRM结果此前
+均已经被研究者看过。本实验是回顾性机制归因，而非
+独立盲测、不是新外部验证、不得给出独立正式显著性结论。
+只使用原TRAIN内划分，永不打开UTS_test、Tampere Test文件、
+UJI official/outer、TUJI results_test变量。TUJI的.mat实体
+同时保存训练与测试变量；只能使用原G6仅提取results_train
+的适配器。不得读历史confirm结果JSON用于选择参数。
+
+【历史模型身份必须严格匹配】
+使用用户本地原G6 TUJI的5个.pt、G4 UTS的5个.pt、
+G5 Tampere的5个.pt。通过G6 CAL、G4原CAL固定SHA、
+G5 freeze核验原成员身份、坐标分区和数据字节。
+若任一模型或原始数据缺失、hash不符，STOP报告事实。
+禁止Codex重训、替换种子/epoch、虚构对照结果。
+只在新的G8文件和测试中处理新实现bug，不能改历史G4-G7
+科学源文件和任何原始实验产物。
+
+【机制必须通过的数值恒等式】
+1) 原q.reshape(N,5,192) == 原边缘w*c（3e-6容差）
+2) 双层softmax(log(w)/.6)*softmax(log(c)/.6)
+   == 原G6对整体q应用T=.6（3e-6容差）
+3) s固定=1，维度和概率总和精确近似，点估计和ES应有限
+4) Student-t df4方差：每个坐标2*sigma^2。
+   total trace = within-component + between-component-centres。
+   between = Var_anchor(E_member[centre | anchor])
+          + E_anchor Var_member(centre | anchor)。
+   between = Var_member(E_anchor[centre | member])
+          + E_member Var_anchor(centre | member)。
+注意两种归因顺序都正确，不存在天然唯一的因果分摊比例。
+分别保存原始BASE/双层BOTH对应的逐坐标方差trace，单位m²。
+若任何一条失败，修复前不可冻结实验；冻结后出现问题保留锁STOP。
+
+【数据角色】
+TUJI G6原CAL与CONFIRM；
+UTS G4原CAL与CONFIRM；
+Tampere G5原CONFIRM。
+都与各自FIT训练位置无重合，但都属于历史已暴露分区。
+不重新切分坐标，也不重新训练原5成员。
+
+【运行命令：从仓库根目录，原CUDA环境】
+步骤1，编译和CPU测试：
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g8_hierarchical_attribution.py tests/test_uji_v17_g8_hierarchical_attribution.py
+python -m pytest -q tests/test_uji_v17_g8_hierarchical_attribution.py tests/test_uji_v17_g7_frozen_transfer.py
+步骤2，在manifest之前进行数据和原模型身份预检：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g8_hierarchical_attribution preflight
+步骤3，只要以上全通过，冻结本轮源码、旧模型哈希与角色：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g8_hierarchical_attribution prepare
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g8_hierarchical_attribution check
+步骤4，只有一次GPU原位推断：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g8_hierarchical_attribution run --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g8_hierarchical_attribution check
+
+【单次冻结、失败处理】
+run必须在读取确认位置标签并计算分数之前先生成
+attribution_v17_g8.lock。如锁存在，不能重复run。
+若锁生成之后程序异常，立刻停止，保留锁、异常日志，
+不得删除重跑到结果满意。不要把G8的诊断性对照变成
+基于旧已知标签的候选筛选，更不要为任何一个域私调T。
+manifest冻结后不能修改其哈希所含科学代码/测试/设计。
+
+【产物要求：精简，不追求工程完美主义】
+1. fhm_dapp_tim/evidence/v17_g8_hierarchical_attribution/
+   manifest_v17_g8.json
+   attribution_v17_g8.lock
+   attribution_v17_g8.json
+   RUN_REPORT_V17_G8.md
+2. 最多附一份简短RUN_NOTES.md：CUDA设备、测试通过数、每个
+   域E5权重身份验证情况、五个评分角色的结果、是否发生异常、
+   旧历史证据是否保持字节一致。
+3. 原始四组coordinate macro MAE/ES及坐标配对向量、方差trace
+   m²保存在原结果JSON，不需再建立数十个审计文件。
+4. 最差位置、楼层异质性由ChatGPT在产物上传后独立计算。
+5. .pt保持本地，不要求上传。
+
+【模型与Q1研究决策】
+四组消融全部为描述性结果，绝不事后晋级单独层温度。
+下一步由ChatGPT独立检查成员/锚点贡献、交互项、两种方差
+分解及严重负迁移点，才决定是否值得在新的独立开发分区
+上设计具有新颖性、受约束的可靠性学习模块。
+G8本身不是Q1方法论文的最终模型，最终目标仍是原始绝对
+2D MAE、ES、尾部风险和真正的跨数据集验证。
+
+Git规则：Git切换、commit、push、上传均由用户亲自处理。
+Codex不执行任何Git命令。
