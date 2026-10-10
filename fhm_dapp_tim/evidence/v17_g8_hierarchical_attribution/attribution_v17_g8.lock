@@ -1,0 +1,12 @@
+{
+  "four_prespecified_variants": [
+    "base",
+    "member",
+    "anchor",
+    "both"
+  ],
+  "historically_viewed_scoring_roles": true,
+  "manifest_file_sha256": "0c89c4deb72fcada62f3ff0d16fa219a894b07626883309ede76b22f06504686",
+  "protocol": "v17_g8_member_anchor_temperature_attribution_20261010",
+  "result_sha256": "2d837e34412f862427df28c68653d8f737b6b3622c212840e973ac0ed529dc75"
+}

@@ -27,15 +27,17 @@ def test_four_fixed_variants_only():
     assert g8.ROLES["uts"]==("calibration","confirmation")
 
 
-def test_joint_factorization_matches_original_g6_temperature():
-    w,c,p=_factorized()
+@pytest.mark.parametrize("dtype",[torch.float32,torch.float64])
+def test_joint_factorization_matches_original_g6_temperature(dtype):
+    w,c,p=_factorized(dtype=dtype)
     variants=g8.hierarchical_laws(p)
     assert variants["base"] is p
     assert set(variants)==set(g8.VARIANTS)
     for label in g8.VARIANTS:
         assert variants[label].shape==p.shape
+        assert variants[label].dtype==dtype
         assert torch.allclose(variants[label].sum(dim=-1),
-                              torch.ones(len(p)),atol=1e-6)
+                              torch.ones(len(p),dtype=dtype),atol=1e-6)
     expected=g8.g6.calibrate_joint_law(
         p,torch.zeros(len(p),960,2),torch.ones(len(p),960,2),
         0.6,1.0,
@@ -220,4 +222,7 @@ def test_report_is_deterministic_through_json_round_trip():
         "result_sha256":"synthetic"
     }
     assert g8._overview(j)==g8._overview(json.loads(json.dumps(j,sort_keys=True)))
-    assert "NOT" in g8._overview(j)
+    report=g8._overview(j)
+    assert "No training or new blind confirmation." in report
+    assert "already-viewed" in report
+    assert "No p-values or model promotion." in report

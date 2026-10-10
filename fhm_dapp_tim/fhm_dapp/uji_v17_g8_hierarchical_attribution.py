@@ -207,7 +207,7 @@ def hierarchical_laws(joint:torch.Tensor, members:int=E, anchors:int=K
     reconstructed=member[:,:,None]*anchor[:,None,:]
     if not torch.allclose(p,reconstructed,atol=TOL,rtol=TOL):
         raise G8Error("R3 joint member*anchor factorization does not hold")
-    if not torch.allclose(p.sum(dim=(1,2)),torch.ones(n,device=p.device),
+    if not torch.allclose(p.sum(dim=(1,2)),torch.ones(n,device=p.device,dtype=p.dtype),
                           atol=TOL,rtol=TOL):
         raise G8Error("joint law is not normalized")
     wm=_tempered(member,T);ca=_tempered(anchor,T)

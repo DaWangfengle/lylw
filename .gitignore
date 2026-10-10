@@ -167,3 +167,9 @@ local_notes/
 !/fhm_dapp_tim/evidence/v17_g7_frozen_transfer/RUN_STDOUT.log
 !/fhm_dapp_tim/evidence/v17_g7_frozen_transfer/RUN_STDERR.log
 /fhm_dapp_tim/models/v17_g7_frozen_transfer/pytest_tmp/
+
+# V17-G8 scientific stdout/stderr evidence; local pytest fixtures stay ignored.
+!/fhm_dapp_tim/evidence/v17_g8_hierarchical_attribution/RUN_STDOUT.log
+!/fhm_dapp_tim/evidence/v17_g8_hierarchical_attribution/RUN_STDERR.log
+/fhm_dapp_tim/models/v17_g8_hierarchical_attribution/pytest_tmp_initial/
+/fhm_dapp_tim/models/v17_g8_hierarchical_attribution/pytest_tmp_repaired/
