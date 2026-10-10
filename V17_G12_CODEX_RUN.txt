@@ -1,0 +1,122 @@
+V17-G12 | Codex科学实验执行指令：固定强后验的欧氏MAE决策与检索排序归因
+======================================================================
+分支：v17-g12-action-ranking-disentanglement
+主程序：fhm_dapp_tim/fhm_dapp/uji_v17_g12_action_ranking.py
+单测：tests/test_uji_v17_g12_action_ranking.py
+冻结科研方案：fhm_dapp_tim/evidence/v17_g12_action_ranking/DESIGN_V17_G12.md
+
+【第一性原理与已有结果，不要重复发明】
+G8 Anchor T=.6五成员强基线，TUJI/UTS/Tampere CONFIRM
+MAE分别2.657774m、5.107529m、5.987721m。
+G10仅在原主导位置已经合理时提供小幅收益，错误主导模式容易进一步恶化。
+G11中UTS存在16个“RSS 1NN正确邻域而V17 Top1错误邻域”的站点，
+但V17整体比RSS KNN更稳健。Tampere RSS 5NN胜出0.224m
+实际上由两个极端位置的大幅改善驱动。
+需将“空间假设排序错误”与“后验给定时的欧氏点决策规则错误”严格拆开。
+尤其不要忽略：G5此前已经在未锐化Tampere V17上做过
+分量几何中位数和连续Student-t几何中位数；这些算法不是新发明，
+G5未达到统计晋级条件。G12是对更强T=.6后验在三个域的新增控制实验。
+
+【G12干预A：概率分布完全固定，只改点决策】
+原原子后验E5/L192/K192/alpha1，Student-t df4，
+原所有960连续位置中心/尺度，成员/锚点概率身份全部固定。
+用原G8 hierarchical_laws(...)[anchor]生成Anchor T=.6后验。
+三种决策固定如下：
+(1) 原完整分布加权均值（必须逐位置100%数值复现G8）；
+(2) 原G5 weighted_component_geometric_median，最多64迭代，
+    tol1e-5m：此算法忽略连续Student-t尺度，属于中心点离散代理；
+(3) 原V9 spatial_median_from_draws，来自相同冻结Student-t
+    后验的独立128+128随机抽样，seed19801，最多64迭代，tol1e-5m。
+    这是蒙特卡洛近似，不是解析解。
+额外用与决策采样完全独立的seed19802、128+128 Student-t抽样
+评估三种决策在**预测模型自己**的欧氏期望风险（不是实际位置MAE）。
+真实逐位置二维MAE用CAL/CONFIRM物理坐标做事后评分。
+同一个完整后验的Energy Score对三种决策完全相同：
+只需用G8原seed19602、64+64的Student-t连续ES计一次，
+不能说median改善了ES（后验完全没变）。
+绝不使用真实位置、真实楼层、以前结果来选择中位数迭代、采样量、
+是否启用某一动作、权重或任何阈值。
+
+【G12干预B：固定原网络，把空间检索的运算阶段独立展开】
+在全体原FIT锚点的同一个全局anchor id上计算6个打分地图：
+1. prototype_only：softmax(-beta_p * 原FIT RSS原型距离)
+2. neural_only：各E5成员softmax(beta_n * 原神经检索logit)后取均值
+3. fused_equal_members：原神经+原型融合后，各成员完整先验等权平均
+4. fused_radial_members：完整先验按R3原Top-L径向方差权重合并
+5. topL_radial_members：R3成员Top-L归一化后散射到全FIT锚点再径向加权
+6. R3_consensus_K192：原R3 alpha1的Top-K共识锚点概率，其他anchor为0
+注意prototype_only和neural_only是两个平行视角，
+不是时间上串行的检索步骤，不能无脑用转移次数声称因果。
+零参模型，不改变原任何R3算子，不从这6个视角挑最优预测算法。
+真实目标building/floor/xy绝不输入6个地图；它们仅在地图预测完成后
+用于10m同建筑同楼层Top1命中、近邻概率质量、
+最近真值邻域anchor排名及各阶段配对转换的事后诊断。
+T=.6锐化不改变anchor Top1 ID，必须在代码内检查。
+
+【数据/科学身份约束】
+原TUJI CAL+CONFIRM、UTS CAL+CONFIRM、Tampere CONFIRM；
+总计909物理站点、4825扫描，只有各自原TRAIN-internal角色。
+只加载原15份冻结E5 checkpoint，原G4/G5/G6角色边界，
+FIT字典与坐标原点保持原样。原始外部/test/outer/官方验证不能打开。
+任何CAL/CONFIRM标签只能参与评估与事后诊断，不能参与预测/模型选择。
+这5个历史角色早已G4-G11反复观察；结果只能是回顾性机制实验，
+不得“通过检验”就宣称新盲测、方法可发表或概率校准成立。
+每物理位置先聚合其多个扫描的误差，再对位置等权求macro MAE。
+保存完整物理坐标keys、逐站点预测误差、模型预期风险、
+后验ES、行动位置移动量、6阶段近邻命中/质量/排序、转移计数。
+必须检查p90/p95、最差位置、尾部风险，不能只看宏平均。
+
+【严格执行顺序：准备前可修G12合成测试bug】
+仓库根目录，在原 liuyan/CUDA 环境运行：
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g12_action_ranking.py tests/test_uji_v17_g12_action_ranking.py
+python -m pytest -q tests/test_uji_v17_g12_action_ranking.py tests/test_uji_v17_g11_rss_identifiability.py tests/test_uji_v17_g10_evidence_corrected_law.py tests/test_uji_v17_g9_anchor_support_diagnostic.py tests/test_uji_v17_g8_hierarchical_attribution.py
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g12_action_ranking preflight
+
+全部通过后冻结科研方案与源码：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g12_action_ranking prepare
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g12_action_ranking check
+
+仅一次正式GPU评分（不训练）：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g12_action_ranking run --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g12_action_ranking check
+
+prepare前发现真实bug可以只在新增G12源码/单测中最小修复，记录
+故障原因与回归测试；绝不修改G1-G11历史科学源码或方法常数凑指标。
+正式run之前写不可变.lock；一旦锁写入，即使发生错误也必须STOP，
+不得删锁反复尝试、偷偷改seed或观察结果后选算法。
+全部G12预测冻结之后，才读取旧G8/G11结果核对：
+原Anchor T=.6五个角色每物理站点MAE/ES应与G8完全一致，
+排序原型Top1与G11相同；若不一致报告不可判定。
+如网络原权重hash不符、原角色分区出错、R3共识不等于joint边缘、
+输出有NaN/Inf、确认数据参与动作优化，立即STOP。
+
+【结果输出（本地再由用户上传GitHub）】
+fhm_dapp_tim/evidence/v17_g12_action_ranking/
+  DESIGN_V17_G12.md
+  manifest_v17_g12.json
+  run_v17_g12.lock
+  diagnosis_v17_g12.json
+  RUN_REPORT_V17_G12.md
+  RUN_NOTES.md（简洁：测试数、GPU/耗时、权重SHA校验、一次正式运行、
+                出现bug的精确修复记录、G1-G11历史文件不变）
+不生成几十份工程审计报告；不上传原始.pt。
+每个域必须给：
+(1) 原均值/分量中位数/连续中位数的绝对MAE、p90/p95/极端尾部；
+(2) 同一后验下模型期望风险与真实误差是否一致变化；
+(3) 六阶段10m命中、近邻质量、排序变化，特别是UTS困难位置；
+(4) 原Tampere(262.94,107.04)与(262.94,112.04)的动作改动与错误。
+禁止根据这轮已暴露确认标签决定新版门控。
+
+【交给ChatGPT后讨论的决策问题】
+若中位数在模型期望风险降低且真实MAE也稳定降低，下一步考虑
+独立验证这条已有决策规则；它本身不是Q1创新。
+若模型期望风险降低但真值MAE变差，要追问后验失配而非乱改median。
+若RSS原型对而fused/neural错造成显著失误，下一步才值得训练
+基于真正新划分的RSS空间困难负样本判别模型。
+如果没有证据能让新模型可靠超越现有强E5，就停止G系列的
+后处理版本，直接进入新数据划分和完整可学习建模。
+任何论文级结论仍需要未观察过的物理位置独立评估和
+原V17 E5/E16/E25相同预算对照、ES与尾部风险。
+
+【Git归属】所有Git checkout、commit、push、上传由用户自己处理。
+Codex不要执行任何Git命令，只做科学测试、一次正式运行、简洁产物。
