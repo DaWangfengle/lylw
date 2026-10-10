@@ -137,10 +137,11 @@ def fit_site_ap_frequency(
     fit_rss:torch.Tensor, fit_group:torch.Tensor, anchors:int,
     seen_ap_mask:torch.Tensor,
 )->torch.Tensor:
-    """Reproduce original FIT per-anchor AP detection probabilities exactly.
+    """Use original build_anchor_memory FIT AP-detection formula.
 
-    Uses the original FIT rule RSS > -0.999 and Beta(.5,.5) smoothing.
-    The channel is already in the frozen anchor checkpoint, not new sensing.
+    Frozen R0 E5 checkpoints can omit these statistics because the old
+    candidate reranker is off. Recompute from original FIT scans ONLY.
+    This is new processing of existing RSS, not a new sensor or label.
     """
     if (fit_rss.ndim!=2 or fit_group.shape!=(len(fit_rss),)
         or seen_ap_mask.shape!=(fit_rss.shape[1],)
@@ -491,8 +492,8 @@ def _report(result:dict)->str:
         "2. Raw RSS L2 uses the EXACT same model-seen AP L2 prototype law",
         "   already used upstream in R3: it is an information benchmark,",
         "   not a novel independent sensor observation.",
-        "3. AP-visibility Brier uses a new FIT-only reference frequency",
-        "   channel, but it comes from the SAME RSS scans; observed values",
+        "3. AP-visibility Brier recomputes the original FIT detection frequency",
+        "   (unused by frozen R0 retrieval) from the SAME RSS scans; values",
         "   clipped to -1 are indistinguishable from missing AP.",
         "4. Margin uses TRUE location, with positives <=10m same floor",
         "   and clearly wrong >=20m or different building/floor.",
@@ -531,11 +532,10 @@ def run(device_name:str="cuda")->dict:
         fit_rss=data["data"]["rss"][fit_rows].detach().cpu().float()
         frequencies=fit_site_ap_frequency(
             fit_rss,group_index,int(ref.n_anchors),seen)
-        original_detection=ref.anchor_detection_prob.detach().cpu()[:,seen]
-        if (original_detection.shape!=frequencies.shape or
-            not torch.allclose(original_detection,frequencies,atol=1e-6,rtol=1e-6)):
-            raise G11Error("FIT AP detection reconstruction differs from checkpoint memory")
-        frequencies=original_detection
+        # Original V17-R0 does NOT pass detection_prob to the frozen
+        # model when the candidate reranker is disabled. Therefore it
+        # must be computed from the original FIT rows, never from labels
+        # or from a fabricated checkpoint buffer.
         by_domain[domain]={}
         for role in ROLES[domain]:
             by_domain[domain][role]=score_role(
