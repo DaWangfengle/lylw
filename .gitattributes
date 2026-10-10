@@ -98,3 +98,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g7_frozen_transfer.py -text
 tests/test_uji_v17_g7_frozen_transfer.py -text
 fhm_dapp_tim/evidence/v17_g7_frozen_transfer/** -text
 V17_G7_CODEX_RUN.txt -text
+
+# G8 frozen science artifacts: no platform newline conversion
+fhm_dapp_tim/fhm_dapp/uji_v17_g8_hierarchical_attribution.py -text
+tests/test_uji_v17_g8_hierarchical_attribution.py -text
+fhm_dapp_tim/evidence/v17_g8_hierarchical_attribution/** -text
+V17_G8_CODEX_RUN.txt -text
