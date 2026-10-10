@@ -1,0 +1,113 @@
+V17-G7 | Codex 冻结迁移压力测试指令
+======================================
+目标分支：v17-g7-frozen-transfer-stress
+仓库：DaWangfengle/lylw
+主程序：fhm_dapp_tim/fhm_dapp/uji_v17_g7_frozen_transfer.py
+设计：fhm_dapp_tim/evidence/v17_g7_frozen_transfer/DESIGN_V17_G7.md
+测试：tests/test_uji_v17_g7_frozen_transfer.py
+
+一、科研目的与证据边界
+G6 TUJI 内部 CAL 冻结 T=0.6,s=0.5，原 G6 CONFIRM 同时改善MAE、ES。
+G7 不探索T/s，不改损失、模型、先验，也不重新训练。
+直接复用原G4 UTS、G5 Tampere各自已经训练好的5成员模型。
+考察 TUJI 固定参数在两个不同数据域是否仍能迁移。
+
+注意：G4/G5 的历史内部 CAL/CONFIRM 位置和结果此前已经被研究者
+查看过。G7 是回顾性迁移压力测试，不是独立盲测、不是新外部正式
+测试、更不能宣称多数据集普适性已经证明。只有未来新独立评估
+才能为Q1提供相应证据。
+
+只读取 UTS_training.csv 和 Tampere 两份 Training 文件。严禁读取
+UTS_test.csv、Tampere Test_*.csv、UJI官方验证/outer、TUJI results_test，
+以及G4/G5历史结果JSON用于选择本次参数。
+G7读取G4/G5原manifest和冻结的权重身份，绝不读取旧结果来替代
+重新推断。G6 CAL JSON仅用于证明源政策确已冻结。
+
+二、现有权重非常重要（不重新训练）
+G4 UTS 本地旧5成员：
+fhm_dapp_tim/models/v17_g4_observable_support/
+G5 Tampere 本地旧5成员：
+fhm_dapp_tim/models/v17_g5_bayes_action/
+两个目录应有历史 member_01 到 member_05 的原始.pt。
+G4/G5 checkpoints 通常没有上传GitHub；若原文件缺失，就明确
+STOP，保留错误并报告，不能用新种子重新训练冒充历史面板。
+不得改写G4/G5/G6任何science代码、manifest、freeze、证据文件。
+所有成员 SHA256必须和G4/G5历史manifest/freeze一致。
+
+三、固定预测对照
+统一 E5/L192/K192/alpha1、Student-t df4和原R3连续分布。
+直接调用G6原来的 _score_role/scoring 实现，一致的随机种子19602，
+两流各64个抽样用于Energy Score（所有候选配对共享随机数）。
+四个固定变体：
+T1_S1: 原始V17完全不变；
+T0.6_S1: 只锐化最终联合混合权重；
+T1_S0.5: 只缩Student-t尺度；
+T0.6_S0.5: 唯一预先冻结的主要候选。
+只改scale绝不改变混合后验均值，因此同T不同s的MAE必须一致。
+
+场景：
+UTS：原G4 historical calibration + confirmation（前者仅描述性）；
+Tampere：原G5 historical confirmation；
+FIT训练成员不参与验证，也不使用正式测试集。
+保存坐标宏MAE、ES、逐坐标配对向量、设备行级数值、预测半径、
+50%/80%/90%名义覆盖率及最严重恶化位置。
+
+四、实验前CPU测试、数据和权重预检
+在仓库根目录、原Python/CUDA环境依次执行：
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g7_frozen_transfer.py tests/test_uji_v17_g7_frozen_transfer.py
+python -m pytest -q tests/test_uji_v17_g7_frozen_transfer.py tests/test_uji_v17_g6_calibration.py
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer preflight
+
+在preflight中检查：
+1）G6 CAL确实冻结T0.6_S0.5，且G6 manifest一致；
+2）原G4/G5所有源代码与数据hash匹配历史manifest；
+3）两个5成员checkpoint全部存在、hash匹配、原FIT角色不变；
+4）UTS/Tampere历史物理坐标角色交集为0；
+5）不读取其他数据集测试文件，不引用历史误差结果选择T/s；
+6）运行所需显卡资源；只可在合成/FIT输入上做数值smoke。
+如果出现真实前置不兼容，先检查旧权重是否确实保留，不能
+自动重训。科学参数不得修补。如果必须修复新G7代码，只能在
+prepare以前进行、记录原因并重测；不要动旧科学模块。
+
+五、冻结本次计划（确认preflight成功之后）
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer prepare
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer check
+
+G7新manifest冻结旧模型哈希、数据角色键、G6源政策、固定参数
+和执行源码。冻结后不得修改源码、任意更换权重/目标子集。
+
+六、仅一次GPU推断（不会训练，严禁循环试T/s）
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer run --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer check
+
+run首先写 transfer_v17_g7.lock，然后执行三个固定historical角色。
+如果lock建立后中断，保留原始日志及lock，不准删除/静默重跑。
+没有批准额外多个温度、新分区、新模型、新设备筛选。
+
+七、固定描述性判定
+仅UTS historical confirmation与Tampere historical confirmation
+构成两个独立数据域的描述性判断。UTS calibration只作复核。
+每一个域都需要：
+主要T0.6_S0.5相对T1_S1坐标宏MAE改善>=0.15m；
+同时ES不得增加。
+两域都通过：TWO_DOMAIN_DESCRIPTIVE_TRANSFER_SIGNAL；
+否则：TRANSFER_NOT_ESTABLISHED。
+这里不是统计意义上的独立显著性检验；不能因为某域只改T
+更好就改选T0.6_S1，不能根据结果调整0.15m门槛。
+
+八、提交给ChatGPT分析所需精简产物（Git动作用户自行完成）
+fhm_dapp_tim/evidence/v17_g7_frozen_transfer/manifest_v17_g7.json
+fhm_dapp_tim/evidence/v17_g7_frozen_transfer/transfer_v17_g7.lock
+fhm_dapp_tim/evidence/v17_g7_frozen_transfer/transfer_v17_g7.json
+fhm_dapp_tim/evidence/v17_g7_frozen_transfer/RUN_REPORT_V17_G7.md
+以及最多一份简洁RUN_NOTES.md记录测试exit code、所用CUDA设备、
+G4/G5五成员权重验证、两个数据域决策、异常。
+不必建立几十个审计文件，不用上传.pt大型权重。
+
+绝对Git规则：Git分支切换、提交、push、上传都由用户自行安排。
+Codex不执行任何Git命令，也不把Git命令写入运行脚本。
+
+实验后由ChatGPT分析三件事：两个目标域是否真出现联合改善；
+改善来自T还是s；以及环境、楼层、极端位置的异质性是否说明
+全局温度无法迁移。成功也只能进入“值得研究”的机制候选，
+不能宣称G7是JCR Q1最终论文模型。
