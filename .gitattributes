@@ -116,3 +116,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g10_evidence_corrected_law.py -text
 tests/test_uji_v17_g10_evidence_corrected_law.py -text
 fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/** -text
 V17_G10_CODEX_RUN.txt -text
+
+# G11 fixed scientific design/source and FIT-only diagnosis byte identity
+fhm_dapp_tim/fhm_dapp/uji_v17_g11_rss_identifiability.py -text
+tests/test_uji_v17_g11_rss_identifiability.py -text
+fhm_dapp_tim/evidence/v17_g11_rss_identifiability/** -text
+V17_G11_CODEX_RUN.txt -text
