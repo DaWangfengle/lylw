@@ -26,7 +26,7 @@ Use true building/floor/XY AFTER prediction, for diagnosis only:
 - Define NEAR: same building/floor and distance <=10m. Clearly WRONG: any different building/floor, or distance >=20m. For each raw distance score calculate best clearly-wrong minus best near score; positive margin means raw nearest correct-region anchor beats nearest geographically distant impostor in that distance metric. Missing nearby FIT anchors or clearly-wrong anchors means undefined margin, serialized as null.
 - Original Top-K rank of first selected near anchor (null if none); original shared mass on true near anchors.
 - Physical-site macro averaging means average rows per site, then sites equally. Site hit rate is fractional where repeated RSS scans vary.
-- Paired quadrant analysis raw 1NN vs V17 Top-1 (both correct, raw only, V17 only, both wrong), which uses labels as diagnostic and **cannot be used as a model gating feature**. Also report AP detection Top-1 near when both raw L2 and frozen V17 Top-1 are far.
+- Paired quadrant analysis raw 1NN vs V17 Top-1 (both correct, raw only, V17 only, both wrong), which uses labels as diagnostic and **cannot be used as a model gating feature**. Site category is determined by at least half of its repeated query scans yielding Top-1 near (<0.5 means far), not by averaging any oracle prediction. Also report AP detection Top-1 near when both raw L2 and frozen V17 Top-1 are far.
 
 Do not move the 10m/20m thresholds after looking at results.
 
