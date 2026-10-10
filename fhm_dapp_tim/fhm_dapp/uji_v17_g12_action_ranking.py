@@ -290,9 +290,15 @@ def _summary(vectors:dict[str,list])->dict:
         out[name]={"site_mean":float(x.mean()) if len(x) else None,
                    "n_finite_sites":len(x),"n_sites":len(values)}
         if name.endswith("_mae_m") and len(x):
+            sorted_desc=np.sort(x)[::-1]
             out[name].update({
+                "median_m":float(np.median(x)),
                 "p90_m":float(np.quantile(x,.9)),
                 "p95_m":float(np.quantile(x,.95)),
+                "p99_m":float(np.quantile(x,.99)),
+                "worst_5pct_mean_m":float(sorted_desc[:max(1,int(np.ceil(.05*len(x))))].mean()),
+                "sites_ge_10m":int((x>=10).sum()),
+                "sites_ge_20m":int((x>=20).sum()),
                 "max_m":float(np.max(x))})
     return out
 
@@ -438,6 +444,19 @@ def _report(record:dict)->str:
                 f"{s['component_median_mae_m']['site_mean']:.6f} | "
                 f"{s['continuous_median_mae_m']['site_mean']:.6f} | "
                 f"{s['shared_student_t_es_m']['site_mean']:.6f} |")
+    lines.extend(["","## Ranking stage: coordinate-site macro Top1@10m",""])
+    for domain in DOMAINS:
+        for role,x in record["by_domain"][domain].items():
+            s=x["summary"]
+            stage_string=", ".join(
+                f"{stage}={s[stage+'_top1_in10m']['site_mean']:.4f}"
+                for stage in STAGES)
+            lines.append(f"- {domain}/{role}: {stage_string}")
+            p=x["decision_effects"]
+            lines.append(
+                f"  Decision ΔMAE vs mean: component "
+                f"{p['component_median_minus_mean']['mean_delta_mae_m']:+.6f}m; "
+                f"continuous {p['continuous_median_minus_mean']['mean_delta_mae_m']:+.6f}m")
     lines.extend(["","## Scientific interpretation boundaries","",
         "- Point actions share EXACTLY one frozen 960-component posterior.",
         "- The training-free continuous median is approximate: 2x128 fixed",
