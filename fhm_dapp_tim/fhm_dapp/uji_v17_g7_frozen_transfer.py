@@ -42,6 +42,16 @@ MIN_DOMAIN_GAIN_M = 0.15
 MAX_DOMAIN_ES_INCREASE_M = 0.0
 RANDOM_STREAM_SEED = g6.SCORE_SEED
 EXPECTED_CANDIDATES = (BASE, JOINT, TEMP_ONLY, SCALE_ONLY)
+# G4's original manifest did not freeze checkpoint hashes. These SHA256s
+# come from its pre-existing, immutable CAL evidence (not read at G7 runtime).
+# This avoids a tautological check that hashes only today's local files.
+G4_ORIGINAL_FROZEN_MEMBER_SHA256 = (
+    "299b5955967acc333fccef45d6a83ca45af4a6e073bf64a909ba9889dabb4fb5",
+    "3bf3db6c88d3189529623106af2e1463e44b17408965eeecd98a739efa8d9b48",
+    "4e56c499c837a40d45c9a40b984ec12eb7bc9f10dd8db5ae2b549103d05e7548",
+    "695b0afbc0c282f20f6f7f41d385b842b169ef366c75f0c010e5f27f24bd1224",
+    "0067c6a6f4d88c5dc49a9159d26304802be14e31f6cbcf23b91c29555c5ef25c",
+)
 
 
 class G7Error(RuntimeError):
@@ -104,6 +114,8 @@ def _data_and_old_protocol(domain:str) -> dict:
             raise G7Error("G4 training/data/scoring source hashes changed")
         data,groups,rows=g4._data_roles()
         frozen_hashes=_hash_local_checkpoints([g4.member_path(i) for i in range(1,6)])
+        if tuple(frozen_hashes)!=G4_ORIGINAL_FROZEN_MEMBER_SHA256:
+            raise G7Error("G4 checkpoint bytes do not match ORIGINAL G4 CAL-frozen hashes")
         if int(old["panel"])!=5 or int(old["L"])!=192 or int(old["K"])!=192:
             raise G7Error("G4 original E5/L192/K192 protocol differs")
         if old["coordinate_keys"]!={k:[list(x) for x in sorted(v)] for k,v in groups.items()}:
