@@ -1,0 +1,103 @@
+V17-G11 | Codex 科学运行指令：RSS空间可辨识性与V17错误排序归因
+================================================================
+GitHub分支：v17-g11-rss-identifiability-benchmark
+主程序：fhm_dapp_tim/fhm_dapp/uji_v17_g11_rss_identifiability.py
+测试：tests/test_uji_v17_g11_rss_identifiability.py
+固定设计：fhm_dapp_tim/evidence/v17_g11_rss_identifiability/DESIGN_V17_G11.md
+
+【科学目标】请不要将G11改成新训练、温度网格搜索或工程大重构。
+G6-G10说明概率锐化与轻量证据修正容易改善正常位置，却可能强化原本
+最高概率但实际上很远的错误位置。现在必须区分：
+H1：FIT原始RSS也把相同空间区域混淆（可能是观测或指纹质量问题）；
+H2：简单FIT RSS证据能排对但V17检索/共识排错（可能存在表征/排名损失）。
+H1不是信息论不可辨识证明；H2也不是某种模型必然能够恢复的因果证明。
+先做一个不训练、但有真实定位MAE对照和逐位置差异的实验。
+
+【必须固定的四个决策】
+一、原冻结V17 E5/L192/K192/alpha1、Anchor-only T=.6：同G8。
+二、原始RSS FIT prototype L2 1NN：严格复用R2B._prototype_distance，
+    在模型可见的AP上计算；它本就是R3上游特征，不是新的传感信息。
+三、原始RSS FIT prototype L2 5NN：固定k=5，权重1/(d+.001)^2，
+    不搜索k值或阈值。
+四、FIT AP检出频率1NN：按原模型RSS>-0.999的检出定义，Beta(0.5,0.5)
+    平滑，每AP Brier距离，从FIT行重建每锚点检测率；
+    必须与原冻结checkpoint的anchor_detection_prob严格数值一致
+    (atol/rtol均1e-6)，正式计算优先用原checkpoint中保存的检测率。
+    这是对已有FIT统计的一种简单判别规则，并非新增观测。
+所有决策在完整FIT锚点中检索，不能使用query真实building/floor筛选。
+若raw RSS模型范围或缺失编码不匹配，不能自作主张换阈值调参。
+
+【标签只用于诊断、不能参与预测】
+物理空间NEAR：同建筑同楼层距离<=10m；
+清晰错误FAR：不同建筑/楼层，或者欧氏距离>=20m。
+逐扫描计算：
+- raw L2 1NN / AP 1NN / 原始R3共识Top1的NEAR命中；
+- raw L2前5个锚点是否至少有一个NEAR；
+- 原始R3 Top-K内最前NEAR锚点的名次及NEAR概率质量；
+- 原始RSS/AP检测频率的best_wrong_minus_best_near得分差（正数有利）；
+- 四类真值分组（双对、仅raw对、仅V17对、双错）及AP独立纠正位置；
+- 完整每物理坐标的4种二维MAE和诊断向量，宏平均、p90/p95和最大误差。
+判定“对/错”的真实xy/floor只用于分析报告，禁止用作门控、训练标签或者
+预测输入。空间分界10m、20m不可在评分后为了得到好看结果改动。
+AP归一化RSS -1也可能来自最小值裁剪，不能把它当成完美检测标签。
+不计算基于Student-t的ES来和原始确定性1NN伪公平比较，本轮是MAE与判别。
+
+【数据角色和权重身份】
+完全复用原G6 TUJI：FIT / CAL / CONFIRM，TUJI MAT仅请求results_train变量，
+实体容器还包含test字节但不反序列化test变量；
+G4 UTS原训练CSV：FIT / CAL / CONFIRM；
+G5 Tampere原训练RSS与坐标：FIT / CONFIRM。
+绝不打开任何提供的test、外部validation/test标签、正式outer。
+原始15份E5 frozen checkpoint字节SHA、G4/G5/G6原始角色、所有旧文件
+保持一致；如权重找不到直接STOP，不重训替代。
+全部CAL/CONFIRM过去已被看过，结果只能是回顾性科学诊断。
+每物理位置先聚合它的重复扫描，再计算坐标宏MAE/诊断比例。
+不使用G8/G9/G10历史输出生成本轮预测或方法参数；正式结果冻结后
+才可对照G8 Anchor T=.6逐物理坐标MAE，应在1e-4m内数值一致。
+
+【执行指令（仓库根目录、原CUDA环境）】
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g11_rss_identifiability.py tests/test_uji_v17_g11_rss_identifiability.py
+python -m pytest -q tests/test_uji_v17_g11_rss_identifiability.py tests/test_uji_v17_g10_evidence_corrected_law.py tests/test_uji_v17_g9_anchor_support_diagnostic.py tests/test_uji_v17_g8_hierarchical_attribution.py
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g11_rss_identifiability preflight
+
+上述测试和源身份全部通过，再执行冻结准备：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g11_rss_identifiability prepare
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g11_rss_identifiability check
+
+冻结后仅一次全域计算：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g11_rss_identifiability run --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g11_rss_identifiability check
+
+如发现新G11源码测试bug：只能在prepare之前，在新G11源码/测试中
+做最小修正，并再次完整测试；记录具体原因，不改历史G1–G10科学文件。
+准备后的源码固定，正式run前先写.lock；如果锁已存在但发生错误，
+保留锁和完整错误日志，STOP，不可删锁重跑挑结果。
+若AP检测频率不一致、FIT索引一一对应失败、R3后验恒等式不成立、
+原始Anchor T=.6与G8不一致或发生真实测试数据访问，立即STOP。
+
+【产物】
+上传到GitHub本分支：
+fhm_dapp_tim/evidence/v17_g11_rss_identifiability/
+  DESIGN_V17_G11.md（已经在分支）
+  manifest_v17_g11.json
+  diagnostic_v17_g11.lock
+  rss_identifiability_v17_g11.json
+  RUN_REPORT_V17_G11.md
+  RUN_NOTES.md（请简洁记录：测试数量、CUDA、一次正式运行、
+    15权重SHA核验、历史文件不变、任何准备前修复和STOP事件）
+不要生成大量工程审计或新网络文件，不上传.pt。
+
+【我最关心的科学问题，跑完后交我分析】
+1. TUJI/UTS/Tampere三个域，单纯raw RSS 1NN/5NN的绝对MAE到底有多大？
+2. V17严重失败的物理位置中，raw RSS 1NN或AP检测1NN是否能把正确区域排第一？
+3. Raw与V17双错的困难位置，RSS的正/负间隔是否能揭示空间混淆？
+4. 只在AP检测能纠正、而RSS L2和V17错排的位置，是否存在新建模方向？
+5. 这些现象是否跨域重复，还是仅由某个数据域的站点密度/指纹质量引起？
+
+可能的下一轮决策：若可分辨性证据明显却被V17浪费，设计在全新
+未观察物理位置上验证的RSS困难负样本/空间对比学习基础模型；
+若原始指纹也高度混淆，先研究观测信息与设备/时间不一致问题。
+不能把1NN的单次结果包装成贝叶斯下界、算法晋级或JCR Q1结论。
+
+【Git责任边界】所有分支切换、commit、push、上传由用户自己负责，
+Codex不要执行任何Git命令，只做科学测试、一次CUDA运行、上传所需产物。
