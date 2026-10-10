@@ -1,0 +1,331 @@
+
+=== compile-initial | 2026-10-10T10:31:05+08:00 | D:\miniminiconda\envs\liuyan\python.exe -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g7_frozen_transfer.py tests/test_uji_v17_g7_frozen_transfer.py ===
+
+=== END compile-initial exit=0 elapsed_seconds=0.098 ===
+
+=== tests-initial | 2026-10-10T10:31:09+08:00 | D:\miniminiconda\envs\liuyan\python.exe -m pytest -q tests/test_uji_v17_g7_frozen_transfer.py tests/test_uji_v17_g6_calibration.py ===
+.................................                                        [100%]
+33 passed in 7.74s
+
+=== END tests-initial exit=0 elapsed_seconds=9.442 ===
+
+=== preflight-initial | 2026-10-10T10:31:24+08:00 | D:\miniminiconda\envs\liuyan\python.exe -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer preflight ===
+{
+  "protocol": "v17_g7_frozen_tuji_policy_uts_tampere_transfer_20261010",
+  "status": "G7_REUSE_TWO_HISTORICAL_FROZEN_E5_PANELS",
+  "source_sha256": {
+    "g7_design": "bdf3ab9ddb53f0e374a758abeaeaaac36fe43ed9d643f496221266fe324f5be4",
+    "g7_code": "0a4f3b3862b636f78f16719bb49aff79c451af0b3cdb8b51588bf7cdf365ce1f",
+    "g7_tests": "71527124526bbefb3d5d0ae71c5c7017382ea386d53e92d6173ca7ca3b4e2584",
+    "g6_calibration_and_scorer": "e8f42637b24a69c664dd8726c9b15974fb51f219d2c373d1d0b3fce8d42cffe1",
+    "g4_uts_historical_protocol": "e91cf79a3d691e5b932b6387f9ed7150278f53de003dc6a67a19d114854913f3",
+    "g5_tampere_historical_protocol": "0953f4726d7b769b140f9d0e20e8ed7481a2d2b144ecc875368e5bc764945d8b"
+  },
+  "g6_frozen_calibration_file_sha256": "77ae0e137335dc6e99f1bf9d26b135fc9979bfc89ae26c881c207dae4fc2b17a",
+  "g6_frozen_manifest_file_sha256": "45896bed26ca192ad35422efd657e373b8878d6e7870eac8f17447d5b26d08c7",
+  "fixed_policy": {
+    "policy": "T0.6_S0.5",
+    "T": 0.6,
+    "scale": 0.5
+  },
+  "frozen_scorer_seed": 19602,
+  "variants": [
+    "T1_S1",
+    "T0.6_S0.5",
+    "T0.6_S1",
+    "T1_S0.5"
+  ],
+  "domains": {
+    "uts": {
+      "historical_manifest_sha256": "24b5de94db3c2539daef4fb28b808eccf762b795709db8430bd5a967f86699f5",
+      "historical_manifest_self_sha256": "9c430315b50c7457e9af2da2e0cc0a8569cba9e8f03247f9ef4a5e15bf966b31",
+      "historical_protocol": "v17_g4_uts_train_internal_observable_support_v1_20261009",
+      "checkpoints": [
+        "299b5955967acc333fccef45d6a83ca45af4a6e073bf64a909ba9889dabb4fb5",
+        "3bf3db6c88d3189529623106af2e1463e44b17408965eeecd98a739efa8d9b48",
+        "4e56c499c837a40d45c9a40b984ec12eb7bc9f10dd8db5ae2b549103d05e7548",
+        "695b0afbc0c282f20f6f7f41d385b842b169ef366c75f0c010e5f27f24bd1224",
+        "0067c6a6f4d88c5dc49a9159d26304802be14e31f6cbcf23b91c29555c5ef25c"
+      ],
+      "dataset_train_source": "UTSIndoorLoc/UTS_training.csv",
+      "old_confirm_labels_previously_observed": true,
+      "role_coordinate_count": {
+        "calibration": 258,
+        "confirmation": 263
+      },
+      "role_rows": {
+        "calibration": 1625,
+        "confirmation": 1692
+      },
+      "role_coordinate_sha256": {
+        "calibration": "60593e68e8b87ac284408acc5b4d0f5f6cb1c138677350ccf667aa29788da763",
+        "confirmation": "dee3633a2b4a4dfedb5054c420fef766e917c3a437303b08c7a7917373bdba93"
+      },
+      "raw_training_rows": 9108,
+      "anchor_count": 945,
+      "ap_width": 589
+    },
+    "tampere": {
+      "historical_manifest_sha256": "f3c92a952566787039cab02ec42fbcf3a493aa3b34b7194ba4b26989d450c812",
+      "historical_freeze_sha256": "d1e0d97f102fd85931332a4dbf5139dcd368667366068d9d8903910c96b4523b",
+      "historical_manifest_self_sha256": "0ce50ed637ef6987b915a4a94169400782eb1a4b638c32869c450eb40319bfbc",
+      "historical_protocol": "v17_g5_tampere_train_only_bayes_action_v1_20261009",
+      "checkpoints": [
+        "8af93392f81c8cc71c7e44664da8aa3c62356f1eb8e067feff072dba3e67e60b",
+        "37c8af1d611586456e6200d3fe196f111f4e93249613d4997ccdef6f9541e294",
+        "c1e173049c37ef26858ada993f8d3fa62ea150ff55b7c6ccd34bd31eb0b04f2d",
+        "0f53c19750169c95327f501172e2da60a690b08dcf19db677a78365b848280f1",
+        "ccd93aee342b27b67b3f971f157286886d7090556bd28cdbdb4af82f350ef3b5"
+      ],
+      "dataset_train_source": "Tampere/Training_rss.csv + Training_coordinates.csv",
+      "old_confirm_labels_previously_observed": true,
+      "role_coordinate_count": {
+        "confirmation": 112
+      },
+      "role_rows": {
+        "confirmation": 112
+      },
+      "role_coordinate_sha256": {
+        "confirmation": "905866e37596155ee6131b271686a69ce3e0692f9d67d61b978d2c109e411b67"
+      },
+      "raw_training_rows": 446,
+      "anchor_count": 334,
+      "ap_width": 489
+    }
+  },
+  "new_network_training_required": false,
+  "previously_observed_uts_tampere_internal_labels": true,
+  "blind_external_evaluation": false,
+  "provided_test_files_accessed": false
+}
+
+=== END preflight-initial exit=0 elapsed_seconds=7.984 ===
+
+=== cuda-fit-smoke | 2026-10-10T10:33:01+08:00 | D:\miniminiconda\envs\liuyan\python.exe -c "<inline code SHA256=08bbe2ac7f7b542568f4828cd590e071178feb9f002c5c7ff267e7fc277ad99e>" ===
+{
+  "g6_noncontainer_source_hashes_match_manifest": true,
+  "panels": {
+    "uts": {
+      "fit_only_smoke_rows": 2,
+      "five_members_loaded": 5,
+      "shared_fit_memory_exact": true,
+      "original_fit_origin_exact": true,
+      "state_and_grad_unchanged": true,
+      "same_temperature_mae_exact": true,
+      "peak_cuda_allocated_bytes": 64692224,
+      "role_counts": {
+        "fit": {
+          "sites": 945,
+          "rows": 5791
+        },
+        "calibration": {
+          "sites": 258,
+          "rows": 1625
+        },
+        "confirmation": {
+          "sites": 263,
+          "rows": 1692
+        }
+      },
+      "role_pair_overlaps": {
+        "calibration/fit": 0,
+        "calibration/confirmation": 0,
+        "confirmation/fit": 0
+      },
+      "fit_origin": [
+        59.30860137939453,
+        16.47628402709961
+      ]
+    },
+    "tampere": {
+      "fit_only_smoke_rows": 2,
+      "five_members_loaded": 5,
+      "shared_fit_memory_exact": true,
+      "original_fit_origin_exact": true,
+      "state_and_grad_unchanged": true,
+      "same_temperature_mae_exact": true,
+      "peak_cuda_allocated_bytes": 51024896,
+      "role_counts": {
+        "fit": {
+          "sites": 334,
+          "rows": 334
+        },
+        "confirmation": {
+          "sites": 112,
+          "rows": 112
+        }
+      },
+      "role_pair_overlaps": {
+        "confirmation/fit": 0
+      },
+      "fit_origin": [
+        195.4998779296875,
+        126.66690063476562
+      ]
+    }
+  },
+  "raw_data_accesses": [
+    "d:\\liuyanlunwen\\data\\tampere\\training_coordinates.csv",
+    "d:\\liuyanlunwen\\data\\tampere\\training_rss.csv",
+    "d:\\liuyanlunwen\\data\\utsindoorloc\\uts_training.csv"
+  ],
+  "provided_test_accesses": 0
+}
+
+=== END cuda-fit-smoke exit=0 elapsed_seconds=12.088 ===
+
+=== prepare | 2026-10-10T10:33:35+08:00 | D:\miniminiconda\envs\liuyan\python.exe -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer prepare ===
+{
+  "protocol": "v17_g7_frozen_tuji_policy_uts_tampere_transfer_20261010",
+  "source_sha256": {
+    "g7_design": "bdf3ab9ddb53f0e374a758abeaeaaac36fe43ed9d643f496221266fe324f5be4",
+    "g7_code": "0a4f3b3862b636f78f16719bb49aff79c451af0b3cdb8b51588bf7cdf365ce1f",
+    "g7_tests": "71527124526bbefb3d5d0ae71c5c7017382ea386d53e92d6173ca7ca3b4e2584",
+    "g6_calibration_and_scorer": "e8f42637b24a69c664dd8726c9b15974fb51f219d2c373d1d0b3fce8d42cffe1",
+    "g4_uts_historical_protocol": "e91cf79a3d691e5b932b6387f9ed7150278f53de003dc6a67a19d114854913f3",
+    "g5_tampere_historical_protocol": "0953f4726d7b769b140f9d0e20e8ed7481a2d2b144ecc875368e5bc764945d8b"
+  },
+  "fixed_policy": {
+    "policy": "T0.6_S0.5",
+    "T": 0.6,
+    "scale": 0.5
+  },
+  "g6_calibration_file_sha256": "77ae0e137335dc6e99f1bf9d26b135fc9979bfc89ae26c881c207dae4fc2b17a",
+  "g6_manifest_file_sha256": "45896bed26ca192ad35422efd657e373b8878d6e7870eac8f17447d5b26d08c7",
+  "models_and_roles": {
+    "uts": {
+      "historical_manifest_sha256": "24b5de94db3c2539daef4fb28b808eccf762b795709db8430bd5a967f86699f5",
+      "historical_manifest_self_sha256": "9c430315b50c7457e9af2da2e0cc0a8569cba9e8f03247f9ef4a5e15bf966b31",
+      "historical_protocol": "v17_g4_uts_train_internal_observable_support_v1_20261009",
+      "checkpoints": [
+        "299b5955967acc333fccef45d6a83ca45af4a6e073bf64a909ba9889dabb4fb5",
+        "3bf3db6c88d3189529623106af2e1463e44b17408965eeecd98a739efa8d9b48",
+        "4e56c499c837a40d45c9a40b984ec12eb7bc9f10dd8db5ae2b549103d05e7548",
+        "695b0afbc0c282f20f6f7f41d385b842b169ef366c75f0c010e5f27f24bd1224",
+        "0067c6a6f4d88c5dc49a9159d26304802be14e31f6cbcf23b91c29555c5ef25c"
+      ],
+      "dataset_train_source": "UTSIndoorLoc/UTS_training.csv",
+      "old_confirm_labels_previously_observed": true,
+      "role_coordinate_count": {
+        "calibration": 258,
+        "confirmation": 263
+      },
+      "role_rows": {
+        "calibration": 1625,
+        "confirmation": 1692
+      },
+      "role_coordinate_sha256": {
+        "calibration": "60593e68e8b87ac284408acc5b4d0f5f6cb1c138677350ccf667aa29788da763",
+        "confirmation": "dee3633a2b4a4dfedb5054c420fef766e917c3a437303b08c7a7917373bdba93"
+      },
+      "raw_training_rows": 9108,
+      "anchor_count": 945,
+      "ap_width": 589
+    },
+    "tampere": {
+      "historical_manifest_sha256": "f3c92a952566787039cab02ec42fbcf3a493aa3b34b7194ba4b26989d450c812",
+      "historical_freeze_sha256": "d1e0d97f102fd85931332a4dbf5139dcd368667366068d9d8903910c96b4523b",
+      "historical_manifest_self_sha256": "0ce50ed637ef6987b915a4a94169400782eb1a4b638c32869c450eb40319bfbc",
+      "historical_protocol": "v17_g5_tampere_train_only_bayes_action_v1_20261009",
+      "checkpoints": [
+        "8af93392f81c8cc71c7e44664da8aa3c62356f1eb8e067feff072dba3e67e60b",
+        "37c8af1d611586456e6200d3fe196f111f4e93249613d4997ccdef6f9541e294",
+        "c1e173049c37ef26858ada993f8d3fa62ea150ff55b7c6ccd34bd31eb0b04f2d",
+        "0f53c19750169c95327f501172e2da60a690b08dcf19db677a78365b848280f1",
+        "ccd93aee342b27b67b3f971f157286886d7090556bd28cdbdb4af82f350ef3b5"
+      ],
+      "dataset_train_source": "Tampere/Training_rss.csv + Training_coordinates.csv",
+      "old_confirm_labels_previously_observed": true,
+      "role_coordinate_count": {
+        "confirmation": 112
+      },
+      "role_rows": {
+        "confirmation": 112
+      },
+      "role_coordinate_sha256": {
+        "confirmation": "905866e37596155ee6131b271686a69ce3e0692f9d67d61b978d2c109e411b67"
+      },
+      "raw_training_rows": 446,
+      "anchor_count": 334,
+      "ap_width": 489
+    }
+  },
+  "domain_order": [
+    "uts",
+    "tampere"
+  ],
+  "scored_roles": {
+    "uts": [
+      "calibration",
+      "confirmation"
+    ],
+    "tampere": [
+      "confirmation"
+    ]
+  },
+  "variants": [
+    "T1_S1",
+    "T0.6_S0.5",
+    "T0.6_S1",
+    "T1_S0.5"
+  ],
+  "g6_original_energy_draws_per_stream": 64,
+  "energy_random_seed": 19602,
+  "diagnostic_transfer_gate": {
+    "required_domains": [
+      "uts",
+      "tampere"
+    ],
+    "each_domain_mae_improvement_min_m": 0.15,
+    "each_domain_es_worsening_max_m": 0.0,
+    "not_formal_prospective_statistical_evidence": true
+  },
+  "historically_seen_labels_not_independent": true,
+  "no_retraining_no_temperature_grid_search_no_provided_test": true,
+  "manifest_sha256": "b6ecb24186659b4881bb083d62eec0e49d98f77697e75867be419cdbee705095"
+}
+
+=== END prepare exit=0 elapsed_seconds=7.755 ===
+
+=== check-before-run | 2026-10-10T10:33:51+08:00 | D:\miniminiconda\envs\liuyan\python.exe -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer check ===
+{
+  "status": "FROZEN_READY"
+}
+
+=== END check-before-run exit=0 elapsed_seconds=7.737 ===
+
+=== run-once | 2026-10-10T10:34:14+08:00 | D:\miniminiconda\envs\liuyan\python.exe -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer run --device cuda ===
+{
+  "status": "TWO_DOMAIN_DESCRIPTIVE_TRANSFER_SIGNAL",
+  "result_sha256": "689c62a942ff85fcab71c8ea307a90895bc3ea2985041233ea7d614ce893a267",
+  "gate": {
+    "status": "TWO_DOMAIN_DESCRIPTIVE_TRANSFER_SIGNAL",
+    "passed_descriptive_gate": true,
+    "checks": {
+      "uts": {
+        "delta_mae_m": -1.7119376524399659,
+        "delta_es_m": -0.8029391849166174,
+        "mae_improvement_met": true,
+        "es_nonworsening_met": true
+      },
+      "tampere": {
+        "delta_mae_m": -1.2157823912813255,
+        "delta_es_m": -0.19274188148989957,
+        "mae_improvement_met": true,
+        "es_nonworsening_met": true
+      }
+    },
+    "not_independent_blind_evidence": true
+  }
+}
+
+=== END run-once exit=0 elapsed_seconds=26.000 ===
+
+=== check-after-run | 2026-10-10T10:34:56+08:00 | D:\miniminiconda\envs\liuyan\python.exe -m fhm_dapp_tim.fhm_dapp.uji_v17_g7_frozen_transfer check ===
+{
+  "status": "VERIFIED",
+  "scientific_status": "TWO_DOMAIN_DESCRIPTIVE_TRANSFER_SIGNAL",
+  "result_sha256": "689c62a942ff85fcab71c8ea307a90895bc3ea2985041233ea7d614ce893a267"
+}
+
+=== END check-after-run exit=0 elapsed_seconds=7.819 ===

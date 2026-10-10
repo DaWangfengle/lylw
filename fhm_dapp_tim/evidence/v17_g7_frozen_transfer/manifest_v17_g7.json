@@ -1,0 +1,109 @@
+{
+  "diagnostic_transfer_gate": {
+    "each_domain_es_worsening_max_m": 0.0,
+    "each_domain_mae_improvement_min_m": 0.15,
+    "not_formal_prospective_statistical_evidence": true,
+    "required_domains": [
+      "uts",
+      "tampere"
+    ]
+  },
+  "domain_order": [
+    "uts",
+    "tampere"
+  ],
+  "energy_random_seed": 19602,
+  "fixed_policy": {
+    "T": 0.6,
+    "policy": "T0.6_S0.5",
+    "scale": 0.5
+  },
+  "g6_calibration_file_sha256": "77ae0e137335dc6e99f1bf9d26b135fc9979bfc89ae26c881c207dae4fc2b17a",
+  "g6_manifest_file_sha256": "45896bed26ca192ad35422efd657e373b8878d6e7870eac8f17447d5b26d08c7",
+  "g6_original_energy_draws_per_stream": 64,
+  "historically_seen_labels_not_independent": true,
+  "manifest_sha256": "b6ecb24186659b4881bb083d62eec0e49d98f77697e75867be419cdbee705095",
+  "models_and_roles": {
+    "tampere": {
+      "anchor_count": 334,
+      "ap_width": 489,
+      "checkpoints": [
+        "8af93392f81c8cc71c7e44664da8aa3c62356f1eb8e067feff072dba3e67e60b",
+        "37c8af1d611586456e6200d3fe196f111f4e93249613d4997ccdef6f9541e294",
+        "c1e173049c37ef26858ada993f8d3fa62ea150ff55b7c6ccd34bd31eb0b04f2d",
+        "0f53c19750169c95327f501172e2da60a690b08dcf19db677a78365b848280f1",
+        "ccd93aee342b27b67b3f971f157286886d7090556bd28cdbdb4af82f350ef3b5"
+      ],
+      "dataset_train_source": "Tampere/Training_rss.csv + Training_coordinates.csv",
+      "historical_freeze_sha256": "d1e0d97f102fd85931332a4dbf5139dcd368667366068d9d8903910c96b4523b",
+      "historical_manifest_self_sha256": "0ce50ed637ef6987b915a4a94169400782eb1a4b638c32869c450eb40319bfbc",
+      "historical_manifest_sha256": "f3c92a952566787039cab02ec42fbcf3a493aa3b34b7194ba4b26989d450c812",
+      "historical_protocol": "v17_g5_tampere_train_only_bayes_action_v1_20261009",
+      "old_confirm_labels_previously_observed": true,
+      "raw_training_rows": 446,
+      "role_coordinate_count": {
+        "confirmation": 112
+      },
+      "role_coordinate_sha256": {
+        "confirmation": "905866e37596155ee6131b271686a69ce3e0692f9d67d61b978d2c109e411b67"
+      },
+      "role_rows": {
+        "confirmation": 112
+      }
+    },
+    "uts": {
+      "anchor_count": 945,
+      "ap_width": 589,
+      "checkpoints": [
+        "299b5955967acc333fccef45d6a83ca45af4a6e073bf64a909ba9889dabb4fb5",
+        "3bf3db6c88d3189529623106af2e1463e44b17408965eeecd98a739efa8d9b48",
+        "4e56c499c837a40d45c9a40b984ec12eb7bc9f10dd8db5ae2b549103d05e7548",
+        "695b0afbc0c282f20f6f7f41d385b842b169ef366c75f0c010e5f27f24bd1224",
+        "0067c6a6f4d88c5dc49a9159d26304802be14e31f6cbcf23b91c29555c5ef25c"
+      ],
+      "dataset_train_source": "UTSIndoorLoc/UTS_training.csv",
+      "historical_manifest_self_sha256": "9c430315b50c7457e9af2da2e0cc0a8569cba9e8f03247f9ef4a5e15bf966b31",
+      "historical_manifest_sha256": "24b5de94db3c2539daef4fb28b808eccf762b795709db8430bd5a967f86699f5",
+      "historical_protocol": "v17_g4_uts_train_internal_observable_support_v1_20261009",
+      "old_confirm_labels_previously_observed": true,
+      "raw_training_rows": 9108,
+      "role_coordinate_count": {
+        "calibration": 258,
+        "confirmation": 263
+      },
+      "role_coordinate_sha256": {
+        "calibration": "60593e68e8b87ac284408acc5b4d0f5f6cb1c138677350ccf667aa29788da763",
+        "confirmation": "dee3633a2b4a4dfedb5054c420fef766e917c3a437303b08c7a7917373bdba93"
+      },
+      "role_rows": {
+        "calibration": 1625,
+        "confirmation": 1692
+      }
+    }
+  },
+  "no_retraining_no_temperature_grid_search_no_provided_test": true,
+  "protocol": "v17_g7_frozen_tuji_policy_uts_tampere_transfer_20261010",
+  "scored_roles": {
+    "tampere": [
+      "confirmation"
+    ],
+    "uts": [
+      "calibration",
+      "confirmation"
+    ]
+  },
+  "source_sha256": {
+    "g4_uts_historical_protocol": "e91cf79a3d691e5b932b6387f9ed7150278f53de003dc6a67a19d114854913f3",
+    "g5_tampere_historical_protocol": "0953f4726d7b769b140f9d0e20e8ed7481a2d2b144ecc875368e5bc764945d8b",
+    "g6_calibration_and_scorer": "e8f42637b24a69c664dd8726c9b15974fb51f219d2c373d1d0b3fce8d42cffe1",
+    "g7_code": "0a4f3b3862b636f78f16719bb49aff79c451af0b3cdb8b51588bf7cdf365ce1f",
+    "g7_design": "bdf3ab9ddb53f0e374a758abeaeaaac36fe43ed9d643f496221266fe324f5be4",
+    "g7_tests": "71527124526bbefb3d5d0ae71c5c7017382ea386d53e92d6173ca7ca3b4e2584"
+  },
+  "variants": [
+    "T1_S1",
+    "T0.6_S0.5",
+    "T0.6_S1",
+    "T1_S0.5"
+  ]
+}

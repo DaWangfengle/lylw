@@ -1,0 +1,8 @@
+{
+  "g6_calibration_sha256": "77ae0e137335dc6e99f1bf9d26b135fc9979bfc89ae26c881c207dae4fc2b17a",
+  "historical_weights_are_original": true,
+  "manifest_file_sha256": "76f01a1ad317db4c01c43ffdf9b2ce50b26932f36e368235e54b5558be0a7763",
+  "protocol": "v17_g7_frozen_tuji_policy_uts_tampere_transfer_20261010",
+  "reanalysis_of_seen_domains": true,
+  "result_sha256": "f26da5c586ccdbcedf6120e4088d3d99644dd0f1b9b412417e78c0234c89bbf7"
+}
