@@ -66,9 +66,10 @@ def test_member_and_anchor_commute_at_fixed_temperature():
 def test_independent_product_violation_is_a_hard_stop():
     w,c,p=_factorized(n=2,e=5,k=192)
     v=p.clone().reshape(2,5,192)
-    v[0,0,0]+=0.1
-    v[0,0,1]-=0.1
-    assert (v>=0).all()  # chosen softmax distribution can be too tiny;
+    delta=float(min(v[0,0,0],v[0,0,1]))*0.5
+    v[0,0,0]+=delta
+    v[0,0,1]-=delta
+    assert (v>=0).all()
     with pytest.raises(g8.G8Error,match="factorization"):
         g8.hierarchical_laws(v.reshape(2,-1))
 
