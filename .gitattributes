@@ -122,3 +122,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g11_rss_identifiability.py -text
 tests/test_uji_v17_g11_rss_identifiability.py -text
 fhm_dapp_tim/evidence/v17_g11_rss_identifiability/** -text
 V17_G11_CODEX_RUN.txt -text
+
+# G12 frozen E5 action/rank intervention byte identity across checkouts
+fhm_dapp_tim/fhm_dapp/uji_v17_g12_action_ranking.py -text
+tests/test_uji_v17_g12_action_ranking.py -text
+fhm_dapp_tim/evidence/v17_g12_action_ranking/** -text
+V17_G12_CODEX_RUN.txt -text
