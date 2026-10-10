@@ -259,7 +259,7 @@ def score_role(models:list,data:dict,rows:np.ndarray,origin:np.ndarray)->dict:
     gid,unique=r2b._coordinate_groups(keys)
     values:dict[str,torch.Tensor]={}
     true=torch.as_tensor(data["raw_xy"][rows]-origin[None,:],
-                         device=device,dtype=torch.float32)
+                         device=device,dtype=torch.float64)
     bg=torch.as_tensor(data["building"][rows],dtype=torch.long,device=device)
     fl=torch.as_tensor(data["floor"][rows],dtype=torch.long,device=device)
     if not (torch.isfinite(true).all() and int(ref.n_anchors)>=K):
@@ -311,10 +311,9 @@ def score_role(models:list,data:dict,rows:np.ndarray,origin:np.ndarray)->dict:
                            component_location=loc)
         # Compare exactly two fixed decisions to make source/diagnosis links.
         mean_base=(p[:,:,None]*loc).sum(1)
-        sharp=torch.softmax(c.clamp_min(1e-30).log()/T,dim=1)
-        means=(wm.transpose(0,1)[:,:,None,None]*
-               sharp[:,None,:,None]*
-               loc.reshape(b,E,K,2)).sum(dim=(1,2))
+        # Keep G8's marginalization and float32 reduction order exactly.
+        anchor_joint=g8.hierarchical_laws(p,E,K)["anchor"]
+        means=(anchor_joint[:,:,None]*loc).sum(1)
         diag["base_point_mae_m"]=torch.linalg.vector_norm(
             mean_base.double()-true[start:end].double(),dim=1)
         diag["anchor_t_point_mae_m"]=torch.linalg.vector_norm(

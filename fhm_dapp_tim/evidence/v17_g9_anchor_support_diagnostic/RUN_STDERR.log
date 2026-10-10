@@ -1,0 +1,56 @@
+
+=== compile-initial | 2026-10-10T13:16:48+08:00 | args=['-m', 'compileall', '-q', 'fhm_dapp_tim/fhm_dapp/uji_v17_g9_anchor_support_diagnostic.py', 'tests/test_uji_v17_g9_anchor_support_diagnostic.py'] ===
+
+=== exit=0 seconds=0.096 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== tests-initial | 2026-10-10T13:16:48+08:00 | args=['-m', 'pytest', '-q', 'tests/test_uji_v17_g9_anchor_support_diagnostic.py', 'tests/test_uji_v17_g8_hierarchical_attribution.py', '--basetemp', 'fhm_dapp_tim/models/v17_g9_anchor_support_diagnostic/pytest_tmp_initial'] ===
+
+=== exit=0 seconds=7.136 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== preflight-initial | 2026-10-10T13:17:31+08:00 | args=['-m', 'fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic', 'preflight'] ===
+
+=== exit=0 seconds=9.411 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== regression-before-fix | 2026-10-10T13:18:39+08:00 | args=['-m', 'pytest', '-q', 'tests/test_uji_v17_g9_anchor_support_diagnostic.py::test_point_mae_preserves_original_target_precision_and_g8_action', '--basetemp', 'fhm_dapp_tim/models/v17_g9_anchor_support_diagnostic/pytest_tmp_precision'] ===
+
+=== exit=1 seconds=4.952 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== compile-repaired | 2026-10-10T13:19:04+08:00 | args=['-m', 'compileall', '-q', 'fhm_dapp_tim/fhm_dapp/uji_v17_g9_anchor_support_diagnostic.py', 'tests/test_uji_v17_g9_anchor_support_diagnostic.py'] ===
+
+=== exit=0 seconds=0.092 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== tests-repaired | 2026-10-10T13:19:04+08:00 | args=['-m', 'pytest', '-q', 'tests/test_uji_v17_g9_anchor_support_diagnostic.py', 'tests/test_uji_v17_g8_hierarchical_attribution.py', '--basetemp', 'fhm_dapp_tim/models/v17_g9_anchor_support_diagnostic/pytest_tmp_repaired'] ===
+
+=== exit=0 seconds=5.158 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== preflight-repaired | 2026-10-10T13:19:09+08:00 | args=['-m', 'fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic', 'preflight'] ===
+
+=== exit=0 seconds=9.180 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== identity-and-synthetic-cuda | 2026-10-10T13:20:18+08:00 | args=['-'] ===
+
+=== exit=0 seconds=14.183 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== prepare | 2026-10-10T13:20:50+08:00 | args=['-m', 'fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic', 'prepare'] ===
+
+=== exit=0 seconds=9.256 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== check-before-run | 2026-10-10T13:20:59+08:00 | args=['-m', 'fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic', 'check'] ===
+
+=== exit=0 seconds=9.254 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== run-once | 2026-10-10T13:21:37+08:00 | args=['-m', 'fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic', 'run', '--device', 'cuda'] ===
+
+=== exit=0 seconds=31.963 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== check-after-run | 2026-10-10T13:22:09+08:00 | args=['-m', 'fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic', 'check'] ===
+
+=== exit=0 seconds=9.315 stderr_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ===
+
+=== auxiliary read-only review failures; no formal rerun ===
+Traceback (most recent call last):
+  File "<stdin>", line 21, in <module>
+KeyError: 'by_domain'
+Traceback (most recent call last):
+  File "<stdin>", line 28, in <module>
+AssertionError

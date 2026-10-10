@@ -4,6 +4,7 @@ from __future__ import annotations
 import inspect
 import json
 
+import numpy as np
 import pytest
 import torch
 
@@ -184,3 +185,63 @@ def test_train_only_inference_no_old_confirm_outcomes():
     assert "confirmation_v17" not in code
     assert "load_uts(\"test\")" not in code
     assert "load_tampere(\"test\")" not in code
+
+
+def test_point_mae_preserves_original_target_precision_and_g8_action(monkeypatch):
+    """Reproduce G8's deterministic actions without an ES draw or real labels."""
+    torch.manual_seed(909)
+    rows, anchors = 3, 209
+    logits = torch.randn(5, rows, anchors)
+    centres = torch.randn(5, rows, anchors, 2) * 40
+    scales = .2 + torch.rand_like(centres)
+    prototype = torch.rand(rows, anchors)
+    anchor_xy = torch.randn(anchors, 2) * 40
+
+    class FrozenSyntheticMember(torch.nn.Module):
+        def __init__(self, index):
+            super().__init__()
+            self.marker = torch.nn.Parameter(torch.zeros(()), requires_grad=False)
+            self.encoder = torch.nn.Identity()
+            self.index = index
+            self.n_anchors = anchors
+            self.anchor_coords = anchor_xy
+            self.anchor_buildings = torch.zeros(anchors, dtype=torch.long)
+            self.anchor_floors = torch.zeros(anchors, dtype=torch.long)
+
+        def retrieval_logits_from_embedding(self, embedding):
+            return logits[self.index]
+
+        def _components(self, embedding, indices):
+            return centres[self.index], scales[self.index]
+
+    monkeypatch.setattr(g9.r2b, "_prototype_distance", lambda model, rss: prototype)
+
+    def forbid_energy_score(*args, **kwargs):
+        raise AssertionError("G9 point diagnostics must not draw an Energy Score")
+
+    monkeypatch.setattr(g9.r3, "_score_joint_law", forbid_energy_score)
+    origin = np.array([7.13189697265625, 15.915324211120605], dtype=np.float64)
+    raw_xy = np.array([[43.123456789, 61.987654321],
+                       [43.123456789, 61.987654321],
+                       [58.987654321, 17.123456789]], dtype=np.float64)
+    keys = [(0, 0, 43.1235, 61.9877), (0, 0, 43.1235, 61.9877),
+            (0, 0, 58.9877, 17.1235)]
+    data = {"rss": torch.zeros(rows, 4), "raw_xy": raw_xy, "keys": keys,
+            "building": np.zeros(rows, dtype=np.int64),
+            "floor": np.zeros(rows, dtype=np.int64)}
+    result = g9.score_role([FrozenSyntheticMember(i) for i in range(5)],
+                           data, np.arange(rows), origin)
+    priors = torch.softmax(g9.r3p.BETA_NEURAL * logits
+                           - g9.r3p.BETA_PROTOTYPE * prototype[None], dim=-1)
+    top, ix, radial, _ = g9.r3._member_top_l(
+        priors, centres, scales, 192, student_df=4.)
+    joint, location, _ = g9.r3._dense_joint_law(
+        top, ix, radial, centres, scales, tuple(range(5)), top_k=192, alpha=1.)
+    target = torch.as_tensor(raw_xy - origin, dtype=torch.float64)
+    gid, unique = g9.r2b._coordinate_groups(keys)
+    for label, law in (("base_point_mae_m", joint),
+                       ("anchor_t_point_mae_m", g9.g8.hierarchical_laws(joint)["anchor"])):
+        action = (law[:, :, None] * location).sum(1)
+        loss = torch.linalg.vector_norm(action.double() - target, dim=1)
+        expected = g9.r2b._group_vector(loss, gid, len(unique)).tolist()
+        assert result["site_vectors"][label] == expected

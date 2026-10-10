@@ -1,0 +1,10 @@
+{
+  "manifest_file_sha256": "853b54874c9581288d2c8a97b94c3a66ee8ee3494f227a8df0a30901c96785aa",
+  "metric_radius_m": [
+    5.0,
+    10.0
+  ],
+  "old_labels_previously_exposed": true,
+  "protocol": "v17_g9_train_internal_anchor_support_attribution_20261010",
+  "result_sha256": "899f8aae423f0f3f25daeb757b8af554a701b1fb3a89bee6bc026e83fa4941b2"
+}
