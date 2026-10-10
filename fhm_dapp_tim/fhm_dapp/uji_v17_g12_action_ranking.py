@@ -409,6 +409,21 @@ def score_role(models:list,data:dict,rows:np.ndarray,origin:np.ndarray)->dict:
             "best_gain_m":-min(ds),
             "coordinate_vector_delta_mae_m":ds,
         }
+    risk_error_alignment={}
+    for name in ("component_median","continuous_median"):
+        actual=np.asarray(delta[name],dtype=np.float64)
+        risk_delta=np.asarray(site[name+"_model_risk_m"],dtype=np.float64) - (
+            np.asarray(site["mean_model_risk_m"],dtype=np.float64))
+        risk_error_alignment[name]={
+            "mean_model_risk_delta_m":float(risk_delta.mean()),
+            "mean_realized_mae_delta_m":float(actual.mean()),
+            "model_risk_improved_sites":int((risk_delta<0).sum()),
+            "model_risk_improved_but_real_mae_worse_sites":
+                int(((risk_delta<0)&(actual>0)).sum()),
+            "model_risk_worse_but_real_mae_better_sites":
+                int(((risk_delta>0)&(actual<0)).sum()),
+            "model_risk_delta_by_site_m":risk_delta.tolist(),
+        }
     # Descriptive stage rescue/loss uses true labels; no runtime gate.
     movements={}
     for before,after in zip(STAGES[:-1],STAGES[1:]):
@@ -424,6 +439,7 @@ def score_role(models:list,data:dict,rows:np.ndarray,origin:np.ndarray)->dict:
             "physical_coordinate_keys":[list(x) for x in ordered],
             "summary":stats,"site_vectors":site,
             "decision_effects":pairs,
+            "risk_vs_realized_error_posthoc":risk_error_alignment,
             "ranking_stage_transitions_posthoc":movements,
             "oracle_labels_only_for_scoring_diagnostics":True,
             "random_streams_independent":True}
@@ -457,6 +473,11 @@ def _report(record:dict)->str:
                 f"  Decision ΔMAE vs mean: component "
                 f"{p['component_median_minus_mean']['mean_delta_mae_m']:+.6f}m; "
                 f"continuous {p['continuous_median_minus_mean']['mean_delta_mae_m']:+.6f}m")
+            z=x["risk_vs_realized_error_posthoc"]["continuous_median"]
+            lines.append(f"  Continuous median model-risk Δ "
+                f"{z['mean_model_risk_delta_m']:+.6f}m; "
+                f"risk better / real MAE worse on "
+                f"{z['model_risk_improved_but_real_mae_worse_sites']} sites")
     lines.extend(["","## Scientific interpretation boundaries","",
         "- Point actions share EXACTLY one frozen 960-component posterior.",
         "- The training-free continuous median is approximate: 2x128 fixed",
