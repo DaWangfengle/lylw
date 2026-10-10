@@ -15,7 +15,7 @@ All use exact original frozen E5 networks, original FIT coordinate and RSS memor
 1. Frozen V17 Anchor T=.6: original R3 Top-L192, Top-K192, alpha1 and Student-t df4, point mixture mean. Recompute the original mean; no old outcome JSON read during scoring.
 2. Raw RSS L2 1NN: the EXACT pre-existing R3 upstream FIT prototype RSS distance computed on model-seen APs. Not novel independent sensor information.
 3. Raw RSS L2 5NN: original five nearest FIT anchors, weights 1/(d+0.001)^2, all buildings/floors allowed. Predetermined count and smoothing, no search.
-4. AP-presence 1NN: from FIT scans only, estimate model-seen AP detection Bernoulli frequency for each frozen reference anchor, Beta(.5,.5) smoothing. AP detected only when normalized model RSS > -1+1e-6. Query/reference Brier distance is the mean squared difference in observed AP bit and FIT detection frequency. No label-dependent candidates. Caveat: observed signal clipped to -110 dBm may also be exactly -1 in normalized RSS, so this observation channel cannot distinguish clipping from truly missing.
+4. AP-presence 1NN: from FIT scans only, estimate model-seen AP detection Bernoulli frequency for each frozen reference anchor, Beta(.5,.5) smoothing. AP detected only when normalized model RSS > -0.999 (matching original FIT anchor memory). Query/reference Brier distance is the mean squared difference in observed AP bit and FIT detection frequency. No label-dependent candidates. Caveat: observed signal clipped to -110 dBm may also be exactly -1 in normalized RSS, so this observation channel cannot distinguish clipping from truly missing.
 
 Predictions are fully **label free**, with no true building/floor preselection; only original FIT reference geometries may be known. Mapping of raw FIT keys to frozen anchor IDs must be verified as a full one-to-one bijection by building, floor and physical XY tolerance <=0.03m before computing AP frequency prototypes.
 
@@ -26,7 +26,7 @@ Use true building/floor/XY AFTER prediction, for diagnosis only:
 - Define NEAR: same building/floor and distance <=10m. Clearly WRONG: any different building/floor, or distance >=20m. For each raw distance score calculate best clearly-wrong minus best near score; positive margin means raw nearest correct-region anchor beats nearest geographically distant impostor in that distance metric. Missing nearby FIT anchors or clearly-wrong anchors means undefined margin, serialized as null.
 - Original Top-K rank of first selected near anchor (null if none); original shared mass on true near anchors.
 - Physical-site macro averaging means average rows per site, then sites equally. Site hit rate is fractional where repeated RSS scans vary.
-- Paired quadrant analysis raw 1NN vs V17 Top-1 (both correct, raw only, V17 only, both wrong), which uses labels as diagnostic and **cannot be used as a model gating feature**.
+- Paired quadrant analysis raw 1NN vs V17 Top-1 (both correct, raw only, V17 only, both wrong), which uses labels as diagnostic and **cannot be used as a model gating feature**. Also report AP detection Top-1 near when both raw L2 and frozen V17 Top-1 are far.
 
 Do not move the 10m/20m thresholds after looking at results.
 
