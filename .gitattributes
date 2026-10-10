@@ -92,3 +92,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g6_calibration.py -text
 tests/test_uji_v17_g6_calibration.py -text
 fhm_dapp_tim/evidence/v17_g6_distribution_calibration/** -text
 V17_G6_CODEX_RUN.txt -text
+
+# G7 scientific source and experiment evidence byte-stability
+fhm_dapp_tim/fhm_dapp/uji_v17_g7_frozen_transfer.py -text
+tests/test_uji_v17_g7_frozen_transfer.py -text
+fhm_dapp_tim/evidence/v17_g7_frozen_transfer/** -text
+V17_G7_CODEX_RUN.txt -text
