@@ -20,10 +20,12 @@ H1不是信息论不可辨识证明；H2也不是某种模型必然能够恢复�
 三、原始RSS FIT prototype L2 5NN：固定k=5，权重1/(d+.001)^2，
     不搜索k值或阈值。
 四、FIT AP检出频率1NN：按原模型RSS>-0.999的检出定义，Beta(0.5,0.5)
-    平滑，每AP Brier距离，从FIT行重建每锚点检测率；
-    必须与原冻结checkpoint的anchor_detection_prob严格数值一致
-    (atol/rtol均1e-6)，正式计算优先用原checkpoint中保存的检测率。
-    这是对已有FIT统计的一种简单判别规则，并非新增观测。
+    平滑，每AP Brier距离，从原FIT行重建每锚点检测率；
+    注意原V17-R0构建函数虽计算此统计，但冻结E5构建时未传入该统计，
+    关闭候选重排器的旧checkpoint并不保存anchor_detection_prob。
+    因此不得凭空索取checkpoint中不存在的属性；只需用原
+    build_anchor_memory相同的公式做合成数据数值测试，并验证FIT
+    物理位置到原锚点的完整一一对应。属于原有RSS的新计算，不是新观测。
 所有决策在完整FIT锚点中检索，不能使用query真实building/floor筛选。
 若raw RSS模型范围或缺失编码不匹配，不能自作主张换阈值调参。
 
@@ -72,7 +74,7 @@ python -m fhm_dapp_tim.fhm_dapp.uji_v17_g11_rss_identifiability check
 做最小修正，并再次完整测试；记录具体原因，不改历史G1–G10科学文件。
 准备后的源码固定，正式run前先写.lock；如果锁已存在但发生错误，
 保留锁和完整错误日志，STOP，不可删锁重跑挑结果。
-若AP检测频率不一致、FIT索引一一对应失败、R3后验恒等式不成立、
+若AP检测公式不符合原FIT构建、FIT索引一一对应失败、R3后验恒等式不成立、
 原始Anchor T=.6与G8不一致或发生真实测试数据访问，立即STOP。
 
 【产物】
