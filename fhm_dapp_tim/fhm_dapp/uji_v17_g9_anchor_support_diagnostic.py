@@ -190,8 +190,11 @@ def stage_metrics(
         within=same_distance<=radius+EPS
         chosen=within.gather(1,consensus_indices)
         out[f"{key}_fit_exists"]=within.any(dim=1).double()
-        out[f"{key}_union_exists"]=(within&union).any(dim=1).double()
-        out[f"{key}_consensus_exists"]=chosen.any(dim=1).double()
+        union_hit=(within&union).any(dim=1)
+        consensus_hit=chosen.any(dim=1)
+        out[f"{key}_union_exists"]=union_hit.double()
+        out[f"{key}_consensus_exists"]=consensus_hit.double()
+        out[f"{key}_consensus_and_union_exists"]=(union_hit&consensus_hit).double()
         out[f"{key}_base_mass"]=(consensus_prob*chosen).sum(dim=1).double()
         out[f"{key}_anchor_t_mass"]=(sharp*chosen).sum(dim=1).double()
         if component_location is not None:
@@ -201,10 +204,19 @@ def stage_metrics(
 
 
 def _mean_vector(vals:torch.Tensor,gid:torch.Tensor,count:int)->list:
-    """Physical-coordinate means. Missing distance uses null, never infinities."""
-    x=torch.where(torch.isfinite(vals),vals,torch.full_like(vals,MISSING)).cpu()
-    grouped=r2b._group_vector(x,gid,count).tolist()
-    return [None if v>MISSING/2 else float(v) for v in grouped]
+    """Physical site mean over finite observations; null if no valid row.
+
+    A single missing Top-K candidate must not poison other valid RSS
+    observations from the same physical coordinate.
+    """
+    x=vals.detach().cpu().double()
+    groups=gid.detach().cpu().long()
+    finite=torch.isfinite(x)
+    total=torch.zeros(count,dtype=torch.float64)
+    number=torch.zeros(count,dtype=torch.float64)
+    total.scatter_add_(0,groups,torch.where(finite,x,0.))
+    number.scatter_add_(0,groups,finite.double())
+    return [float(v/n) if n else None for v,n in zip(total.tolist(),number.tolist())]
 
 
 def _summary(site:dict, count:int)->dict:
@@ -227,10 +239,10 @@ def _summary(site:dict, count:int)->dict:
             sum(x for x,f in zip(union,fit) if f>0.5)/denom if denom else None)
         result[tag+"_consensus_recall_given_fit"]=(
             sum(x for x,f in zip(cons,fit) if f>0.5)/denom if denom else None)
-        selected_denom=sum(x for x in union)
+        selected_denom=sum(union)
+        both=site[tag+"_consensus_and_union_exists"]
         result[tag+"_consensus_recall_given_union"]=(
-            sum(min(x,y) for x,y in zip(union,cons))/selected_denom
-            if selected_denom else None)
+            sum(both)/selected_denom if selected_denom else None)
     return result
 
 
