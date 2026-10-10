@@ -110,3 +110,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g9_anchor_support_diagnostic.py -text
 tests/test_uji_v17_g9_anchor_support_diagnostic.py -text
 fhm_dapp_tim/evidence/v17_g9_anchor_support_diagnostic/** -text
 V17_G9_CODEX_RUN.txt -text
+
+# G10 fixed model and retrospective evidence across Windows checkouts
+fhm_dapp_tim/fhm_dapp/uji_v17_g10_evidence_corrected_law.py -text
+tests/test_uji_v17_g10_evidence_corrected_law.py -text
+fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/** -text
+V17_G10_CODEX_RUN.txt -text
