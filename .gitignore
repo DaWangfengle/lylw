@@ -188,3 +188,8 @@ local_notes/
 !/fhm_dapp_tim/evidence/v17_g11_rss_identifiability/RUN_STDOUT.log
 !/fhm_dapp_tim/evidence/v17_g11_rss_identifiability/RUN_STDERR.log
 /fhm_dapp_tim/models/v17_g11_rss_identifiability/pytest_tmp_*/
+
+# V17-G12 scientific stdout/stderr evidence; local pytest fixtures stay ignored.
+!/fhm_dapp_tim/evidence/v17_g12_action_ranking/RUN_STDOUT.log
+!/fhm_dapp_tim/evidence/v17_g12_action_ranking/RUN_STDERR.log
+/fhm_dapp_tim/models/v17_g12_action_ranking/pytest_tmp_*/

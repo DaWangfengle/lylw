@@ -1,0 +1,7 @@
+{
+  "historical_outcome_labels_exposed": true,
+  "manifest_file_sha256": "552ff668c1483104de8b77acd08531f03980e2476189513337fc731f25e032ae",
+  "no_parameter_training": true,
+  "protocol": "v17_g12_frozen_anchor_action_and_rank_chain_20261010",
+  "result_sha256": "d40e03e1ccc1e2e2ca4585cdd043e60e3e5a4ea98ccfac9677943d6f0f6f2987"
+}
