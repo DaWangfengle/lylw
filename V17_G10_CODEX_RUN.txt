@@ -1,0 +1,105 @@
+V17-G10 | Codex 本地科学实验：冻结V17 E5上的跨域可学习锚点证据修正
+=================================================================
+分支：v17-g10-evidence-corrected-anchor-law
+主程序：fhm_dapp_tim/fhm_dapp/uji_v17_g10_evidence_corrected_law.py
+单元测试：tests/test_uji_v17_g10_evidence_corrected_law.py
+研究设计：fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/DESIGN_V17_G10.md
+
+【重要：这是有严格边界的科学迭代，不是工程重构】
+G8指出MAE主要受锚点层概率影响。G9指出正确邻域锚点几乎总被检索保留，
+但概率排序经常偏离真实空间模式。不能继续调temperature/scale/成员权重，
+也不应该直接堆大网络。G10仅测试：四个无需真实标签的RSS/成员一致性/
+局部空间概率特征，是否能帮助现有冻住的anchor T=.6概率分布。
+训练参数总量仅4个，共享于三套不同数据域，冻结所有原E5网络。
+不实现额外候选挖掘、预训练、门控专家或第二个修正方案。
+
+【模型和原始强基线】
+原成员E=5，L=192，K=192，alpha=1，Student-t df=4。
+原R3混合概率 q_mk=w_m*c_k。
+Base原始c；Anchor-only强基线q0=softmax(log c / 0.6)；
+G10 q=softmax(log c/0.6 + Σ(theta_j * phi_j))，
+theta_j=1.5*tanh(v_j)，所有成员权重w、连续中心/Student-t尺度不变。
+phi依次是（1）RSS相对原型匹配；（2）五成员Top-L支持比例；
+（3）成员对数先验分歧；（4）10m同建筑同楼层空间局部概率凝聚。
+特征只依赖RSS、冻结模型、FIT锚点元数据，不能使用真实位置/真实楼层。
+零参数时G10必须精确等于G8 Anchor-only，包括同随机流连续ES。
+
+【训练、分区、避免标签泄漏】
+只在TUJI原G6 CAL(137站点)和UTS原G4 CAL(258站点)共同拟合四个共享参数。
+原E5 FIT本来已用来训练基模型，因此禁止在FIT原位预测上训练修正器。
+不准利用TUJI/UTS CONFIRM、Tampere任何标签拟合系数/挑超参。
+Tampere原G5 CONFIRM只作为零本域校准的描述性迁移。
+所有CONFIRM位置过去G4–G9已经被看过！严格称为回顾性，不得宣称新盲测、
+独立证实或统计显著性晋级。各域自己的基础E5权重仍使用原始不同AP宽度。
+训练时每个物理站点等权，然后TUJI/UTS两个域总权重各1/2，不按扫描数
+让某个域主导。唯一固定训练：seed20261010，Adam lr0.06，24 epoch，
+batch24，theta上界±1.5。绝不根据CONFIRM选epoch、lambda或feature。
+单一训练损失：
+    [Dirac-mixture ES + 0.30 * point Euclidean MAE] / 10m
+    + 0.10 * KL(q || original Anchor T=.6)
+Dirac-mixture ES是原成员平均分量中心上的离散代理损失，**不是**
+完整连续Student-t Energy Score；请不要混淆这两个指标。
+正式评估ES仍用原R3 960个连续Student-t分量、共同随机数两套64次、
+种子19602；所有方法同一批随机数，固定原中心/尺度。
+
+【四个阶段，必须按顺序】
+1. 仓库根目录、原conda/CUDA环境先编译和CPU测试：
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g10_evidence_corrected_law.py tests/test_uji_v17_g10_evidence_corrected_law.py
+python -m pytest -q tests/test_uji_v17_g10_evidence_corrected_law.py tests/test_uji_v17_g9_anchor_support_diagnostic.py tests/test_uji_v17_g8_hierarchical_attribution.py
+2. 原冻结权重、数据边界和manifest预检；无任何评分或训练：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g10_evidence_corrected_law preflight
+3. 全通过后冻结源码和科研参数：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g10_evidence_corrected_law prepare
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g10_evidence_corrected_law check
+4. 单次训练+三域正式评分：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g10_evidence_corrected_law run --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g10_evidence_corrected_law check
+
+run在任何CAL拟合之前先写.lock，训练仅用CAL；训练系数保存成不可变
+fitted_coefficients_v17_g10.json后才能打开原CONFIRM标签。
+如锁已产生，程序异常或显著效果不理想，立即STOP、保留异常记录、
+绝对不能删锁重跑、修改loss或偷看确认集再挑超参。
+允许修复在prepare之前CPU人工合成测试发现的G10新实现bug，
+必须记录具体原因并重新测试。不得修改G1–G9原科学源码和旧结果；
+如果正式冻结后发现问题，停止并报告科学结论不可判定。
+
+【对照、必须上传的科学产物】
+只比较Base、原Anchor T=.6、G10四特征修正；
+三个CONFIRM角色：TUJI、UTS、Tampere。
+全部用相同输入、模型、分量中心/尺度及随机数。
+保存每个物理坐标macro MAE/连续ES、p90/p95误差、
+学习修正与T=.6的每位置配对MAE/ES、负迁移位置数量和最大负迁移。
+自动留存单次训练24轮完整损失序列及四个共享系数。
+结果目录：
+fhm_dapp_tim/evidence/v17_g10_evidence_corrected_law/
+  manifest_v17_g10.json
+  train_v17_g10.lock
+  fitted_coefficients_v17_g10.json
+  evaluation_v17_g10.json
+  RUN_REPORT_V17_G10.md
+  RUN_NOTES.md（可选但建议简短：测试数、CUDA、模型SHA、是否一次运行、
+  原G1-G9历史文件未变、异常修复事实）。
+.pt文件仍留本地，无须上传原始权重。
+不要做工程完美主义，也不要生成几十份运行审计文件。
+
+【重大科研停机条件】
+- 任一E5原权重、FIT/CAL/CONFIRM角色或原始数据hash不一致；
+- 任何官方测试/外部提供测试文件被访问；
+- 独立复算R3原后验边缘与共识概率不一致；
+- 四参数为零不能与Anchor T=.6精确一致；
+- CAL和CONFIRM物理站点泄漏，或Tampere标签进入训练；
+- 概率/目标值出现NaN，训练损失不有限，或结果证据哈希无法核验。
+遇到上述情况先STOP，不能“为了能跑通”去掉断言或偷改旧R3。
+
+【科研判断：任务完成后交还ChatGPT】
+重点不是训练loss是否下降，而是G10能否在三个域用**同一套参数**
+超越原Anchor-only T=.6的绝对2D MAE、连续Energy Score、p90/p95与
+严重负迁移位置。哪怕TUJI/UTS进步而Tampere崩溃，也应视为
+跨域证据不可信，不能声称获得JCR Q1方法。
+如果只是拟合历史CAL而实际CONFIRM不好，明确否定此简单证据修正，
+再研究更根本的RSS信息不可辨识/空间模式表示，不要盲目加网络。
+真正Q1结论仍需新的从未观察物理位置开发测试和独立外部数据验证、
+以及与原V17完整E16/E25等预算基线对比。
+
+【Git责任边界】所有checkout、commit、push和上传GitHub由用户自己做。
+Codex只负责科学测试、一次GPU执行、简洁日志；不要运行任何Git命令。
