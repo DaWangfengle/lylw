@@ -1,0 +1,101 @@
+V17-G9｜Codex 本地执行指令：参考点几何支持 vs 检索筛选 vs 概率分配
+================================================================
+GitHub分支：v17-g9-anchor-support-ranking-diagnostic
+主程序：fhm_dapp_tim/fhm_dapp/uji_v17_g9_anchor_support_diagnostic.py
+单测：tests/test_uji_v17_g9_anchor_support_diagnostic.py
+科学设计：fhm_dapp_tim/evidence/v17_g9_anchor_support_diagnostic/DESIGN_V17_G9.md
+
+一、科学问题（严禁提前设计新模型）
+G8证明当前E5后验的大幅点定位变化来自锚点共识层，而不是成员温度。
+但「锚点概率锐化有效」不能直接证明锚点分配错误：正确空间模式可能
+根本未进入候选集，也可能因成员Top-L、共识Top-K而消失，或者虽在
+最终候选集中却获得过低概率；还可能存在多峰分布点决策不匹配。
+G9只做一次精确的分层诊断，不训练、不开新温度网格、不构造新gate。
+
+二、固定五个分层概念
+1）全部FIT锚点：同一building与floor，几何XY距真实位置<=5m/10m。
+2）五成员各自Top-L=192的全局anchor ID并集是否存在近邻。
+3）最终R3 consensus Top-K=192是否保留近邻。
+4）最终正确邻域上的锚点共识概率质量 c_k，及固定T=.6锚点温度
+    c_k^(1/.6)归一化后的质量（标签仅用于分析，不准做部署特征）。
+5）模型的残差调整后连续分量中心是否接近真实位置：与「原始锚点坐标」
+    的邻近度区分，楼层标签由分量对应的anchor ID继承。
+记录各层最近距离、5/10m命中率、条件召回率、成员并集规模、
+被共识保留却不属于成员Top-L并集的ID个数、Top-1锚点楼层与距离，
+和逐坐标base/anchor-only MAE。
+固定2个半径5m及10m，不可看结果后只汇报有利半径或改数值。
+
+特别注意：FIT anchor在5/10m内没有近邻≠连续模型无法正确预测，
+模型残差中心可以到达更远位置；不能宣称oracle定位下界。
+此外，正确邻域概率、真实距离等都使用了标签，绝不能用于部署预测、
+自动门控或目标域模型调参。UTS跨楼层二维重叠必须严格分开。
+
+三、输入范围与旧实验完整性
+TUJI：原G6 TRAIN MAT，仅加载results_train变量（MAT实体含test变量）；
+UTS：原G4 UTS_training.csv；
+Tampere：原G5 Training_rss + Training_coordinates。
+沿用原FIT/CAL/CONFIRM物理位置分区和原始15个冻结E5权重。
+TUJI/UTS分别评分历史CAL+CONFIRM；Tampere评分历史CONFIRM。
+这5个评分角色的标签以前已被查看过，是回顾性诊断而非盲测。
+所有成员checkpoint的SHA256必须通过旧G4/G5/G6身份校验。
+不能重训或重建丢失的.pt；缺文件就STOP，不得改成新数据分区。
+禁止读任何正式外部提供test/UJI outer，也不使用旧实验结果JSON
+挑选G9阈值、半径、方法或输出结论。
+严格保持G1-G8所有源码、测试和既有证据字节不变。
+
+四、必须通过的科学恒等检查
+- G9使用原R3真实检索logits与prototype项，不简化新检索器。
+- 独立重算的共识概率须等于原_dense_joint_law输出的成员边缘和。
+- 共识锚点ID gather得到的E×K分量中心必须与原R3输出一致。
+- 近邻筛选先判building/floor再判XY，不允许跨楼层的二维伪匹配。
+- 对相同物理位置的多行RSS先平均，再计算坐标宏诊断；缺失距离
+  必须输出null，并仅使用有限观测计算该位置的最近距离统计。
+- 共识在Top-L外选中锚点不是理论错误：epsilon补全允许这种情况，
+  必须报告，而不能强行假设Top-K为Top-L并集的子集。
+- 固定base与anchor T=.6的mean MAE只做G8对齐检查；本轮不需要
+  再调用Energy Score 128次随机抽样。
+
+五、先测试再冻结（仓库根目录、原本CUDA环境）
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g9_anchor_support_diagnostic.py tests/test_uji_v17_g9_anchor_support_diagnostic.py
+python -m pytest -q tests/test_uji_v17_g9_anchor_support_diagnostic.py tests/test_uji_v17_g8_hierarchical_attribution.py
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic preflight
+
+检查所有测试、原数据和权重身份通过。可以在preflight前使用完全合成数据
+做CPU/GPU smoke，但不能偷看任何真实角色结果。
+若发现本轮新实现bug，只在prepare之前修正本轮新G9文件与G9单测，
+记录问题和修复原因。禁止修改历史G1-G8的任何科学代码。
+若数学恒等校验失败，禁止通过移除assert、提高容差或改共识实现蒙混过关。
+
+六、冻结后只执行一次完整GPU分析
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic prepare
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic check
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic run --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g9_anchor_support_diagnostic check
+
+在任何目标位置诊断前先写不可逆.lock；如锁已生成后失败，
+必须保留锁与日志，STOP，不可清锁循环试运行。
+原历史分区此前已暴露，本轮不设p值、晋级门槛，也不挑最优候选。
+
+七、简洁产物上传GitHub后交由ChatGPT分析
+fhm_dapp_tim/evidence/v17_g9_anchor_support_diagnostic/
+- manifest_v17_g9.json
+- diagnosis_v17_g9.lock
+- diagnosis_v17_g9.json
+- RUN_REPORT_V17_G9.md
+- 只需一份简洁RUN_NOTES.md：测试通过数、CUDA型号、原模型身份、
+  历史证据是否改动、运行次数和异常。
+不要生成几十份审计报告，也不上传大.pt。结果JSON包含全部
+物理坐标对齐向量，用于ChatGPT检查失败层级、严重恶化点、楼层模式。
+
+八、科研决策（结果之前不能预选）
+如果正确位置附近FIT锚点很多，但成员Top-L经常丢弃：优先研究检索。
+如果Top-L保留但共识Top-K丢失：优先研究多成员共识选择。
+如果Top-K保留且质量持续过低：值得研究区域概率分配的真实性和校准。
+如果锚点附近缺少候选但残差中心仍能靠近真值：说明「锚点几何覆盖」
+并非连续定位不可达，不能用oracle低估模型能力。
+如果后验候选和质量都合理却MAE仍差：重点考虑多峰点决策/残差偏差。
+这些判断仍需在新的未观察独立开发数据上验证，新模型要超过
+Anchor-only T=.6强基线，同时保持绝对MAE、ES和尾部风险表现。
+
+Git规则：所有Git切换、commit、push、上传由用户自行处理；
+Codex只运行Python科学验证与实验，不执行任何Git命令。
