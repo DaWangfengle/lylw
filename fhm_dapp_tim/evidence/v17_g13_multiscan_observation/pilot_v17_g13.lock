@@ -1,0 +1,10 @@
+{
+  "before_any_CONFIRM_scoring": true,
+  "manifest_file_sha256": "505e5e0db7c6784625bfc93616a537c9425eb8342e65e2b7ccda48b4f55afd8c",
+  "multi_scan_domains": [
+    "tuji",
+    "uts"
+  ],
+  "protocol": "g13_multiscan_fit_bernoulli_conditional_student_observation_v1",
+  "result_sha256": "b32b8d79636c0643bf849fced7cca5c078bd8130e6ca9777048f273bd4312568"
+}
