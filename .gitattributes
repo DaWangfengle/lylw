@@ -128,3 +128,9 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g12_action_ranking.py -text
 tests/test_uji_v17_g12_action_ranking.py -text
 fhm_dapp_tim/evidence/v17_g12_action_ranking/** -text
 V17_G12_CODEX_RUN.txt -text
+
+# G13 source/manifest evidence hashes must not be changed by CRLF conversion
+fhm_dapp_tim/fhm_dapp/uji_v17_g13_multiscan_observation.py -text
+tests/test_uji_v17_g13_multiscan_observation.py -text
+fhm_dapp_tim/evidence/v17_g13_multiscan_observation/** -text
+V17_G13_CODEX_RUN.txt -text
