@@ -1,0 +1,108 @@
+V17-G13 | Codex scientific run: multi-scan AP-detection + conditional RSS evidence
+========================================================================
+BRANCH: v17-g13-multiscan-observation-evidence-pilot
+SCIENTIFIC CODE:
+ fhm_dapp_tim/fhm_dapp/uji_v17_g13_multiscan_observation.py
+DESIGN:
+ fhm_dapp_tim/evidence/v17_g13_multiscan_observation/DESIGN_V17_G13.md
+TEST:
+ tests/test_uji_v17_g13_multiscan_observation.py
+
+研究目的：验证多扫描 RSS 指纹是否允许从 FIT 估计 AP 检测概率和
+条件 RSS 强度，再为 V17 的空间候选提供额外观测证据。不是继续
+搜索温度、不是 G10 的四特征后验修补，也不训练新 V17 网络。
+
+【本轮研究范围】
+只使用 TUJI G6、UTS G4 原始冻结五成员权重与训练文件内部
+FIT/CAL/CONFIRM 物理位置划分。Tampere 从本轮及未来主模型评价排除，
+不要删除任何历史 Tampere 结果。UJIIndoorLoc (UJII) 是最终目标
+数据集，但本轮没有同协议新的独立 E5 检查点；严禁伪造 UJI 结果。
+后续另行设计 UJI 的独立多扫描物理位置隔离及官方测试协议。
+G10-G12 只作机制参考，不用其 CONFIRM 标签调整 G13。
+
+【与前面 G8-G12 区别】
+原 E5 / L192 / K192 / alpha1 / Student-t df4 的 FIT 参考点、
+所有冻结成员权重、连续分量中心与尺度完全不变。
+观测似然从原 FIT 多次扫描估计：
+1. P(AP detected | anchor) 使用 Beta(.5,.5) 全域 FIT 参考概率、
+   各锚点计数向全局收缩4次伪观测；
+2. P(RSS strength | AP detected,anchor) 只使用检测到 AP 的 RSS，
+   全域 FIT 条件均值/方差收缩4伪观测，Student-t df4 评分，
+   模型归一化 RSS 最小 sigma=.06。
+模型 RSS==-1 被视为缺失/地板裁剪；不能区分这两种原始事件。
+只处理模型原 seen_AP mask 的列。真实 query 楼层/建筑/XY、
+真实错误大小、邻近正确标签绝不进入部署特征。FIT 锚点
+身份必须经原 G11 物理坐标+楼层匹配的一一映射验证。
+
+【仅两个共享参数，只有一次学习】
+原 c 的强基线为 Anchor T=.6。两个经每query候选内稳健
+标准化的可见性与RSS证据，分别乘以非负系数 θv,θs∈[0,1.5]。
+两个系数从0开始，Adam lr=.05，固定24 epochs，batch24，
+随机种子20261012。原 TUJI CAL、UTS CAL 每个物理位置等权，
+两个数据域等权。原 FIT 只用于不带标签学习的扫描统计，
+任何 CONFIRM 不进入系数拟合、损失、epoch挑选或候选选择。
+CAL损失采用原 G10 的连续中心 Dirac-mixture Energy Score
+代理 +0.30*点MAE、缩放10m、+0.10 KL(新||强基线)。
+此 TRAIN 损失不是连续 Student-t ES；不要混淆。
+
+【唯一冻结的五个评价方案】
+base: 原 R3
+anchor_t06: 原始全域固定强基线，T=.6
+visibility: 同一次联合训练得到的 θv，θs=0（不重新训练）
+strength: 同一次联合训练得到的 θs，θv=0（不重新训练）
+joint: 原来一次训练得到的 θv 和 θs 都使用
+共享原 R3 连续分布、MC 两流各64次、原 G8 seed19602。
+评价 TUJI和UTS 的历史 CONFIRM，物理位置宏 MAE、真实连续
+Energy Score、P90/P95、最差坐标、逐坐标负迁移数和配对向量。
+主要比较 joint 相对 anchor_t06；不因为另外两条消融较好
+就事后改主候选。描述性正向信号须TUJI与UTS各自 MAE 至少
+改善0.15m且ES不恶化。因历史确认角色早已被看到，这绝非
+独立显著性或正式晋级；如果不达标就保留失败，不调参再试。
+
+【用户本地 CUDA / Codex 执行顺序】
+在仓库根目录、以前成功运行 V17 的 Python 环境：
+python -m compileall -q fhm_dapp_tim/fhm_dapp/uji_v17_g13_multiscan_observation.py tests/test_uji_v17_g13_multiscan_observation.py
+python -m pytest -q tests/test_uji_v17_g13_multiscan_observation.py tests/test_uji_v17_g11_rss_identifiability.py
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g13_multiscan_observation preflight
+
+先验证原 G6 TUJI、G4 UTS 五成员所有 checkpoint SHA256、
+原 FIT/CAL/CONFIRM 物理位置、数据与 AP schema。
+确认每个 anchor 实际扫描次数统计，且绝不读取 official/
+provided test（TUJI MAT 只能解出results_train变量）。
+如果缺失旧权重或者原源码hash不匹配，STOP，禁止重训冒充。
+
+仅允许在 prepare 之前修复经CPU测试重现的新 G13 科学 bug；
+重新完整测试。严禁修改任何 G1-G12 旧科学源码或实验证据，
+不能为了结果好看修改缺失AP阈值、伪观测数、训练损失或系数范围。
+
+全部通过后：
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g13_multiscan_observation prepare
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g13_multiscan_observation check
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g13_multiscan_observation run --device cuda
+python -m fhm_dapp_tim.fhm_dapp.uji_v17_g13_multiscan_observation check
+
+run 必须先写不可逆 lock，随后提取 CAL、学习恰好两个系数、
+先将系数保存为冻结 JSON，最后才读取 CONFIRM 做配对评价。
+任何 lock 后故障，都保留 lock 与错误日志立即 STOP；不允许
+删除锁重跑或根据确认集迭代超参数。
+
+【精简产物】
+fhm_dapp_tim/evidence/v17_g13_multiscan_observation/
+ DESIGN_V17_G13.md
+ manifest_v17_g13.json
+ pilot_v17_g13.lock
+ coefficients_v17_g13.json
+ evaluation_v17_g13.json
+ RUN_REPORT_V17_G13.md
+ RUN_NOTES.md（仅一页：测试 exit code、GPU、原始 E5 hash、
+              FIT 扫描次数、是否发生修复、是否保持历史文件不变）
+无须几十份审计产物，无须上传 .pt。
+
+【跑完之后】
+ChatGPT独立检查原始FIT重复扫描强度、两个新系数、VIS/RSS联合
+消融、同预算绝对 MAE/ES、空间尾部风险与不利样本。根据真实
+机制决定是否发展空间判别型观测证据模型，不能因Q1目标强行
+认定学习的参数或跨领域迁移本身已经足够创新。
+不把历史确认集写成新盲测；UJI 等待严格独立协议。
+
+Git 操作由用户自行执行。Codex不执行任何 Git 命令。
