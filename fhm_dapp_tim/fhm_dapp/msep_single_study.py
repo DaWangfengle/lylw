@@ -280,7 +280,7 @@ def _joint_refit(base, rss, xy, sample_anchor, obs, roles, keys,
 
 
 def _evaluate(modes, model, obs, rss, xy, keys, rows, memory,
-              *, k, device, batch, draws, seed):
+              *, k, device, batch, draws, seed, site_sink=None):
     outcome = {name: {"err": [], "es": [], "nll": [], "mass": [], "coverage": [], "floor": [], "building": [], "joint_correct": [], "top1_near": [], "entropy": [], "top10_near": [], "nearest_center": []}
                for name in modes if not name.startswith("_")}
     for start in range(0, len(rows), batch):
@@ -351,6 +351,17 @@ def _evaluate(modes, model, obs, rss, xy, keys, rows, memory,
                        "anchor_entropy_nats": float(a["entropy"].mean()),
                        "nearest_component_center_error_m_oracle": float(a["nearest_center"].mean())})
         reports[name] = metric
+        if site_sink is not None:
+            groups = {}
+            for idx, key in enumerate(site_keys):
+                groups.setdefault(key, []).append(idx)
+            site_sink[name] = [
+                {"site":list(key),"scan_count":len(idx),
+                 **{field:float(np.mean(a[field][idx])) for field in
+                    ("err","es","nll","mass","coverage","floor","building","joint_correct",
+                     "top1_near","top10_near","entropy","nearest_center")}}
+                for key, idx in sorted(groups.items())
+            ]
     return reports
 
 
@@ -389,14 +400,17 @@ def run(args):
              "v17_single_g13": {"mode":"g13","theta":theta},
              "v17_single_unified_frozen": {"mode":"unified","head":frozen_head}}
     evaluation_role = "dev" if args.smoke else "test"
+    site_diagnostics = {}
     base_result = _evaluate(modes,base,obs,rss,xy,keys,roles[evaluation_role],memory,
-                            k=k,device=device,batch=args.batch,draws=args.es_draws,seed=args.seed+900)
+                            k=k,device=device,batch=args.batch,draws=args.es_draws,
+                            seed=args.seed+900,site_sink=site_diagnostics)
     # Explicitly isolate what changed in the backbone during joint fine tuning.
     modes_joint = {"_data":data,
                    "unified_joint_no_evidence": {"mode":"temperature","temperature":.6},
                    "unified_joint": {"mode":"unified","head":joint_head}}
     joint_result = _evaluate(modes_joint,joint,obs,rss,xy,keys,roles[evaluation_role],memory,
-                             k=k,device=device,batch=args.batch,draws=args.es_draws,seed=args.seed+900)
+                             k=k,device=device,batch=args.batch,draws=args.es_draws,
+                             seed=args.seed+900,site_sink=site_diagnostics)
     result = {
         "protocol":"msep-single-anchor-v1", "dataset":args.dataset,
         "hypotheses":{
@@ -425,6 +439,10 @@ def run(args):
         "config":vars(args),
     }
     (output/"RESULT.json").write_text(json.dumps(_json_safe(result),ensure_ascii=False,indent=2),encoding="utf-8")
+    (output/"SITE_DIAGNOSTICS.json").write_text(
+        json.dumps(_json_safe({"evaluation_role":evaluation_role,
+                                "audit_only_not_inference":True,
+                                "by_model":site_diagnostics}),ensure_ascii=False),encoding="utf-8")
     torch.save({"base_model":base.state_dict(),"joint_model":joint.state_dict(),
                 "frozen_head":frozen_head.state_dict(),"joint_head":joint_head.state_dict(),
                 "fit_anchor_coords":memory["coords"],"fit_anchor_building":memory["building"],
