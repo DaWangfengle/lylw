@@ -377,13 +377,14 @@ def run(args):
              "v17_single_temp_t06": {"mode":"temperature","temperature":.6},
              "v17_single_g13": {"mode":"g13","theta":theta},
              "v17_single_unified_frozen": {"mode":"unified","head":frozen_head}}
-    base_result = _evaluate(modes,base,obs,rss,xy,keys,roles["test"],memory,
+    evaluation_role = "dev" if args.smoke else "test"
+    base_result = _evaluate(modes,base,obs,rss,xy,keys,roles[evaluation_role],memory,
                             k=k,device=device,batch=args.batch,draws=args.es_draws,seed=args.seed+900)
     # Explicitly isolate what changed in the backbone during joint fine tuning.
     modes_joint = {"_data":data,
                    "unified_joint_no_evidence": {"mode":"temperature","temperature":.6},
                    "unified_joint": {"mode":"unified","head":joint_head}}
-    joint_result = _evaluate(modes_joint,joint,obs,rss,xy,keys,roles["test"],memory,
+    joint_result = _evaluate(modes_joint,joint,obs,rss,xy,keys,roles[evaluation_role],memory,
                              k=k,device=device,batch=args.batch,draws=args.es_draws,seed=args.seed+900)
     result = {
         "protocol":"msep-single-anchor-v1", "dataset":args.dataset,
@@ -399,7 +400,8 @@ def run(args):
         "base_training":base_history,"joint_fit_history":joint_history,
         "calibration":{"fitted_temperature":fitted_temperature,"original_g13_coefficients":theta,
                        "unified_frozen_gate":frozen_head.gate.state_dict()["weight"].detach().cpu().tolist()},
-        "test_metrics":{**base_result,**joint_result},
+        "evaluation_role":evaluation_role,
+        "dev_smoke_metrics" if args.smoke else "test_metrics":{**base_result,**joint_result},
         "limitations":[
             "These TEST labels are newly held out by this script but raw dataset families have historical exposure.",
             "Single-member FIT training includes original V17 retrieval targets; joint stage excludes query's own anchor only.",
@@ -416,10 +418,12 @@ def run(args):
                 "frozen_head":frozen_head.state_dict(),"joint_head":joint_head.state_dict(),
                 "fit_anchor_coords":memory["coords"],"fit_anchor_building":memory["building"],
                 "fit_anchor_floor":memory["floor"],"reference_origin":origin,
-                "ap_ids":data.ap_ids,"role_site_keys":{k:[keys[int(i)] for i in v] for k,v in roles.items()},
+                "ap_ids":data.ap_ids,"role_site_keys":{k:[keys[int(i)] for i in v] for k,v in roles.items() if (not args.smoke or k!="test")},
                 "observation_memory":{k:v.cpu() for k,v in obs.items()},"config":vars(args)},
                output/"CHECKPOINTS.pt")
-    print(json.dumps({"output":str(output),"test_metrics":result["test_metrics"]},ensure_ascii=False,indent=2))
+    metric_key = "dev_smoke_metrics" if args.smoke else "test_metrics"
+    print(json.dumps({"output":str(output),"evaluation_role":evaluation_role,
+                      metric_key:result[metric_key]},ensure_ascii=False,indent=2))
     return result
 
 
@@ -439,6 +443,7 @@ def main():
     p.add_argument("--support",choices=("all","topk"),default="all")
     p.add_argument("--k",type=int,default=192)
     p.add_argument("--es-draws",type=int,default=32)
+    p.add_argument("--smoke",action="store_true",help="DEV-only diagnostics; do not evaluate TEST")
     args = p.parse_args()
     if args.base_epochs<1 or args.joint_epochs<1 or args.batch<1 or args.k<2:
         p.error("invalid training, batch, or candidate size")

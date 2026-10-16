@@ -34,7 +34,7 @@ All fits are dataset-local. The number of APs is not the number of reference anc
 
 ## Required gates / analysis
 
-Before GPU: compile changed Python, run `pytest -q tests/test_msep_single_posterior.py`, verify loaders and AP/site counts, perform one short smoke experiment (new output). With GPU run three datasets in separate directories. Do not rerun on the same TEST while altering the design. If changed after TEST, allocate a fresh scientifically defensible holdout or describe repetitions as exploratory.
+Before GPU: compile changed Python, run `pytest -q tests/test_msep_single_posterior.py`, verify loaders and AP/site counts, perform one short `--smoke` experiment (new output). The smoke mode **must evaluate DEV only**, never inspect TEST labels/predictions or expose test site keys in checkpoints. With GPU run three datasets in separate directories. Do not rerun on the same TEST while altering the design. If changed after TEST, allocate a fresh scientifically defensible holdout or describe repetitions as exploratory.
 
 Compute paired site differences between `v17_single_raw`, `v17_single_temp_fit`, `v17_single_temp_t06`, `v17_single_g13`, `v17_single_unified_frozen`, `unified_joint_no_evidence`, and `unified_joint`. MAE gain with ES deterioration is not unqualified success. Check P90/P95, building-floor joint accuracy, correct neighborhood mass and coverage, and fit support counts. Never assert that a fitted latent anchor posterior is a calibrated true anchor distribution solely on coordinates; multiple anchor mixtures can explain the same continuous coordinate.
 
