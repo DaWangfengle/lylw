@@ -23,6 +23,7 @@ from fhm_dapp_tim.fhm_dapp.anchor import build_anchor_memory
 from fhm_dapp_tim.fhm_dapp.model import AnchorStudentTModel
 from fhm_dapp_tim.fhm_dapp.train_anchor import _neighbor_targets, _ap_building_owner
 from fhm_dapp_tim.fhm_dapp.train_anchor_v2 import FROZEN_TRAINING
+from fhm_dapp_tim.fhm_dapp.uji_v17_g10_evidence_corrected_law import discrete_energy_loss
 from fhm_dapp_tim.fhm_dapp.msep_single_posterior import (
     HISTORICAL_ANCHOR_T, UnifiedAnchorPosterior, anchor_site_keys,
     build_fit_observation_memory, candidate_evidence, energy_score_mc,
@@ -116,6 +117,39 @@ def _fit_g13(pack, *, steps=100, lr=.04):
         opt.step()
         with torch.no_grad():
             theta.clamp_(0., 1.5)
+    return theta.detach().tolist()
+
+
+def _fit_g13_historical_surrogate(pack, *, epochs=24, batch=12):
+    """Original G13 CAL objective, adapted to a single member/one dataset.
+
+    Per-anchor component centers replace the historical E5 member-averaged
+    centers. Streaming mini-batches avoid materializing CAL x K x K in GPU RAM.
+    This is the original G13 *calibration law*, not the original E5 panel.
+    """
+    theta = torch.nn.Parameter(torch.zeros(2, dtype=pack["scores"].dtype,
+                                            device=pack["scores"].device))
+    optimizer = torch.optim.Adam([theta], lr=.05)
+    n = len(pack["scores"])
+    with torch.no_grad():
+        baseline = torch.softmax(pack["scores"] / HISTORICAL_ANCHOR_T, dim=1)
+    for _ in range(epochs):
+        optimizer.zero_grad(set_to_none=True)
+        for start in range(0, n, batch):
+            end = min(n,start+batch)
+            q = posterior(pack["scores"][start:end],pack["z"][start:end],
+                          mode="g13",theta=theta)
+            c = pack["xy"][start:end]
+            y = pack["target"][start:end]
+            es = discrete_energy_loss(q,c,y)
+            point = torch.linalg.vector_norm((q[:,:,None]*c).sum(1)-y,dim=1)
+            prior = baseline[start:end]
+            kl = (q*(q.clamp_min(1e-30).log()-prior.clamp_min(1e-30).log())).sum(1)
+            objective = ((es+.30*point)/10. + .10*kl)
+            (pack["weight"][start:end]*objective).sum().backward()
+        optimizer.step()
+        with torch.no_grad():
+            theta.clamp_(0.,1.5)
     return theta.detach().tolist()
 
 
@@ -387,6 +421,7 @@ def run(args):
                                patience=args.patience,batch=args.batch,k=k,seed=args.seed)
     cal = _pack(base,obs,rss,roles["cal"],xy,keys,k=k,device=device,batch_size=args.batch)
     fitted_temperature = _fit_temperature(cal)
+    theta_hist = _fit_g13_historical_surrogate(cal)
     theta = _fit_g13(cal)
     frozen_head = _fit_unified_frozen(cal,theta)
     del cal
@@ -397,6 +432,7 @@ def run(args):
              "v17_single_raw": {"mode":"raw"},
              "v17_single_temp_fit": {"mode":"temperature","temperature":fitted_temperature},
              "v17_single_temp_t06": {"mode":"temperature","temperature":.6},
+             "v17_single_g13_historical_cal": {"mode":"g13","theta":theta_hist},
              "v17_single_g13": {"mode":"g13","theta":theta},
              "v17_single_unified_frozen": {"mode":"unified","head":frozen_head}}
     evaluation_role = "dev" if args.smoke else "test"
@@ -423,7 +459,8 @@ def run(args):
         "input_ap_count":len(data.ap_ids), "fit_anchor_count":int(n),
         "fit_scan_count_quantiles":np.quantile(memory["counts"].cpu().numpy(),[0,.5,.9,1]).tolist(),
         "base_training":base_history,"joint_fit_history":joint_history,
-        "calibration":{"fitted_temperature":fitted_temperature,"original_g13_coefficients":theta,
+        "calibration":{"fitted_temperature":fitted_temperature,"g13_historical_surrogate_coefficients":theta_hist,
+                       "g13_full_nll_coefficients":theta,
                        "unified_frozen_gate":frozen_head.gate.state_dict()["weight"].detach().cpu().tolist()},
         "evaluation_role":evaluation_role,
         "dev_smoke_metrics" if args.smoke else "test_metrics":{**base_result,**joint_result},
