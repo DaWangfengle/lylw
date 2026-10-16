@@ -187,6 +187,11 @@ def main(args):
                             epochs=args.base_epochs, patience=12,
                             batch=args.batch, k=None, seed=args.seed)
         all_bases[name] = model
+        if args.save_checkpoints:
+            torch.save({"model": model.state_dict(), "training": state,
+                        "anchor_class": anchor_class.cpu(),
+                        "class_pairs": class_pairs.cpu()},
+                       output / (name+"_base.pt"))
         pack = pack_model(model, obs, rss, xy, site_keys, cal_eval,
                           args.batch, device)
         value, sites = metrics_for_pack(
@@ -202,6 +207,28 @@ def main(args):
                                cal_fit, args.batch, device)
     raw_check_pack = pack_model(all_bases["raw"], obs, rss, xy, site_keys,
                                 cal_eval, args.batch, device)
+    # Frozen SCORE-LAW diagnostic: original learned retrieval law versus the
+    # fixed R3 neural_scale=1/prototype=32/3 law, SAME anchors/centers/scales.
+    original_scores = []
+    with torch.no_grad():
+        original_base = all_bases["raw"]
+        original_base.eval()
+        for start in range(0, len(cal_eval), args.batch):
+            rows = cal_eval[start:start+args.batch]
+            logits, _ = original_base.retrieval_logits(rss[rows].to(device))
+            original_scores.append(logits.gather(1, raw_check_pack["ids"][start:start+len(rows)]))
+    alternate = dict(raw_check_pack)
+    alternate["scores"] = torch.cat(original_scores, dim=0)
+    original_met, original_sites = metrics_for_pack(
+        alternate, {"temperature": 1., "theta": [0., 0.]},
+        data, cal_eval, anchor_class, class_pairs,
+        seed=args.seed+900, draws=args.es_draws)
+    report["score_law_diagnostic"] = {
+        "learned_training_law_same_centers": original_met,
+        "fixed_R3_law_is_calibration_raw": True,
+        "warning": "counterfactual score substitution, not a retrained aligned model",
+    }
+    by_site["learned_training_score_same_centers"] = original_sites
     policies = {
         "raw": {"temperature": 1., "theta": [0., 0.]},
         "temp_t06": {"temperature": .6, "theta": [0., 0.]},
