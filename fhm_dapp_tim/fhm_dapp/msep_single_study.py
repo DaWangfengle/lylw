@@ -281,7 +281,7 @@ def _joint_refit(base, rss, xy, sample_anchor, obs, roles, keys,
 
 def _evaluate(modes, model, obs, rss, xy, keys, rows, memory,
               *, k, device, batch, draws, seed):
-    outcome = {name: {"err": [], "es": [], "nll": [], "mass": [], "coverage": [], "floor": [], "building": [], "joint_correct": []}
+    outcome = {name: {"err": [], "es": [], "nll": [], "mass": [], "coverage": [], "floor": [], "building": [], "joint_correct": [], "top1_near": [], "entropy": [], "top10_near": [], "nearest_center": []}
                for name in modes if not name.startswith("_")}
     for start in range(0, len(rows), batch):
         block = rows[start:start+batch]
@@ -295,6 +295,7 @@ def _evaluate(modes, model, obs, rss, xy, keys, rows, memory,
             ftruth = torch.tensor(np.asarray(modes["_data"].floor)[block], device=device)
             within = ((anchor_b == btruth[:, None]) & (anchor_f == ftruth[:, None])
                       & (torch.linalg.vector_norm(anchor_xy-y[:, None, :],dim=-1) <= 5.0))
+            center_nearest = torch.linalg.vector_norm(loc-y[:,None,:],dim=2).min(1).values
             for name, spec in modes.items():
                 if name.startswith("_"):
                     continue
@@ -323,10 +324,16 @@ def _evaluate(modes, model, obs, rss, xy, keys, rows, memory,
                     guess = classes[class_mass.argmax()]
                     correct.append((guess == btruth[j] * 10000 + ftruth[j]).float())
                 joint_correct = torch.stack(correct)
+                top1_near = within.gather(1, prob.argmax(1)[:,None]).squeeze(1).float()
+                ranked = prob.topk(k=min(10,prob.shape[1]),dim=1).indices
+                top10_near = within.gather(1,ranked).any(1).float()
+                entropy = -(prob*prob.clamp_min(1e-30).log()).sum(1)
                 result = outcome[name]
                 for label, t in (("err",err),("es",es),("nll",nll),("mass",mass),
                                  ("coverage",within.any(1).float()),("floor",floor_ok),
-                                 ("building",b_ok),("joint_correct",joint_correct)):
+                                 ("building",b_ok),("joint_correct",joint_correct),
+                                 ("top1_near",top1_near),("top10_near",top10_near),
+                                 ("entropy",entropy),("nearest_center",center_nearest)):
                     result[label].append(t.detach().cpu().numpy())
     reports = {}
     site_keys = [keys[int(i)] for i in rows]
@@ -338,7 +345,11 @@ def _evaluate(modes, model, obs, rss, xy, keys, rows, memory,
                        "correct_neighborhood_coverage": float(a["coverage"].mean()),
                        "true_floor_probability": float(a["floor"].mean()),
                        "true_building_probability": float(a["building"].mean()),
-                       "building_floor_joint_accuracy": float(a["joint_correct"].mean())})
+                       "building_floor_joint_accuracy": float(a["joint_correct"].mean()),
+                       "correct_neighborhood_top1_rate": float(a["top1_near"].mean()),
+                       "correct_neighborhood_top10_rate": float(a["top10_near"].mean()),
+                       "anchor_entropy_nats": float(a["entropy"].mean()),
+                       "nearest_component_center_error_m_oracle": float(a["nearest_center"].mean())})
         reports[name] = metric
     return reports
 
