@@ -110,8 +110,11 @@ def metrics_for_pack(pack, params, data, rows, anchor_class, class_pairs,
                              b, f, anchor_class, class_pairs, keys=pack["keys"])
     lp = student_t_logpdf(pack["xy"], pack["sigma"], pack["target"])
     cls = anchor_class[pack["ids"]]
-    tcls = ((class_pairs[:, 0][None, :] == b[:, None])
-            & (class_pairs[:, 1][None, :] == f[:, None])).to(torch.int32).argmax(1)
+    true_bf = ((class_pairs[:, 0][None, :] == b[:, None])
+               & (class_pairs[:, 1][None, :] == f[:, None]))
+    if not bool(true_bf.any(dim=1).all()):
+        raise RuntimeError("evaluation class has no FIT reference support")
+    tcls = true_bf.to(torch.int32).argmax(1)
     true_mode = cls == tcls[:, None]
     joint_nll = -torch.logsumexp(
         (q.clamp_min(1e-30).log() + lp).masked_fill(~true_mode, -torch.inf), dim=1)
