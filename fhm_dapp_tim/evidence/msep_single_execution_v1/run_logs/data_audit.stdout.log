@@ -1,0 +1,3 @@
+{"dataset": "tuji", "roles": {"fit": {"rows": 3241, "sites": 646}, "dev": {"rows": 448, "sites": 91}, "cal": {"rows": 453, "sites": 91}, "test": {"rows": 453, "sites": 91}}, "fit_anchors": 646, "fit_seen_aps": 116}
+{"dataset": "uts", "roles": {"fit": {"rows": 6519, "sites": 1052}, "dev": {"rows": 846, "sites": 138}, "cal": {"rows": 862, "sites": 138}, "test": {"rows": 881, "sites": 138}}, "fit_anchors": 1052, "fit_seen_aps": 556}
+{"dataset": "uji", "roles": {"fit": {"rows": 14398, "sites": 672}, "dev": {"rows": 1792, "sites": 87}, "cal": {"rows": 1867, "sites": 87}, "test": {"rows": 1880, "sites": 87}}, "fit_anchors": 672, "fit_seen_aps": 324}

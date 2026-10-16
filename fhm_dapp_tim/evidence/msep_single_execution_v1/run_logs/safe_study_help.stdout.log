@@ -1,0 +1,30 @@
+usage: msep_single_study.py [-h] --dataset {uji,uts,tuji} --output OUTPUT
+                            [--data-root DATA_ROOT] [--device DEVICE]
+                            [--seed SEED] [--split-seed SPLIT_SEED]
+                            [--base-epochs BASE_EPOCHS] [--patience PATIENCE]
+                            [--joint-epochs JOINT_EPOCHS] [--batch BATCH]
+                            [--threads THREADS] [--support {all,topk}] [--k K]
+                            [--es-draws ES_DRAWS] [--smoke]
+
+MSEP-Loc single-member full experimental protocol (FIT/DEV/CAL/TEST). Run from
+repository root: python -m fhm_dapp_tim.fhm_dapp.msep_single_study --dataset
+tuji --output ... No Git operations; no pre-trained checkpoints or official-
+test labels required.
+
+options:
+  -h, --help            show this help message and exit
+  --dataset {uji,uts,tuji}
+  --output OUTPUT
+  --data-root DATA_ROOT
+  --device DEVICE
+  --seed SEED
+  --split-seed SPLIT_SEED
+  --base-epochs BASE_EPOCHS
+  --patience PATIENCE
+  --joint-epochs JOINT_EPOCHS
+  --batch BATCH
+  --threads THREADS
+  --support {all,topk}
+  --k K
+  --es-draws ES_DRAWS
+  --smoke               DEV-only diagnostics; do not evaluate TEST

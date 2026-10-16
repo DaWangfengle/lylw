@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "reviewed_at": "2026-10-16T21:47:20.642494+08:00",
+  "frozen_scientific_source_files_unchanged": 130,
+  "historical_modules_unchanged": 126,
+  "input_training_files_unchanged": 7,
+  "original_command_logs_hashes_verified": 38,
+  "formal_train_and_test_invocations_per_dataset": 1,
+  "smoke_invocations_per_dataset": 1,
+  "official_test_inference_invocations": 0,
+  "data_boundary_evidence": "Reviewed loader/call graph and train-variable-only MATLAB adapter; not a system-wide OS I/O trace.",
+  "scientific_command_warnings": {
+    "smoke_tuji": 0,
+    "smoke_uts": 0,
+    "smoke_uji": 0,
+    "smoke_result_audit": 0,
+    "full_tuji": 0,
+    "full_uts": 0,
+    "full_uji": 0,
+    "full_result_audit": 0
+  },
+  "retained_failures": [
+    {
+      "label": "pytest_loader_regression_before_fix",
+      "exit_code": 1
+    },
+    {
+      "label": "compile_safe_loader",
+      "exit_code": 1
+    }
+  ],
+  "formal_output_sha256": {
+    "tuji": {
+      "CHECKPOINTS.pt": "c9d727a5e90540ac852e4304bf04a3f6c51376a3beda598c89c04a5aeab3eac5",
+      "RESULT.json": "e9b843be608cff803ab18366e4dba76ca3bdf2e8e79e423d550c9a3ec45492a6",
+      "SITE_DIAGNOSTICS.json": "85845982d9cec641cb8a4f385caf319837892b7441b40ccb2a881479877639bf",
+      "TEST_INVOCATION.lock": "3d8e97fba6edba5c82700706ef57f9b27c42235009dc1c6b980ed7ec81bbe447"
+    },
+    "uts": {
+      "CHECKPOINTS.pt": "a3125b6614740f40b9087aba611e1980b3665986482a973db48d7f347a0f1b07",
+      "RESULT.json": "a1c82236f81770f3c8b05c4ed4f7489edcc654f529aae324c2aa6d937166b2a1",
+      "SITE_DIAGNOSTICS.json": "5303da3d7d8a8ce7efa785cff219d760189d98cfed41553c4bf7e666c63c809c",
+      "TEST_INVOCATION.lock": "14d042b09f36f922ad324eaed5b272382103eb9b3e6a93978db7f05df084df9c"
+    },
+    "uji": {
+      "CHECKPOINTS.pt": "0d28302141f3bc2e1b552517f4607c1fbb02df6e387e034945ea3137b81eb5c9",
+      "RESULT.json": "0295ae6f6e93d80efa0a65f6422631a46975fbbce03f05d480e1fd2695d3e6cf",
+      "SITE_DIAGNOSTICS.json": "d27da63c0e4454cc1edb3b1da52637048387e5b4c70f9297b36b1bf617818510",
+      "TEST_INVOCATION.lock": "2e656417322e620de28629d9e4cb3d05bf5e07e64692229a11ed4b14e28bcadc"
+    }
+  },
+  "audit_artifact_sha256": {
+    "METHOD_FREEZE.json": "a1ebb1ec7e7352c0b007842f2ee4e06e45f57b3ff82b218fec24164da6767e12",
+    "DATA_AUDIT.json": "e4da206e68d13650384e90b785afc59b5807bccf22e5ed55f80cd7a8d964e65b",
+    "SMOKE_RESULT_AUDIT.json": "fd8493549eb0d9476b5894e62cd5be7dff1e12f8ec32be7b5b108b9c418a5444",
+    "FULL_RESULT_AUDIT.json": "361fcbd9a9a358a015ed8476dcea0d4a4c66ec14f0f33f9210fdeb249af354c8",
+    "PAIRED_SITE_ANALYSIS.json": "31e9e11d0653bd01f32f393edd64705f1c52b53518e9ae5783c8d677c9e9ea8f",
+    "PARAMETER_REVIEW.json": "3b7e757d45c5a2fe0e1566b0d043dca14afe9c5495fa813c6f2b41e51ea1923b",
+    "FIX_RECORD.md": "447e87fc6ba855e9279a8141831b66770e24ff58ffdbaeca0cd46199337744bc",
+    "RUN_REPORT_MSEP_SINGLE_POSTERIOR.md": "ac8369dddea283d20046d3472ecd803ba601aef892faced64536fa4fa82b208b"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "reviewed_at": "2026-10-16T21:47:20.642494+08:00",
+  "frozen_scientific_source_files_unchanged": 130,
+  "historical_modules_unchanged": 126,
+  "input_training_files_unchanged": 7,
+  "original_command_logs_hashes_verified": 38,
+  "formal_train_and_test_invocations_per_dataset": 1,
+  "smoke_invocations_per_dataset": 1,
+  "official_test_inference_invocations": 0,
+  "data_boundary_evidence": "Reviewed loader/call graph and train-variable-only MATLAB adapter; not a system-wide OS I/O trace.",
+  "scientific_command_warnings": {
+    "smoke_tuji": 0,
+    "smoke_uts": 0,
+    "smoke_uji": 0,
+    "smoke_result_audit": 0,
+    "full_tuji": 0,
+    "full_uts": 0,
+    "full_uji": 0,
+    "full_result_audit": 0
+  },
+  "retained_failures": [
+    {
+      "label": "pytest_loader_regression_before_fix",
+      "exit_code": 1
+    },
+    {
+      "label": "compile_safe_loader",
+      "exit_code": 1
+    }
+  ]
+}

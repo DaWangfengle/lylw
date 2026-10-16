@@ -1,0 +1,276 @@
+{
+  "protocol": "msep-single-anchor-v1",
+  "dataset": "uts",
+  "hypotheses": {
+    "stage1": "single-member support/weighting diagnostics",
+    "stage2": "raw vs temperature vs G13 vs learned reliability posterior (frozen backbone)",
+    "stage3": "FIT leave-own-anchor-out joint gradients through V17 encoder and Student-t head"
+  },
+  "role_isolation": "physical site (building,floor,XY rounded to 4 decimals)",
+  "role_count": {
+    "fit": {
+      "rows": 6519,
+      "sites": 1052
+    },
+    "dev": {
+      "rows": 846,
+      "sites": 138
+    },
+    "cal": {
+      "rows": 862,
+      "sites": 138
+    },
+    "test": {
+      "rows": 881,
+      "sites": 138
+    }
+  },
+  "input_ap_count": 589,
+  "fit_anchor_count": 1052,
+  "fit_seen_ap_count": 556,
+  "role_site_key_sha256": {
+    "fit": "c64749c8baf20032ca7fe813bb2a3e6cd3f9be5f557819c875f4bdee580b5dd8",
+    "dev": "9f74ca2ee19021073179598fd3565bb4a300d98d724d6c65186338aeffa1fe10",
+    "cal": "19716bc359dbfa7958c231e5733cd682bea1d8c03dc499fdcb130904ea5432bc",
+    "test": "7b0fa3465167e038f640864a7dacb02d09f635ce1df3d03c885e92ae1dc29890"
+  },
+  "fit_scan_count_quantiles": [
+    1.0,
+    5.0,
+    11.0,
+    35.0
+  ],
+  "base_training": {
+    "best_epoch": 1,
+    "best_dev_mae": 10.591712951660156,
+    "history": [
+      {
+        "epoch": 1,
+        "fit_loss": 8.803224706182293,
+        "dev_mae": 10.591712951660156
+      }
+    ]
+  },
+  "joint_fit_history": [
+    {
+      "epoch": 1,
+      "fit_leave_self_loss": 7.963535161579356
+    }
+  ],
+  "calibration": {
+    "fitted_temperature": 0.6491266489028931,
+    "g13_historical_surrogate_coefficients": [
+      1.0197829008102417,
+      1.0034854412078857
+    ],
+    "g13_full_nll_coefficients": [
+      0.0,
+      1.079476237297058
+    ],
+    "unified_frozen_gate": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        -0.8039127588272095,
+        -0.16331185400485992,
+        0.06717326492071152,
+        0.1816348284482956
+      ]
+    ]
+  },
+  "evaluation_role": "dev",
+  "dev_smoke_metrics": {
+    "v17_single_raw": {
+      "site_macro_mae_m": 10.591713905334473,
+      "site_macro_es_m": 6.665961742401123,
+      "row_mae_m": 10.651591300964355,
+      "row_es_m": 6.627389430999756,
+      "site_p90_mae_m": 20.25611114501953,
+      "site_p95_mae_m": 24.093265533447266,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 7.562986373901367,
+      "correct_neighborhood_mass": 0.1241094172000885,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.4905397593975067,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9385342597961426,
+      "correct_neighborhood_top1_rate": 0.6418439745903015,
+      "correct_neighborhood_top10_rate": 0.9349882006645203,
+      "anchor_entropy_nats": 5.285007476806641,
+      "nearest_component_center_error_m_oracle": 0.6531370878219604
+    },
+    "v17_single_temp_fit": {
+      "site_macro_mae_m": 6.713125705718994,
+      "site_macro_es_m": 4.94644832611084,
+      "row_mae_m": 6.613924026489258,
+      "row_es_m": 4.935676574707031,
+      "site_p90_mae_m": 12.232551574707031,
+      "site_p95_mae_m": 14.682907104492188,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 8.026147842407227,
+      "correct_neighborhood_mass": 0.25061991810798645,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.7393006682395935,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9751772880554199,
+      "correct_neighborhood_top1_rate": 0.6418439745903015,
+      "correct_neighborhood_top10_rate": 0.9349882006645203,
+      "anchor_entropy_nats": 3.593003034591675,
+      "nearest_component_center_error_m_oracle": 0.6531370878219604
+    },
+    "v17_single_temp_t06": {
+      "site_macro_mae_m": 6.385056018829346,
+      "site_macro_es_m": 4.7560319900512695,
+      "row_mae_m": 6.313692569732666,
+      "row_es_m": 4.754714012145996,
+      "site_p90_mae_m": 11.775586128234863,
+      "site_p95_mae_m": 13.175359725952148,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 8.144050598144531,
+      "correct_neighborhood_mass": 0.2751505374908447,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.7727715969085693,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9751772880554199,
+      "correct_neighborhood_top1_rate": 0.6418439745903015,
+      "correct_neighborhood_top10_rate": 0.9349882006645203,
+      "anchor_entropy_nats": 3.3155269622802734,
+      "nearest_component_center_error_m_oracle": 0.6531370878219604
+    },
+    "v17_single_g13_historical_cal": {
+      "site_macro_mae_m": 4.707730293273926,
+      "site_macro_es_m": 3.776310682296753,
+      "row_mae_m": 4.569037437438965,
+      "row_es_m": 3.694319248199463,
+      "site_p90_mae_m": 9.130680084228516,
+      "site_p95_mae_m": 11.107699394226074,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 8.478681564331055,
+      "correct_neighborhood_mass": 0.4978938400745392,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.9020156860351562,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9905437231063843,
+      "correct_neighborhood_top1_rate": 0.7234042286872864,
+      "correct_neighborhood_top10_rate": 0.9373522400856018,
+      "anchor_entropy_nats": 2.111544370651245,
+      "nearest_component_center_error_m_oracle": 0.6531370878219604
+    },
+    "v17_single_g13": {
+      "site_macro_mae_m": 4.8493194580078125,
+      "site_macro_es_m": 3.9222142696380615,
+      "row_mae_m": 4.661220073699951,
+      "row_es_m": 3.8390281200408936,
+      "site_p90_mae_m": 9.765931129455566,
+      "site_p95_mae_m": 11.448302268981934,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 8.405251502990723,
+      "correct_neighborhood_mass": 0.4797675609588623,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.8834633827209473,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9905437231063843,
+      "correct_neighborhood_top1_rate": 0.7293144464492798,
+      "correct_neighborhood_top10_rate": 0.9373522400856018,
+      "anchor_entropy_nats": 2.2671122550964355,
+      "nearest_component_center_error_m_oracle": 0.6531370878219604
+    },
+    "v17_single_unified_frozen": {
+      "site_macro_mae_m": 4.814136505126953,
+      "site_macro_es_m": 3.743820905685425,
+      "row_mae_m": 4.653382301330566,
+      "row_es_m": 3.7307751178741455,
+      "site_p90_mae_m": 9.209112167358398,
+      "site_p95_mae_m": 11.471643447875977,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 8.404361724853516,
+      "correct_neighborhood_mass": 0.4802106022834778,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.8842990398406982,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9905437231063843,
+      "correct_neighborhood_top1_rate": 0.7434988021850586,
+      "correct_neighborhood_top10_rate": 0.9373522400856018,
+      "anchor_entropy_nats": 2.2605478763580322,
+      "nearest_component_center_error_m_oracle": 0.6531370878219604
+    },
+    "unified_joint_no_evidence": {
+      "site_macro_mae_m": 6.1828742027282715,
+      "site_macro_es_m": 4.661541938781738,
+      "row_mae_m": 6.128419876098633,
+      "row_es_m": 4.656063556671143,
+      "site_p90_mae_m": 11.583396911621094,
+      "site_p95_mae_m": 13.075700759887695,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 5.994294166564941,
+      "correct_neighborhood_mass": 0.2493857741355896,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.7230656147003174,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9633569717407227,
+      "correct_neighborhood_top1_rate": 0.6418439745903015,
+      "correct_neighborhood_top10_rate": 0.9290780425071716,
+      "anchor_entropy_nats": 3.644436836242676,
+      "nearest_component_center_error_m_oracle": 0.8651078343391418
+    },
+    "unified_joint": {
+      "site_macro_mae_m": 4.5002899169921875,
+      "site_macro_es_m": 3.5612642765045166,
+      "row_mae_m": 4.375796318054199,
+      "row_es_m": 3.5102126598358154,
+      "site_p90_mae_m": 8.84044361114502,
+      "site_p95_mae_m": 10.410780906677246,
+      "sites": 138,
+      "rows": 846,
+      "row_nll": 5.467331409454346,
+      "correct_neighborhood_mass": 0.5308939814567566,
+      "correct_neighborhood_coverage": 0.9586288332939148,
+      "true_floor_probability": 0.9027535319328308,
+      "true_building_probability": 1.0,
+      "building_floor_joint_accuracy": 0.9905437231063843,
+      "correct_neighborhood_top1_rate": 0.7529550790786743,
+      "correct_neighborhood_top10_rate": 0.9373522400856018,
+      "anchor_entropy_nats": 2.001648187637329,
+      "nearest_component_center_error_m_oracle": 0.8651078343391418
+    }
+  },
+  "limitations": [
+    "These TEST labels are newly held out by this script but raw dataset families have historical exposure.",
+    "Single-member FIT training includes original V17 retrieval targets; joint stage excludes query's own anchor only.",
+    "Within-FIT leave-self-out is not wholly unseen-site meta-learning: base encoder saw all FIT sites.",
+    "The unified reliability gate is a testable low-dimensional mechanism, not a proven calibrated posterior.",
+    "No architecture/parameter may be selected based on test_metrics; all hypotheses frozen prior to run.",
+    "The G13 score is a composite likelihood of the same RSS, not independent sensor data.",
+    "A true neighborhood is an audit-only label-derived quantity; never an inference input."
+  ],
+  "config": {
+    "dataset": "uts",
+    "output": "fhm_dapp_tim/evidence/msep_single_smoke_uts",
+    "data_root": null,
+    "device": "auto",
+    "seed": 17301,
+    "split_seed": 20261016,
+    "base_epochs": 1,
+    "patience": 12,
+    "joint_epochs": 1,
+    "batch": 32,
+    "threads": 4,
+    "support": "all",
+    "k": 192,
+    "es_draws": 8,
+    "smoke": true
+  },
+  "checkpoint_sha256": "3013624df7ab209453df5cdff8a70b70cbd44d284c2d9f0cb58147701be67584",
+  "elapsed_seconds": 35.93632509998861
+}

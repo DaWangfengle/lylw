@@ -120,3 +120,55 @@ def test_joint_posterior_loss_reaches_retriever_gate_and_centres():
     for grad in (scores.grad,centers.grad,head.theta.grad,head.gate.weight.grad):
         assert grad is not None and torch.isfinite(grad).all()
         assert torch.linalg.vector_norm(grad) > 0
+
+
+def test_tuji_adapter_requests_train_variable_only(monkeypatch):
+    from types import SimpleNamespace
+    from fhm_dapp_tim.fhm_dapp import msep_single_study as study
+    from fhm_dapp_tim.fhm_dapp import v18_4_datasets as ds
+
+    calls = []
+
+    def fake_loadmat(path, **kwargs):
+        calls.append(kwargs)
+        assert kwargs.get("variable_names") == ("results_train",)
+        return {"results_train": SimpleNamespace(Wifi=np.asarray([], dtype=object))}
+
+    def fake_adapter(split, **kwargs):
+        assert split == "train"
+        for filename in ds.TUJI_DEVICE_FILES.values():
+            payload = ds.loadmat(filename, squeeze_me=True, struct_as_record=False)
+            assert "results_test" not in payload
+        return "canonical_train_data", None
+
+    monkeypatch.setattr(ds, "loadmat", fake_loadmat)
+    monkeypatch.setattr(study, "load_tuji1", fake_adapter)
+    assert study._load("tuji", None) == "canonical_train_data"
+    assert len(calls) == 5
+    assert ds.loadmat is fake_loadmat  # Temporary restriction was restored.
+
+
+def test_tuji_adapter_rejects_unexpected_test_variable(monkeypatch):
+    from fhm_dapp_tim.fhm_dapp import msep_single_study as study
+    from fhm_dapp_tim.fhm_dapp import v18_4_datasets as ds
+
+    monkeypatch.setattr(ds, "loadmat", lambda *a, **k: {"results_train": object(), "results_test": object()})
+
+    def fake_adapter(*args, **kwargs):
+        ds.loadmat("synthetic.mat")
+        return None, None
+
+    monkeypatch.setattr(study, "load_tuji1", fake_adapter)
+    with pytest.raises(RuntimeError, match="results_test"):
+        study._load("tuji", None)
+
+
+def test_mixture_nll_matches_independent_student_t_density():
+    weights = torch.tensor([[.2, .8]], dtype=torch.float64)
+    centers = torch.tensor([[[0., 2.], [3., -1.]]], dtype=torch.float64)
+    scales = torch.tensor([[[.7, 1.2], [2., .4]]], dtype=torch.float64)
+    target = torch.tensor([[1., .5]], dtype=torch.float64)
+    lp = torch.distributions.StudentT(4., centers, scales).log_prob(target[:, None]).sum(-1)
+    expected = -torch.logsumexp(weights.log() + lp, dim=1).mean()
+    actual = mixture_loss(weights, centers, scales, target, mae_weight=0.)
+    assert torch.allclose(actual, expected, atol=1e-12, rtol=1e-12)

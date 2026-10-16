@@ -1,0 +1,164 @@
+{
+  "tuji": {
+    "checkpoint_sha256": "c9d727a5e90540ac852e4304bf04a3f6c51376a3beda598c89c04a5aeab3eac5",
+    "frozen_head": {
+      "theta": [
+        0.6851542592048645,
+        1.5
+      ],
+      "gate.weight": [
+        [
+          -0.0269620418548584,
+          0.035314206033945084,
+          -0.04390581697225571,
+          -0.024205831810832024
+        ],
+        [
+          0.34149906039237976,
+          0.14193961024284363,
+          0.3922232985496521,
+          0.5076728463172913
+        ]
+      ],
+      "gate.bias": [
+        -0.03070756234228611,
+        0.6037174463272095
+      ]
+    },
+    "joint_head": {
+      "theta": [
+        0.7628957033157349,
+        1.3589577674865723
+      ],
+      "gate.weight": [
+        [
+          -0.022557444870471954,
+          0.04500715434551239,
+          -0.005069748032838106,
+          -0.023866472765803337
+        ],
+        [
+          0.35793009400367737,
+          0.33448556065559387,
+          0.36205071210861206,
+          0.36302244663238525
+        ]
+      ],
+      "gate.bias": [
+        -0.026265176013112068,
+        0.36424142122268677
+      ]
+    },
+    "all_saved_model_and_head_tensors_finite": true,
+    "joint_loss_supervision": "2D XY mixture NLL + point risk + KL/gate penalty; no explicit building/floor categorical loss",
+    "joint_and_no_evidence_metrics_identical": false
+  },
+  "uts": {
+    "checkpoint_sha256": "a3125b6614740f40b9087aba611e1980b3665986482a973db48d7f347a0f1b07",
+    "frozen_head": {
+      "theta": [
+        0.0,
+        0.0
+      ],
+      "gate.weight": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "gate.bias": [
+        0.0,
+        0.0
+      ]
+    },
+    "joint_head": {
+      "theta": [
+        0.4167191684246063,
+        0.5264749526977539
+      ],
+      "gate.weight": [
+        [
+          -0.29416346549987793,
+          -0.21498925983905792,
+          -0.31507647037506104,
+          -0.31499993801116943
+        ],
+        [
+          -0.30868664383888245,
+          -0.27810776233673096,
+          -0.32171908020973206,
+          -0.3225107192993164
+        ]
+      ],
+      "gate.bias": [
+        -0.3194764256477356,
+        -0.3243117034435272
+      ]
+    },
+    "all_saved_model_and_head_tensors_finite": true,
+    "joint_loss_supervision": "2D XY mixture NLL + point risk + KL/gate penalty; no explicit building/floor categorical loss",
+    "joint_and_no_evidence_metrics_identical": false
+  },
+  "uji": {
+    "checkpoint_sha256": "0d28302141f3bc2e1b552517f4607c1fbb02df6e387e034945ea3137b81eb5c9",
+    "frozen_head": {
+      "theta": [
+        0.0,
+        0.0
+      ],
+      "gate.weight": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "gate.bias": [
+        0.0,
+        0.0
+      ]
+    },
+    "joint_head": {
+      "theta": [
+        0.0,
+        0.0
+      ],
+      "gate.weight": [
+        [
+          -0.3452305197715759,
+          -0.020587459206581116,
+          -0.3538776636123657,
+          -0.2980446517467499
+        ],
+        [
+          -0.4449692964553833,
+          -0.2852673828601837,
+          -0.44848960638046265,
+          -0.4374235272407532
+        ]
+      ],
+      "gate.bias": [
+        -0.3619082570075989,
+        -0.4497028887271881
+      ]
+    },
+    "all_saved_model_and_head_tensors_finite": true,
+    "joint_loss_supervision": "2D XY mixture NLL + point risk + KL/gate penalty; no explicit building/floor categorical loss",
+    "joint_and_no_evidence_metrics_identical": true
+  }
+}

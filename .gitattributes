@@ -134,3 +134,16 @@ fhm_dapp_tim/fhm_dapp/uji_v17_g13_multiscan_observation.py -text
 tests/test_uji_v17_g13_multiscan_observation.py -text
 fhm_dapp_tim/evidence/v17_g13_multiscan_observation/** -text
 V17_G13_CODEX_RUN.txt -text
+
+# MSEP frozen source/evidence SHA256 must survive checkout without conversion.
+fhm_dapp_tim/fhm_dapp/msep_single_posterior.py -text
+fhm_dapp_tim/fhm_dapp/msep_single_study.py -text
+tests/test_msep_single_posterior.py -text
+docs/MSEP_SINGLE_POSTERIOR_PROTOCOL.md -text
+fhm_dapp_tim/evidence/msep_single_execution_v1/** -text
+fhm_dapp_tim/evidence/msep_single_smoke_tuji/** -text
+fhm_dapp_tim/evidence/msep_single_smoke_uts/** -text
+fhm_dapp_tim/evidence/msep_single_smoke_uji/** -text
+fhm_dapp_tim/evidence/msep_single_tuji_full_v1/** -text
+fhm_dapp_tim/evidence/msep_single_uts_full_v1/** -text
+fhm_dapp_tim/evidence/msep_single_uji_full_v1/** -text

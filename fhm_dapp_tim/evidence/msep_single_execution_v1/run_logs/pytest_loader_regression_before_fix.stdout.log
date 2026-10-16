@@ -1,0 +1,80 @@
+.........FF.                                                             [100%]
+================================== FAILURES ===================================
+_______________ test_tuji_adapter_requests_train_variable_only ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A3C52EE960>
+
+    def test_tuji_adapter_requests_train_variable_only(monkeypatch):
+        from types import SimpleNamespace
+        from fhm_dapp_tim.fhm_dapp import msep_single_study as study
+        from fhm_dapp_tim.fhm_dapp import v18_4_datasets as ds
+    
+        calls = []
+    
+        def fake_loadmat(path, **kwargs):
+            calls.append(kwargs)
+            assert kwargs.get("variable_names") == ("results_train",)
+            return {"results_train": SimpleNamespace(Wifi=np.asarray([], dtype=object))}
+    
+        def fake_adapter(split, **kwargs):
+            assert split == "train"
+            for filename in ds.TUJI_DEVICE_FILES.values():
+                payload = ds.loadmat(filename, squeeze_me=True, struct_as_record=False)
+                assert "results_test" not in payload
+            return "canonical_train_data", None
+    
+        monkeypatch.setattr(ds, "loadmat", fake_loadmat)
+        monkeypatch.setattr(study, "load_tuji1", fake_adapter)
+>       assert study._load("tuji", None) == "canonical_train_data"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_msep_single_posterior.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+fhm_dapp_tim\fhm_dapp\msep_single_study.py:57: in _load
+    return load_tuji1("train", **kw)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_msep_single_posterior.py:140: in fake_adapter
+    payload = ds.loadmat(filename, squeeze_me=True, struct_as_record=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = 'Formatted_data_A12.mat'
+kwargs = {'squeeze_me': True, 'struct_as_record': False}
+@py_assert1 = <built-in method get of dict object at 0x000002A3C3B49740>
+@py_assert3 = 'variable_names', @py_assert5 = None
+@py_assert8 = ('results_train',), @py_assert7 = False
+@py_format10 = "None\n{None = <built-in method get of dict object at 0x000002A3C3B49740>\n{<built-in method get of dict object at 0x000002A3C3B49740> = {'squeeze_me': True, 'struct_as_record': False}.get\n}('variable_names')\n} == ('results_train',)"
+@py_format12 = "assert None\n{None = <built-in method get of dict object at 0x000002A3C3B49740>\n{<built-in method get of dict object...x000002A3C3B49740> = {'squeeze_me': True, 'struct_as_record': False}.get\n}('variable_names')\n} == ('results_train',)"
+
+    def fake_loadmat(path, **kwargs):
+        calls.append(kwargs)
+>       assert kwargs.get("variable_names") == ("results_train",)
+E       AssertionError: assert None == ('results_train',)
+E        +  where None = <built-in method get of dict object at 0x000002A3C3B49740>('variable_names')
+E        +    where <built-in method get of dict object at 0x000002A3C3B49740> = {'squeeze_me': True, 'struct_as_record': False}.get
+
+tests\test_msep_single_posterior.py:134: AssertionError
+_____________ test_tuji_adapter_rejects_unexpected_test_variable ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A3A03EEEA0>
+
+    def test_tuji_adapter_rejects_unexpected_test_variable(monkeypatch):
+        from fhm_dapp_tim.fhm_dapp import msep_single_study as study
+        from fhm_dapp_tim.fhm_dapp import v18_4_datasets as ds
+    
+        monkeypatch.setattr(ds, "loadmat", lambda *a, **k: {"results_train": object(), "results_test": object()})
+    
+        def fake_adapter(*args, **kwargs):
+            ds.loadmat("synthetic.mat")
+            return None, None
+    
+        monkeypatch.setattr(study, "load_tuji1", fake_adapter)
+>       with pytest.raises(RuntimeError, match="results_test"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests\test_msep_single_posterior.py:162: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_msep_single_posterior.py::test_tuji_adapter_requests_train_variable_only
+FAILED tests/test_msep_single_posterior.py::test_tuji_adapter_rejects_unexpected_test_variable
+2 failed, 10 passed in 4.24s

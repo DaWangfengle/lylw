@@ -1,0 +1,880 @@
+{
+  "tuji": {
+    "input_sha256": {
+      "data\\TUJI1\\Formatted_data_A12.mat": "73c59c6a8a12c45c4b6bf9b93b45cb89d0cfb7bb147260dc763f0d5f5af314a5",
+      "data\\TUJI1\\Formatted_data_POCO.mat": "9973384ac04365a55a2e6b33b16b61724cf41869e828b1544c7c4bc61c9d2495",
+      "data\\TUJI1\\Formatted_data_S20.mat": "e3e327243852ba38087c4e8f07c4d94c7b8acc0987e961d5dc6e8fcf23dd354e",
+      "data\\TUJI1\\Formatted_data_S7.mat": "c33ac65f9b61f6b24272b256b091c54747d5bce3f186a8a96e83cbc3e9f9fdab",
+      "data\\TUJI1\\Formatted_data_tabS7.mat": "f8a9bf0a94367f2255a3c94b2bd4b633d73d7000a8f1a0cf5c25e90d231b0e23"
+    },
+    "ap_ids_sha256": "6b2af48a35ea0025c35e8fe778fa9cb5f280e696958d3c48310683a2d571aa06",
+    "rows": 4595,
+    "sites": 919,
+    "input_aps": 259,
+    "fit_seen_aps": 116,
+    "fit_anchor_count": 646,
+    "physical_roles_disjoint": true,
+    "centered_site_mapping_bijective": true,
+    "non_fit_sample_anchor_ids_all_minus_one": true,
+    "g13_statistics_source": "FIT RSS and FIT anchor IDs only; original imported G13 function",
+    "fit_scan_count_distribution": {
+      "3": 16,
+      "4": 5,
+      "5": 577,
+      "6": 48
+    },
+    "fit_scans_quantiles": [
+      3.0,
+      5.0,
+      5.0,
+      5.0,
+      5.0,
+      6.0
+    ],
+    "fit_sites_with_at_least_two_scans": 646,
+    "roles": {
+      "fit": {
+        "rows": 3241,
+        "sites": 646,
+        "row_indices_sha256": "d0f9966ab131069fd9a3a80e9eb53a3ef04fd41119007acc9f15aa3ae30f0827",
+        "site_keys_sha256": "f1ce441cb3355e54bf6d62728cfc6da3ada65960e164e80fa41f07b1b570280c",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 646,
+            "scans": 3241
+          }
+        },
+        "device_rows": {
+          "0": 646,
+          "1": 631,
+          "2": 693,
+          "3": 642,
+          "4": 629
+        }
+      },
+      "dev": {
+        "rows": 448,
+        "sites": 91,
+        "row_indices_sha256": "f789d33b0b42fe8b37b8738f9f694a9fff164027572fd7b6633f84198d16cfbf",
+        "site_keys_sha256": "650486a638e9de9438c296c47461384547e647262a3d127718bf5474007e5966",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 91,
+            "scans": 448
+          }
+        },
+        "device_rows": {
+          "0": 89,
+          "1": 86,
+          "2": 99,
+          "3": 90,
+          "4": 84
+        }
+      },
+      "cal": {
+        "rows": 453,
+        "sites": 91,
+        "row_indices_sha256": "2fef0261bdc918be9b4494e3c478c4d3282b3ea9da02738f9f6b27ca1b3b90d3",
+        "site_keys_sha256": "352f751e4fcb0fb47b79cae7de31d88397c8ead3449b1c6a9362d66aefdcc5fa",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 91,
+            "scans": 453
+          }
+        },
+        "device_rows": {
+          "0": 91,
+          "1": 87,
+          "2": 97,
+          "3": 91,
+          "4": 87
+        }
+      },
+      "test": {
+        "rows": 453,
+        "sites": 91,
+        "row_indices_sha256": "f01b54140cdd5ed2c7af8dcb2ab0a3446215e384f3a1405f665a84e2fb5d2676",
+        "site_keys_sha256": "62f017890ef9a5412832ec8bba3130d56337fee43cf2170335914039a9be0175",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 91,
+            "scans": 453
+          }
+        },
+        "device_rows": {
+          "0": 91,
+          "1": 87,
+          "2": 97,
+          "3": 91,
+          "4": 87
+        }
+      }
+    },
+    "coordinate_min_m": [
+      0.0,
+      0.0
+    ],
+    "coordinate_max_m": [
+      22.639999389648438,
+      32.79199981689453
+    ],
+    "mat_variable_policy": "physical MAT containers opened/hashed; only results_train decoded, results_test absent",
+    "official_test_files_opened": false
+  },
+  "uts": {
+    "input_sha256": {
+      "data\\UTSIndoorLoc\\UTS_training.csv": "a7cc7d12169be4d6cd9197f5761e463ecdd9e0e798b4f67790ca468d3028785b"
+    },
+    "ap_ids_sha256": "6688022d8cbed1e278abc49bf83b8119ff6488c867b649c1012c07b7240b3387",
+    "rows": 9108,
+    "sites": 1466,
+    "input_aps": 589,
+    "fit_seen_aps": 556,
+    "fit_anchor_count": 1052,
+    "physical_roles_disjoint": true,
+    "centered_site_mapping_bijective": true,
+    "non_fit_sample_anchor_ids_all_minus_one": true,
+    "g13_statistics_source": "FIT RSS and FIT anchor IDs only; original imported G13 function",
+    "fit_scan_count_distribution": {
+      "1": 15,
+      "2": 48,
+      "3": 215,
+      "4": 170,
+      "5": 119,
+      "6": 87,
+      "7": 63,
+      "8": 73,
+      "9": 80,
+      "10": 49,
+      "11": 42,
+      "12": 29,
+      "13": 27,
+      "14": 13,
+      "15": 9,
+      "16": 3,
+      "17": 3,
+      "18": 2,
+      "19": 1,
+      "20": 1,
+      "22": 2,
+      "35": 1
+    },
+    "fit_scans_quantiles": [
+      1.0,
+      3.0,
+      5.0,
+      8.0,
+      11.0,
+      35.0
+    ],
+    "fit_sites_with_at_least_two_scans": 1037,
+    "roles": {
+      "fit": {
+        "rows": 6519,
+        "sites": 1052,
+        "row_indices_sha256": "caac74731999d2ed0d2159abd458135c0a87907c46187a557f6b43f77d9dc164",
+        "site_keys_sha256": "c64749c8baf20032ca7fe813bb2a3e6cd3f9be5f557819c875f4bdee580b5dd8",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 68,
+            "scans": 228
+          },
+          "(0, 1)": {
+            "sites": 25,
+            "scans": 67
+          },
+          "(0, 2)": {
+            "sites": 23,
+            "scans": 90
+          },
+          "(0, 3)": {
+            "sites": 85,
+            "scans": 511
+          },
+          "(0, 4)": {
+            "sites": 54,
+            "scans": 294
+          },
+          "(0, 5)": {
+            "sites": 60,
+            "scans": 661
+          },
+          "(0, 6)": {
+            "sites": 62,
+            "scans": 546
+          },
+          "(0, 7)": {
+            "sites": 70,
+            "scans": 657
+          },
+          "(0, 8)": {
+            "sites": 53,
+            "scans": 323
+          },
+          "(0, 9)": {
+            "sites": 49,
+            "scans": 360
+          },
+          "(0, 10)": {
+            "sites": 86,
+            "scans": 800
+          },
+          "(0, 11)": {
+            "sites": 69,
+            "scans": 320
+          },
+          "(0, 12)": {
+            "sites": 84,
+            "scans": 356
+          },
+          "(0, 13)": {
+            "sites": 91,
+            "scans": 300
+          },
+          "(0, 14)": {
+            "sites": 104,
+            "scans": 340
+          },
+          "(0, 15)": {
+            "sites": 69,
+            "scans": 666
+          }
+        },
+        "device_rows": {
+          "0": 6519
+        }
+      },
+      "dev": {
+        "rows": 846,
+        "sites": 138,
+        "row_indices_sha256": "98dd748eee67e20d7e2f6eb4d54b6529c80cbe1bf8f85def8b8aa5c304510952",
+        "site_keys_sha256": "9f74ca2ee19021073179598fd3565bb4a300d98d724d6c65186338aeffa1fe10",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 9,
+            "scans": 27
+          },
+          "(0, 1)": {
+            "sites": 3,
+            "scans": 8
+          },
+          "(0, 2)": {
+            "sites": 2,
+            "scans": 6
+          },
+          "(0, 3)": {
+            "sites": 11,
+            "scans": 77
+          },
+          "(0, 4)": {
+            "sites": 7,
+            "scans": 45
+          },
+          "(0, 5)": {
+            "sites": 8,
+            "scans": 108
+          },
+          "(0, 6)": {
+            "sites": 8,
+            "scans": 71
+          },
+          "(0, 7)": {
+            "sites": 9,
+            "scans": 69
+          },
+          "(0, 8)": {
+            "sites": 7,
+            "scans": 44
+          },
+          "(0, 9)": {
+            "sites": 7,
+            "scans": 46
+          },
+          "(0, 10)": {
+            "sites": 11,
+            "scans": 98
+          },
+          "(0, 11)": {
+            "sites": 9,
+            "scans": 46
+          },
+          "(0, 12)": {
+            "sites": 11,
+            "scans": 42
+          },
+          "(0, 13)": {
+            "sites": 13,
+            "scans": 39
+          },
+          "(0, 14)": {
+            "sites": 14,
+            "scans": 42
+          },
+          "(0, 15)": {
+            "sites": 9,
+            "scans": 78
+          }
+        },
+        "device_rows": {
+          "0": 846
+        }
+      },
+      "cal": {
+        "rows": 862,
+        "sites": 138,
+        "row_indices_sha256": "c2bf31809ad2c3ff225e77ed0b6b355bb540626bd9b5256e9ea82641668a31cc",
+        "site_keys_sha256": "19716bc359dbfa7958c231e5733cd682bea1d8c03dc499fdcb130904ea5432bc",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 9,
+            "scans": 31
+          },
+          "(0, 1)": {
+            "sites": 3,
+            "scans": 8
+          },
+          "(0, 2)": {
+            "sites": 2,
+            "scans": 7
+          },
+          "(0, 3)": {
+            "sites": 11,
+            "scans": 73
+          },
+          "(0, 4)": {
+            "sites": 7,
+            "scans": 44
+          },
+          "(0, 5)": {
+            "sites": 8,
+            "scans": 93
+          },
+          "(0, 6)": {
+            "sites": 8,
+            "scans": 63
+          },
+          "(0, 7)": {
+            "sites": 9,
+            "scans": 103
+          },
+          "(0, 8)": {
+            "sites": 7,
+            "scans": 41
+          },
+          "(0, 9)": {
+            "sites": 7,
+            "scans": 45
+          },
+          "(0, 10)": {
+            "sites": 11,
+            "scans": 103
+          },
+          "(0, 11)": {
+            "sites": 9,
+            "scans": 43
+          },
+          "(0, 12)": {
+            "sites": 11,
+            "scans": 42
+          },
+          "(0, 13)": {
+            "sites": 13,
+            "scans": 40
+          },
+          "(0, 14)": {
+            "sites": 14,
+            "scans": 45
+          },
+          "(0, 15)": {
+            "sites": 9,
+            "scans": 81
+          }
+        },
+        "device_rows": {
+          "0": 862
+        }
+      },
+      "test": {
+        "rows": 881,
+        "sites": 138,
+        "row_indices_sha256": "91add9f18c111b6d8989ba188ef187873cefcc4614ef5783e544ccef0702faaf",
+        "site_keys_sha256": "7b0fa3465167e038f640864a7dacb02d09f635ce1df3d03c885e92ae1dc29890",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 9,
+            "scans": 33
+          },
+          "(0, 1)": {
+            "sites": 3,
+            "scans": 13
+          },
+          "(0, 2)": {
+            "sites": 2,
+            "scans": 7
+          },
+          "(0, 3)": {
+            "sites": 11,
+            "scans": 78
+          },
+          "(0, 4)": {
+            "sites": 7,
+            "scans": 42
+          },
+          "(0, 5)": {
+            "sites": 8,
+            "scans": 101
+          },
+          "(0, 6)": {
+            "sites": 8,
+            "scans": 70
+          },
+          "(0, 7)": {
+            "sites": 9,
+            "scans": 86
+          },
+          "(0, 8)": {
+            "sites": 7,
+            "scans": 42
+          },
+          "(0, 9)": {
+            "sites": 7,
+            "scans": 50
+          },
+          "(0, 10)": {
+            "sites": 11,
+            "scans": 94
+          },
+          "(0, 11)": {
+            "sites": 9,
+            "scans": 44
+          },
+          "(0, 12)": {
+            "sites": 11,
+            "scans": 46
+          },
+          "(0, 13)": {
+            "sites": 13,
+            "scans": 40
+          },
+          "(0, 14)": {
+            "sites": 14,
+            "scans": 43
+          },
+          "(0, 15)": {
+            "sites": 9,
+            "scans": 92
+          }
+        },
+        "device_rows": {
+          "0": 881
+        }
+      }
+    },
+    "coordinate_min_m": [
+      5.052680015563965,
+      0.22936700284481049
+    ],
+    "coordinate_max_m": [
+      109.03099822998047,
+      32.706298828125
+    ],
+    "mat_variable_policy": null,
+    "official_test_files_opened": false
+  },
+  "uji": {
+    "input_sha256": {
+      "data\\UJIndoorLoc\\trainingData.csv": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168"
+    },
+    "ap_ids_sha256": "26880363013bf9eb339b19fc428a0a85d3698fa364554e891283adf196459ecf",
+    "rows": 19937,
+    "sites": 933,
+    "input_aps": 520,
+    "fit_seen_aps": 324,
+    "fit_anchor_count": 672,
+    "physical_roles_disjoint": true,
+    "centered_site_mapping_bijective": true,
+    "non_fit_sample_anchor_ids_all_minus_one": true,
+    "g13_statistics_source": "FIT RSS and FIT anchor IDs only; original imported G13 function",
+    "fit_scan_count_distribution": {
+      "2": 2,
+      "3": 1,
+      "5": 1,
+      "6": 1,
+      "7": 2,
+      "8": 2,
+      "9": 9,
+      "10": 105,
+      "11": 1,
+      "12": 3,
+      "14": 4,
+      "15": 2,
+      "16": 1,
+      "17": 4,
+      "18": 9,
+      "19": 48,
+      "20": 307,
+      "21": 1,
+      "22": 1,
+      "23": 1,
+      "24": 2,
+      "25": 3,
+      "26": 2,
+      "27": 13,
+      "28": 8,
+      "29": 21,
+      "30": 57,
+      "31": 1,
+      "34": 1,
+      "35": 2,
+      "36": 2,
+      "37": 6,
+      "38": 10,
+      "39": 5,
+      "40": 11,
+      "42": 2,
+      "44": 2,
+      "47": 2,
+      "48": 1,
+      "49": 5,
+      "50": 4,
+      "58": 1,
+      "60": 3,
+      "62": 1,
+      "70": 1,
+      "80": 1
+    },
+    "fit_scans_quantiles": [
+      2.0,
+      19.0,
+      20.0,
+      22.25,
+      30.0,
+      80.0
+    ],
+    "fit_sites_with_at_least_two_scans": 672,
+    "roles": {
+      "fit": {
+        "rows": 14398,
+        "sites": 672,
+        "row_indices_sha256": "6991493ba84e3351a82bee3a52127211e3499e9c9a969d1628a313afc43b13ed",
+        "site_keys_sha256": "ce7d8263891c2800ead02bd441aed709254686485e3fca6705a8985ed3ab5662",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 39,
+            "scans": 781
+          },
+          "(0, 1)": {
+            "sites": 49,
+            "scans": 984
+          },
+          "(0, 2)": {
+            "sites": 49,
+            "scans": 998
+          },
+          "(0, 3)": {
+            "sites": 50,
+            "scans": 1033
+          },
+          "(1, 0)": {
+            "sites": 55,
+            "scans": 1040
+          },
+          "(1, 1)": {
+            "sites": 42,
+            "scans": 1008
+          },
+          "(1, 2)": {
+            "sites": 58,
+            "scans": 1025
+          },
+          "(1, 3)": {
+            "sites": 35,
+            "scans": 665
+          },
+          "(2, 0)": {
+            "sites": 49,
+            "scans": 1427
+          },
+          "(2, 1)": {
+            "sites": 65,
+            "scans": 1639
+          },
+          "(2, 2)": {
+            "sites": 52,
+            "scans": 1101
+          },
+          "(2, 3)": {
+            "sites": 80,
+            "scans": 1896
+          },
+          "(2, 4)": {
+            "sites": 49,
+            "scans": 801
+          }
+        },
+        "device_rows": {
+          "0": 353,
+          "1": 311,
+          "2": 392,
+          "3": 3168,
+          "4": 3538,
+          "5": 112,
+          "6": 630,
+          "7": 265,
+          "8": 730,
+          "9": 511,
+          "10": 799,
+          "11": 297,
+          "12": 443,
+          "13": 1062,
+          "14": 1102,
+          "15": 685
+        }
+      },
+      "dev": {
+        "rows": 1792,
+        "sites": 87,
+        "row_indices_sha256": "d897b98270b781cb658c0fb8184ddbcf00c2f7374c59a52edb3a1cc4b20dd4d2",
+        "site_keys_sha256": "f104acdf330efa3a3832e5923c826f021a8cc688c612c67ed4c412514ed89f4d",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 5,
+            "scans": 99
+          },
+          "(0, 1)": {
+            "sites": 6,
+            "scans": 138
+          },
+          "(0, 2)": {
+            "sites": 7,
+            "scans": 137
+          },
+          "(0, 3)": {
+            "sites": 6,
+            "scans": 126
+          },
+          "(1, 0)": {
+            "sites": 7,
+            "scans": 110
+          },
+          "(1, 1)": {
+            "sites": 6,
+            "scans": 119
+          },
+          "(1, 2)": {
+            "sites": 7,
+            "scans": 131
+          },
+          "(1, 3)": {
+            "sites": 5,
+            "scans": 85
+          },
+          "(2, 0)": {
+            "sites": 6,
+            "scans": 175
+          },
+          "(2, 1)": {
+            "sites": 8,
+            "scans": 142
+          },
+          "(2, 2)": {
+            "sites": 7,
+            "scans": 162
+          },
+          "(2, 3)": {
+            "sites": 11,
+            "scans": 258
+          },
+          "(2, 4)": {
+            "sites": 6,
+            "scans": 110
+          }
+        },
+        "device_rows": {
+          "0": 61,
+          "1": 40,
+          "2": 20,
+          "3": 411,
+          "4": 464,
+          "5": 20,
+          "6": 102,
+          "7": 40,
+          "8": 70,
+          "9": 67,
+          "10": 91,
+          "11": 60,
+          "12": 57,
+          "13": 76,
+          "14": 165,
+          "15": 48
+        }
+      },
+      "cal": {
+        "rows": 1867,
+        "sites": 87,
+        "row_indices_sha256": "855bc643c405841cf97727cca0d56b1d0ab8acebb3df222ff9d95e746b41374f",
+        "site_keys_sha256": "51d93b7e5869bb2d16aaa2c467542fdc5e45d8514f09c955d15a96de5e77e2b6",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 5,
+            "scans": 74
+          },
+          "(0, 1)": {
+            "sites": 6,
+            "scans": 125
+          },
+          "(0, 2)": {
+            "sites": 7,
+            "scans": 153
+          },
+          "(0, 3)": {
+            "sites": 6,
+            "scans": 115
+          },
+          "(1, 0)": {
+            "sites": 7,
+            "scans": 108
+          },
+          "(1, 1)": {
+            "sites": 6,
+            "scans": 177
+          },
+          "(1, 2)": {
+            "sites": 7,
+            "scans": 111
+          },
+          "(1, 3)": {
+            "sites": 5,
+            "scans": 95
+          },
+          "(2, 0)": {
+            "sites": 6,
+            "scans": 180
+          },
+          "(2, 1)": {
+            "sites": 8,
+            "scans": 212
+          },
+          "(2, 2)": {
+            "sites": 7,
+            "scans": 146
+          },
+          "(2, 3)": {
+            "sites": 11,
+            "scans": 291
+          },
+          "(2, 4)": {
+            "sites": 6,
+            "scans": 80
+          }
+        },
+        "device_rows": {
+          "0": 60,
+          "1": 69,
+          "2": 42,
+          "3": 451,
+          "4": 373,
+          "5": 40,
+          "6": 58,
+          "7": 40,
+          "8": 80,
+          "9": 76,
+          "10": 111,
+          "11": 50,
+          "12": 72,
+          "13": 110,
+          "14": 165,
+          "15": 70
+        }
+      },
+      "test": {
+        "rows": 1880,
+        "sites": 87,
+        "row_indices_sha256": "0353930c030df0cb825bc08f989de6f46d2fec200a6978bf1f5a1e44abaa88b6",
+        "site_keys_sha256": "035790e7217a8a7e7f3d96761574598a3bde8bf14a417b289ec2af3d1bc15809",
+        "by_building_floor": {
+          "(0, 0)": {
+            "sites": 5,
+            "scans": 105
+          },
+          "(0, 1)": {
+            "sites": 6,
+            "scans": 109
+          },
+          "(0, 2)": {
+            "sites": 7,
+            "scans": 155
+          },
+          "(0, 3)": {
+            "sites": 6,
+            "scans": 117
+          },
+          "(1, 0)": {
+            "sites": 7,
+            "scans": 110
+          },
+          "(1, 1)": {
+            "sites": 6,
+            "scans": 180
+          },
+          "(1, 2)": {
+            "sites": 7,
+            "scans": 129
+          },
+          "(1, 3)": {
+            "sites": 5,
+            "scans": 103
+          },
+          "(2, 0)": {
+            "sites": 6,
+            "scans": 160
+          },
+          "(2, 1)": {
+            "sites": 8,
+            "scans": 169
+          },
+          "(2, 2)": {
+            "sites": 7,
+            "scans": 168
+          },
+          "(2, 3)": {
+            "sites": 11,
+            "scans": 264
+          },
+          "(2, 4)": {
+            "sites": 6,
+            "scans": 111
+          }
+        },
+        "device_rows": {
+          "0": 33,
+          "1": 20,
+          "2": 44,
+          "3": 486,
+          "4": 460,
+          "5": 20,
+          "6": 51,
+          "7": 29,
+          "8": 100,
+          "9": 70,
+          "10": 90,
+          "11": 30,
+          "12": 38,
+          "13": 135,
+          "14": 164,
+          "15": 110
+        }
+      }
+    },
+    "coordinate_min_m": [
+      -7691.33837890625,
+      4864745.5
+    ],
+    "coordinate_max_m": [
+      -7300.81884765625,
+      4865016.5
+    ],
+    "mat_variable_policy": null,
+    "official_test_files_opened": false
+  }
+}

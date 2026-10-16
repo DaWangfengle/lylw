@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-10-16T21:43:57.231621+08:00",
+  "evaluation_role": "test",
+  "checkpoint_sha256": "0d28302141f3bc2e1b552517f4607c1fbb02df6e387e034945ea3137b81eb5c9",
+  "source_sha256": {
+    "msep_single_study.py": "1f4a81f910e671813cfb34a0c1f0d976a5a246da090a068b07e02183f5275996",
+    "msep_single_posterior.py": "6c285e043544471e82e50d3c608223622ded4ba5adafd8ae9fa9e3e853c72df1"
+  },
+  "all_learned_choices_frozen": true,
+  "config": {
+    "dataset": "uji",
+    "output": "fhm_dapp_tim/evidence/msep_single_uji_full_v1",
+    "data_root": null,
+    "device": "auto",
+    "seed": 17301,
+    "split_seed": 20261016,
+    "base_epochs": 80,
+    "patience": 12,
+    "joint_epochs": 10,
+    "batch": 64,
+    "threads": 4,
+    "support": "all",
+    "k": 192,
+    "es_draws": 32,
+    "smoke": false
+  }
+}

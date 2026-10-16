@@ -198,3 +198,7 @@ local_notes/
 !/fhm_dapp_tim/evidence/v17_g13_multiscan_observation/RUN_STDOUT.log
 !/fhm_dapp_tim/evidence/v17_g13_multiscan_observation/RUN_STDERR.log
 /fhm_dapp_tim/models/v17_g13_multiscan_observation/pytest_tmp_*/
+
+# MSEP single-member run: retain raw scientific command evidence.
+!/fhm_dapp_tim/evidence/msep_single_execution_v1/run_logs/*.stdout.log
+!/fhm_dapp_tim/evidence/msep_single_execution_v1/run_logs/*.stderr.log

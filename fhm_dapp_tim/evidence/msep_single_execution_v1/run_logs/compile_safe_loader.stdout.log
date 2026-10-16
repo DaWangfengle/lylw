@@ -1,0 +1,6 @@
+*** Error compiling 'fhm_dapp_tim/fhm_dapp/msep_single_study.py'...
+  File "fhm_dapp_tim/fhm_dapp/msep_single_study.py", line 446
+    "scans":len(rows)} for r,rows in roles.items()}), flush=True)
+                                                   ^
+SyntaxError: closing parenthesis ')' does not match opening parenthesis '{' on line 443
+
