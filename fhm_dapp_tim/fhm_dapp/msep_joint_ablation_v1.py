@@ -169,9 +169,9 @@ def main(args):
         "cal_fit_sites": len(set(site_keys[int(i)] for i in cal_fit)),
         "cal_eval_sites": len(set(site_keys[int(i)] for i in cal_eval)),
         "neighbor_mass_wrong_bf_original": neighbor_contamination(
-            old_n, old_w, memory["building"], memory["floor"]),
+            old_n.cpu(), old_w.cpu(), memory["building"], memory["floor"]),
         "neighbor_mass_wrong_bf_new": neighbor_contamination(
-            floor_n, floor_w, memory["building"], memory["floor"]),
+            floor_n.cpu(), floor_w.cpu(), memory["building"], memory["floor"]),
         "variants": {}, "calibration": {},
     }
     by_site = {}
