@@ -103,3 +103,20 @@ def test_invalid_inputs_fail_closed():
         split_physical_sites([(0,0,1.,2.)],seed=1)
     with pytest.raises(ValueError):
         posterior(torch.zeros(1,2),torch.zeros(1,2,2),mode="g13",theta=(-1.,0.))
+
+
+def test_joint_posterior_loss_reaches_retriever_gate_and_centres():
+    torch.manual_seed(19)
+    scores = torch.randn(4, 7, requires_grad=True)
+    evidence = torch.randn(4, 7, 2)
+    reliability = torch.rand(4, 7, 4)
+    centers = torch.randn(4, 7, 2, requires_grad=True)
+    scale = torch.ones_like(centers) * 1.5
+    target = torch.randn(4, 2)
+    head = UnifiedAnchorPosterior(theta=(.8, .9))
+    q = posterior(scores,evidence,mode="unified",reliability=reliability,unified=head)
+    objective = mixture_loss(q,centers,scale,target)
+    objective.backward()
+    for grad in (scores.grad,centers.grad,head.theta.grad,head.gate.weight.grad):
+        assert grad is not None and torch.isfinite(grad).all()
+        assert torch.linalg.vector_norm(grad) > 0
