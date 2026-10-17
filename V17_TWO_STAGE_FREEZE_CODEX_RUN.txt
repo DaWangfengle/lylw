@@ -43,7 +43,8 @@ The three checkpoint policies are reported side by side:
 
 Policy (c) is predeclared as the only Stage-2 primary checkpoint. Policies (a)
 and (b) are retained as checkpoint-selection sensitivity audits. CAL-eval is
-never used to select a checkpoint.
+never used to select a checkpoint. Excluding Epochs 1..20 affects checkpoint
+selection only; it does NOT add a learning-rate warmup schedule.
 
 Stage 2 freezes each primary Stage-1 model and its continuous components. On
 the same site-disjoint CAL-fit/CAL-eval protocol, it evaluates:
