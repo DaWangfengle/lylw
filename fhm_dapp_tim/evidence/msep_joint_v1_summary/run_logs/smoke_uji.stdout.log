@@ -1,0 +1,13 @@
+{"stage": "base", "epoch": 1, "fit_loss": 8.489964905038343, "dev_mae": 18.403125762939453}
+{"stage": "base_done", "variant": "raw", "macro_mae_m": 19.485857009887695}
+{"stage": "base", "epoch": 1, "fit_loss": 8.050863192144748, "dev_mae": 18.28820037841797}
+{"stage": "base_done", "variant": "floor_neighbors", "macro_mae_m": 19.375680923461914}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 1, "fit_loss_sum": 4284.042362689972, "batches": 452}
+{"stage": "variant_done", "variant": "raw_xy", "macro_mae_m": 10.330699920654297, "bf_accuracy": 0.8759769797325134}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 1, "fit_loss_sum": 5325.921092987061, "batches": 452}
+{"stage": "variant_done", "variant": "raw_joint", "macro_mae_m": 12.105911254882812, "bf_accuracy": 0.889247715473175}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 1, "fit_loss_sum": 4373.55292224884, "batches": 452}
+{"stage": "variant_done", "variant": "floor_neighbors_xy", "macro_mae_m": 10.349934577941895, "bf_accuracy": 0.8772186040878296}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 1, "fit_loss_sum": 5313.106804847717, "batches": 452}
+{"stage": "variant_done", "variant": "floor_neighbors_joint", "macro_mae_m": 11.908890724182129, "bf_accuracy": 0.8964793682098389}
+{"stage": "complete", "output": "fhm_dapp_tim\\evidence\\msep_joint_v1_smoke_uji", "test_accesses": 0}

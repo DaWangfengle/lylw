@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "student_t_matches_torch_distribution": true,
+  "evidence_theta_gradients": [
+    -0.4671801030635834,
+    0.5294708013534546
+  ],
+  "refits_independent_from_same_initial_state": true,
+  "identical_refit_query_order_and_budget": true,
+  "base_parameters_unchanged": true,
+  "repeated_no_evidence_refit_identical": true,
+  "synthetic_evidence_final_theta": [
+    0.2003709375858307,
+    0.20180381834506989
+  ],
+  "scope": "synthetic correctness only; no real CAL/DEV/TEST scores"
+}

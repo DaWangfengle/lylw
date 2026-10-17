@@ -1,0 +1,67 @@
+MSEP-Loc 下一轮单成员空间后验科学消融：Codex 本地执行指令
+日期：2026-10-16
+仓库：DaWangfengle/lylw
+GPT 已经在 GitHub 新分支 msep-joint-location-ablation-v1 写入实验代码和测试。
+
+一、工作边界（必须遵守）
+1. 我会自己负责 Git 分支切换和后续 git 上传。你只在我已经切换好的本地 msep-joint-location-ablation-v1 分支工作；本指令不授权进行 git checkout/switch/commit/push/pull/merge/rebase，也不授权更改 main。不要自动上传。
+2. 当前是科学实验迭代，而不是工程平台开发。优先保证训练目标、数据隔离、配对消融和准确结果，禁止为美观任意重构 V17/G13 的历史科学源码。
+3. 目标是比较：旧同建筑邻居 vs 新同建筑同楼层邻居；XY-only 联合微调 vs BF-XY 完整联合微调；BF-XY with/without G13 的独立同预算训练；冻结 Raw 骨干时固定 T=.6、学 T、学 G13、联合学 T/G13；训练/推理锚点评分规则的反事实差异。
+4. 读取 docs/MSEP_JOINT_LOCATION_ABLATION_V1.md 作为数学/数据/指标契约；细读 fhm_dapp_tim/fhm_dapp/msep_joint_science_v1.py、msep_joint_ablation_v1.py、tests/test_msep_joint_ablation_v1.py，并对照旧的 msep_single_study.py / model.py / train_anchor.py 检查兼容性。
+5. 只允许 FIT 用于模型梯度/G13 统计；DEV 基础模型早停；CAL-fit 优化校准系数；CAL-eval 做描述性对照；TEST 完全不评分、不训练、不选择、不读取其标签用于决策；不加载 UJI 官方 validationData、UTS 官方 test、TUJI MAT 的 results_test。旧 TEST 已暴露，不许以任何理由在其上调参。
+6. 结果不必改善。如果 UJI 仍然崩塌，真实记录，不要修改目标直到看到想要的数值。只在确定性代码BUG导致运行无法完成时作最小修复，保存修复前日志、根因和修复后的测试记录；禁止根据开发集结果临时扩网格、挑模型或改变数学目标。
+
+二、环境与第一道门槛
+在项目根目录使用现有 Windows Python：
+$PY = 'D:\miniminiconda\envs\liuyan\python.exe'
+& $PY -m compileall -q fhm_dapp_tim/fhm_dapp/msep_joint_science_v1.py fhm_dapp_tim/fhm_dapp/msep_joint_ablation_v1.py
+& $PY -m pytest tests/test_msep_joint_ablation_v1.py -q
+& $PY -m fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1 --help
+
+特别检查：
+- 自适应同楼层邻居的单锚点楼层、样本稀疏楼层是否正确处理，softmax 不出现 NaN，零权重不得跑到错楼层。
+- -log p(B,F,x,y|RSS) 的 normalizer 是全参考锚点，真实 BF 仅用于训练监督，不能在部署推理时过滤候选锚点。
+- joint θ 有梯度并 clamp[0,1.5]，no-evidence 模型单独独立训练，相同初始骨干/随机种子/训练预算；参数未误共享。
+- 每个 CAL-eval 站点都未落入 CAL-fit，同一个物理位置的全部扫描仅分一个角色。
+- 原基准与新研究数据编码器接口一致，所有 AP mask/原型信息仅由 FIT 构造。
+- 旧 XY Joint 作为负对照不加入 BF 监督；新 BF-XY 同步报告 full XY mean 与 model-predicted BF conditioned XY mean。
+- 切记不要默默忽略测试失败，遇到科学目标逻辑错误必须停下并记录。
+
+三、最小冒烟（仅检查能跑，不采纳分数）
+$PY = 'D:\miniminiconda\envs\liuyan\python.exe'
+& $PY -m fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1 --dataset tuji --base-epochs 1 --joint-epochs 1 --es-draws 8 --batch 32 --skip-evidence-refit --output fhm_dapp_tim/evidence/msep_joint_v1_smoke_tuji
+& $PY -m fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1 --dataset uts --base-epochs 1 --joint-epochs 1 --es-draws 8 --batch 32 --skip-evidence-refit --output fhm_dapp_tim/evidence/msep_joint_v1_smoke_uts
+& $PY -m fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1 --dataset uji --base-epochs 1 --joint-epochs 1 --es-draws 8 --batch 32 --skip-evidence-refit --output fhm_dapp_tim/evidence/msep_joint_v1_smoke_uji
+
+核查每个 RESULT.json 和 SITE_DIAGNOSTICS.json 都能解析、没有 NaN/Inf；n_sites 与 cal_fit/cal_eval 的角色哈希/计数一致；无 TEST 评价字段；所有 BF 概率和几何指标有限。如果发生资源不足，优先检查 torch 内存和 batch；调低 batch 前先作必要性的记录，不能改变模型、损失或选择规则。
+
+四、三域正式开发期实验：三个预设训练种子（不是官方/独立 TEST）
+$PY = 'D:\miniminiconda\envs\liuyan\python.exe'
+$seeds = @(17301, 17302, 17303)
+$domains = @('tuji', 'uts', 'uji')
+foreach ($seed in $seeds) {
+  foreach ($domain in $domains) {
+    $out = "fhm_dapp_tim/evidence/msep_joint_v1_${domain}_seed${seed}"
+    $cliArgs = @('-m','fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1','--dataset',$domain,'--seed',[string]$seed,'--split-seed','20261017','--base-epochs','80','--joint-epochs','10','--batch','64','--es-draws','32','--output',$out)
+    if ($seed -eq 17301) { $cliArgs += '--save-checkpoints' }
+    New-Item -ItemType Directory -Force -Path $out | Out-Null
+    & $PY @cliArgs 2>&1 | Tee-Object -FilePath (Join-Path $out 'RUN_STDOUT_STDERR.log')
+    $code = $LASTEXITCODE
+    if ($code -ne 0) { throw "FAILED $domain seed $seed exit $code; preserve logs; do not conceal or skip" }
+  }
+}
+
+如现有环境的某一 Python 路径确实不存在，先输出环境核查，不自行下载/更换科学依赖版本。三数据集读取路径沿用项目已有数据适配器，不手动生成新的训练 CSV。保留每次 stdout/stderr 原始日志，结果目录不覆盖历史实验产物。日志建议用 PowerShell Start-Transcript 或 tee 分别保存原始输出，不改动运行参数。
+
+五、结果核查与给 GPT 的上交资料
+请至少生成 fhm_dapp_tim/evidence/msep_joint_v1_summary/RUN_REPORT.md 与 SUMMARY.json，包括：
+- 9 次实验的运行参数、commit/分支标识（仅只读查询）、数据角色站点数、CAL 拆分数、基础选中 epoch、结果目录与原始日志位置；
+- 每个数据集/seed 的 Raw、Floor、XY refit、Joint BF-XY refit、Joint+EV refit 的 full mean MAE、predicted BF MAE、BF accuracy、Energy Score、joint NLL、P95；
+- 按物理位置配对计算差异、胜/负/平站点数和最大伤害，尤其 raw_xy -> raw_joint 与 floor_neighbors_xy -> floor_neighbors_joint，以及 no_ev -> with_evidence；
+- 同条件 Raw 冻结温度/G13 组合在 CAL-eval 上的数值和 theta/T，特别检查 UTS/UJI 有无真正可复现的增量；
+- 当前 FIT 的旧邻居跨 BF 软标签质量及新邻居零污染；
+- 保留原学习型检索评分 vs 固定 R3 的相同 Student-t 中心反事实；
+- 明确这些结果是已暴露原始数据上的 split-internal exploratory development，不是新 TEST，不可与先前不同划分 2.316/4.599/6.760 数字直接比较；
+- 所有负结果、实验失败和修复日志，一律不得删除。
+
+完成后仅汇总科学现象与完整产物位置；不开展新的多成员、外部数据、残差 5m 截断、参数大网格，也不进行 git 上传。由我自己安排将运行报告和必要证据上传到 GitHub，之后再交给 GPT 从第一性原理分析决定下一步。

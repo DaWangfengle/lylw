@@ -1,0 +1,23 @@
+usage: msep_joint_ablation_v1.py [-h] --dataset {tuji,uts,uji} --output OUTPUT
+                                 [--data-root DATA_ROOT]
+                                 [--device {auto,cpu,cuda}] [--seed SEED]
+                                 [--split-seed SPLIT_SEED]
+                                 [--base-epochs BASE_EPOCHS]
+                                 [--joint-epochs JOINT_EPOCHS] [--batch BATCH]
+                                 [--es-draws ES_DRAWS] [--save-checkpoints]
+                                 [--skip-evidence-refit]
+
+options:
+  -h, --help            show this help message and exit
+  --dataset {tuji,uts,uji}
+  --output OUTPUT
+  --data-root DATA_ROOT
+  --device {auto,cpu,cuda}
+  --seed SEED
+  --split-seed SPLIT_SEED
+  --base-epochs BASE_EPOCHS
+  --joint-epochs JOINT_EPOCHS
+  --batch BATCH
+  --es-draws ES_DRAWS
+  --save-checkpoints
+  --skip-evidence-refit

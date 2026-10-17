@@ -1,0 +1,927 @@
+{
+  "started_at": "2026-10-17T18:28:55.239346+08:00",
+  "python": "D:/miniminiconda/envs/liuyan/python.exe",
+  "branch": "msep-joint-location-ablation-v1",
+  "initial_commit": "92181f4ce6e11449b0972fffd5a2d290939dff57",
+  "git_scope": "read-only branch/status/hash only; no mutation/publication authorized",
+  "commands": [
+    {
+      "label": "compile_initial",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "compileall",
+        "-q",
+        "fhm_dapp_tim/fhm_dapp/msep_joint_science_v1.py",
+        "fhm_dapp_tim/fhm_dapp/msep_joint_ablation_v1.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:29:05.613014+08:00",
+      "ended_at": "2026-10-17T18:29:05.717093+08:00",
+      "duration_seconds": 0.1038906000321731,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/compile_initial.stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/compile_initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "tests_initial",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_msep_joint_ablation_v1.py",
+        "-q"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:29:05.806657+08:00",
+      "ended_at": "2026-10-17T18:29:14.181244+08:00",
+      "duration_seconds": 8.37727969995467,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/tests_initial.stdout.log",
+          "bytes": 100,
+          "sha256": "a88b3e6c1cb3eac3415b46d33d87043a69b0c15441ef10593113f755bbfb38c2"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/tests_initial.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "help",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--help"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:29:14.270346+08:00",
+      "ended_at": "2026-10-17T18:29:18.568155+08:00",
+      "duration_seconds": 4.298442800005432,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/help.stdout.log",
+          "bytes": 908,
+          "sha256": "f7eecc34407880c0b0fec7ce0c625de5e5346ddb026bba40176c31185f9cdb21"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/help.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "audit_inputs",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/msep_joint_v1_summary/audit_inputs.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:30:14.991544+08:00",
+      "ended_at": "2026-10-17T18:30:29.158356+08:00",
+      "duration_seconds": 14.158573199994862,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_inputs.stdout.log",
+          "bytes": 903,
+          "sha256": "73040b0e9bb0b6fc93978c36d4f224094157164944793898c0565634529896ab"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_inputs.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "audit_numerics",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/msep_joint_v1_summary/audit_numerics.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:31:05.940579+08:00",
+      "ended_at": "2026-10-17T18:31:13.382841+08:00",
+      "duration_seconds": 7.442641299974639,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_numerics.stdout.log",
+          "bytes": 927,
+          "sha256": "a10d3b7d40ca23c360f465bd48c50fa7541ab9fca075b5ee91317d2649a85ada"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_numerics.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "smoke_tuji",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "tuji",
+        "--base-epochs",
+        "1",
+        "--joint-epochs",
+        "1",
+        "--es-draws",
+        "8",
+        "--batch",
+        "32",
+        "--skip-evidence-refit",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_smoke_tuji"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:31:13.661567+08:00",
+      "ended_at": "2026-10-17T18:31:41.493350+08:00",
+      "duration_seconds": 27.831550300004892,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/smoke_tuji.stdout.log",
+          "bytes": 1365,
+          "sha256": "934da77db68155f1b20033139df2d239433e3bb33579ee5e424e81a65e5c73b0"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/smoke_tuji.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "smoke_uts",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uts",
+        "--base-epochs",
+        "1",
+        "--joint-epochs",
+        "1",
+        "--es-draws",
+        "8",
+        "--batch",
+        "32",
+        "--skip-evidence-refit",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_smoke_uts"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:31:41.577828+08:00",
+      "ended_at": "2026-10-17T18:32:52.267808+08:00",
+      "duration_seconds": 70.69131229998311,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/smoke_uts.stdout.log",
+          "bytes": 1423,
+          "sha256": "8ddb27e2a20cb3820908e508e46c145449e5918740936db763cfeea927c39313"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/smoke_uts.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "smoke_uji",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uji",
+        "--base-epochs",
+        "1",
+        "--joint-epochs",
+        "1",
+        "--es-draws",
+        "8",
+        "--batch",
+        "32",
+        "--skip-evidence-refit",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_smoke_uji"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:32:52.376042+08:00",
+      "ended_at": "2026-10-17T18:34:41.105086+08:00",
+      "duration_seconds": 108.7289252000046,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/smoke_uji.stdout.log",
+          "bytes": 1425,
+          "sha256": "6cf9171f6d3f212ac1c40417d739d653ac67694f1b33c7e13cae0d80aaf44c24"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/smoke_uji.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "audit_smoke",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/msep_joint_v1_summary/audit_results.py",
+        "smoke"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:34:52.249565+08:00",
+      "ended_at": "2026-10-17T18:34:52.552960+08:00",
+      "duration_seconds": 0.30345810001017526,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_smoke.stdout.log",
+          "bytes": 104,
+          "sha256": "f6b09f9e10e83154b8cb581b6babb27b4b9639a49be1dfb2f1ee6553ac9f9ed1"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_smoke.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "freeze_method",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/msep_joint_v1_summary/freeze_method.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:34:52.636814+08:00",
+      "ended_at": "2026-10-17T18:34:52.933818+08:00",
+      "duration_seconds": 0.2948196000070311,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/freeze_method.stdout.log",
+          "bytes": 168,
+          "sha256": "e6503930ae59f1c6fa66e2e31f7799fbbe9e657f670b141c6dacb2b9167ef96c"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/freeze_method.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_tuji_17301",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "tuji",
+        "--seed",
+        "17301",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301",
+        "--save-checkpoints"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:35:02.021754+08:00",
+      "ended_at": "2026-10-17T18:41:19.935262+08:00",
+      "duration_seconds": 376.776909600012,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_tuji_17301.stdout.log",
+          "bytes": 22925,
+          "sha256": "d99cf8d12a4d9aedbcaf6d2359aefdaf92058e08634b769c4fce0361a8b7a2ac"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_tuji_17301.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_uts_17301",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uts",
+        "--seed",
+        "17301",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301",
+        "--save-checkpoints"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:41:20.032017+08:00",
+      "ended_at": "2026-10-17T18:57:57.913031+08:00",
+      "duration_seconds": 997.882647899969,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uts_17301.stdout.log",
+          "bytes": 17426,
+          "sha256": "6a1492e54777cd438485c8805d445cb59dba6b731953674a3ebb0a4e128238b2"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uts_17301.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_uji_17301",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uji",
+        "--seed",
+        "17301",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301",
+        "--save-checkpoints"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T18:57:58.003315+08:00",
+      "ended_at": "2026-10-17T19:22:06.959276+08:00",
+      "duration_seconds": 1448.953113900032,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uji_17301.stdout.log",
+          "bytes": 16949,
+          "sha256": "750f6ce0e8c7bff90302575c5194fd9676165c18aeceef95b9f331e7761c509e"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uji_17301.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_tuji_17302",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "tuji",
+        "--seed",
+        "17302",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17302"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T19:22:07.047602+08:00",
+      "ended_at": "2026-10-17T19:28:22.918168+08:00",
+      "duration_seconds": 375.8720714999945,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_tuji_17302.stdout.log",
+          "bytes": 22934,
+          "sha256": "c92932ac7fdcc31f57e8a65d000407eb4d04c1e49696ae8f2d5f87925b6a3184"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_tuji_17302.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_uts_17302",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uts",
+        "--seed",
+        "17302",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17302"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T19:28:23.010397+08:00",
+      "ended_at": "2026-10-17T19:49:08.533869+08:00",
+      "duration_seconds": 1245.5227372000227,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uts_17302.stdout.log",
+          "bytes": 23050,
+          "sha256": "a524a0d6eeb00c6957bbeae60cc672db187033223b21e73cb09b0d6525f0543a"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uts_17302.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_uji_17302",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uji",
+        "--seed",
+        "17302",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17302"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T19:49:08.619011+08:00",
+      "ended_at": "2026-10-17T20:14:21.265170+08:00",
+      "duration_seconds": 1512.6457723000203,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uji_17302.stdout.log",
+          "bytes": 17777,
+          "sha256": "7be046bafbeefea50cfc340e90f9b362da9462c1d4c6af4b97417439fe5b3743"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uji_17302.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_tuji_17303",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "tuji",
+        "--seed",
+        "17303",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17303"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T20:14:21.353311+08:00",
+      "ended_at": "2026-10-17T20:20:39.741407+08:00",
+      "duration_seconds": 378.3886995999492,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_tuji_17303.stdout.log",
+          "bytes": 22962,
+          "sha256": "58c2d7371b73efd7ebfc0cc38513e07936c5dbfe3e9af8a2f072c658184a4838"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_tuji_17303.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_uts_17303",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uts",
+        "--seed",
+        "17303",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17303"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T20:20:39.823889+08:00",
+      "ended_at": "2026-10-17T20:33:05.190403+08:00",
+      "duration_seconds": 745.3667931000236,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uts_17303.stdout.log",
+          "bytes": 11772,
+          "sha256": "730761176293ccaba09e2cd0e141ef3a7df3fb3622c0bc875c436f2d572df95a"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uts_17303.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "full_uji_17303",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_joint_ablation_v1",
+        "--dataset",
+        "uji",
+        "--seed",
+        "17303",
+        "--split-seed",
+        "20261017",
+        "--base-epochs",
+        "80",
+        "--joint-epochs",
+        "10",
+        "--batch",
+        "64",
+        "--es-draws",
+        "32",
+        "--output",
+        "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17303"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T20:33:05.293598+08:00",
+      "ended_at": "2026-10-17T21:00:32.186395+08:00",
+      "duration_seconds": 1646.8931578999618,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uji_17303.stdout.log",
+          "bytes": 19260,
+          "sha256": "c1dc06eecda5c8ddec4dc05eb5a7cab88c3455f0c8f4fdb6c88c5fd3c27e760d"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/full_uji_17303.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "audit_formal",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/msep_joint_v1_summary/audit_results.py",
+        "full"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T21:00:47.179912+08:00",
+      "ended_at": "2026-10-17T21:00:48.007828+08:00",
+      "duration_seconds": 0.8306463999906555,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_formal.stdout.log",
+          "bytes": 101,
+          "sha256": "9a3f758e450f4cdf27da0da65d189e3a08777e220c7f9491def3460fb652ee36"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/audit_formal.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "write_report",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/msep_joint_v1_summary/write_report.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T21:03:16.684128+08:00",
+      "ended_at": "2026-10-17T21:03:16.931547+08:00",
+      "duration_seconds": 0.24885219999123365,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/write_report.stdout.log",
+          "bytes": 177,
+          "sha256": "8cfb736ff40dfd16897bf5e6ad001efb364c849dc6db79c977da788727812e59"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/write_report.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "label": "final_integrity",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/msep_joint_v1_summary/final_integrity.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-17T21:04:00.280304+08:00",
+      "ended_at": "2026-10-17T21:04:04.030490+08:00",
+      "duration_seconds": 3.747404199966695,
+      "exit_code": 0,
+      "environment_overrides": {
+        "PYTHONUTF8": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4"
+      },
+      "logs": {
+        "stdout": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/final_integrity.stdout.log",
+          "bytes": 4070,
+          "sha256": "76ad082e4699c2821a06a4f9d2b679cf2b2a4368b52ca0e1f1873a092ccd39c4"
+        },
+        "stderr": {
+          "path": "fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/final_integrity.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "status": "COMPLETE",
+  "completed_at": "2026-10-17T21:04:28.863492+08:00",
+  "formal_runs_completed": 9,
+  "smoke_runs_completed": 3,
+  "tests_passed": 8,
+  "tests_failed": 0,
+  "scientific_source_repairs": [],
+  "test_evaluations": 0,
+  "git_mutations_or_publication": 0,
+  "verified_command_logs": 44,
+  "artifacts": {
+    "report": "fhm_dapp_tim/evidence/msep_joint_v1_summary/RUN_REPORT.md",
+    "summary": "fhm_dapp_tim/evidence/msep_joint_v1_summary/SUMMARY.json",
+    "integrity_review": "fhm_dapp_tim/evidence/msep_joint_v1_summary/INTEGRITY_REVIEW.json",
+    "formal_output_directories": [
+      "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301",
+      "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301",
+      "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301",
+      "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17302",
+      "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17302",
+      "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17302",
+      "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17303",
+      "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17303",
+      "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17303"
+    ]
+  },
+  "elapsed_seconds": 9333.624146
+}

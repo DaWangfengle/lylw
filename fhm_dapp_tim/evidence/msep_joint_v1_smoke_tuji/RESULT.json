@@ -1,0 +1,272 @@
+{
+  "study": "MSEP causal single-member v1; exploratory split-internal only",
+  "dataset": "tuji",
+  "config": {
+    "dataset": "tuji",
+    "output": "fhm_dapp_tim/evidence/msep_joint_v1_smoke_tuji",
+    "data_root": null,
+    "device": "auto",
+    "seed": 17301,
+    "split_seed": 20261017,
+    "base_epochs": 1,
+    "joint_epochs": 1,
+    "batch": 32,
+    "es_draws": 8,
+    "save_checkpoints": false,
+    "skip_evidence_refit": true
+  },
+  "warning": "TEST NOT EVALUATED; previous experiment exposed historical outcomes",
+  "site_counts": {
+    "fit": 646,
+    "dev": 91,
+    "cal": 91,
+    "test": 91
+  },
+  "cal_fit_sites": 45,
+  "cal_eval_sites": 46,
+  "neighbor_mass_wrong_bf_original": 0.0,
+  "neighbor_mass_wrong_bf_new": 0.0,
+  "variants": {
+    "raw": {
+      "metrics": {
+        "macro_mae_full_m": 4.023703098297119,
+        "macro_mae_predicted_bf_m": 4.023703098297119,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 7.0308942794799805,
+        "macro_es_m": 3.10746431350708,
+        "macro_joint_nll": 5.202505588531494,
+        "n_scans": 234,
+        "n_sites": 46
+      },
+      "training": {
+        "best_epoch": 1,
+        "best_dev_mae": 4.178669452667236,
+        "history": [
+          {
+            "epoch": 1,
+            "fit_loss": 8.985529179666557,
+            "dev_mae": 4.178669452667236
+          }
+        ]
+      }
+    },
+    "floor_neighbors": {
+      "metrics": {
+        "macro_mae_full_m": 4.0237040519714355,
+        "macro_mae_predicted_bf_m": 4.0237040519714355,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 7.03089714050293,
+        "macro_es_m": 3.107464551925659,
+        "macro_joint_nll": 5.202505588531494,
+        "n_scans": 234,
+        "n_sites": 46
+      },
+      "training": {
+        "best_epoch": 1,
+        "best_dev_mae": 4.1786699295043945,
+        "history": [
+          {
+            "epoch": 1,
+            "fit_loss": 8.985529067469578,
+            "dev_mae": 4.1786699295043945
+          }
+        ]
+      }
+    },
+    "raw_xy": {
+      "metrics": {
+        "macro_mae_full_m": 2.899726152420044,
+        "macro_mae_predicted_bf_m": 2.899726152420044,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 4.7314653396606445,
+        "macro_es_m": 2.1923160552978516,
+        "macro_joint_nll": 4.619424343109131,
+        "n_scans": 234,
+        "n_sites": 46
+      },
+      "theta": [
+        0.0,
+        0.0
+      ],
+      "epochs": 1,
+      "last_fit_loss": 581.4477353096008
+    },
+    "raw_joint": {
+      "metrics": {
+        "macro_mae_full_m": 2.8965470790863037,
+        "macro_mae_predicted_bf_m": 2.8965470790863037,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 4.741120338439941,
+        "macro_es_m": 2.1785998344421387,
+        "macro_joint_nll": 4.619726657867432,
+        "n_scans": 234,
+        "n_sites": 46
+      },
+      "theta": [
+        0.0,
+        0.0
+      ],
+      "epochs": 1,
+      "last_fit_loss": 581.3717784881592
+    },
+    "floor_neighbors_xy": {
+      "metrics": {
+        "macro_mae_full_m": 2.9034552574157715,
+        "macro_mae_predicted_bf_m": 2.9034552574157715,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 4.7207794189453125,
+        "macro_es_m": 2.179555892944336,
+        "macro_joint_nll": 4.619152069091797,
+        "n_scans": 234,
+        "n_sites": 46
+      },
+      "theta": [
+        0.0,
+        0.0
+      ],
+      "epochs": 1,
+      "last_fit_loss": 581.3829321861267
+    },
+    "floor_neighbors_joint": {
+      "metrics": {
+        "macro_mae_full_m": 2.901660680770874,
+        "macro_mae_predicted_bf_m": 2.901660680770874,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 4.725179672241211,
+        "macro_es_m": 2.191915512084961,
+        "macro_joint_nll": 4.619044780731201,
+        "n_scans": 234,
+        "n_sites": 46
+      },
+      "theta": [
+        0.0,
+        0.0
+      ],
+      "epochs": 1,
+      "last_fit_loss": 581.4018144607544
+    }
+  },
+  "calibration": {
+    "raw": {
+      "params": {
+        "temperature": 1.0,
+        "theta": [
+          0.0,
+          0.0
+        ]
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.023703098297119,
+        "macro_mae_predicted_bf_m": 4.023703098297119,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 7.0308942794799805,
+        "macro_es_m": 3.10746431350708,
+        "macro_joint_nll": 5.202505588531494,
+        "n_scans": 234,
+        "n_sites": 46
+      }
+    },
+    "temp_t06": {
+      "params": {
+        "temperature": 0.6,
+        "theta": [
+          0.0,
+          0.0
+        ]
+      },
+      "metrics": {
+        "macro_mae_full_m": 3.124901056289673,
+        "macro_mae_predicted_bf_m": 3.124901056289673,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 5.313823699951172,
+        "macro_es_m": 2.2930243015289307,
+        "macro_joint_nll": 4.870754241943359,
+        "n_scans": 234,
+        "n_sites": 46
+      }
+    },
+    "temp_fit": {
+      "params": {
+        "temperature": 0.25,
+        "theta": [
+          0.0,
+          0.0
+        ]
+      },
+      "metrics": {
+        "macro_mae_full_m": 2.925010919570923,
+        "macro_mae_predicted_bf_m": 2.925010919570923,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 4.467916488647461,
+        "macro_es_m": 2.084031105041504,
+        "macro_joint_nll": 4.566314697265625,
+        "n_scans": 234,
+        "n_sites": 46
+      }
+    },
+    "g13_t06": {
+      "params": {
+        "temperature": 0.6,
+        "theta": [
+          1.5,
+          1.5
+        ]
+      },
+      "metrics": {
+        "macro_mae_full_m": 2.594547986984253,
+        "macro_mae_predicted_bf_m": 2.594547986984253,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 4.104066848754883,
+        "macro_es_m": 1.9125633239746094,
+        "macro_joint_nll": 4.444098949432373,
+        "n_scans": 234,
+        "n_sites": 46
+      }
+    },
+    "temp_plus_g13": {
+      "params": {
+        "temperature": 0.25522541999816895,
+        "theta": [
+          1.5,
+          1.5
+        ]
+      },
+      "metrics": {
+        "macro_mae_full_m": 2.618194341659546,
+        "macro_mae_predicted_bf_m": 2.618194341659546,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 4.300971984863281,
+        "macro_es_m": 1.8889384269714355,
+        "macro_joint_nll": 4.361749172210693,
+        "n_scans": 234,
+        "n_sites": 46
+      }
+    }
+  },
+  "score_law_diagnostic": {
+    "learned_training_law_same_centers": {
+      "macro_mae_full_m": 4.493612766265869,
+      "macro_mae_predicted_bf_m": 4.493612766265869,
+      "macro_bf_accuracy": 1.0,
+      "row_bf_accuracy": 1.0,
+      "site_p95_full_m": 7.575106143951416,
+      "macro_es_m": 3.3100764751434326,
+      "macro_joint_nll": 5.342289924621582,
+      "n_scans": 234,
+      "n_sites": 46
+    },
+    "fixed_R3_law_is_calibration_raw": true,
+    "warning": "counterfactual score substitution, not a retrained aligned model"
+  }
+}

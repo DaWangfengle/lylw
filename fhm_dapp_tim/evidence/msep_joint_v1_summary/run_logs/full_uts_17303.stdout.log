@@ -1,0 +1,109 @@
+{"stage": "base", "epoch": 1, "fit_loss": 10.70781501288553, "dev_mae": 9.416967391967773}
+{"stage": "base", "epoch": 2, "fit_loss": 7.0066769748058135, "dev_mae": 9.601593971252441}
+{"stage": "base", "epoch": 3, "fit_loss": 6.310710462551673, "dev_mae": 9.547883033752441}
+{"stage": "base", "epoch": 4, "fit_loss": 5.935340168406662, "dev_mae": 9.615031242370605}
+{"stage": "base", "epoch": 5, "fit_loss": 6.522064718227942, "dev_mae": 9.644498825073242}
+{"stage": "base", "epoch": 6, "fit_loss": 6.351979954728803, "dev_mae": 9.606749534606934}
+{"stage": "base", "epoch": 7, "fit_loss": 5.774863432911993, "dev_mae": 9.670299530029297}
+{"stage": "base", "epoch": 8, "fit_loss": 6.295627612512089, "dev_mae": 9.70801830291748}
+{"stage": "base", "epoch": 9, "fit_loss": 6.315288298338363, "dev_mae": 9.658487319946289}
+{"stage": "base", "epoch": 10, "fit_loss": 6.437828267662271, "dev_mae": 9.685943603515625}
+{"stage": "base", "epoch": 11, "fit_loss": 6.543019438252865, "dev_mae": 9.807012557983398}
+{"stage": "base", "epoch": 12, "fit_loss": 6.5352678345245065, "dev_mae": 9.736148834228516}
+{"stage": "base", "epoch": 13, "fit_loss": 6.409664339232213, "dev_mae": 9.64986515045166}
+{"stage": "base", "epoch": 14, "fit_loss": 6.29403044876543, "dev_mae": 9.626523971557617}
+{"stage": "base", "epoch": 15, "fit_loss": 6.239075554227366, "dev_mae": 9.644815444946289}
+{"stage": "base", "epoch": 16, "fit_loss": 5.586597146339787, "dev_mae": 9.704093933105469}
+{"stage": "base", "epoch": 17, "fit_loss": 5.496532639253487, "dev_mae": 9.713382720947266}
+{"stage": "base", "epoch": 18, "fit_loss": 5.41748429270624, "dev_mae": 9.684370040893555}
+{"stage": "base", "epoch": 19, "fit_loss": 5.313359751284701, "dev_mae": 9.640878677368164}
+{"stage": "base", "epoch": 20, "fit_loss": 5.266438164757293, "dev_mae": 9.617681503295898}
+{"stage": "base_done", "variant": "raw", "macro_mae_m": 9.320236206054688}
+{"stage": "base", "epoch": 1, "fit_loss": 10.262439912962682, "dev_mae": 9.302068710327148}
+{"stage": "base", "epoch": 2, "fit_loss": 6.6943698207151545, "dev_mae": 9.438405990600586}
+{"stage": "base", "epoch": 3, "fit_loss": 6.534998000246807, "dev_mae": 9.4688720703125}
+{"stage": "base", "epoch": 4, "fit_loss": 6.951842553407243, "dev_mae": 9.462682723999023}
+{"stage": "base", "epoch": 5, "fit_loss": 5.695888236888404, "dev_mae": 9.516084671020508}
+{"stage": "base", "epoch": 6, "fit_loss": 6.136570916592496, "dev_mae": 9.511425018310547}
+{"stage": "base", "epoch": 7, "fit_loss": 6.053398187878062, "dev_mae": 9.513830184936523}
+{"stage": "base", "epoch": 8, "fit_loss": 5.9091373693595814, "dev_mae": 9.521835327148438}
+{"stage": "base", "epoch": 9, "fit_loss": 5.192822900790612, "dev_mae": 9.50271987915039}
+{"stage": "base", "epoch": 10, "fit_loss": 5.152882238036221, "dev_mae": 9.493598937988281}
+{"stage": "base", "epoch": 11, "fit_loss": 5.065189102320995, "dev_mae": 9.520657539367676}
+{"stage": "base", "epoch": 12, "fit_loss": 4.999323803244285, "dev_mae": 9.533082962036133}
+{"stage": "base", "epoch": 13, "fit_loss": 4.94494306231008, "dev_mae": 9.489683151245117}
+{"stage": "base", "epoch": 14, "fit_loss": 5.1151580949431485, "dev_mae": 9.511269569396973}
+{"stage": "base", "epoch": 15, "fit_loss": 5.167730447158073, "dev_mae": 9.52172565460205}
+{"stage": "base", "epoch": 16, "fit_loss": 5.479146383341076, "dev_mae": 9.468116760253906}
+{"stage": "base", "epoch": 17, "fit_loss": 4.879060120258517, "dev_mae": 9.471689224243164}
+{"stage": "base", "epoch": 18, "fit_loss": 4.794052494382395, "dev_mae": 9.444302558898926}
+{"stage": "base", "epoch": 19, "fit_loss": 4.697070489809351, "dev_mae": 9.390996932983398}
+{"stage": "base", "epoch": 20, "fit_loss": 4.641559008255745, "dev_mae": 9.36026382446289}
+{"stage": "base_done", "variant": "floor_neighbors", "macro_mae_m": 9.293617248535156}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 1, "fit_loss_sum": 772.5479264259338, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 2, "fit_loss_sum": 742.7650232315063, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 3, "fit_loss_sum": 723.2166204452515, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 4, "fit_loss_sum": 707.2036294937134, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 5, "fit_loss_sum": 696.003999710083, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 6, "fit_loss_sum": 686.2064981460571, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 7, "fit_loss_sum": 675.7444310188293, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 8, "fit_loss_sum": 664.0579490661621, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 9, "fit_loss_sum": 656.6319088935852, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 10, "fit_loss_sum": 646.7395586967468, "batches": 103}
+{"stage": "variant_done", "variant": "raw_xy", "macro_mae_m": 5.893525123596191, "bf_accuracy": 0.9420289993286133}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 1, "fit_loss_sum": 802.6929187774658, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 2, "fit_loss_sum": 768.1536741256714, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 3, "fit_loss_sum": 747.26309633255, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 4, "fit_loss_sum": 730.1426010131836, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 5, "fit_loss_sum": 717.9280242919922, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 6, "fit_loss_sum": 705.8172855377197, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 7, "fit_loss_sum": 693.6807961463928, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 8, "fit_loss_sum": 682.2201862335205, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 9, "fit_loss_sum": 674.2562532424927, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 10, "fit_loss_sum": 664.8227066993713, "batches": 103}
+{"stage": "variant_done", "variant": "raw_joint", "macro_mae_m": 5.94724702835083, "bf_accuracy": 0.9855072498321533}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 1, "fit_loss_sum": 774.6812958717346, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 2, "fit_loss_sum": 732.3821992874146, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 3, "fit_loss_sum": 704.148015499115, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 4, "fit_loss_sum": 684.0660929679871, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 5, "fit_loss_sum": 668.1147875785828, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 6, "fit_loss_sum": 654.9976840019226, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 7, "fit_loss_sum": 642.508885383606, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 8, "fit_loss_sum": 628.9604120254517, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 9, "fit_loss_sum": 618.5825924873352, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 10, "fit_loss_sum": 608.5092926025391, "batches": 103}
+{"stage": "variant_done", "variant": "raw_joint_with_evidence", "macro_mae_m": 4.903564929962158, "bf_accuracy": 1.0}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 1, "fit_loss_sum": 768.9961366653442, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 2, "fit_loss_sum": 739.9824652671814, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 3, "fit_loss_sum": 720.5825247764587, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 4, "fit_loss_sum": 704.679181098938, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 5, "fit_loss_sum": 692.9038038253784, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 6, "fit_loss_sum": 682.6133632659912, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 7, "fit_loss_sum": 671.7178115844727, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 8, "fit_loss_sum": 661.326452255249, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 9, "fit_loss_sum": 652.6331973075867, "batches": 103}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 10, "fit_loss_sum": 641.7741370201111, "batches": 103}
+{"stage": "variant_done", "variant": "floor_neighbors_xy", "macro_mae_m": 5.836916923522949, "bf_accuracy": 0.9420289993286133}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 1, "fit_loss_sum": 795.1315431594849, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 2, "fit_loss_sum": 761.5780005455017, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 3, "fit_loss_sum": 741.7549080848694, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 4, "fit_loss_sum": 724.655827999115, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 5, "fit_loss_sum": 712.6514010429382, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 6, "fit_loss_sum": 700.8994040489197, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 7, "fit_loss_sum": 689.2510194778442, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 8, "fit_loss_sum": 677.50559425354, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 9, "fit_loss_sum": 669.5845947265625, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 10, "fit_loss_sum": 659.8880844116211, "batches": 103}
+{"stage": "variant_done", "variant": "floor_neighbors_joint", "macro_mae_m": 5.961972236633301, "bf_accuracy": 0.9710144996643066}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 1, "fit_loss_sum": 767.2296261787415, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 2, "fit_loss_sum": 725.8805966377258, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 3, "fit_loss_sum": 699.5905427932739, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 4, "fit_loss_sum": 680.3070368766785, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 5, "fit_loss_sum": 665.055757522583, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 6, "fit_loss_sum": 651.8166637420654, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 7, "fit_loss_sum": 639.0431971549988, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 8, "fit_loss_sum": 626.3018636703491, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 9, "fit_loss_sum": 616.6181874275208, "batches": 103}
+{"stage": "refit", "kind": "joint", "evidence": true, "epoch": 10, "fit_loss_sum": 606.7018661499023, "batches": 103}
+{"stage": "variant_done", "variant": "floor_neighbors_joint_with_evidence", "macro_mae_m": 4.863371849060059, "bf_accuracy": 1.0}
+{"stage": "complete", "output": "fhm_dapp_tim\\evidence\\msep_joint_v1_uts_seed17303", "test_accesses": 0}

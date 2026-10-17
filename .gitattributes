@@ -147,3 +147,22 @@ fhm_dapp_tim/evidence/msep_single_smoke_uji/** -text
 fhm_dapp_tim/evidence/msep_single_tuji_full_v1/** -text
 fhm_dapp_tim/evidence/msep_single_uts_full_v1/** -text
 fhm_dapp_tim/evidence/msep_single_uji_full_v1/** -text
+
+# MSEP joint-location ablation: preserve frozen source and evidence SHA256.
+fhm_dapp_tim/fhm_dapp/msep_joint_science_v1.py -text
+fhm_dapp_tim/fhm_dapp/msep_joint_ablation_v1.py -text
+tests/test_msep_joint_ablation_v1.py -text
+docs/MSEP_JOINT_LOCATION_ABLATION_V1.md -text
+fhm_dapp_tim/evidence/msep_joint_v1_smoke_tuji/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_smoke_uts/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_smoke_uji/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_summary/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17302/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17303/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17302/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17303/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17302/** -text
+fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17303/** -text

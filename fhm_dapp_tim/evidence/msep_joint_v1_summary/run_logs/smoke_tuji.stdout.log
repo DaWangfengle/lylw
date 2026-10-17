@@ -1,0 +1,13 @@
+{"stage": "base", "epoch": 1, "fit_loss": 8.985529179666557, "dev_mae": 4.178669452667236}
+{"stage": "base_done", "variant": "raw", "macro_mae_m": 4.023703098297119}
+{"stage": "base", "epoch": 1, "fit_loss": 8.985529067469578, "dev_mae": 4.1786699295043945}
+{"stage": "base_done", "variant": "floor_neighbors", "macro_mae_m": 4.0237040519714355}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 1, "fit_loss_sum": 581.4477353096008, "batches": 102}
+{"stage": "variant_done", "variant": "raw_xy", "macro_mae_m": 2.899726152420044, "bf_accuracy": 1.0}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 1, "fit_loss_sum": 581.3717784881592, "batches": 102}
+{"stage": "variant_done", "variant": "raw_joint", "macro_mae_m": 2.8965470790863037, "bf_accuracy": 1.0}
+{"stage": "refit", "kind": "xy", "evidence": false, "epoch": 1, "fit_loss_sum": 581.3829321861267, "batches": 102}
+{"stage": "variant_done", "variant": "floor_neighbors_xy", "macro_mae_m": 2.9034552574157715, "bf_accuracy": 1.0}
+{"stage": "refit", "kind": "joint", "evidence": false, "epoch": 1, "fit_loss_sum": 581.4018144607544, "batches": 102}
+{"stage": "variant_done", "variant": "floor_neighbors_joint", "macro_mae_m": 2.901660680770874, "bf_accuracy": 1.0}
+{"stage": "complete", "output": "fhm_dapp_tim\\evidence\\msep_joint_v1_smoke_tuji", "test_accesses": 0}

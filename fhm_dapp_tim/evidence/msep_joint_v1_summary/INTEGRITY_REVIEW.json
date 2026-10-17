@@ -1,0 +1,167 @@
+{
+  "status": "PASS",
+  "reviewed_at": "2026-10-17T21:04:03.637248+08:00",
+  "unchanged_frozen_source_files": 193,
+  "unchanged_training_inputs": 7,
+  "formal_run_count": 9,
+  "formal_retries": 0,
+  "test_evaluations": 0,
+  "verified_completed_command_logs": 42,
+  "local_checkpoint_count": 24,
+  "checkpoint_bytes": 96416668,
+  "equal_parameter_calibration_metric_and_site_identities": [
+    [
+      "uji",
+      17301,
+      "temp_t06",
+      "g13_t06"
+    ],
+    [
+      "uts",
+      17302,
+      "temp_t06",
+      "g13_t06"
+    ],
+    [
+      "uji",
+      17302,
+      "temp_t06",
+      "g13_t06"
+    ],
+    [
+      "uji",
+      17303,
+      "temp_t06",
+      "g13_t06"
+    ]
+  ],
+  "checkpoint_tensor_reviews": [
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/floor_neighbors_base.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/floor_neighbors_joint.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/floor_neighbors_joint_with_evidence.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/floor_neighbors_xy.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/raw_base.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/raw_joint.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/raw_joint_with_evidence.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_tuji_seed17301/raw_xy.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/floor_neighbors_base.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/floor_neighbors_joint.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/floor_neighbors_joint_with_evidence.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/floor_neighbors_xy.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/raw_base.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/raw_joint.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/raw_joint_with_evidence.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uts_seed17301/raw_xy.pt",
+      "model_tensors": 61,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/floor_neighbors_base.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/floor_neighbors_joint.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/floor_neighbors_joint_with_evidence.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/floor_neighbors_xy.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/raw_base.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/raw_joint.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/raw_joint_with_evidence.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/msep_joint_v1_uji_seed17301/raw_xy.pt",
+      "model_tensors": 65,
+      "all_finite": true
+    }
+  ],
+  "commands_with_stderr": [],
+  "nonzero_command_exits": [],
+  "scientific_source_or_protocol_repairs": [],
+  "report_sha256": "e22c7bdb893077aa7612e059f0e204b01bc6910489b7af45b04a195835bda8c7",
+  "summary_sha256": "d6f3899282fdab4e551cf0e951b6f01e9c805e37d9276b4e8a97e2a7267a70aa",
+  "method_freeze_sha256": "ed280aa9c16ef9211f21cba69fa457d388fffa805a09342d647f2465d503b0df",
+  "review_scope": "all completed logs before this audit; own stdout/stderr recorded by command runner after exit; no new inference"
+}
