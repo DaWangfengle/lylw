@@ -460,6 +460,8 @@ def run_one(args):
         "device": str(device), "config": {
             "epochs_per_variant": EPOCHS, "batch": args.batch, "threads": args.threads,
             "es_draws": args.es_draws, "primary_checkpoint_policy": PRIMARY_CHECKPOINT,
+            "checkpoint_selection_excludes_epochs_1_through": WARMUP_EPOCHS,
+            "learning_rate_warmup_schedule_added": False,
             "legacy_min_epochs": LEGACY_MIN_EPOCHS, "legacy_patience": LEGACY_PATIENCE,
             "legacy_min_improvement_m": LEGACY_MIN_IMPROVEMENT_M,
             "calibration_fit_split_seed": args.split_seed + 99,
@@ -490,6 +492,7 @@ def run_one(args):
         "limitations": [
             "CAL-eval is a site-disjoint internal comparison split, not a new blind official-test benchmark.",
             "The unrestricted best-DEV and legacy early-stop checkpoints are sensitivity diagnostics; CAL-eval is not used to select the primary checkpoint.",
+            "Epochs 1..20 are excluded only from primary checkpoint selection; no learning-rate warmup schedule is introduced.",
             "Stage 2 changes posterior temperature and/or G13 coefficients only; encoder, candidate IDs, centers, and scales are fixed.",
             "Raw V17 and same-floor V17 use the same initial state, optimizer configuration, paired seed, and data-loader seed.",
             "No post-hoc Joint fine-tuning is implemented or run.",
