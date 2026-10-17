@@ -129,6 +129,7 @@ Each run directory contains:
   EPOCH_HISTORY.csv
   CHECKPOINT_SELECTION.csv
   RUN_MANIFEST.json
+  REFERENCE_STATE.pt (FIT reference geometry, AP IDs, observation memory, and role keys)
   six checkpoint files (three policies x two neighbor variants)
 
 Interpretation conventions
