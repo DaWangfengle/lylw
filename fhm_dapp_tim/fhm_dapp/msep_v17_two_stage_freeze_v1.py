@@ -269,7 +269,7 @@ def _train_fixed_80(model, rss, xy, sample_anchor, device_ids,
     if len(history) != EPOCHS:
         raise AssertionError(f"expected {EPOCHS} epochs, got {len(history)}")
     snapshots = {
-        "legacy_early_stop": full_best_state if False else legacy_best_state,
+        "legacy_early_stop": legacy_best_state,
         "best_dev_epoch_1_80": full_best_state,
         PRIMARY_CHECKPOINT: warm_best_state,
     }
@@ -547,7 +547,6 @@ def run_one(args):
                 "cal_eval_macro_bf_accuracy": metrics["macro_bf_accuracy"],
             })
             del eval_pack
-        site_diagnostics["stage1_cal_eval"][variant]["_neighbor_wrong_bf_mass"] = contamination
 
     for policy in CHECKPOINT_POLICIES:
         site_diagnostics["stage1_neighbor_deltas"][policy] = _site_deltas(
