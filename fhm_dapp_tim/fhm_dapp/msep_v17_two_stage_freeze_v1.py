@@ -434,6 +434,26 @@ def run_one(args):
             separators=(",", ":")).encode()).hexdigest()
         for role, indices in roles.items()
     }
+    # One shared reference bundle keeps individual model checkpoints compact and reproducible.
+    reference_path = output / "REFERENCE_STATE.pt"
+    torch.save({
+        "dataset": args.dataset,
+        "ap_ids": list(data.ap_ids),
+        "reference_origin": origin,
+        "fit_anchor_coords": memory["coords"].detach().cpu(),
+        "fit_anchor_building": memory["building"].detach().cpu(),
+        "fit_anchor_floor": memory["floor"].detach().cpu(),
+        "observation_memory": {name: value.detach().cpu() for name, value in obs.items()},
+        "role_site_keys": {
+            role: [keys[int(i)] for i in indices]
+            for role, indices in roles.items() if role != "test"
+        },
+        "config": {
+            "seed": args.seed, "split_seed": args.split_seed,
+            "epochs": EPOCHS, "primary_checkpoint_policy": PRIMARY_CHECKPOINT,
+            "frozen_training_config": FROZEN_TRAINING,
+        },
+    }, reference_path)
     report = {
         "study": "V17 two-stage full-80-epoch and frozen posterior calibration closeout",
         "dataset": args.dataset, "seed": args.seed, "split_seed": args.split_seed,
@@ -504,7 +524,6 @@ def run_one(args):
             "neighbor_wrong_bf_mass": contamination,
         }
         trained[variant] = {"model": model, "states": states, "selections": selections}
-        variant_site_metrics = {}
         report["stage1"]["cal_eval_checkpoint_metrics"][variant] = {}
         site_diagnostics["stage1_cal_eval"][variant] = {}
         for policy in CHECKPOINT_POLICIES:
@@ -521,6 +540,7 @@ def run_one(args):
                 "simulated_legacy_stop_epoch": selection["simulated_stop_epoch"],
                 "epochs_trained_in_this_run": EPOCHS,
                 "frozen_training_config": FROZEN_TRAINING,
+                "reference_state_file": "REFERENCE_STATE.pt",
                 "no_joint_refit": True,
             }, checkpoint_path)
             eval_pack = _pack(
@@ -535,7 +555,6 @@ def run_one(args):
                 "metrics": metrics,
             }
             site_diagnostics["stage1_cal_eval"][variant][policy] = sites
-            variant_site_metrics[policy] = sites
             selection_rows.append({
                 "dataset": args.dataset, "seed": args.seed, "variant": variant,
                 "checkpoint_policy": policy, "selected_epoch": selection["selected_epoch"],
@@ -653,6 +672,7 @@ def run_one(args):
         "evaluation_role": "CAL-eval", "official_test_rows_scored": 0,
         "result_sha256": _sha256(result_path),
         "site_diagnostics_sha256": _sha256(site_path),
+        "reference_state_sha256": _sha256(reference_path),
         "source_sha256": report["source_sha256"],
     }
     (output / "RUN_MANIFEST.json").write_text(
@@ -697,6 +717,30 @@ def aggregate(args):
             raise FileNotFoundError(
                 f"missing completed run {path}; finish all nine paired runs before aggregation")
         loaded[(dataset, seed)] = json.loads(path.read_text(encoding="utf-8"))
+
+    # Fail closed on partial, mismatched, or test-contaminated runs before writing summaries.
+    role_sha_by_dataset = {}
+    for (dataset, seed), result in loaded.items():
+        protocol = result.get("data_protocol", {})
+        if protocol.get("official_test_rows_scored") != 0 or protocol.get("internal_test_role_rows_scored") != 0:
+            raise RuntimeError(f"test-role scoring detected in {dataset}/seed{seed}")
+        if protocol.get("cal_fit_eval_site_overlap") != 0:
+            raise RuntimeError(f"CAL-fit/CAL-eval site overlap in {dataset}/seed{seed}")
+        current_sha = protocol.get("role_site_key_sha256")
+        if dataset in role_sha_by_dataset and current_sha != role_sha_by_dataset[dataset]:
+            raise RuntimeError(f"site split changed across paired seeds for {dataset}")
+        role_sha_by_dataset[dataset] = current_sha
+        training = result.get("stage1", {}).get("training", {})
+        if set(training) != {"raw_neighbors", "same_floor_neighbors"}:
+            raise RuntimeError(f"missing Stage-1 variants in {dataset}/seed{seed}")
+        for variant, record in training.items():
+            history = record.get("all_epoch_history", [])
+            if record.get("epochs_completed") != EPOCHS or len(history) != EPOCHS:
+                raise RuntimeError(f"incomplete 80-epoch history: {dataset}/seed{seed}/{variant}")
+            if [int(row.get("epoch", -1)) for row in history] != list(range(1, EPOCHS + 1)):
+                raise RuntimeError(f"epoch sequence is not 1..80: {dataset}/seed{seed}/{variant}")
+        if set(result.get("stage2", {}).get("variants", {})) != {"raw_neighbors", "same_floor_neighbors"}:
+            raise RuntimeError(f"missing Stage-2 variants in {dataset}/seed{seed}")
 
     run_rows = []
     paired_rows = []
