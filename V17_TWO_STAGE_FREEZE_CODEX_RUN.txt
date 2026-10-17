@@ -96,9 +96,11 @@ PowerShell commands from the repository root:
   foreach ($dataset in @("tuji", "uts", "uji")) {
     foreach ($seed in @(17301, 17302, 17303)) {
       $out = Join-Path $root ("{0}_seed{1}" -f $dataset, $seed)
-      python -m fhm_dapp_tim.fhm_dapp.msep_v17_two_stage_freeze_v1 run --dataset $dataset --seed $seed --output $out --device auto --batch 64 --threads 4 --es-draws 32
+      $log = Join-Path $root ("{0}_seed{1}.log" -f $dataset, $seed)
+      python -m fhm_dapp_tim.fhm_dapp.msep_v17_two_stage_freeze_v1 run --dataset $dataset --seed $seed --output $out --device auto --batch 64 --threads 4 --es-draws 32 *>&1 | Tee-Object -FilePath $log
       if ($LASTEXITCODE -ne 0) {
-        throw "Run failed: dataset=$dataset seed=$seed output=$out"
+        Get-Content $log -Tail 80
+        throw "Run failed: dataset=$dataset seed=$seed output=$out log=$log"
       }
     }
   }
