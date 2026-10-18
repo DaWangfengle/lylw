@@ -60,6 +60,15 @@ def test_graph_diffusion_identity_and_jensen_partition_bound():
     assert torch.all(log_partition_gap(logits, diffused) <= 2e-6)
 
 
+def test_complete_retrieval_g13_logit_matches_locked_formula():
+    scores = torch.tensor([[1.0, -2.0]])
+    evidence = torch.tensor([[[0.2, -0.4], [0.5, 0.7]]])
+    theta = torch.tensor([0.3, 0.8])
+    actual = combine_retrieval_and_g13_logits(scores, evidence, 2.0, theta)
+    expected = scores / 2.0 + 0.3 * evidence[:, :, 0] + 0.8 * evidence[:, :, 1]
+    assert torch.allclose(actual, expected, atol=0.0, rtol=0.0)
+
+
 def test_equal_alpha_dual_channel_is_full_logit_diffusion():
     coords = np.array([[0., 0.], [1., 0.], [0., 1.]])
     graph, _ = build_doubly_stochastic_floor_graph(
@@ -262,6 +271,29 @@ def test_beta_zero_compact_mixture_nll_and_energy_score_equal_parent_baseline():
     assert torch.allclose(expanded_es, parent_es)
 
 
+def test_joint_nll_masks_wrong_bf_even_when_wrong_component_density_is_huge():
+    q = torch.tensor([[0.5, 0.5]])
+    ids = torch.tensor([[0, 1]])
+    scales = torch.ones((1, 2, 2))
+    target = torch.tensor([[0.0, 0.0]])
+    target_building = torch.tensor([0])
+    target_floor = torch.tensor([0])
+    anchor_building = torch.tensor([0, 1])
+    anchor_floor = torch.tensor([0, 0])
+    # The wrong-BF component is centered exactly on the target in the first arm.
+    centers_a = torch.tensor([[[10.0, 0.0], [0.0, 0.0]]])
+    centers_b = torch.tensor([[[10.0, 0.0], [100.0, 100.0]]])
+    nll_a = joint_bf_xy_nll(
+        q, ids, centers_a, scales, target, target_building, target_floor,
+        anchor_building, anchor_floor,
+    )
+    nll_b = joint_bf_xy_nll(
+        q, ids, centers_b, scales, target, target_building, target_floor,
+        anchor_building, anchor_floor,
+    )
+    assert torch.equal(nll_a, nll_b)
+
+
 def test_joint_nll_strictly_ignores_zero_weight_components():
     target = torch.tensor([[0.1, 0.0]])
     target_building = torch.tensor([0])
@@ -308,6 +340,44 @@ def test_cell_lse_beta_zero_preserves_raw_bf_mass_when_requested():
             torch.softmax(raw_scores, dim=-1)[:, mask].sum(-1),
             atol=1e-7,
         )
+
+
+def test_beta_zero_bf_mass_preserving_expansion_preserves_joint_metrics():
+    parent_logits = torch.tensor([[1.2, 0.2, -0.5, 0.1]])
+    raw_scores = torch.tensor([[4.0, 0.0, -1.0, -2.0]])
+    classes = torch.tensor([0, 0, 1, 1])
+    parent_centers = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [5.0, 0.0], [6.0, 0.0]]])
+    parent_scales = torch.full_like(parent_centers, 0.8)
+    edges = torch.tensor([[0, 1]])
+    virtual_centers = 0.5 * (parent_centers[:, 0:1, :] + parent_centers[:, 1:2, :])
+    virtual_scales = 0.5 * (parent_scales[:, 0:1, :] + parent_scales[:, 1:2, :])
+    result = cell_lse_expansion(
+        parent_logits, torch.tensor([[1.5]]), edges, 0.0,
+        parent_centers, parent_scales, virtual_centers, virtual_scales,
+        classes, preserve_class_mass=True, raw_base_scores=raw_scores,
+    )
+    parent_q = layer_mass_preserving_softmax(raw_scores, parent_logits, classes)
+    target = torch.tensor([[0.3, 0.0]])
+    target_building = torch.tensor([0])
+    target_floor = torch.tensor([0])
+    anchor_building = torch.tensor([0, 0, 1, 1])
+    anchor_floor = torch.tensor([0, 0, 0, 0])
+    parent_nll = joint_bf_xy_nll(
+        parent_q, torch.arange(4)[None, :], parent_centers, parent_scales, target,
+        target_building, target_floor, anchor_building, anchor_floor,
+    )
+    expanded_nll = joint_bf_xy_nll(
+        result["expanded_weights"], result["expanded_ids"], result["expanded_centers"],
+        result["expanded_scales"], target, target_building, target_floor,
+        anchor_building, anchor_floor,
+    )
+    assert torch.allclose(expanded_nll, parent_nll)
+    parent_es = energy_score_mc(parent_q, parent_centers, parent_scales, target, draws=64, seed=17302)
+    expanded_es = energy_score_mc(
+        result["expanded_weights"], result["expanded_centers"], result["expanded_scales"],
+        target, draws=64, seed=17302,
+    )
+    assert torch.allclose(expanded_es, parent_es)
 
 
 def test_joint_nll_and_transport_risk_have_finite_gradients():
