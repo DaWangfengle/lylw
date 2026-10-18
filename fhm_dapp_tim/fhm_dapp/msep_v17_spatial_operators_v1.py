@@ -366,6 +366,8 @@ def cell_lse_expansion(
     e = len(edges)
     if virtual_logits.shape != (batch, e):
         raise ValueError("virtual_logits shape does not match edge count")
+    if not torch.isfinite(parent_logits).all() or not torch.isfinite(virtual_logits).all():
+        raise ValueError("parent and virtual complete logits must be finite")
     if parent_centers.shape != (batch, n, 2) or parent_scales.shape != (batch, n, 2):
         raise ValueError("parent centers/scales must have shape [B,N,2]")
     if virtual_centers.shape != (batch, e, 2) or virtual_scales.shape != (batch, e, 2):
@@ -382,6 +384,8 @@ def cell_lse_expansion(
     if preserve_class_mass:
         if raw_base_scores is None or raw_base_scores.shape != parent_logits.shape:
             raise ValueError("BF-mass-preserving mode requires raw unscaled base scores [B,N]")
+        if not torch.isfinite(raw_base_scores).all():
+            raise ValueError("raw unscaled base scores must be finite")
 
     # Canonicalize each undirected edge without reordering edge IDs, because the
     # virtual-logit/center/scale tensors use exactly this row order.
