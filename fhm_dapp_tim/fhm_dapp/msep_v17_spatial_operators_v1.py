@@ -429,24 +429,29 @@ def cell_lse_expansion(
     parent_component_weights = torch.stack(
         [cell_q[:, i] * cell_internal_weights[i][:, 0] for i in range(n)], dim=1
     )
-    edge_component_weights = []
     cell_center_rows = []
-    for i in range(n):
-        weights_i = cell_internal_weights[i]
-        center_i = weights_i[:, :1] * parent_centers[:, i, :]
-        for slot, edge_id in enumerate(incident[i], start=1):
-            center_i = center_i + weights_i[:, slot:slot + 1] * virtual_centers[:, edge_id, :]
-        cell_center_rows.append(center_i)
-    for edge_id, (i, j) in enumerate(edge_list):
-        slot_i = incident[i].index(edge_id) + 1
-        slot_j = incident[j].index(edge_id) + 1
-        weight_i = cell_q[:, i] * cell_internal_weights[i][:, slot_i]
-        weight_j = cell_q[:, j] * cell_internal_weights[j][:, slot_j]
-        edge_component_weights.append(weight_i + weight_j)
-    if e:
-        virtual_component_weights = torch.stack(edge_component_weights, dim=1)
+    if beta == 0.0:
+        # Exact identity path: no virtual slots exist in per-cell weights.
+        cell_center_rows = [parent_centers[:, i, :] for i in range(n)]
+        virtual_component_weights = parent_logits.new_zeros((batch, e))
     else:
-        virtual_component_weights = parent_logits.new_empty((batch, 0))
+        for i in range(n):
+            weights_i = cell_internal_weights[i]
+            center_i = weights_i[:, :1] * parent_centers[:, i, :]
+            for slot, edge_id in enumerate(incident[i], start=1):
+                center_i = center_i + weights_i[:, slot:slot + 1] * virtual_centers[:, edge_id, :]
+            cell_center_rows.append(center_i)
+        edge_component_weights = []
+        for edge_id, (i, j) in enumerate(edge_list):
+            slot_i = incident[i].index(edge_id) + 1
+            slot_j = incident[j].index(edge_id) + 1
+            weight_i = cell_q[:, i] * cell_internal_weights[i][:, slot_i]
+            weight_j = cell_q[:, j] * cell_internal_weights[j][:, slot_j]
+            edge_component_weights.append(weight_i + weight_j)
+        if e:
+            virtual_component_weights = torch.stack(edge_component_weights, dim=1)
+        else:
+            virtual_component_weights = parent_logits.new_empty((batch, 0))
     expanded_weights = torch.cat((parent_component_weights, virtual_component_weights), dim=1)
     expanded_centers = torch.cat((parent_centers, virtual_centers), dim=1)
     expanded_scales = torch.cat((parent_scales, virtual_scales), dim=1)
