@@ -232,6 +232,7 @@ def test_beta_zero_compact_mixture_nll_and_energy_score_equal_parent_baseline():
     assert torch.equal(result["expanded_weights"][:, :3], parent_q)
     assert torch.equal(result["expanded_weights"][:, 3], torch.zeros(2))
     assert torch.equal(result["expanded_centers"][:, :3], parent_centers)
+    assert torch.equal(result["cell_centers"], parent_centers)
     assert torch.equal(result["expanded_scales"][:, :3], parent_scales)
     assert torch.all(result["expanded_scales"] > 0)
 
