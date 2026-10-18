@@ -342,29 +342,3 @@ def component_center_transport_risk(
     return (q * distance).sum(dim=-1)
 
 
-def stable_cell_score_identity_error(
-    parent_logits: torch.Tensor,
-    virtual_logits: torch.Tensor,
-    edge_index: torch.Tensor,
-    beta: float,
-) -> torch.Tensor:
-    """Diagnostic helper: when every incident virtual score equals its parent score,
-    the cell LSE should exactly recover the parent score up to floating-point error.
-    """
-    n = parent_logits.shape[1]
-    e = len(edge_index)
-    if virtual_logits.shape != (len(parent_logits), e):
-        raise ValueError("virtual_logits shape mismatch")
-    incident = [[] for _ in range(n)]
-    for k, (i, j) in enumerate(torch.as_tensor(edge_index).cpu().tolist()):
-        incident[int(i)].append(k)
-        incident[int(j)].append(k)
-    out = []
-    for i, edges in enumerate(incident):
-        if not edges or beta == 0:
-            out.append(parent_logits[:, i])
-            continue
-        vals = [parent_logits[:, i] + math.log1p(-beta)]
-        vals.extend(parent_logits[:, i] + math.log(beta / len(edges)) for _ in edges)
-        out.append(torch.logsumexp(torch.stack(vals, dim=-1), dim=-1))
-    return torch.stack(out, dim=-1)
