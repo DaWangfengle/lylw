@@ -1,0 +1,79 @@
+V17 SPATIAL IDENTIFIABILITY — CODEX EXECUTION INSTRUCTIONS
+Branch: v17-spatial-identifiability-full-v1
+
+GOAL
+Implement and execute the locked full-strength study in:
+fhm_dapp_tim/evidence/v17_spatial_structure_v1/DESIGN_V17_SPATIAL_STRUCTURE.md
+
+This is a scientific iteration, not an engineering refactor. Keep the existing V17 two-stage experiment and all historical evidence immutable. Do not run any internal TEST role or official test labels.
+
+READ THESE FILES FIRST
+1. fhm_dapp_tim/evidence/v17_two_stage_freeze_v1/RUN_REPORT_V17_TWO_STAGE.md
+2. fhm_dapp_tim/evidence/v17_two_stage_freeze_v1/INTEGRITY_REVIEW.json
+3. fhm_dapp_tim/fhm_dapp/msep_v17_two_stage_freeze_v1.py
+4. fhm_dapp_tim/fhm_dapp/msep_v17_spatial_operators_v1.py
+5. tests/test_msep_v17_spatial_operators_v1.py
+6. fhm_dapp_tim/evidence/v17_spatial_structure_v1/DESIGN_V17_SPATIAL_STRUCTURE.md
+
+IMPLEMENTATION TASK
+Create fhm_dapp_tim/fhm_dapp/msep_v17_spatial_structure_v1.py as the runner. Do not alter existing baseline/model/data files unless a truly unavoidable defect is found; prefer a new wrapper. If a base file must change, stop and explain why before changing it.
+
+Required CLI:
+- preflight --root <local evidence root>
+- frozen --root <local evidence root> --output <output root>
+- train --root <local evidence root> --output <output root>
+- aggregate --root <output root>
+- all --root <local evidence root> --output <output root>
+
+PHASE F — FROZEN / ZERO RETRAINING
+1. Load the exact local files:
+   <root>/<dataset>_seed<seed>/raw_neighbors_best_dev_epoch_21_80.pt
+   <root>/<dataset>_seed<seed>/same_floor_neighbors_best_dev_epoch_21_80.pt
+   plus each run's REFERENCE_STATE.pt, RESULT.json, and RUN_MANIFEST.json.
+2. Verify all checkpoint/reference/source hashes available in the manifests before inference. Rebuild the same FIT/DEV/CAL/CAL-fit/CAL-eval site split and verify its hash against RESULT.json. If any required file is absent or mismatched, mark the frozen phase BLOCKED and stop it. Do NOT silently retrain to replace a frozen checkpoint.
+3. Use canonical anchor-ID order. The existing candidate_evidence helper returns anchors in per-row score rank order; never apply W to that ranked tensor without restoring canonical order. Prefer computing scores/embeddings directly from model.retrieval_logits and components with ids=torch.arange(n_anchors).
+4. Reuse the exact inference constants and observation feature implementation from msep_single_posterior.py / msep_joint_science_v1.py. Keep candidate IDs, component centers, and scales frozen.
+5. Structure 1A–1D: fit only graph alpha(s) on CAL-fit using the predeclared grid in DESIGN_V17_SPATIAL_STRUCTURE.md. Use fixed T/theta read from the corresponding existing Stage-2 calibration records; do not jointly refit T/theta while claiming the graph is the only changed factor. Evaluate once on site-disjoint CAL-eval.
+6. For each 1A–1D configuration, report both global softmax and BF-mass-preserving normalization. Compute the Jensen partition-function diagnostic for 1C and verify logZ(diffused)-logZ(base) <= numerical tolerance.
+7. Structure 2: generate midpoint virtual points only on undirected same-BF graph edges. Compute each virtual score by interpolating the parent anchor keys and FIT-only RSS prototypes, then evaluating the same neural-plus-prototype-distance scoring law as a physical anchor. Do NOT set a virtual score to the average of endpoint logits.
+8. Implement the cell LSE with unit base cell measure, endpoint weight 1-beta, and beta/n_i per incident virtual child. Shared midpoint ownership is symmetric. Use the beta grid from the design file; select beta using 2B on CAL-fit and use the same beta for the 2A diagnostic. 2A uses pure geometric virtual centers; 2B uses interpolated parent residuals. At beta=0, both must return the frozen parent continuous component centers exactly. Interpolate virtual scales linearly. Preserve expanded endpoint/virtual mixture weights for Energy Score and NLL rather than replacing them with an unreported heuristic.
+9. Output per-site metrics and paired deltas for all frozen variants.
+
+PHASE T — TRAINING O -> A -> C -> D -> E
+1. Use the exact current 80-epoch training protocol, fixed paired seeds 17301/17302/17303, identical site splits, same initialization per dataset/seed, same optimizer and augmentation. Primary checkpoint is the minimum DEV MAE over epochs 21–80. Never early-stop before epoch 80.
+2. O: original neighbor targets. A: same-building-and-floor neighbor targets.
+3. C: A + full joint BF-XY NLL. Compute q over all anchors from the same forward pass; for the joint numerator, retain only components whose anchor building and floor match the true target anchor's building/floor. The denominator remains the all-anchor posterior normalizer. Do not use a true-class-conditioned inference shortcut.
+4. D: C + closed-form center transport risk sum_i q_i * ||mu_i-y||_2, weight 0.30. Use all anchor components, not a separately sampled subset.
+5. E: D + P(alpha) logit diffusion inside the retrieval-logit path for training and DEV/CAL evaluation. W must be the same symmetric doubly-stochastic same-BF graph. Alpha is trainable, initialized at 0.1, constrained to [0,1], and included in the optimizer. Do not diffuse G13 alone. Save the selected alpha with each checkpoint.
+6. The added joint NLL/transport losses must reuse the logits and embedding from the original training forward pass. Do not make a second independently augmented forward pass, which would introduce a different random RSS augmentation/dropout realization.
+7. Train all variants to 80 epochs. Reuse existing O/A checkpoints only if source/config/split hashes and selected epochs match exactly. If they do not match, retrain O/A under the same Phase-T runner so the chain remains paired; keep Phase-F zero-retrain handling separate.
+8. Score DEV for checkpoint selection and CAL-eval for reporting only. Do not inspect, load, score, or infer on internal TEST/official test.
+
+METRICS
+Report:
+- site-macro full MAE;
+- predicted-BF-conditioned MAE;
+- Energy Score;
+- joint BF-XY NLL;
+- macro and row BF accuracy;
+- site-level deltas, P95/P99/worst-site MAE;
+- fitted alpha/beta, T/theta values, selected epoch;
+- means and sample SD over three seeds, explicitly descriptive rather than significance tests.
+
+OUTPUTS
+Write to fhm_dapp_tim/evidence/v17_spatial_structure_v1/ (or the requested output root):
+- per-run RESULT.json and SITE_DIAGNOSTICS.json;
+- EPOCH_HISTORY.csv and CHECKPOINT_SELECTION.csv for trained variants;
+- RUN_LEVEL_METRICS.csv, AGGREGATE_SUMMARY.csv, PAIRED_DELTAS.csv, SITE_DELTAS_ALL_RUNS.csv;
+- INTEGRITY_REVIEW.json and RUN_REPORT_V17_SPATIAL_STRUCTURE.md;
+- SHA256 hashes for source files, data/split role keys, input checkpoints, and result files.
+- Explicitly record that internal TEST rows scored = 0 and official test rows scored = 0.
+
+TESTING / STOP CONDITIONS
+- Run pytest tests/test_msep_v17_spatial_operators_v1.py and all existing tests relevant to the touched modules.
+- Add runner tests for: canonical anchor ordering; checkpoint/hash fail-closed behavior; exact beta=0 degeneration; layer BF mass preservation; same-floor graph invariants; 1C Jensen bound; joint BF-XY NLL masks; finite gradients for joint NLL and transport risk; and no TEST access.
+- Fix failing tests before the expensive experiment. Do not start the full run if an invariant test fails.
+- Run preflight first. If the frozen checkpoints are absent, do not pretend the frozen study ran; report the exact missing paths and continue Phase T only if its training inputs are available.
+- Run frozen first, audit it, then run training, then aggregate and audit.
+- Preserve all negative results and per-site harms. Do not select a configuration using CAL-eval.
+- Do not run git commands, commit, push, or upload anything. The user handles repository publication separately.
