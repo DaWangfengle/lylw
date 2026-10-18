@@ -243,12 +243,15 @@ def g13_continuous_field_features(
     detection_probability: torch.Tensor,
     conditional_mean: torch.Tensor,
     conditional_variance: torch.Tensor,
+    *,
+    n_physical: int,
 ) -> torch.Tensor:
-    """G13 evidence for a combined physical+virtual candidate field.
+    """G13 evidence for physical candidates followed by virtual candidates.
 
-    Apply the canonical V17/G13 per-query candidate-axis stabilization jointly to
-    all supplied candidates. Do not standardize virtual candidates separately.
-    Memory tensors have shape [K, seen_APs]; query_rss retains the full AP schema.
+    The stabilization mean/RMS is computed ONLY from the first n_physical
+    candidates, then applied unchanged to virtual candidates. Therefore appending
+    virtual points cannot alter any parent G13 feature: beta=0 remains an exact
+    posterior identity. Memory tensors have shape [N+E, seen_APs].
     """
     if query_rss.ndim != 2 or seen_ap_mask.ndim != 1:
         raise ValueError("query_rss and seen_ap_mask must have shapes [B, AP] and [AP]")
@@ -260,7 +263,9 @@ def g13_continuous_field_features(
     mu = conditional_mean.to(device=x.device, dtype=x.dtype)
     var = conditional_variance.to(device=x.device, dtype=x.dtype)
     if pi.ndim != 2 or pi.shape != mu.shape or pi.shape != var.shape or pi.shape[1] != x.shape[1]:
-        raise ValueError("G13 memory must have shape [candidates, seen_APs]")
+        raise ValueError("G13 memory must have shape [N+E, seen_APs]")
+    if not 1 <= int(n_physical) <= pi.shape[0]:
+        raise ValueError("n_physical must identify a nonempty physical prefix")
     if not torch.isfinite(pi).all() or bool(((pi <= 0) | (pi >= 1)).any()):
         raise ValueError("G13 pi must be finite and in (0,1)")
     if not torch.isfinite(mu).all() or not torch.isfinite(var).all() or bool((var <= 0).any()):
@@ -275,11 +280,16 @@ def g13_continuous_field_features(
     strength = strength / detected.sum(dim=1).clamp_min(1).to(x.dtype)[:, None]
     strength = torch.where(detected.any(dim=1)[:, None], strength, torch.zeros_like(strength))
 
-    def stabilize(value: torch.Tensor) -> torch.Tensor:
-        centered = value - value.mean(dim=1, keepdim=True)
-        return centered / torch.sqrt(centered.square().mean(dim=1, keepdim=True) + 0.20**2)
+    def stabilize_against_physical(value: torch.Tensor) -> torch.Tensor:
+        reference = value[:, :n_physical]
+        mean = reference.mean(dim=1, keepdim=True)
+        scale = torch.sqrt((reference - mean).square().mean(dim=1, keepdim=True) + 0.20**2)
+        return (value - mean) / scale
 
-    features = torch.stack((stabilize(vis), stabilize(strength)), dim=2)
+    features = torch.stack((
+        stabilize_against_physical(vis),
+        stabilize_against_physical(strength),
+    ), dim=2)
     if not torch.isfinite(features).all():
         raise RuntimeError("nonfinite G13 continuous-field evidence")
     return features
