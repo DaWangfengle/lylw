@@ -524,6 +524,29 @@ def joint_bf_xy_nll(
     return -torch.logsumexp(terms, dim=-1)
 
 
+def replace_unmasked_nll_with_joint_bf_xy(
+    base_loss: torch.Tensor,
+    original_unmasked_nll: torch.Tensor,
+    joint_bf_xy_nll_loss: torch.Tensor,
+) -> torch.Tensor:
+    """Replace the old NLL term at weight 1.0; never add a second NLL."""
+    if any(value.numel() != 1 for value in (base_loss, original_unmasked_nll, joint_bf_xy_nll_loss)):
+        raise ValueError("loss composition inputs must be scalar tensors")
+    return base_loss - original_unmasked_nll + joint_bf_xy_nll_loss
+
+
+def add_transport_risk_increment(
+    loss: torch.Tensor,
+    transport_risk_per_row: torch.Tensor,
+) -> torch.Tensor:
+    """Add the locked +0.30 mean component-center transport risk, retaining coord loss."""
+    if loss.numel() != 1 or transport_risk_per_row.ndim != 1:
+        raise ValueError("loss must be scalar and transport risk must have shape [batch]")
+    if not torch.isfinite(transport_risk_per_row).all() or bool((transport_risk_per_row < 0).any()):
+        raise ValueError("transport risks must be finite and nonnegative")
+    return loss + 0.30 * transport_risk_per_row.mean()
+
+
 def component_center_transport_risk(
     q: torch.Tensor,
     centers: torch.Tensor,
