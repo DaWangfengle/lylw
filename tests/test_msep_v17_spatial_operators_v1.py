@@ -195,16 +195,17 @@ def test_cell_lse_rejects_cross_floor_or_duplicate_midpoint_edges():
     centers = torch.zeros((1, 2, 2))
     scales = torch.ones_like(centers)
     virtual_centers = torch.zeros((1, 1, 2))
+    virtual_scales = torch.ones_like(virtual_centers)
     with pytest.raises(ValueError, match="crosses building-floor"):
         cell_lse_expansion(
             parent_logits, torch.zeros((1, 1)), torch.tensor([[0, 1]]), 0.3,
-            centers, scales, virtual_centers, virtual_centers,
+            centers, scales, virtual_centers, virtual_scales,
             torch.tensor([0, 1]),
         )
     with pytest.raises(ValueError, match="exactly once"):
         cell_lse_expansion(
             torch.zeros((1, 2)), torch.zeros((1, 2)), torch.tensor([[0, 1], [1, 0]]), 0.3,
-            centers, scales, virtual_centers.expand(1, 2, 2), virtual_centers.expand(1, 2, 2),
+            centers, scales, virtual_centers.expand(1, 2, 2), torch.ones((1, 2, 2)),
             torch.tensor([0, 0]),
         )
 
