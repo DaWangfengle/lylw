@@ -220,10 +220,11 @@ def cell_lse_expansion(
         raise ValueError("class_ids must have one entry per parent cell")
 
     incident: list[list[int]] = [[] for _ in range(n)]
+    class_values = cls.detach().cpu().tolist()
     for edge_id, (i, j) in enumerate(edges.detach().cpu().tolist()):
         if i == j or i < 0 or j < 0 or i >= n or j >= n:
             raise ValueError("invalid midpoint edge")
-        if int(cls[i]) != int(cls[j]):
+        if int(class_values[i]) != int(class_values[j]):
             raise ValueError("midpoint edge crosses building-floor class")
         incident[i].append(edge_id)
         incident[j].append(edge_id)
