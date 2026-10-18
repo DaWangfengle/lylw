@@ -1,0 +1,35 @@
+--- audit_and_report.py (failed original)
++++ audit_and_report.py (fixed)
+@@ -337,6 +337,9 @@
+         "artifact_sha256": artifact_hashes, "checkpoint_sha256": checkpoint_hashes,
+         "stage2_site_harms_vs_raw": paired_site_reviews,
+         "nonempty_stderr_streams": warnings,
++        "failed_auxiliary_commands": [{"label": x["label"], "exit_code": x["exit_code"],
++                                       "stdout": x["stdout"], "stderr": x["stderr"]}
++                                      for x in execution["commands"] if x.get("status") == "FAILED"],
+     }
+     sys.path.insert(0, str(REPO))
+     from fhm_dapp_tim.fhm_dapp.train_anchor import _neighbor_targets
+@@ -403,11 +406,11 @@
+                 for policy in POLICIES[1:]:
+                     p = results[(dataset,seed)]["stage2"]["variants"][variant]["calibration"][policy]["params"]
+                     lines.append(f"|{dataset}/{seed}|{variant}|{policy}|{p['temperature']:.6f}|{p['theta'][0]:.6f}|{p['theta'][1]:.6f}|")
+-    append_interpretation(lines, before, results, diagnostics, review)
++    append_interpretation(lines, before, execution, results, diagnostics, review)
+     (ROOT / "RUN_REPORT_V17_TWO_STAGE.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+ 
+ 
+-def append_interpretation(lines, before, results, diagnostics, review):
++def append_interpretation(lines, before, execution, results, diagnostics, review):
+     lines += ["", "## 温度之外的额外证据收益", "", "下面固定比较 temperature_plus_g13 − temperature_only，避免把温度本身的收益归给 G13。没有据此替换预声明方案或重训。", "", "|域|骨干|ΔMAE(m)|ΔES(m)|ΔBF准确率|MAE/ES同时严格降低的种子数|", "|---|---|---:|---:|---:|---:|"]
+     for dataset in DATASETS:
+         for variant in VARIANTS:
+@@ -450,6 +453,8 @@
+         lines.append(f"- {dataset}：主检查点同楼层修复 ΔMAE {mean_sd(improvements)} m、ΔES {mean_sd(es_improvements)} m、ΔBF {mean_sd(bf_improvements)}；MAE 严格改善 {sum(x<0 for x in improvements)}/3 个种子。不同指标的正负结果均保留，不能仅以分类准确率或平均 MAE 宣称全面成功。")
+     tuji_differences = [max(abs(a["dev_mae_m"]-b["dev_mae_m"]) for a,b in zip(results[("tuji",seed)]["stage1"]["training"]["raw_neighbors"]["all_epoch_history"],results[("tuji",seed)]["stage1"]["training"]["same_floor_neighbors"]["all_epoch_history"],strict=True)) for seed in SEEDS]
+     lines += ["", f"TUJI 单建筑楼层的邻居 ID 完全相同，权重通过原程序 atol=rtol=1e-7 等价检查，但不是逐位相同：最大权重差 {review['tuji_neighbor_numerics']['weight_max_absolute_difference']:.10g}，{review['tuji_neighbor_numerics']['unequal_weight_entries']}/{review['tuji_neighbor_numerics']['weight_entries']} 项不同。配对轨迹逐轮 DEV MAE 最大绝对差（三种子）为 {tuji_differences} m。没有强制全 CUDA 确定性，不能唯一分离浮点归一化与GPU随机执行的影响，不能把 TUJI 的差异归因于排除跨楼层邻居。", "", "T=1 与 T=.6 是本轮四方案定义的一部分。g13_fixed_t06 与 raw 的差包含温度变化，不能全部归因于观测证据；temperature_plus_g13 与 temperature_only 才是本轮可报告的额外证据对照，但二者来自各自 CAL-fit 优化，不是识别物理因果。参数触边和种子差异须连同校准表解释，不能扩网格追结果。", "", "所有骨干为单成员且同一划分下公平重训；不能直接与旧 E5/G13 的不同预算和划分绝对 MAE 作改进或显著性比较。三个种子共享 CAL-eval 站点，站点也可能有空间/设备/会话相关性。CAL-eval 来自此前已研究的训练语料内部位置，非独立外部盲测。连续 ES 是有限 MC 近似；BF-XY NLL 的概率对象与仅 XY NLL 不同，不能跨定义排优劣。", "", "本轮未加入新网络、门控、Joint 微调或 TEST 选择。是否推进后续机制应另行预注册，不能用本轮 CAL-eval 再挑部署策略；当前收尾结果本身不构成正式外部泛化证明。", "", "## 完整性、异常及文件", "", f"独立核验 PASS：9 次作业，18×80 轮，54 个检查点与9个共享参考 bundle，126 条 run-level、42 条聚合、81 条 seed 配对、{review['paired_site_rows']} 条逐站点配对记录。{review['source_files_unchanged']} 个源码/测试/指令文件及7个训练输入 SHA256 全部保持不变。检查点选择由独立程序回放；Stage1 主检查点 raw 与 Stage2 raw 逐站点 JSON 完全一致。", "", f"从保存站点向量复算总体指标的最大绝对差为 {review['maximum_float32_site_reduction_difference']:.10g}，来自原程序 float32 reduction 与序列化后 double 归并的舍入差；审计允许2e-5。这里没有更改任何科学门禁。源码未输出原始逐扫描误差，故不声称独立重建 scan→site；本次独立复核的是 saved site→macro/CSV/paired deltas。", "", "随机种子固定，未额外开启原脚本未设定的全 CUDA 确定性内核。未新增学习率调度、改变 batch/epochs、重新选划分或改模型源代码。", ""]
++    if review["failed_auxiliary_commands"]:
++        lines += ["结果审计/报告辅助脚本首次运行：数值交叉核验完成后，Markdown 生成时因 append_interpretation 漏传 execution 参数发生 NameError。补齐函数调用/签名的参数后，仅重跑只读文件审计和报告生成。9 次正式科学作业及 aggregate 均为 exit 0；没有重训或重新评分。原始 helper、stdout/stderr 与部分数值审计保留，修复详见 FIX_RECORD.md。", ""]
+     if review["nonempty_stderr_streams"]:
+         lines.append("stderr 非空记录（保留原始日志；内容须按日志解释）：")
+         for warning in review["nonempty_stderr_streams"]:

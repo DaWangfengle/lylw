@@ -1,0 +1,29 @@
+{
+  "study": "V17 two-stage full-80-epoch and frozen posterior calibration closeout",
+  "dataset": "uji",
+  "seed": 17302,
+  "split_seed": 20261017,
+  "device": "cuda",
+  "python": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+  "torch": "2.10.0+cu128",
+  "numpy": "2.4.4",
+  "cuda_available": true,
+  "epochs_per_variant": 80,
+  "variant_count": 2,
+  "joint_refit_implemented": false,
+  "joint_refit_run": false,
+  "evaluation_role": "CAL-eval",
+  "official_test_rows_scored": 0,
+  "result_sha256": "7fc2eec4b0c2ed7a4a40c8107010ec1052c336335cdedeba3de2cad8cedf0f6b",
+  "site_diagnostics_sha256": "83f70f8ffdbc7290696e06f8c95cff714af32716115ea011fc84ad7940b19f55",
+  "reference_state_sha256": "c75df1f80870058d7c4d0fb6efbad06a2f90eb9186d0f8ea66a0a989163e8860",
+  "source_sha256": {
+    "msep_v17_two_stage_freeze_v1.py": "bc578f08b73da5d7fb3a2bdaec4efb9107219548a939178e1abf238e591e08e2",
+    "msep_single_study.py": "1f4a81f910e671813cfb34a0c1f0d976a5a246da090a068b07e02183f5275996",
+    "msep_single_posterior.py": "6c285e043544471e82e50d3c608223622ded4ba5adafd8ae9fa9e3e853c72df1",
+    "msep_joint_science_v1.py": "fe4c227ee04c3b16809780630dcdfd374f367ea28de6affa595279a477062b1a",
+    "model.py": "adfad97a3e760dd27ab552658cf895f0989cb1673310c2b0a51a5f83279792ef",
+    "train_anchor.py": "4e2b597d385f315d556cc6759d5a26a7de4392e654cc5e08dc57efb3c151f480",
+    "train_anchor_v2.py": "ba6392a72b373c182686c616ded7d0706cb423835e5fcf760cf9de9be88d70cb"
+  }
+}

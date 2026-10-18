@@ -1,0 +1,143 @@
+{
+  "audit": "PASS",
+  "source_files": 194,
+  "input_files": 7,
+  "environment": {
+    "python_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "torch": "2.10.0+cu128",
+    "torch_cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 2060",
+    "gpu_total_bytes": 6442123264
+  },
+  "datasets": {
+    "tuji": {
+      "roles": {
+        "fit": {
+          "sites": 646,
+          "scans": 3236,
+          "site_keys_sha256": "46374747335d9ceeadca4df2390dd1df2f97ee4700723c2167956ce640680ebd"
+        },
+        "dev": {
+          "sites": 91,
+          "scans": 453,
+          "site_keys_sha256": "5dcd81400268b91e7aa6acc0c54044340b64bf620cc600905769b28267647cad"
+        },
+        "test": {
+          "sites": 91,
+          "scans": 457,
+          "site_keys_sha256": "8fdbfa37d04203e905d18064e632f8463514794c3bd04899179841f062d6d52d"
+        },
+        "cal_fit": {
+          "sites": 45,
+          "scans": 215,
+          "site_keys_sha256": "d31dc059e0f3bd20ee46623ebd2b35eec2745d66e853f3edfebc7623f849ab2b"
+        },
+        "cal_eval": {
+          "sites": 46,
+          "scans": 234,
+          "site_keys_sha256": "e90a55e2edb63cbd4cb82c89d63a693bae3b1f3dc27f7dae1284ea8e9a0806e6"
+        }
+      },
+      "role_site_overlap": 0,
+      "raw_centered_mapping_bijective": true,
+      "fit_anchor_count": 646,
+      "fit_seen_aps": 120,
+      "fit_scans_per_site": {
+        "min": 1,
+        "mean": 5.0092879256965945
+      },
+      "raw_wrong_neighbor_bf_mass": 0.0,
+      "same_floor_wrong_neighbor_bf_mass": 0.0,
+      "paired_initial_states_exact": true,
+      "single_bf_noop": true,
+      "optimizer_updates_per_variant": 4080,
+      "test_rows_scored": 0
+    },
+    "uts": {
+      "roles": {
+        "fit": {
+          "sites": 1052,
+          "scans": 6534,
+          "site_keys_sha256": "5071ba2f693e74ab0ee0a35c326de3defc85ac7c9a58d98b27425dc121a95121"
+        },
+        "dev": {
+          "sites": 138,
+          "scans": 873,
+          "site_keys_sha256": "4bab64723abcb3f46d7344a2d20775add82680053844149dc25c8da7721a95e3"
+        },
+        "test": {
+          "sites": 138,
+          "scans": 843,
+          "site_keys_sha256": "90e467d5cf2e9856ec8c14010a5ea95c075a87a948884bedbf8277440a853fd4"
+        },
+        "cal_fit": {
+          "sites": 69,
+          "scans": 444,
+          "site_keys_sha256": "4d103d7a1175d710bf206142fe10af8d467f8339825c499b6b4b4b6064ad452a"
+        },
+        "cal_eval": {
+          "sites": 69,
+          "scans": 414,
+          "site_keys_sha256": "263db27f64b3333b31defc39e58b95c8e0343ecbe89c403aa7949fdbe04e4042"
+        }
+      },
+      "role_site_overlap": 0,
+      "raw_centered_mapping_bijective": true,
+      "fit_anchor_count": 1052,
+      "fit_seen_aps": 557,
+      "fit_scans_per_site": {
+        "min": 1,
+        "mean": 6.2110266159695815
+      },
+      "raw_wrong_neighbor_bf_mass": 0.9361103478493346,
+      "same_floor_wrong_neighbor_bf_mass": 0.0,
+      "paired_initial_states_exact": true,
+      "single_bf_noop": false,
+      "optimizer_updates_per_variant": 8240,
+      "test_rows_scored": 0
+    },
+    "uji": {
+      "roles": {
+        "fit": {
+          "sites": 672,
+          "scans": 14453,
+          "site_keys_sha256": "a786ba743b52fdc8d59fdfbefb9ab2074cd59cebf8b62f0d12b2bfe7b6c8ff92"
+        },
+        "dev": {
+          "sites": 87,
+          "scans": 1828,
+          "site_keys_sha256": "a98069aa6fbc0a5f04da9331afaf9730c652a3ee5fb124d8422d2eb984c03bae"
+        },
+        "test": {
+          "sites": 87,
+          "scans": 1778,
+          "site_keys_sha256": "e2cb7577578a3295711e9162a42caf4c8f820cc5d4814649afe32fbc09523610"
+        },
+        "cal_fit": {
+          "sites": 43,
+          "scans": 959,
+          "site_keys_sha256": "f931e3a45b6699c33d2b64f5bd8e37d83633a9718e12706e8add50c8c7165f43"
+        },
+        "cal_eval": {
+          "sites": 44,
+          "scans": 919,
+          "site_keys_sha256": "d0dfff02ffc99cfbdfdfcf2e053547df950707b7b91d560c0d5b0e11d606f190"
+        }
+      },
+      "role_site_overlap": 0,
+      "raw_centered_mapping_bijective": true,
+      "fit_anchor_count": 672,
+      "fit_seen_aps": 332,
+      "fit_scans_per_site": {
+        "min": 2,
+        "mean": 21.507440476190474
+      },
+      "raw_wrong_neighbor_bf_mass": 0.7901185162969786,
+      "same_floor_wrong_neighbor_bf_mass": 0.0,
+      "paired_initial_states_exact": true,
+      "single_bf_noop": false,
+      "optimizer_updates_per_variant": 18080,
+      "test_rows_scored": 0
+    }
+  }
+}

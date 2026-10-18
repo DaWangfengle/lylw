@@ -1,0 +1,33 @@
+{
+  "expected_runs": 9,
+  "completed_runs": 9,
+  "datasets": [
+    "tuji",
+    "uts",
+    "uji"
+  ],
+  "paired_seeds": [
+    17301,
+    17302,
+    17303
+  ],
+  "primary_checkpoint_policy": "best_dev_epoch_21_80",
+  "calibration_policies": [
+    "raw",
+    "temperature_only",
+    "g13_fixed_t06",
+    "temperature_plus_g13"
+  ],
+  "files": [
+    "RUN_LEVEL_METRICS.csv",
+    "AGGREGATE_SUMMARY.csv",
+    "PAIRED_DELTAS.csv",
+    "SITE_DELTAS_ALL_RUNS.csv"
+  ],
+  "interpretation": [
+    "All means and sample standard deviations summarize three paired seeds on the same internal CAL-eval sites.",
+    "Negative MAE/ES delta means improvement; positive BF-accuracy delta means improvement.",
+    "Site-level deltas are descriptive and are not independent-site significance tests.",
+    "No internal TEST role or official test labels were evaluated."
+  ]
+}

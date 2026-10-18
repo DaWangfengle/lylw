@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_two_stage_freeze_v1\audit_and_report.py", line 467, in <module>
+    main()
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_two_stage_freeze_v1\audit_and_report.py", line 256, in main
+    finish(before, execution, results, diagnostics, expected_metrics, artifact_hashes,
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_two_stage_freeze_v1\audit_and_report.py", line 361, in finish
+    write_report(before, execution, results, diagnostics, review, summary_rows, paired_rows)
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_two_stage_freeze_v1\audit_and_report.py", line 406, in write_report
+    append_interpretation(lines, before, results, diagnostics, review)
+  File "D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_two_stage_freeze_v1\audit_and_report.py", line 460, in append_interpretation
+    for command in execution["commands"]:
+                   ^^^^^^^^^
+NameError: name 'execution' is not defined. Did you mean: 'Exception'?

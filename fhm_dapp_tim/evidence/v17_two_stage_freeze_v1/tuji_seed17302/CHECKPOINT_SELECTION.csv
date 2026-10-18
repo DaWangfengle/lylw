@@ -1,0 +1,7 @@
+﻿dataset,seed,variant,checkpoint_policy,selected_epoch,dev_mae_m,simulated_legacy_stop_epoch,is_primary_for_stage2,cal_eval_macro_mae_m,cal_eval_macro_es_m,cal_eval_macro_bf_accuracy
+tuji,17302,raw_neighbors,legacy_early_stop,79,2.3287293910980225,,False,2.3918771743774414,1.7820274829864502,1.0
+tuji,17302,raw_neighbors,best_dev_epoch_1_80,79,2.3287293910980225,,False,2.3918771743774414,1.7820274829864502,1.0
+tuji,17302,raw_neighbors,best_dev_epoch_21_80,79,2.3287293910980225,,True,2.3918771743774414,1.7820274829864502,1.0
+tuji,17302,same_floor_neighbors,legacy_early_stop,80,2.25325083732605,,False,2.3189244270324707,1.6963106393814087,1.0
+tuji,17302,same_floor_neighbors,best_dev_epoch_1_80,80,2.25325083732605,,False,2.3189244270324707,1.6963106393814087,1.0
+tuji,17302,same_floor_neighbors,best_dev_epoch_21_80,80,2.25325083732605,,True,2.3189244270324707,1.6963106393814087,1.0

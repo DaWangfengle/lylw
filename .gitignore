@@ -206,3 +206,7 @@ local_notes/
 # MSEP joint-location ablation: retain raw scientific command evidence.
 !/fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/*.stdout.log
 !/fhm_dapp_tim/evidence/msep_joint_v1_summary/run_logs/*.stderr.log
+
+# V17 two-stage closeout: retain original scientific and audit command logs.
+!/fhm_dapp_tim/evidence/v17_two_stage_freeze_v1/run_logs/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_two_stage_freeze_v1/run_logs/*.stderr.log

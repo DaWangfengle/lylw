@@ -1,0 +1,1527 @@
+{
+  "status": "PASS",
+  "completed_paired_jobs": 9,
+  "trained_backbones": 18,
+  "full_training_epochs": 1440,
+  "checkpoint_files": 54,
+  "reference_bundles": 9,
+  "run_metric_rows": 126,
+  "summary_rows": 42,
+  "paired_seed_rows": 81,
+  "paired_site_rows": 5247,
+  "pytest_passed": 13,
+  "source_files_unchanged": 194,
+  "training_input_files_unchanged": 7,
+  "maximum_float32_site_reduction_difference": 2.3301393579089336e-06,
+  "float32_reduction_audit_tolerance": 2e-05,
+  "checkpoint_selection_independently_replayed": true,
+  "stage1_primary_raw_equals_stage2_raw_per_site": true,
+  "cal_fit_eval_sites_disjoint": true,
+  "internal_and_official_test_rows_scored": 0,
+  "audit_limit": "Saved site metrics independently reaggregated. Raw per-scan errors are not emitted by this runner, so a scan-to-site rerun is not claimed.",
+  "artifact_sha256": {
+    "tuji_seed17301/RESULT.json": "30e2cdb7dc619e65b6772bf18931a49eb21962c1e44c40f014f0ca534e8a45ca",
+    "tuji_seed17301/SITE_DIAGNOSTICS.json": "b9a36c26c6efe78f7ec0e9afc50e92554de65ec4fbd8833fbde15ba07cbac56f",
+    "tuji_seed17301/RUN_MANIFEST.json": "1d45467b5924b18159d2630e88994e25f3de0e621ff2430ac7412158773fb34f",
+    "tuji_seed17301/EPOCH_HISTORY.csv": "388969cf4b39c9c6c16ea0be02013cb8455fc3478827fb230b87e45ad75fd7b6",
+    "tuji_seed17301/CHECKPOINT_SELECTION.csv": "f8b52074d204dd09a84521bf9284b7d569306fe25a9526baa9de06c6856f42d7",
+    "tuji_seed17301/REFERENCE_STATE.pt": "1ed1df66f36108b49a577a771d917b7848d06b172021be193aaa7bc88de203df",
+    "tuji_seed17302/RESULT.json": "fcf77c085d6c900e137edbd05fc3b7581bf3703b68829fbb3f243444276478f7",
+    "tuji_seed17302/SITE_DIAGNOSTICS.json": "607aeef268f2f7ddb807a59f952f00a5b68a6ab3cf23b5f4419c7339d62fdb97",
+    "tuji_seed17302/RUN_MANIFEST.json": "d14b25aac491d11020f570e437f0486bcefd0ca1ba1bc68f874ce1b066ad0493",
+    "tuji_seed17302/EPOCH_HISTORY.csv": "31091f5c20673c316c762c0b25d0f8655697d3830950a05db924f0a5b1e549d7",
+    "tuji_seed17302/CHECKPOINT_SELECTION.csv": "20e9d98884e0949a2adfd412e2139864ddea71cc66cab20a9d881f1bb88f9cde",
+    "tuji_seed17302/REFERENCE_STATE.pt": "7be7a2f2f5eaf99def17bbe3f1c56b4072bfb05b082225fb487f1a7ebee1cc57",
+    "tuji_seed17303/RESULT.json": "980856242e157083daac3bbcb7d5b498533bf42e1152024507a4cd30676eb437",
+    "tuji_seed17303/SITE_DIAGNOSTICS.json": "13399f4ede926c4b5e713b46c022f4574af42f884aa13a52ec3e30a0146ea254",
+    "tuji_seed17303/RUN_MANIFEST.json": "f6f9adc301a38e90823c06d3c42eed86e2dc08a5b0fc668146346cf8cf7b3e1f",
+    "tuji_seed17303/EPOCH_HISTORY.csv": "708e64890ce06635a1279db9ac4cfafae47d5490e18824b09feefe50e4e58513",
+    "tuji_seed17303/CHECKPOINT_SELECTION.csv": "474a6daf87ce8845316746ff05eccfb3a8a5732e65d8b928768f6ef5288e2739",
+    "tuji_seed17303/REFERENCE_STATE.pt": "3b1d1befabe38f225d6b62be86474b252f0fdd01866b32ffa3847e3d6ee20e2d",
+    "uts_seed17301/RESULT.json": "0adcb46d7c3c4cf99b77ba75fe97af7579bcc9be88574eda33286b6bc77adc73",
+    "uts_seed17301/SITE_DIAGNOSTICS.json": "9ea4f06a8d061431c65b61ab045232b09befc8712931dca7d2e8c71ac537c227",
+    "uts_seed17301/RUN_MANIFEST.json": "2c25c71e2ce2c3a11d57680215835ff9762d31da0c6e19397fee44520f6353aa",
+    "uts_seed17301/EPOCH_HISTORY.csv": "838984da2372beee047d2f0335633d64da742065ae00d48b268baf5f883fef14",
+    "uts_seed17301/CHECKPOINT_SELECTION.csv": "089094e813da40495efa31004154dab3b52dd9f728fda12bdad56d40863f81cf",
+    "uts_seed17301/REFERENCE_STATE.pt": "79066e88e3ed3464f3ba4857ce3c07058c4b22883cb9eab5e71c89a7e3007aa8",
+    "uts_seed17302/RESULT.json": "ca3a1f1e54f775d652ac50803033b124fa64f56949c0c3cb64525d3cd8227ded",
+    "uts_seed17302/SITE_DIAGNOSTICS.json": "6126b837910ebdcf559d080242b16b4414a9a5b94f801b826bc0524818c9c85a",
+    "uts_seed17302/RUN_MANIFEST.json": "9a090c74970a9426e9ccd563e9bd65f39fcb7036caf82b91b33f4392b026c5ad",
+    "uts_seed17302/EPOCH_HISTORY.csv": "a3cece311c777ef25135aeeedd630eac591d17038c241924cc4fcb88c152e62f",
+    "uts_seed17302/CHECKPOINT_SELECTION.csv": "cf7dcb1aef5fbcff1a23f8fd0171b349e52792603839b0a98719fba7405f747c",
+    "uts_seed17302/REFERENCE_STATE.pt": "25c66ea79ae8df473b22742902566ef3b8bac247da4aae6c7fe20998333b9b4c",
+    "uts_seed17303/RESULT.json": "9c036f4ff099425c82a476e569b467174cbbf8f56b301f366245af56d7e45932",
+    "uts_seed17303/SITE_DIAGNOSTICS.json": "b321a4dcc65ba75ad78c17696ce99f6e9373dce501cbe6a2ff2e9f5b4bee284a",
+    "uts_seed17303/RUN_MANIFEST.json": "fa6d9964aca8ddc2dbbe034c982399ea7625f0030e50ef86f2df6b3ff9d551f6",
+    "uts_seed17303/EPOCH_HISTORY.csv": "bd4c3302fbfdfd126ceeff5fc07313192451189a2d8a0346f35d37ed191b943b",
+    "uts_seed17303/CHECKPOINT_SELECTION.csv": "05422ec8116204edc50ae5232b49f2f594f2665c3a38c94ec6967aaa82ec84cb",
+    "uts_seed17303/REFERENCE_STATE.pt": "1fdcc2855c52730b9c172878b406f35665cd0ca67a4ac6d09b3c2b8117faec2d",
+    "uji_seed17301/RESULT.json": "1430d1395ba8b4d0adc25073d51b248daf754d2e4b5518de974eca3f0c50b73d",
+    "uji_seed17301/SITE_DIAGNOSTICS.json": "5faf930e50385a0b8b253ac19069ca1d6ea98999072a7e54d7565a8574a1a487",
+    "uji_seed17301/RUN_MANIFEST.json": "374e80d039ae81e553cad80d13185570d1b85d318f7cc7f9e30f764b522d33cf",
+    "uji_seed17301/EPOCH_HISTORY.csv": "1c5fc00c4f796e28f4dc88479444c2083a499e93ceb9c901a13890e7bf382f4c",
+    "uji_seed17301/CHECKPOINT_SELECTION.csv": "b003e4c46df74a54978f922aa2df5a66032355bfa6e4d06e7c60131e9006c5fb",
+    "uji_seed17301/REFERENCE_STATE.pt": "2f4c8524631de3c7113f0b3c24b7ec6166053aa886464906ba4511d13ea8159a",
+    "uji_seed17302/RESULT.json": "7fc2eec4b0c2ed7a4a40c8107010ec1052c336335cdedeba3de2cad8cedf0f6b",
+    "uji_seed17302/SITE_DIAGNOSTICS.json": "83f70f8ffdbc7290696e06f8c95cff714af32716115ea011fc84ad7940b19f55",
+    "uji_seed17302/RUN_MANIFEST.json": "34ee3d4cd78e07591bfc4112c3f0a4b3f13dff85de060a5ef9f46aa21001a330",
+    "uji_seed17302/EPOCH_HISTORY.csv": "a4687002aee657008d4d84de49106896c9aaf6685302b05d2480a9e96f7bc841",
+    "uji_seed17302/CHECKPOINT_SELECTION.csv": "f7e7fbbc28481b15b61a66e8fdb9d69d24a6c8ac8bb5975372358e3fede4b92f",
+    "uji_seed17302/REFERENCE_STATE.pt": "c75df1f80870058d7c4d0fb6efbad06a2f90eb9186d0f8ea66a0a989163e8860",
+    "uji_seed17303/RESULT.json": "455df37bdd7d783b13cdc399185dc8e83e17f63629258c4ba8a81bf4d17131d5",
+    "uji_seed17303/SITE_DIAGNOSTICS.json": "c01db45288e9c0e119cf38e658758509c46fee81cd9310f2aaab468633965c32",
+    "uji_seed17303/RUN_MANIFEST.json": "368d44cc9345d60694f4f235c00ec430c38b3e39d4a4497f084b3851697d2765",
+    "uji_seed17303/EPOCH_HISTORY.csv": "862c5f3911070409809af2f5116f681bd67d41c8ce9010fd5b2900b865400d44",
+    "uji_seed17303/CHECKPOINT_SELECTION.csv": "d063f572946f11ef0cd547c6f2328e7a50896fb9bcf0067f27d0d6feafb33eb8",
+    "uji_seed17303/REFERENCE_STATE.pt": "9e5fdd92833931b4062b490ae05402bd00b9969afdae2a421a8922985d3da636",
+    "RUN_LEVEL_METRICS.csv": "5445ec55db2f035265d9636991786ec360466ff900ae4ffb919823745a72c5fa",
+    "AGGREGATE_SUMMARY.csv": "a8c8ff471c42600f3578db5cad19e376c996bd48105980f4ecb975177b97584b",
+    "PAIRED_DELTAS.csv": "8965cf3865a73e2f4f97a95d5a05b016228365bfc44e5243de48a2c6ed2a6bb8",
+    "SITE_DELTAS_ALL_RUNS.csv": "0e7b947c3ca0c7b4b3243b30047e247053b1a5a699ddd7a4784390f086cab949",
+    "AGGREGATE_SUMMARY.json": "ad1d59714659823ae57361c4a6fd644d0c1c3343cbf2c31319edab9f73118c6d"
+  },
+  "checkpoint_sha256": {
+    "tuji_seed17301/raw_neighbors_legacy_early_stop.pt": "0d7a5c980e628217f42c33bbea09dda38042167a313eaac83300f0698e7e938e",
+    "tuji_seed17301/raw_neighbors_best_dev_epoch_1_80.pt": "b6786f52c9db65f6a6255f4aa15b4f6b18ac9717cb9809729e2a51b4de604356",
+    "tuji_seed17301/raw_neighbors_best_dev_epoch_21_80.pt": "3fb716ae32455ed77d82eef572452562a6a82234d0c0291124561bb12e2a2864",
+    "tuji_seed17301/same_floor_neighbors_legacy_early_stop.pt": "9a4f0ed8458908342424614ff9a8759424dc0b8827fa230ee1be998c61b22e4d",
+    "tuji_seed17301/same_floor_neighbors_best_dev_epoch_1_80.pt": "8c921a382aefeaa81f390d602336dc640f4a57b83abf916fa93c9eb9eb26d7cf",
+    "tuji_seed17301/same_floor_neighbors_best_dev_epoch_21_80.pt": "b56d44de062adf88f8b5e488a57d1719b30f0a9cb7ac1e5d2627b385dcd22e39",
+    "tuji_seed17302/raw_neighbors_legacy_early_stop.pt": "56e6a6aae01c4dfaf79fc454ab090b4210ec808d7d97082193ff9675eefec8b9",
+    "tuji_seed17302/raw_neighbors_best_dev_epoch_1_80.pt": "7bbfed453621b8297126a681ec63742ecc18fd3897ee86efaf2de160ace64539",
+    "tuji_seed17302/raw_neighbors_best_dev_epoch_21_80.pt": "9f481b45e04e621e614168c4bfda7779a1dd2e11af8f9eb5ed5b49e492714f34",
+    "tuji_seed17302/same_floor_neighbors_legacy_early_stop.pt": "b62acfe077be282f64f035d6620c050feef275cfe9dcc4dd005a14816913d6cd",
+    "tuji_seed17302/same_floor_neighbors_best_dev_epoch_1_80.pt": "983fef0987b17ec329b0fbc5d281f6c3331f362e7777ecc558f3a02be183043f",
+    "tuji_seed17302/same_floor_neighbors_best_dev_epoch_21_80.pt": "242ba393c63acbc643f94d1f00e94bb08ac9fa8563adcb641e45a888e3aa78cf",
+    "tuji_seed17303/raw_neighbors_legacy_early_stop.pt": "1fe8c263febf19f00acaaf66fd5850b241a21b744082325c35fe1025afc05920",
+    "tuji_seed17303/raw_neighbors_best_dev_epoch_1_80.pt": "58f8e9a7aaaac355de9b821a3062c256b61cbb49d86597974bd96cecd8444dc2",
+    "tuji_seed17303/raw_neighbors_best_dev_epoch_21_80.pt": "cf04d2413d2af2e263595868392e3291949be20b27a7aca26a6ec0a6c94a0c09",
+    "tuji_seed17303/same_floor_neighbors_legacy_early_stop.pt": "db9386bc12ac898b4c9efb21a770b2f06a99585baad9ee77709f2f2786f41d30",
+    "tuji_seed17303/same_floor_neighbors_best_dev_epoch_1_80.pt": "ad3f350184e60ff4d395ffb87954c0fe85df311b4b32dec6c1e431236e476019",
+    "tuji_seed17303/same_floor_neighbors_best_dev_epoch_21_80.pt": "7d09edf51286acd56866c35da32984439ee44951f331493890d20abd738e3b95",
+    "uts_seed17301/raw_neighbors_legacy_early_stop.pt": "a1471755cf85ce4e437acbe6e309849229ef56cad36377dd788bf2691f78eb70",
+    "uts_seed17301/raw_neighbors_best_dev_epoch_1_80.pt": "ade8fc6059e395a739ac3ca49c5427c4592f3c33b4e8e86374a3c7f1b5e71ea9",
+    "uts_seed17301/raw_neighbors_best_dev_epoch_21_80.pt": "ca3b432689ee9cbaf53084f18c549903a4b000417f8033017fd382758adc3cc5",
+    "uts_seed17301/same_floor_neighbors_legacy_early_stop.pt": "07a9d28079d3b1fc7762ba5366ecf8ba14fe96254a498ad781f8beb43d77fae3",
+    "uts_seed17301/same_floor_neighbors_best_dev_epoch_1_80.pt": "796da6982d340413d4646f9f322451e1b816c2a4e44d63e286b36398a914a6a5",
+    "uts_seed17301/same_floor_neighbors_best_dev_epoch_21_80.pt": "b8cb46993408696cd2746e8f7a81d4d58634bf8890659379567a2782a4af8533",
+    "uts_seed17302/raw_neighbors_legacy_early_stop.pt": "b2e3549b1910e5c0e89f45a8a6a2fc234bc7e1324b51f38e05b7798c0e3315c4",
+    "uts_seed17302/raw_neighbors_best_dev_epoch_1_80.pt": "c44978779c124d34b004b3270d76fb521dd97b3f3bf11e3daca488d4690bb3c3",
+    "uts_seed17302/raw_neighbors_best_dev_epoch_21_80.pt": "388bd5bcf9a4123bf1a591b655a5edbe1f0117399be3259963082f451e721732",
+    "uts_seed17302/same_floor_neighbors_legacy_early_stop.pt": "ffeaf9021817fae5ce10109f197998d5bc92ba489731196e87901ebd8956d503",
+    "uts_seed17302/same_floor_neighbors_best_dev_epoch_1_80.pt": "6edeb2d0b522bcc8663d8be2ac960ea01fb4ade4a908c1da9de7cc6febab8a00",
+    "uts_seed17302/same_floor_neighbors_best_dev_epoch_21_80.pt": "3de4f6ecb00d90e09ec90ba321e2ce404a3bf243d548a46ebc11829f11a2b109",
+    "uts_seed17303/raw_neighbors_legacy_early_stop.pt": "7b076397f521c634b5a16af50ed8add16d1ef3373a8326f0845dc66865fb38e1",
+    "uts_seed17303/raw_neighbors_best_dev_epoch_1_80.pt": "e5e36c2e0317940f98f999493fb66459e070807c9c43c68a5e1f6aeb25047af5",
+    "uts_seed17303/raw_neighbors_best_dev_epoch_21_80.pt": "d7b6365e9eec218eeda2cbc5354e59dc67ff9be1e96a4287495148163fe35758",
+    "uts_seed17303/same_floor_neighbors_legacy_early_stop.pt": "7c61413ab7db6fc1bafad0e5f038bb46a953c1d8b07c5387f8682c29d37f7384",
+    "uts_seed17303/same_floor_neighbors_best_dev_epoch_1_80.pt": "3c08b10821ef1b4efd3719cbae637ba2a02d816009c0944b6c06e752562a888b",
+    "uts_seed17303/same_floor_neighbors_best_dev_epoch_21_80.pt": "10837f67edd10bfbe7b6dec8f731d661bee74bfd6372bc241852bf92275beb18",
+    "uji_seed17301/raw_neighbors_legacy_early_stop.pt": "23720730e6ab59a7b4427dce55c69fa987892a01e5bbb86a01b238cc57caafd9",
+    "uji_seed17301/raw_neighbors_best_dev_epoch_1_80.pt": "2b2abc09a5168466761ac45352179be1c0ce030fdb0f40abf76ef8a87026e367",
+    "uji_seed17301/raw_neighbors_best_dev_epoch_21_80.pt": "b7eebaa69d22d94b564f868cad31075eb494fbee0451407b80328c173438c103",
+    "uji_seed17301/same_floor_neighbors_legacy_early_stop.pt": "99184fce71863903c0d6a2bbbdf8e83a2b481b5352e89e65fdfc7695a933579f",
+    "uji_seed17301/same_floor_neighbors_best_dev_epoch_1_80.pt": "c84d8b8e848e8782b29c1a9d5c2c94aa912c69982d16a7cc9b9b859429cf2651",
+    "uji_seed17301/same_floor_neighbors_best_dev_epoch_21_80.pt": "0cadf15d10edd4dd515f156f3c124f9e141e3ec92cd5160bb83046851930c856",
+    "uji_seed17302/raw_neighbors_legacy_early_stop.pt": "a2d036c9b7cded49cf0ce202401a60ea120e2582ea80f0b5f7711aa613dac098",
+    "uji_seed17302/raw_neighbors_best_dev_epoch_1_80.pt": "519e6673fcc3752f6191213271a70828a8e460c8e9421637a2bee2a61f877b28",
+    "uji_seed17302/raw_neighbors_best_dev_epoch_21_80.pt": "a9afe5f572ff5ea0e76faebcb5e2fa2f2a12aaf9c2c8c7cf63553315e2daa6ca",
+    "uji_seed17302/same_floor_neighbors_legacy_early_stop.pt": "fec5065f1729391900c08dfb61fc1c19a66f7688ee4ab4225d05c22a57acf462",
+    "uji_seed17302/same_floor_neighbors_best_dev_epoch_1_80.pt": "36603ceac089fb379427db2580d0a753bb19301205870f6190953ca1c9a8832a",
+    "uji_seed17302/same_floor_neighbors_best_dev_epoch_21_80.pt": "be98f76b2fb0e77d9642cd54399585d9fc5fe7e09e8b5c18fc46b3301e6d3a6d",
+    "uji_seed17303/raw_neighbors_legacy_early_stop.pt": "fbcfa68e04fd2e4a2a10b55db9205f94ca360ab5c4a1056d36e7bed58d18db50",
+    "uji_seed17303/raw_neighbors_best_dev_epoch_1_80.pt": "60649e005f2f5240b9a1f8aa549d8960afdf8573c76d1eb7e176c6b54bff8b1a",
+    "uji_seed17303/raw_neighbors_best_dev_epoch_21_80.pt": "d9148776750d479a31452655a8cb18950c2a1df87856f08a2dbf064617c162c9",
+    "uji_seed17303/same_floor_neighbors_legacy_early_stop.pt": "98acd45beabf319bb6bf00cd810eda780b75b3e81ccf3fadb39757dbd1f5d47f",
+    "uji_seed17303/same_floor_neighbors_best_dev_epoch_1_80.pt": "7ea08101bf70fd983062ad315244d0f929121807f10ee21ac6c7bcbf42d76753",
+    "uji_seed17303/same_floor_neighbors_best_dev_epoch_21_80.pt": "a9b0ccb085aedc1272d5d519a095770a069428abd742f86f17d135fd08033621"
+  },
+  "stage2_site_harms_vs_raw": {
+    "tuji_seed17301/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 46,
+      "worst_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": 0.0
+    },
+    "tuji_seed17301/raw_neighbors/temperature_only": {
+      "improved": 28,
+      "worsened": 18,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        5.958,
+        27.426
+      ],
+      "worst_delta_m": 0.9961149513721463,
+      "best_site": [
+        0,
+        0,
+        20.859,
+        15.501
+      ],
+      "best_delta_m": -1.350003051261107
+    },
+    "tuji_seed17301/raw_neighbors/g13_fixed_t06": {
+      "improved": 27,
+      "worsened": 19,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 1.1673205494880676,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": -1.7780375719070438
+    },
+    "tuji_seed17301/raw_neighbors/temperature_plus_g13": {
+      "improved": 26,
+      "worsened": 20,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        10.724,
+        22.061
+      ],
+      "worst_delta_m": 1.061798644065857,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": -1.6989676237106326
+    },
+    "tuji_seed17301/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 46,
+      "worst_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": 0.0
+    },
+    "tuji_seed17301/same_floor_neighbors/temperature_only": {
+      "improved": 29,
+      "worsened": 17,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        4.17,
+        5.366
+      ],
+      "worst_delta_m": 1.086938275396824,
+      "best_site": [
+        0,
+        0,
+        0.0,
+        26.234
+      ],
+      "best_delta_m": -1.5226699590682982
+    },
+    "tuji_seed17301/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 29,
+      "worsened": 17,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        4.17,
+        5.366
+      ],
+      "worst_delta_m": 1.0944231346249582,
+      "best_site": [
+        0,
+        0,
+        16.688,
+        14.903
+      ],
+      "best_delta_m": -1.8992544015248616
+    },
+    "tuji_seed17301/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 29,
+      "worsened": 17,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        4.17,
+        5.366
+      ],
+      "worst_delta_m": 1.049819977581501,
+      "best_site": [
+        0,
+        0,
+        16.688,
+        14.903
+      ],
+      "best_delta_m": -1.8854069809118907
+    },
+    "tuji_seed17302/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 46,
+      "worst_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": 0.0
+    },
+    "tuji_seed17302/raw_neighbors/temperature_only": {
+      "improved": 29,
+      "worsened": 17,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        10.724,
+        22.061
+      ],
+      "worst_delta_m": 0.9782035470008847,
+      "best_site": [
+        0,
+        0,
+        14.301,
+        25.042
+      ],
+      "best_delta_m": -1.4885083198547364
+    },
+    "tuji_seed17302/raw_neighbors/g13_fixed_t06": {
+      "improved": 33,
+      "worsened": 13,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 1.25825434923172,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        28.618
+      ],
+      "best_delta_m": -1.7908803939819338
+    },
+    "tuji_seed17302/raw_neighbors/temperature_plus_g13": {
+      "improved": 31,
+      "worsened": 15,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 1.242606540520986,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        28.618
+      ],
+      "best_delta_m": -1.8152747988700868
+    },
+    "tuji_seed17302/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 46,
+      "worst_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": 0.0
+    },
+    "tuji_seed17302/same_floor_neighbors/temperature_only": {
+      "improved": 29,
+      "worsened": 17,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        10.724,
+        22.061
+      ],
+      "worst_delta_m": 0.9711519956588743,
+      "best_site": [
+        0,
+        0,
+        0.0,
+        26.234
+      ],
+      "best_delta_m": -1.5495376586914062
+    },
+    "tuji_seed17302/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 31,
+      "worsened": 15,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 1.0798737208048501,
+      "best_site": [
+        0,
+        0,
+        16.688,
+        14.903
+      ],
+      "best_delta_m": -1.9046752899885175
+    },
+    "tuji_seed17302/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 31,
+      "worsened": 15,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 1.1165095965067544,
+      "best_site": [
+        0,
+        0,
+        16.688,
+        14.903
+      ],
+      "best_delta_m": -1.9145817607641218
+    },
+    "tuji_seed17303/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 46,
+      "worst_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": 0.0
+    },
+    "tuji_seed17303/raw_neighbors/temperature_only": {
+      "improved": 25,
+      "worsened": 21,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        4.17,
+        5.366
+      ],
+      "worst_delta_m": 1.2031085714697836,
+      "best_site": [
+        0,
+        0,
+        0.0,
+        26.234
+      ],
+      "best_delta_m": -1.5960607051849363
+    },
+    "tuji_seed17303/raw_neighbors/g13_fixed_t06": {
+      "improved": 26,
+      "worsened": 20,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 2.1807459791501365,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        28.618
+      ],
+      "best_delta_m": -2.2031442284584046
+    },
+    "tuji_seed17303/raw_neighbors/temperature_plus_g13": {
+      "improved": 27,
+      "worsened": 19,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 2.122481127580007,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        28.618
+      ],
+      "best_delta_m": -2.1519406914710997
+    },
+    "tuji_seed17303/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 46,
+      "worst_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        9.534,
+        2.385
+      ],
+      "best_delta_m": 0.0
+    },
+    "tuji_seed17303/same_floor_neighbors/temperature_only": {
+      "improved": 27,
+      "worsened": 19,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        4.17,
+        5.366
+      ],
+      "worst_delta_m": 1.0086187183856965,
+      "best_site": [
+        0,
+        0,
+        0.0,
+        26.234
+      ],
+      "best_delta_m": -1.5189536571502682
+    },
+    "tuji_seed17303/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 28,
+      "worsened": 18,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 1.9404748082160947,
+      "best_site": [
+        0,
+        0,
+        0.0,
+        26.234
+      ],
+      "best_delta_m": -1.8766536712646484
+    },
+    "tuji_seed17303/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 28,
+      "worsened": 18,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        11.321,
+        10.134
+      ],
+      "worst_delta_m": 1.929432173569997,
+      "best_site": [
+        0,
+        0,
+        0.0,
+        26.234
+      ],
+      "best_delta_m": -1.8133011579513547
+    },
+    "uts_seed17301/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 69,
+      "worst_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "best_delta_m": 0.0
+    },
+    "uts_seed17301/raw_neighbors/temperature_only": {
+      "improved": 17,
+      "worsened": 52,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        13,
+        22.8606,
+        8.9146
+      ],
+      "worst_delta_m": 4.170502185821533,
+      "best_site": [
+        0,
+        12,
+        98.8942,
+        7.1231
+      ],
+      "best_delta_m": -2.030953049659729
+    },
+    "uts_seed17301/raw_neighbors/g13_fixed_t06": {
+      "improved": 39,
+      "worsened": 30,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        12,
+        98.8942,
+        7.1231
+      ],
+      "worst_delta_m": 2.758072853088379,
+      "best_site": [
+        0,
+        15,
+        60.0607,
+        7.2309
+      ],
+      "best_delta_m": -4.413956642150879
+    },
+    "uts_seed17301/raw_neighbors/temperature_plus_g13": {
+      "improved": 17,
+      "worsened": 52,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        13,
+        22.8606,
+        8.9146
+      ],
+      "worst_delta_m": 4.155308246612549,
+      "best_site": [
+        0,
+        12,
+        98.8942,
+        7.1231
+      ],
+      "best_delta_m": -2.0334126949310303
+    },
+    "uts_seed17301/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 69,
+      "worst_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "best_delta_m": 0.0
+    },
+    "uts_seed17301/same_floor_neighbors/temperature_only": {
+      "improved": 14,
+      "worsened": 55,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        1,
+        97.0086,
+        25.8373
+      ],
+      "worst_delta_m": 5.052028656005859,
+      "best_site": [
+        0,
+        0,
+        74.0978,
+        8.8102
+      ],
+      "best_delta_m": -2.6491031646728516
+    },
+    "uts_seed17301/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 42,
+      "worsened": 27,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        12,
+        98.8942,
+        7.1231
+      ],
+      "worst_delta_m": 3.6525707244873047,
+      "best_site": [
+        0,
+        12,
+        92.9778,
+        19.2001
+      ],
+      "best_delta_m": -6.123954772949219
+    },
+    "uts_seed17301/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 24,
+      "worsened": 45,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        12,
+        18.4289,
+        13.9411
+      ],
+      "worst_delta_m": 5.578021049499513,
+      "best_site": [
+        0,
+        13,
+        29.9586,
+        19.185
+      ],
+      "best_delta_m": -3.0889527797698975
+    },
+    "uts_seed17302/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 69,
+      "worst_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "best_delta_m": 0.0
+    },
+    "uts_seed17302/raw_neighbors/temperature_only": {
+      "improved": 20,
+      "worsened": 49,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        1,
+        96.8492,
+        28.2822
+      ],
+      "worst_delta_m": 3.770319700241089,
+      "best_site": [
+        0,
+        7,
+        67.7828,
+        17.4227
+      ],
+      "best_delta_m": -1.5964365204175313
+    },
+    "uts_seed17302/raw_neighbors/g13_fixed_t06": {
+      "improved": 38,
+      "worsened": 31,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        74.0978,
+        8.8102
+      ],
+      "worst_delta_m": 3.6609878540039062,
+      "best_site": [
+        0,
+        10,
+        15.6568,
+        22.8553
+      ],
+      "best_delta_m": -4.741077158186171
+    },
+    "uts_seed17302/raw_neighbors/temperature_plus_g13": {
+      "improved": 20,
+      "worsened": 49,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        1,
+        96.8492,
+        28.2822
+      ],
+      "worst_delta_m": 3.771230936050415,
+      "best_site": [
+        0,
+        7,
+        67.7828,
+        17.4227
+      ],
+      "best_delta_m": -1.5969154636065166
+    },
+    "uts_seed17302/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 69,
+      "worst_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "best_delta_m": 0.0
+    },
+    "uts_seed17302/same_floor_neighbors/temperature_only": {
+      "improved": 17,
+      "worsened": 52,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        10,
+        15.6568,
+        22.8553
+      ],
+      "worst_delta_m": 4.770283487108019,
+      "best_site": [
+        0,
+        0,
+        74.0978,
+        8.8102
+      ],
+      "best_delta_m": -2.334172487258911
+    },
+    "uts_seed17302/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 43,
+      "worsened": 26,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        0,
+        74.0978,
+        8.8102
+      ],
+      "worst_delta_m": 3.74383544921875,
+      "best_site": [
+        0,
+        12,
+        92.9778,
+        19.2001
+      ],
+      "best_delta_m": -6.139734745025635
+    },
+    "uts_seed17302/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 28,
+      "worsened": 41,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        12,
+        18.4289,
+        13.9411
+      ],
+      "worst_delta_m": 4.569143454233805,
+      "best_site": [
+        0,
+        13,
+        29.9586,
+        19.185
+      ],
+      "best_delta_m": -2.364988327026367
+    },
+    "uts_seed17303/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 69,
+      "worst_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "best_delta_m": 0.0
+    },
+    "uts_seed17303/raw_neighbors/temperature_only": {
+      "improved": 20,
+      "worsened": 49,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        14,
+        82.6241,
+        7.258
+      ],
+      "worst_delta_m": 2.347905158996582,
+      "best_site": [
+        0,
+        13,
+        29.9586,
+        19.185
+      ],
+      "best_delta_m": -1.1111078262329102
+    },
+    "uts_seed17303/raw_neighbors/g13_fixed_t06": {
+      "improved": 39,
+      "worsened": 30,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        12,
+        98.8942,
+        7.1231
+      ],
+      "worst_delta_m": 4.131096363067627,
+      "best_site": [
+        0,
+        14,
+        82.6241,
+        7.258
+      ],
+      "best_delta_m": -5.583678483963013
+    },
+    "uts_seed17303/raw_neighbors/temperature_plus_g13": {
+      "improved": 20,
+      "worsened": 49,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        14,
+        82.6241,
+        7.258
+      ],
+      "worst_delta_m": 2.3414506912231445,
+      "best_site": [
+        0,
+        13,
+        29.9586,
+        19.185
+      ],
+      "best_delta_m": -1.1078763008117676
+    },
+    "uts_seed17303/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 69,
+      "worst_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "best_delta_m": 0.0
+    },
+    "uts_seed17303/same_floor_neighbors/temperature_only": {
+      "improved": 15,
+      "worsened": 54,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        10,
+        15.6568,
+        22.8553
+      ],
+      "worst_delta_m": 5.488109482659235,
+      "best_site": [
+        0,
+        0,
+        74.0978,
+        8.8102
+      ],
+      "best_delta_m": -2.685559034347534
+    },
+    "uts_seed17303/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 39,
+      "worsened": 30,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        12,
+        98.8942,
+        7.1231
+      ],
+      "worst_delta_m": 3.243859052658081,
+      "best_site": [
+        0,
+        12,
+        92.9778,
+        19.2001
+      ],
+      "best_delta_m": -3.3091282844543457
+    },
+    "uts_seed17303/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 21,
+      "worsened": 48,
+      "unchanged": 0,
+      "worst_site": [
+        0,
+        14,
+        17.5075,
+        14.9218
+      ],
+      "worst_delta_m": 5.130998611450195,
+      "best_site": [
+        0,
+        0,
+        74.0978,
+        8.8102
+      ],
+      "best_delta_m": -3.490853786468506
+    },
+    "uji_seed17301/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 44,
+      "worst_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "best_delta_m": 0.0
+    },
+    "uji_seed17301/raw_neighbors/temperature_only": {
+      "improved": 19,
+      "worsened": 25,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7408.3389,
+        4864811.5
+      ],
+      "worst_delta_m": 4.522975656721327,
+      "best_site": [
+        2,
+        4,
+        -7338.8579,
+        4864826.0
+      ],
+      "best_delta_m": -1.2257545828819278
+    },
+    "uji_seed17301/raw_neighbors/g13_fixed_t06": {
+      "improved": 16,
+      "worsened": 28,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        0,
+        -7342.4351,
+        4864757.0
+      ],
+      "worst_delta_m": 2.8400987188021336,
+      "best_site": [
+        2,
+        2,
+        -7408.3389,
+        4864811.5
+      ],
+      "best_delta_m": -3.570224550035265
+    },
+    "uji_seed17301/raw_neighbors/temperature_plus_g13": {
+      "improved": 21,
+      "worsened": 23,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7408.3389,
+        4864811.5
+      ],
+      "worst_delta_m": 6.908463623788622,
+      "best_site": [
+        2,
+        3,
+        -7413.9551,
+        4864788.0
+      ],
+      "best_delta_m": -7.249088764190674
+    },
+    "uji_seed17301/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 44,
+      "worst_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "best_delta_m": 0.0
+    },
+    "uji_seed17301/same_floor_neighbors/temperature_only": {
+      "improved": 16,
+      "worsened": 28,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "worst_delta_m": 11.544045186042784,
+      "best_site": [
+        1,
+        0,
+        -7466.4453,
+        4864859.5
+      ],
+      "best_delta_m": -1.9971827983856212
+    },
+    "uji_seed17301/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 21,
+      "worsened": 23,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        0,
+        -7342.4351,
+        4864757.0
+      ],
+      "worst_delta_m": 2.6105620960394553,
+      "best_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "best_delta_m": -2.576601617038251
+    },
+    "uji_seed17301/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 20,
+      "worsened": 24,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "worst_delta_m": 16.549334919452665,
+      "best_site": [
+        0,
+        1,
+        -7618.7632,
+        4864975.5
+      ],
+      "best_delta_m": -2.137650710344314
+    },
+    "uji_seed17302/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 44,
+      "worst_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "best_delta_m": 0.0
+    },
+    "uji_seed17302/raw_neighbors/temperature_only": {
+      "improved": 14,
+      "worsened": 30,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        0,
+        -7342.4351,
+        4864757.0
+      ],
+      "worst_delta_m": 5.181077255556978,
+      "best_site": [
+        1,
+        2,
+        -7491.0308,
+        4864865.5
+      ],
+      "best_delta_m": -1.8768273234367365
+    },
+    "uji_seed17302/raw_neighbors/g13_fixed_t06": {
+      "improved": 19,
+      "worsened": 25,
+      "unchanged": 0,
+      "worst_site": [
+        1,
+        2,
+        -7491.0308,
+        4864865.5
+      ],
+      "worst_delta_m": 2.2638299703598026,
+      "best_site": [
+        1,
+        3,
+        -7526.4995,
+        4864893.0
+      ],
+      "best_delta_m": -4.178445428609848
+    },
+    "uji_seed17302/raw_neighbors/temperature_plus_g13": {
+      "improved": 15,
+      "worsened": 29,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "worst_delta_m": 8.013212344050409,
+      "best_site": [
+        2,
+        4,
+        -7406.063,
+        4864788.0
+      ],
+      "best_delta_m": -2.119466090202332
+    },
+    "uji_seed17302/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 44,
+      "worst_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "best_delta_m": 0.0
+    },
+    "uji_seed17302/same_floor_neighbors/temperature_only": {
+      "improved": 18,
+      "worsened": 26,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "worst_delta_m": 9.704491186141967,
+      "best_site": [
+        1,
+        2,
+        -7491.0308,
+        4864865.5
+      ],
+      "best_delta_m": -2.418288397789002
+    },
+    "uji_seed17302/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 13,
+      "worsened": 31,
+      "unchanged": 0,
+      "worst_site": [
+        1,
+        2,
+        -7491.0308,
+        4864865.5
+      ],
+      "worst_delta_m": 1.956926941871643,
+      "best_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "best_delta_m": -2.8325450211763386
+    },
+    "uji_seed17302/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 14,
+      "worsened": 30,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "worst_delta_m": 16.522813987731936,
+      "best_site": [
+        0,
+        1,
+        -7618.7632,
+        4864975.5
+      ],
+      "best_delta_m": -2.188186770677568
+    },
+    "uji_seed17303/raw_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 44,
+      "worst_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "best_delta_m": 0.0
+    },
+    "uji_seed17303/raw_neighbors/temperature_only": {
+      "improved": 20,
+      "worsened": 24,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        0,
+        -7342.4351,
+        4864757.0
+      ],
+      "worst_delta_m": 4.933770105242729,
+      "best_site": [
+        2,
+        4,
+        -7406.063,
+        4864788.0
+      ],
+      "best_delta_m": -1.5186350107192994
+    },
+    "uji_seed17303/raw_neighbors/g13_fixed_t06": {
+      "improved": 19,
+      "worsened": 25,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        0,
+        -7342.4351,
+        4864757.0
+      ],
+      "worst_delta_m": 2.5661567201217004,
+      "best_site": [
+        2,
+        2,
+        -7408.3389,
+        4864811.5
+      ],
+      "best_delta_m": -5.424634350670708
+    },
+    "uji_seed17303/raw_neighbors/temperature_plus_g13": {
+      "improved": 21,
+      "worsened": 23,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7408.3389,
+        4864811.5
+      ],
+      "worst_delta_m": 4.921699735853409,
+      "best_site": [
+        2,
+        4,
+        -7406.063,
+        4864788.0
+      ],
+      "best_delta_m": -1.6654433965682984
+    },
+    "uji_seed17303/same_floor_neighbors/raw": {
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 44,
+      "worst_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "worst_delta_m": 0.0,
+      "best_site": [
+        0,
+        0,
+        -7632.1436,
+        4864982.0
+      ],
+      "best_delta_m": 0.0
+    },
+    "uji_seed17303/same_floor_neighbors/temperature_only": {
+      "improved": 11,
+      "worsened": 33,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "worst_delta_m": 8.794711810350417,
+      "best_site": [
+        2,
+        2,
+        -7345.4233,
+        4864829.5
+      ],
+      "best_delta_m": -2.4095344841480255
+    },
+    "uji_seed17303/same_floor_neighbors/g13_fixed_t06": {
+      "improved": 18,
+      "worsened": 26,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7408.3389,
+        4864811.5
+      ],
+      "worst_delta_m": 10.042358769310844,
+      "best_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "best_delta_m": -2.4277694076299667
+    },
+    "uji_seed17303/same_floor_neighbors/temperature_plus_g13": {
+      "improved": 11,
+      "worsened": 33,
+      "unchanged": 0,
+      "worst_site": [
+        2,
+        2,
+        -7313.0654,
+        4864792.0
+      ],
+      "worst_delta_m": 13.65177807211876,
+      "best_site": [
+        2,
+        2,
+        -7345.4233,
+        4864829.5
+      ],
+      "best_delta_m": -2.5343788750469685
+    }
+  },
+  "nonempty_stderr_streams": [],
+  "failed_auxiliary_commands": [
+    {
+      "label": "audit_report",
+      "exit_code": 1,
+      "stdout": "fhm_dapp_tim\\evidence\\v17_two_stage_freeze_v1\\run_logs\\audit_report.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_two_stage_freeze_v1\\run_logs\\audit_report.stderr.log"
+    }
+  ],
+  "tuji_neighbor_numerics": {
+    "ids_bitwise_equal": true,
+    "weights_bitwise_equal": false,
+    "weights_allclose_atol_rtol_1e_7": true,
+    "weight_max_absolute_difference": 2.9802322387695312e-08,
+    "unequal_weight_entries": 2512,
+    "weight_entries": 5168,
+    "interpretation": "Same geometric neighbor targets within declared numeric tolerance, but not bitwise identical weights. CUDA deterministic algorithms were not enabled. Do not attribute TUJI training differences to floor exclusion."
+  }
+}
