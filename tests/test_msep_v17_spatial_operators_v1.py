@@ -16,6 +16,8 @@ from fhm_dapp_tim.fhm_dapp.msep_v17_spatial_operators_v1 import (
     cell_lse_expansion,
     joint_bf_xy_nll,
     component_center_transport_risk,
+    replace_unmasked_nll_with_joint_bf_xy,
+    add_transport_risk_increment,
 )
 from fhm_dapp_tim.fhm_dapp.msep_single_posterior import energy_score_mc
 from fhm_dapp_tim.fhm_dapp.uji_v17_g13_multiscan_observation import (
@@ -326,3 +328,24 @@ def test_joint_nll_and_transport_risk_have_finite_gradients():
     assert torch.isfinite(risk)
     assert torch.isfinite(logits.grad).all()
     assert torch.isfinite(centers.grad).all()
+
+
+def test_training_loss_chain_replaces_nll_and_adds_transport_without_replacing_coord_term():
+    original_nll = torch.tensor(2.0, requires_grad=True)
+    other_terms = torch.tensor(3.0, requires_grad=True)  # includes retrieval/hierarchy/0.25*coord
+    joint_nll = torch.tensor(5.0, requires_grad=True)
+    loss_a = original_nll + other_terms
+    loss_c = replace_unmasked_nll_with_joint_bf_xy(loss_a, original_nll, joint_nll)
+    assert torch.allclose(loss_c, other_terms + joint_nll)
+    grad_old, grad_other, grad_joint = torch.autograd.grad(
+        loss_c, (original_nll, other_terms, joint_nll), retain_graph=True
+    )
+    assert torch.equal(grad_old, torch.tensor(0.0))
+    assert torch.equal(grad_other, torch.tensor(1.0))
+    assert torch.equal(grad_joint, torch.tensor(1.0))
+
+    risk = torch.tensor([1.0, 3.0], requires_grad=True)
+    loss_d = add_transport_risk_increment(loss_c, risk)
+    assert torch.allclose(loss_d, loss_c + 0.30 * risk.mean())
+    grad_risk = torch.autograd.grad(loss_d, risk)[0]
+    assert torch.allclose(grad_risk, torch.full_like(risk, 0.15))
