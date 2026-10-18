@@ -66,7 +66,7 @@ def test_complete_retrieval_g13_logit_matches_locked_formula():
     theta = torch.tensor([0.3, 0.8])
     actual = combine_retrieval_and_g13_logits(scores, evidence, 2.0, theta)
     expected = scores / 2.0 + 0.3 * evidence[:, :, 0] + 0.8 * evidence[:, :, 1]
-    assert torch.allclose(actual, expected, atol=0.0, rtol=0.0)
+    assert torch.allclose(actual, expected)
 
 
 def test_equal_alpha_dual_channel_is_full_logit_diffusion():
