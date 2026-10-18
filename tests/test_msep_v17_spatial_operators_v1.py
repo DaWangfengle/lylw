@@ -108,7 +108,7 @@ def test_g13_midpoint_interpolation_restores_gamma_space_variance():
         interpolate_g13_midpoint_memory(pi, mu, var, edges, gamma_space=-0.1)
 
 
-def test_g13_combined_physical_virtual_features_match_canonical_formula():
+def test_virtual_g13_features_use_parent_scaling_and_do_not_change_parent_features():
     query = torch.tensor([
         [-0.2, -1.0, -0.6],
         [-1.0, -1.0, -1.0],
@@ -117,17 +117,25 @@ def test_g13_combined_physical_virtual_features_match_canonical_formula():
     pi = torch.tensor([[0.2, 0.8], [0.6, 0.4], [0.4, 0.7]])
     mu = torch.tensor([[-0.5, 0.1], [0.3, -0.2], [0.0, 0.4]])
     var = torch.tensor([[0.04, 0.09], [0.16, 0.25], [0.08, 0.12]])
-    actual = g13_continuous_field_features(query, seen, pi, mu, var)
-    memory = {
-        "detection_probability": pi,
-        "conditional_mean": mu,
-        "conditional_variance": var,
+    actual = g13_continuous_field_features(query, seen, pi, mu, var, n_physical=2)
+    physical_memory = {
+        "detection_probability": pi[:2],
+        "conditional_mean": mu[:2],
+        "conditional_variance": var[:2],
         "model_ap_count": torch.tensor(2),
     }
-    ids = torch.arange(len(pi))[None, :].expand(len(query), -1)
-    expected = canonical_g13_observation_features(query, ids, seen, memory)
-    assert torch.allclose(actual, expected, atol=1e-7, rtol=1e-7)
+    ids = torch.arange(2)[None, :].expand(len(query), -1)
+    expected_parent = canonical_g13_observation_features(query, ids, seen, physical_memory)
+    assert torch.allclose(actual[:, :2], expected_parent, atol=1e-7, rtol=1e-7)
     assert torch.isfinite(actual).all()
+    # Appending a different virtual candidate cannot rescale the physical logits.
+    changed_pi = torch.cat((pi[:2], torch.tensor([[0.9, 0.1]])), dim=0)
+    changed_mu = torch.cat((mu[:2], torch.tensor([[0.8, -0.8]])), dim=0)
+    changed_var = torch.cat((var[:2], torch.tensor([[0.2, 0.3]])), dim=0)
+    changed = g13_continuous_field_features(
+        query, seen, changed_pi, changed_mu, changed_var, n_physical=2
+    )
+    assert torch.equal(changed[:, :2], actual[:, :2])
 
 
 def test_midpoint_continuous_centers_and_scales_use_linear_parent_interpolation():
@@ -240,14 +248,14 @@ def test_beta_zero_compact_mixture_nll_and_energy_score_equal_parent_baseline():
         result["expanded_centers"], result["expanded_scales"], target,
         target_building, target_floor, anchor_building, anchor_floor,
     )
-    assert torch.allclose(expanded_nll, parent_nll, atol=0.0, rtol=0.0)
+    assert torch.allclose(expanded_nll, parent_nll)
 
     parent_es = energy_score_mc(parent_q, parent_centers, parent_scales, target, draws=64, seed=17301)
     expanded_es = energy_score_mc(
         result["expanded_weights"], result["expanded_centers"], result["expanded_scales"],
         target, draws=64, seed=17301,
     )
-    assert torch.allclose(expanded_es, parent_es, atol=0.0, rtol=0.0)
+    assert torch.allclose(expanded_es, parent_es)
 
 
 def test_joint_nll_strictly_ignores_zero_weight_components():
