@@ -1,0 +1,92 @@
+V17 SPATIAL COMPOSITION — CODEX EXECUTION INSTRUCTIONS
+Branch: v17-spatial-composition-v1
+
+GOAL
+Run a zero-retraining, calibration-only composition study on the exact local C/D/E checkpoints already saved by the completed V17 spatial-structure experiment. Do not create or train replacement checkpoints. This study must evaluate Structure 3 + Structure 1 + Structure 2 in the progressive order specified in V17_SPATIAL_COMPOSITION_DESIGN.md.
+
+READ FIRST
+1. V17_SPATIAL_COMPOSITION_DESIGN.md
+2. fhm_dapp_tim/fhm_dapp/msep_v17_spatial_composition_v1.py
+3. fhm_dapp_tim/fhm_dapp/msep_v17_spatial_structure_v1.py
+4. fhm_dapp_tim/fhm_dapp/msep_v17_spatial_operators_v1.py
+5. fhm_dapp_tim/evidence/v17_spatial_structure_v1/RUN_REPORT_V17_SPATIAL_STRUCTURE.md
+6. fhm_dapp_tim/evidence/v17_spatial_structure_v1/INTEGRITY_REVIEW.json
+7. fhm_dapp_tim/evidence/v17_spatial_structure_v1/PHASE_T_INTEGRITY_REVIEW.json
+8. tests/test_msep_v17_spatial_composition_v1.py
+9. tests/test_msep_v17_spatial_operators_v1.py
+10. tests/test_msep_v17_spatial_structure_v1.py
+
+NON-NEGOTIABLE SCIENTIFIC RULES
+- No retraining, optimizer creation/steps, checkpoint writes, checkpoint substitutions, or architecture changes.
+- Existing C/D/E checkpoint paths must exist locally:
+  fhm_dapp_tim/evidence/v17_spatial_structure_v1/trained/<dataset>_seed<seed>/{C,D,E}/best_dev_epoch_21_80.pt
+- Source/split root:
+  fhm_dapp_tim/evidence/v17_two_stage_freeze_v1
+- Checkpoint root:
+  fhm_dapp_tim/evidence/v17_spatial_structure_v1
+- Output root:
+  fhm_dapp_tim/evidence/v17_spatial_composition_v1
+- Datasets: tuji, uts, uji. Seeds: 17301, 17302, 17303. Backbones: C, D, E. Expected total: 27 run folders.
+- Do not load, pack, predict, score, select on, or inspect TEST labels. Internal TEST and official TEST score counts must remain exactly zero.
+- CAL-fit selects every parameter. CAL-eval is scored only after CAL_FIT_SELECTION.json and CAL_EVAL.lock are written.
+- Preserve old source files, prior results, checkpoints, and hashes. Do not delete incomplete artifacts; fail closed and report exact paths if an integrity gate fails.
+- Do not run Git commands, commit, push, or upload anything. The user handles repository publication.
+
+METHODS PER CHECKPOINT
+1. joint_calibrated_base: clean T/theta calibration.
+2. 1A_global: prior-only graph diffusion; alpha_obs fixed to zero.
+3. 1D_global: separately selected prior and observation diffusion.
+4. 2A: compact N+E Cell LSE using the beta selected by 2B and gamma_space=0.
+5. 2B: compact N+E Cell LSE with beta/gamma_space selected on CAL-fit.
+6. 2A_beta_only_control: best gamma-zero beta-only control.
+7. combo_1A_2A, combo_1A_2B, combo_1A_2A_beta_only_control.
+8. combo_1D_2A, combo_1D_2B, combo_1D_2A_beta_only_control.
+
+Composition order must be exact:
+- Fit clean T/theta on CAL-fit.
+- Select 1A/1D alpha on CAL-fit and freeze those values.
+- Select standalone 2A/2B beta/gamma on CAL-fit.
+- For each combo, freeze the corresponding S1 alpha selected by its S1-only CAL-fit fit, then select beta/gamma conditional on the diffused physical-parent logits on CAL-fit.
+- At inference, apply S1 to physical parent prior/observation channels first, then use those parent logits with the normal S2 virtual logits in compact Cell LSE.
+- Virtual retrieval scores must use the existing interpolated neural key + FIT-only RSS-prototype distance law. Do not replace virtual logits with the average of endpoint complete logits.
+- For E checkpoints, retain the saved training-time graph layer and alpha. Post-hoc S1 is an additional inference-time operator and must be recorded as such.
+- Use global normalization for 1A_global/1D_global.
+- Use the existing site-equal objective: joint BF-XY NLL + 0.30 component-center transport risk, with the existing deterministic grids and tie-breaks.
+- Use the same CAL-eval rows and seed+900 Energy Score Monte Carlo seed across all methods in a run.
+- Report MAE, ES, joint NLL, BF accuracy, P95/P99, worst-site MAE, paired site deltas, seed means/sample SD, selected parameters, and checkpoint/source/split hashes. Preserve negative results.
+
+PRE-RUN TESTS
+From repository root, run:
+python -m pytest -q tests/test_msep_v17_spatial_operators_v1.py tests/test_msep_v17_spatial_structure_v1.py tests/test_msep_v17_spatial_composition_v1.py
+
+Review every failure. Fix only the new composition implementation/tests unless a concrete existing operator defect is demonstrated. Do not bypass or weaken a failed invariant. Before execution, confirm the runner contains no optimizer/training path.
+
+EXECUTION
+Run the complete pipeline:
+python -m fhm_dapp_tim.fhm_dapp.msep_v17_spatial_composition_v1 all --input-root fhm_dapp_tim/evidence/v17_two_stage_freeze_v1 --checkpoint-root fhm_dapp_tim/evidence/v17_spatial_structure_v1 --output fhm_dapp_tim/evidence/v17_spatial_composition_v1 --device cuda
+
+If CUDA is unavailable, rerun explicitly with --device cpu. Do not silently change device.
+
+If the pipeline is interrupted:
+- Preserve all logs and partial artifacts.
+- Re-run only if the existing CAL-fit selection and CAL-eval lock are consistent with the exact checkpoint and split hashes. The runner supports resuming a locked run when CAL_FIT_SELECTION.json and CAL_EVAL.lock exist but RESULT.json is absent.
+- If a run folder exists without both selection and lock, do not delete it or silently rebuild over it; stop and report the exact path and failure.
+
+POST-RUN GATES
+1. Confirm 27/27 run results, each with exactly 12 methods.
+2. Confirm every CAL_EVAL.lock binds the matching selection SHA256, checkpoint SHA256, CAL-fit/CAL-eval site-key hashes, and zero TEST-score counts.
+3. Confirm INTEGRITY_REVIEW.json says PASS; source/checkpoint hashes match the manifest.
+4. Confirm outputs exist:
+   EXECUTION_MANIFEST.json
+   runs/<dataset>_seed<seed>/<C|D|E>/{RUN.lock,CAL_FIT_SELECTION.json,CAL_EVAL.lock,RESULT.json,SITE_DIAGNOSTICS.json}
+   RUN_LEVEL_METRICS.csv
+   AGGREGATE_SUMMARY.csv
+   PAIRED_DELTAS.csv
+   SITE_DELTAS_ALL_RUNS.csv
+   INTEGRITY_REVIEW.json
+   RUN_REPORT_V17_SPATIAL_COMPOSITION.md
+5. Confirm no checkpoint file was created or modified and no training/optimizer step was executed.
+6. Do not commit, push, or upload results.
+
+FINAL RESPONSE
+Summarize test status, exact run counts, integrity status, output paths, and any blockers. Do not make a scientific winner claim before the result artifacts are reviewed. If any gate fails, state the failure and preserve the artifacts rather than patching around it.
