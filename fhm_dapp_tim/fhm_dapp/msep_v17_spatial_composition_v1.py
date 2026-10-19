@@ -181,6 +181,8 @@ def preflight(args):
         raise RuntimeError("existing Phase-T audit is not a complete PASS; fail closed")
     # This replays the existing study's frozen-input, split, result, and site reductions.
     recomputed_phase_t = s3.audit_results(checkpoint_root, phase="T", require_complete=True, write=False)
+    if saved_phase_t.get("artifact_sha256") != recomputed_phase_t.get("artifact_sha256"):
+        raise RuntimeError("saved Phase-T integrity hashes differ from a fresh read-only audit")
     phase_t_hashes = recomputed_phase_t["artifact_sha256"]
     source_hashes = _source_hashes()
     checkpoints, splits = {}, {}
@@ -239,7 +241,7 @@ def preflight(args):
     manifest_path = output_root / "EXECUTION_MANIFEST.json"
     if manifest_path.is_file():
         existing = s3.read_json(manifest_path)
-        for field in ("status", "input_root", "checkpoint_root", "output_root", "source_sha256", "checkpoint_sha256", "splits"):
+        for field in ("status", "input_root", "checkpoint_root", "output_root", "source_sha256", "checkpoint_sha256", "phase_t_integrity_review_sha256", "splits"):
             if existing.get(field) != manifest.get(field):
                 raise RuntimeError(f"existing composition manifest differs in {field}; use a fresh output root")
         emit("preflight_reused", output=str(output_root), existing_runs=len(list((output_root / "runs").glob("*/*/RESULT.json"))) if (output_root / "runs").exists() else 0)
