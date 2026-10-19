@@ -16,6 +16,11 @@ Evaluate whether the three already implemented structures compose beneficially w
 
 The original source, training checkpoints, Phase-F/Phase-T evidence, and existing operators are read-only.
 
+## Interpretation correction carried forward
+
+Structure 1 is not summarized by the shared-alpha 1C arm. The primary arms here are 1A_global and 1D_global. In the existing Phase-F aggregate, both arms improve ES and joint NLL versus clean joint calibration in all six dataset × backbone groups. The same-floor UJI group reaches MAE 7.34598 m (baseline 7.42044 m) and BF accuracy 96.8134%; the same-floor UTS group reaches MAE 3.94558 m (baseline 3.94772 m) and P95 8.86886 m. TUJI MAE does not improve in every group, so the evidence supports a strong probabilistic-distribution benefit and selected MAE wins, not universal MAE dominance. The combination study therefore retains S1 as a primary candidate and tests it on C/D/E rather than discarding it based on 1C.
+
+
 ## Four progressive comparison groups
 
 For every dataset × seed × C/D/E checkpoint:
