@@ -168,6 +168,9 @@ def preflight(args):
     output_root = Path(args.output).resolve()
     if not (input_root / "INTEGRITY_REVIEW.json").is_file():
         raise FileNotFoundError(f"source integrity review missing under {input_root}")
+    input_review = s3.read_json(input_root / "INTEGRITY_REVIEW.json")
+    if input_review.get("status") != "PASS":
+        raise RuntimeError("source/split root integrity review is not PASS; fail closed")
     if not (checkpoint_root / "EXECUTION_MANIFEST.json").is_file():
         raise FileNotFoundError(f"spatial execution manifest missing under {checkpoint_root}")
     phase_t_review_path = checkpoint_root / "PHASE_T_INTEGRITY_REVIEW.json"
@@ -236,7 +239,7 @@ def preflight(args):
     manifest_path = output_root / "EXECUTION_MANIFEST.json"
     if manifest_path.is_file():
         existing = s3.read_json(manifest_path)
-        for field in ("input_root", "checkpoint_root", "source_sha256", "checkpoint_sha256", "splits"):
+        for field in ("status", "input_root", "checkpoint_root", "output_root", "source_sha256", "checkpoint_sha256", "splits"):
             if existing.get(field) != manifest.get(field):
                 raise RuntimeError(f"existing composition manifest differs in {field}; use a fresh output root")
         emit("preflight_reused", output=str(output_root), existing_runs=len(list((output_root / "runs").glob("*/*/RESULT.json"))) if (output_root / "runs").exists() else 0)
@@ -679,6 +682,14 @@ def run(args):
     if not manifest_path.is_file():
         raise FileNotFoundError("run requires a successful preflight; EXECUTION_MANIFEST.json is missing")
     manifest = s3.read_json(manifest_path)
+    if manifest.get("status") != "PASS":
+        raise RuntimeError("composition preflight manifest is not PASS")
+    if Path(args.input_root).resolve() != Path(manifest["input_root"]):
+        raise RuntimeError("input-root differs from the preflight-locked source root")
+    if Path(args.checkpoint_root).resolve() != Path(manifest["checkpoint_root"]):
+        raise RuntimeError("checkpoint-root differs from the preflight-locked checkpoint root")
+    if output_root != Path(manifest["output_root"]):
+        raise RuntimeError("output root differs from the preflight-locked output root")
     _verify_source_manifest(manifest)
     for relative, expected in manifest["checkpoint_sha256"].items():
         if s3.sha(Path(args.checkpoint_root).resolve() / relative) != expected:
@@ -729,17 +740,40 @@ def audit_results(root, *, require_complete=True, write=False):
         raise RuntimeError(f"composition study incomplete: {len(paths)}/{expected} run results")
     max_reduction_error = 0.0
     expected_method_set = set(METHOD_NAMES)
+    manifest_path = root / "EXECUTION_MANIFEST.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"composition execution manifest missing: {manifest_path}")
+    manifest = s3.read_json(manifest_path)
+    if manifest.get("status") != "PASS":
+        raise RuntimeError("composition execution manifest is not PASS")
     for path in paths:
         result = s3.read_json(path)
         diagnostics = s3.read_json(path.with_name("SITE_DIAGNOSTICS.json"))
         lock = s3.read_json(path.with_name("CAL_EVAL.lock"))
         selection = s3.read_json(path.with_name("CAL_FIT_SELECTION.json"))
+        run_lock = s3.read_json(path.with_name("RUN.lock"))
         assert result["evaluation_role"] == "CAL-eval" and result["selection_role"] == "CAL-fit"
         assert selection["selection_role"] == "CAL-fit" and selection["cal_eval_not_used_for_selection"] is True
+        assert (selection["dataset"], selection["seed"], selection["backbone"]) == (
+            result["dataset"], result["seed"], result["backbone"]
+        )
         assert lock["selection_sha256"] == s3.sha(path.with_name("CAL_FIT_SELECTION.json"))
         assert result["selection_sha256"] == lock["selection_sha256"]
-        assert result["checkpoint_sha256"] == lock["checkpoint_sha256"]
-        assert all(result.get(key) == 0 and lock.get(key) == 0 for key in TEST_COUNTS)
+        assert result["checkpoint_sha256"] == lock["checkpoint_sha256"] == selection["checkpoint_sha256"]
+        assert lock["selection_frozen_before_cal_eval"] is True
+        assert lock["cal_fit_key_sha256"] == result["cal_fit_key_sha256"]
+        assert lock["cal_eval_key_sha256"] == result["cal_eval_key_sha256"]
+        assert run_lock["checkpoint_sha256"] == result["checkpoint_sha256"]
+        assert run_lock["selected_epoch"] == result["selected_epoch"]
+        assert run_lock["cal_fit_key_sha256"] == result["cal_fit_key_sha256"]
+        assert run_lock["cal_eval_key_sha256"] == result["cal_eval_key_sha256"]
+        assert all(result.get(key) == 0 and lock.get(key) == 0 and run_lock.get(key) == 0 for key in TEST_COUNTS)
+        relative_checkpoint = result["checkpoint_relpath"]
+        if manifest["checkpoint_sha256"].get(relative_checkpoint) != result["checkpoint_sha256"]:
+            raise RuntimeError(f"result checkpoint SHA differs from preflight manifest: {path}")
+        actual_checkpoint = Path(manifest["checkpoint_root"]) / relative_checkpoint
+        if not actual_checkpoint.is_file() or s3.sha(actual_checkpoint) != result["checkpoint_sha256"]:
+            raise RuntimeError(f"frozen checkpoint changed after scoring: {actual_checkpoint}")
         assert result["retraining_performed"] is False and result["optimizer_steps"] == 0
         assert set(result["methods"]) == expected_method_set and set(diagnostics) == expected_method_set
         for name, entry in result["methods"].items():
