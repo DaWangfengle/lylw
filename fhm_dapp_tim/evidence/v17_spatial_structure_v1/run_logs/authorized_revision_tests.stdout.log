@@ -1,0 +1,19 @@
+..E...............................................                       [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_authorized_resume_uses_saved_selection_and_never_refits _
+
+self = WindowsPath('D:/liuyanlunwen/fhm_dapp_tim/evidence/v17_spatial_structure_v1/pytest_tmp/authorized_revision')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_spatial_structure_v1\\pytest_tmp\\authorized_revision'
+
+D:\miniminiconda\envs\liuyan\Lib\pathlib.py:1311: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR tests/test_msep_v17_spatial_resume_v1.py::test_authorized_resume_uses_saved_selection_and_never_refits
+49 passed, 1 error in 9.75s

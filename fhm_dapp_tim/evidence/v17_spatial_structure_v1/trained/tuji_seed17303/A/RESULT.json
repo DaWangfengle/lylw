@@ -1,0 +1,47 @@
+{
+  "phase": "T",
+  "dataset": "tuji",
+  "seed": 17303,
+  "backbone": "A",
+  "selected_epoch": 80,
+  "checkpoint": {
+    "reused": true,
+    "path": "fhm_dapp_tim\\evidence\\v17_two_stage_freeze_v1\\tuji_seed17303\\same_floor_neighbors_best_dev_epoch_21_80.pt",
+    "sha256": "7d09edf51286acd56866c35da32984439ee44951f331493890d20abd738e3b95",
+    "source_config_split_epoch_verified": true,
+    "new_optimizer_updates": 0
+  },
+  "epochs": 80,
+  "batch": 64,
+  "methods": {
+    "A": {
+      "params": {
+        "temperature": 1.0,
+        "theta": [
+          0.0,
+          0.0
+        ],
+        "alpha": 0.0
+      },
+      "metrics": {
+        "macro_mae_full_m": 2.2607245445251465,
+        "macro_mae_predicted_bf_m": 2.2607245445251465,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 3.7966547071933743,
+        "macro_es_m": 1.6168628347956615,
+        "macro_joint_nll": 4.452310437741487,
+        "macro_transport_risk_m": 4.651238296342933,
+        "site_p99_full_m": 4.259390988349913,
+        "worst_site_mae_m": 4.511550092697144,
+        "n_sites": 46,
+        "n_scans": 234
+      }
+    }
+  },
+  "calibration_performed": false,
+  "evaluation_role": "CAL-eval",
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "elapsed_seconds": 2.7810969999991357
+}

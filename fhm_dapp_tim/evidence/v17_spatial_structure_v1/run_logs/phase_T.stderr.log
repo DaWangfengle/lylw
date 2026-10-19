@@ -1,0 +1,3 @@
+D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py:820: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  "alpha": float(model.raw_alpha.sigmoid()) if arm == "E" else None}, source)

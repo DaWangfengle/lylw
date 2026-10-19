@@ -1,0 +1,46 @@
+{
+  "phase": "T",
+  "dataset": "uji",
+  "seed": 17302,
+  "backbone": "C",
+  "selected_epoch": 45,
+  "checkpoint": {
+    "reused": false,
+    "path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_spatial_structure_v1\\trained\\uji_seed17302\\C\\best_dev_epoch_21_80.pt",
+    "sha256": "ecbf6d20c0159421f3ce59d681908f959d142d783ebae54a48516aefff13444d",
+    "new_optimizer_updates": 18080
+  },
+  "epochs": 80,
+  "batch": 64,
+  "methods": {
+    "C": {
+      "params": {
+        "temperature": 1.0,
+        "theta": [
+          0.0,
+          0.0
+        ],
+        "alpha": 0.0
+      },
+      "metrics": {
+        "macro_mae_full_m": 7.429254531860352,
+        "macro_mae_predicted_bf_m": 7.264591693878174,
+        "macro_bf_accuracy": 0.9560760259628296,
+        "row_bf_accuracy": 0.9586507081985474,
+        "site_p95_full_m": 16.74228632998845,
+        "macro_es_m": 5.927372444759715,
+        "macro_joint_nll": 14.41139787977392,
+        "macro_transport_risk_m": 11.200572929599069,
+        "site_p99_full_m": 19.92978103046616,
+        "worst_site_mae_m": 21.241238474845886,
+        "n_sites": 44,
+        "n_scans": 919
+      }
+    }
+  },
+  "calibration_performed": false,
+  "evaluation_role": "CAL-eval",
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "elapsed_seconds": 803.100128500002
+}

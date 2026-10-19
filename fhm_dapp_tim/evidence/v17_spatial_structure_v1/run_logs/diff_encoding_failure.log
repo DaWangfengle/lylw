@@ -1,0 +1,1 @@
+Auxiliary diff rendering failed before writing diff: UnicodeDecodeError: gbk codec cannot decode byte 0xaf in position 53981. Corrected read_text(encoding=utf-8); no scientific execution affected.

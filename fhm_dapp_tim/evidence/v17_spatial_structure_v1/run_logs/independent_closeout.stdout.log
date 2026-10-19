@@ -1,0 +1,1 @@
+{"status": "PASS_WITH_DISCLOSED_CROSS_PHASE_DIFFERENCES", "mandatory_protocol_audits_status": "PASS", "phase_counts": {"F": 18, "T": 45}, "run_rows": 405, "summary_rows": 135, "paired_site_rows": 20034, "maximum_loss_composition_error": 3.098806402590526e-07}

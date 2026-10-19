@@ -1,0 +1,2 @@
+﻿dataset,seed,arm,policy,epoch,checkpoint_sha256
+tuji,17301,D,best_dev_epoch_21_80,63,08f26213c2d6e84ebe0b4462660f445b3ffd3c458aea39426771786e9dda8821

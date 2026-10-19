@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py", line 980, in <module>
+    main()
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py", line 976, in main
+    globals()[args.command](args)
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py", line 190, in preflight
+    records[f"{dataset}_seed{seed}"]["FIT_only_smoke"] = fit_smoke(
+                                                         ^^^^^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py", line 229, in fit_smoke
+    pack = make_pack(ctx, ctx["initial"], rows[:8], virtual_gamma=.2)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\miniminiconda\envs\liuyan\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py", line 365, in make_pack
+    assert torch.equal(expanded_z[:, :n], z), "virtual evidence altered parent features"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: virtual evidence altered parent features

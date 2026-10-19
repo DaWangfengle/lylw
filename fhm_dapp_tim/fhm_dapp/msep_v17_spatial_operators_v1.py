@@ -272,24 +272,32 @@ def g13_continuous_field_features(
         raise ValueError("G13 means/variances must be finite and variances positive")
 
     detected = x > -0.999
-    vis = torch.where(detected[:, None, :], pi.log()[None, :, :],
-                      torch.log1p(-pi)[None, :, :]).mean(dim=2)
-    diff = (x[:, None, :] - mu[None, :, :]).square() / (4.0 * var[None, :, :])
-    log_strength = -2.5 * torch.log1p(diff) - 0.5 * var.log()[None, :, :]
-    strength = (detected[:, None, :].to(x.dtype) * log_strength).sum(dim=2)
-    strength = strength / detected.sum(dim=1).clamp_min(1).to(x.dtype)[:, None]
-    strength = torch.where(detected.any(dim=1)[:, None], strength, torch.zeros_like(strength))
 
-    def stabilize_against_physical(value: torch.Tensor) -> torch.Tensor:
-        reference = value[:, :n_physical]
+    def raw_channels(p: torch.Tensor, m: torch.Tensor, v: torch.Tensor):
+        vis = torch.where(detected[:, None, :], p.log()[None, :, :],
+                          torch.log1p(-p)[None, :, :]).mean(dim=2)
+        diff = (x[:, None, :] - m[None, :, :]).square() / (4.0 * v[None, :, :])
+        log_strength = -2.5 * torch.log1p(diff) - 0.5 * v.log()[None, :, :]
+        strength = (detected[:, None, :].to(x.dtype) * log_strength).sum(dim=2)
+        strength = strength / detected.sum(dim=1).clamp_min(1).to(x.dtype)[:, None]
+        strength = torch.where(detected.any(dim=1)[:, None], strength, torch.zeros_like(strength))
+        return vis, strength
+
+    # Keep the physical reduction shape fixed. CUDA reduction/vectorization can
+    # otherwise change parent rounding when a virtual suffix changes row stride.
+    # Virtual channels still use exactly the same physical-reference constants.
+    physical = raw_channels(pi[:n_physical], mu[:n_physical], var[:n_physical])
+    virtual = raw_channels(pi[n_physical:], mu[n_physical:], var[n_physical:]) if len(pi) > n_physical else None
+    physical_z, virtual_z = [], []
+    for channel, reference in enumerate(physical):
         mean = reference.mean(dim=1, keepdim=True)
         scale = torch.sqrt((reference - mean).square().mean(dim=1, keepdim=True) + 0.20**2)
-        return (value - mean) / scale
-
-    features = torch.stack((
-        stabilize_against_physical(vis),
-        stabilize_against_physical(strength),
-    ), dim=2)
+        physical_z.append((reference - mean) / scale)
+        if virtual is not None:
+            virtual_z.append((virtual[channel] - mean) / scale)
+    features = torch.stack(physical_z, dim=2)
+    if virtual is not None:
+        features = torch.cat((features, torch.stack(virtual_z, dim=2)), dim=1)
     if not torch.isfinite(features).all():
         raise RuntimeError("nonfinite G13 continuous-field evidence")
     return features

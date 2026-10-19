@@ -1,0 +1,9 @@
+.........................................                                [100%]
+============================== warnings summary ===============================
+tests/test_msep_v17_spatial_structure_v1.py::test_training_new_losses_reuse_one_encoder_forward_and_have_finite_gradients[E]
+  D:\liuyanlunwen\tests\test_msep_v17_spatial_structure_v1.py:78: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+    assert float(model.raw_alpha.sigmoid()) == pytest.approx(.1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+41 passed, 1 warning in 5.72s

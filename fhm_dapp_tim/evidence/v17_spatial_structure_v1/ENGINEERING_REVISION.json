@@ -1,0 +1,19 @@
+{
+  "original_manifest_sha256": "d1ed6e6bd32aa291fa50501b0d8767c8336baf9bf9a06ac165f849f6afc9a162",
+  "authorization_sha256": "a407173987dfe32cb303847564c3d5a409b6c5b9535b5b95b72f50134cc4d9a2",
+  "recorded_at": "2026-10-19T12:12:36.410320+08:00",
+  "source_changes": {
+    "fhm_dapp_tim/fhm_dapp/msep_v17_spatial_structure_v1.py": {
+      "before_sha256": "bbd81618625a39a515beffb3926355586c740d444b2a9ec0249cb2eae9a425dc",
+      "after_sha256": "5c0e35af4944148e496663cc73692efde8a1ebe38b3956a394dba0172d151309"
+    }
+  },
+  "added_source_sha256": {
+    "tests/test_msep_v17_spatial_resume_v1.py": "1b125678a5649498a3deb04e30de29a6b67f458a2bcfcdd95734973df0921a42"
+  },
+  "diff_sha256": "82f11415eefa6c623c4f2d7a6c5ecc68a445974a6b8141915e7518034aef3aae",
+  "scientific_definition_changed": false,
+  "ES_sampler_only_change": "exclude globally zero-mass columns internally",
+  "control_changes": "explicit authorized continuation; preserve completed runs and locks; reuse frozen selection without refitting",
+  "no_models_grid_seed_tolerance_split_changes": true
+}

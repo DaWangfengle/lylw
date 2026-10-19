@@ -1,0 +1,192 @@
+--- fhm_dapp_tim\evidence\v17_spatial_structure_v1\run_logs\runner_before_authorized_es_fix.py
++++ fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py
+@@ -97,8 +97,23 @@
+ 
+ 
+ def freeze_guard(output):
+-    manifest = read_json(Path(output) / "EXECUTION_MANIFEST.json")
+-    verify_hashes(manifest["source_sha256"])
++    output = Path(output)
++    manifest_path = output / "EXECUTION_MANIFEST.json"
++    manifest = read_json(manifest_path)
++    expected = dict(manifest["source_sha256"])
++    revision_path = output / "ENGINEERING_REVISION.json"
++    if revision_path.is_file():
++        revision = read_json(revision_path)
++        assert revision["original_manifest_sha256"] == sha(manifest_path)
++        authorization_path = output / "USER_AUTHORIZATION_20261019.json"
++        assert revision["authorization_sha256"] == sha(authorization_path)
++        authorization = read_json(authorization_path)
++        verify_hashes(authorization["preserved_frozen_artifact_sha256"], output)
++        for name, change in revision["source_changes"].items():
++            assert expected[name] == change["before_sha256"]
++            expected[name] = change["after_sha256"]
++        expected.update(revision["added_source_sha256"])
++    verify_hashes(expected)
+     verify_hashes(manifest["input_sha256"])
+     verify_hashes(manifest["historical_sha256"], Path(manifest["input_root"]))
+     return manifest
+@@ -465,6 +480,20 @@
+                 sigma=torch.cat((scales, vscales), dim=1), ids=ids, cell_logits=cell_logits)
+ 
+ 
++def zero_mass_safe_energy_score(weights, centers, scales, target, *, draws=32, seed=19602):
++    """Exclude globally zero-mass columns inside sampling; retain the full law.
++
++    Appended zero columns can change CUDA float32 cumsum rounding and sampled
++    component IDs. Positive weights, centers/scales and RNG streams are unchanged.
++    """
++    assert torch.isfinite(weights).all() and (weights >= 0).all()
++    active = (weights > 0).any(dim=0)
++    assert active.any()
++    if not bool(active.all()):
++        weights, centers, scales = weights[:, active], centers[:, active], scales[:, active]
++    return energy_score_mc(weights, centers, scales, target, draws=draws, seed=seed)
++
++
+ @torch.no_grad()
+ def score_mixture(pack, ctx, q, *, centers=None, scales=None, ids=None, seed):
+     centers = pack["xy"] if centers is None else centers
+@@ -476,7 +505,7 @@
+                                    ctx["classes"], ctx["class_pairs"], keys=pack["keys"])
+     nll = op.joint_bf_xy_nll(q, ids, centers, scales, pack["target"], pack["building"], pack["floor"],
+                             ctx["memory"]["building"], ctx["memory"]["floor"])
+-    es = energy_score_mc(q, centers, scales, pack["target"], draws=32, seed=seed)
++    es = zero_mass_safe_energy_score(q, centers, scales, pack["target"], draws=32, seed=seed)
+     risk = op.component_center_transport_risk(q, centers, pack["target"])
+     rows = {"mae_full_m": np.asarray(row["err_full"]),
+             "mae_predicted_bf_m": np.asarray(row["err_predicted_bf"]),
+@@ -555,44 +584,62 @@
+ 
+ 
+ @torch.no_grad()
+-def frozen_one(args, dataset, seed, variant):
++def frozen_one(args, dataset, seed, variant, *, resume=False):
+     output = Path(args.output).resolve() / "frozen" / f"{dataset}_seed{seed}" / variant
+-    output.mkdir(parents=True, exist_ok=False)
+     started = time.perf_counter()
+-    write_json(output / "FROZEN_RUN.lock", {"dataset": dataset, "seed": seed, "variant": variant,
+-               "checkpoint_sha256": sha(checkpoint(args.root, dataset, seed, variant)), **TEST_COUNTS})
++    if resume:
++        assert (output / "FROZEN_RUN.lock").is_file() and (output / "CAL_EVAL.lock").is_file()
++        assert not (output / "RESULT.json").exists() and not (output / "SITE_DIAGNOSTICS.json").exists()
++        write_json(output / "AUTHORIZED_RESUME.lock", {
++            "authorization_sha256": sha(Path(args.output) / "USER_AUTHORIZATION_20261019.json"),
++            "selection_sha256": sha(output / "CAL_FIT_SELECTION.json"),
++            "original_locks_preserved": True, "refit_performed": False, **TEST_COUNTS})
++    else:
++        output.mkdir(parents=True, exist_ok=False)
++        write_json(output / "FROZEN_RUN.lock", {"dataset": dataset, "seed": seed, "variant": variant,
++                   "checkpoint_sha256": sha(checkpoint(args.root, dataset, seed, variant)), **TEST_COUNTS})
+     ctx = reconstruct(dataset, seed, args.root, torch.device(args.device))
+     ckpt = torch.load(checkpoint(args.root, dataset, seed, variant), map_location=args.device, weights_only=False)
+     model = ctx["initial"]
+     model.load_state_dict(ckpt["state_dict"], strict=True)
+     model.eval()
+-    fit = make_pack(ctx, model, ctx["cal_fit"], virtual_gamma=0.)
+-    clean, grid, cal_objective = grid_calibrate(fit, ctx)
+-    emit("clean_calibration", dataset=dataset, seed=seed, variant=variant,
+-         params=clean, objective=cal_objective, grid_count=len(grid))
+-    s1, s1tables = select_s1(fit, ctx, clean)
+-    table2 = []
+-    for gamma in GAMMAS:
+-        pack = fit if gamma == 0. else make_pack(ctx, model, ctx["cal_fit"], virtual_gamma=gamma)
+-        cache = objective_cache(pack, ctx, virtual=True)
+-        for beta in BETAS:
+-            cell = cell_for_pack(pack, ctx, clean, beta)
+-            value = float(objective_from_q(cell["q"], cache))
+-            assert math.isfinite(value), "nonfinite CAL-fit Cell LSE objective"
+-            table2.append({"beta": beta, "gamma_space": gamma, "objective": value})
+-        if pack is not fit:
+-            del pack
+-    best2 = min(table2, key=lambda r: (r["objective"], r["beta"], r["gamma_space"]))
+-    best0 = min((r for r in table2 if r["gamma_space"] == 0.), key=lambda r: (r["objective"], r["beta"]))
+-    selection = {"joint_calibrated_base": clean, "calibration_objective": cal_objective,
+-                 "calibration_grid": grid, "structure1": s1, "structure1_grids": s1tables,
+-                 "structure2_grid": table2, "2B": best2,
+-                 "2A": {"beta": best2["beta"], "gamma_space": 0.},
+-                 "2A_beta_only_control": best0, "selection_role": "CAL-fit",
+-                 "tie_break": "objective then lower T/theta; S1 lower alpha_prior/obs; S2 lower beta/gamma"}
+-    write_json(output / "CAL_FIT_SELECTION.json", selection)
+-    write_json(output / "CAL_EVAL.lock", {"selection_sha256": sha(output / "CAL_FIT_SELECTION.json"),
+-               "cal_eval_key_sha256": key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]), **TEST_COUNTS})
++    if resume:
++        selection = read_json(output / "CAL_FIT_SELECTION.json")
++        clean, s1, best2, best0 = (selection[k] for k in
++                                 ("joint_calibrated_base", "structure1", "2B", "2A_beta_only_control"))
++        lock = read_json(output / "CAL_EVAL.lock")
++        assert lock["selection_sha256"] == sha(output / "CAL_FIT_SELECTION.json")
++        assert lock["cal_eval_key_sha256"] == key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"])
++        emit("authorized_frozen_resume", dataset=dataset, seed=seed, variant=variant,
++             selection_sha256=lock["selection_sha256"], refit_performed=False)
++    else:
++        fit = make_pack(ctx, model, ctx["cal_fit"], virtual_gamma=0.)
++        clean, grid, cal_objective = grid_calibrate(fit, ctx)
++        emit("clean_calibration", dataset=dataset, seed=seed, variant=variant,
++             params=clean, objective=cal_objective, grid_count=len(grid))
++        s1, s1tables = select_s1(fit, ctx, clean)
++        table2 = []
++        for gamma in GAMMAS:
++            pack = fit if gamma == 0. else make_pack(ctx, model, ctx["cal_fit"], virtual_gamma=gamma)
++            cache = objective_cache(pack, ctx, virtual=True)
++            for beta in BETAS:
++                cell = cell_for_pack(pack, ctx, clean, beta)
++                value = float(objective_from_q(cell["q"], cache))
++                assert math.isfinite(value), "nonfinite CAL-fit Cell LSE objective"
++                table2.append({"beta": beta, "gamma_space": gamma, "objective": value})
++            if pack is not fit:
++                del pack
++        best2 = min(table2, key=lambda r: (r["objective"], r["beta"], r["gamma_space"]))
++        best0 = min((r for r in table2 if r["gamma_space"] == 0.), key=lambda r: (r["objective"], r["beta"]))
++        selection = {"joint_calibrated_base": clean, "calibration_objective": cal_objective,
++                     "calibration_grid": grid, "structure1": s1, "structure1_grids": s1tables,
++                     "structure2_grid": table2, "2B": best2,
++                     "2A": {"beta": best2["beta"], "gamma_space": 0.},
++                     "2A_beta_only_control": best0, "selection_role": "CAL-fit",
++                     "tie_break": "objective then lower T/theta; S1 lower alpha_prior/obs; S2 lower beta/gamma"}
++        write_json(output / "CAL_FIT_SELECTION.json", selection)
++        write_json(output / "CAL_EVAL.lock", {"selection_sha256": sha(output / "CAL_FIT_SELECTION.json"),
++                   "cal_eval_key_sha256": key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]), **TEST_COUNTS})
+     # All choices are saved before building the reporting-only evaluation pack.
+     evaluation = make_pack(ctx, model, ctx["cal_eval"], virtual_gamma=0.)
+     results, diagnostics = {}, {}
+@@ -633,8 +680,8 @@
+         evaluation["target"], evaluation["building"], evaluation["floor"], model.anchor_buildings, model.anchor_floors)
+     expanded_nll = op.joint_bf_xy_nll(beta0["q"], beta0["ids"], beta0["xy"], beta0["sigma"],
+         evaluation["target"], evaluation["building"], evaluation["floor"], model.anchor_buildings, model.anchor_floors)
+-    parent_es = energy_score_mc(parent_q, evaluation["xy"], evaluation["sigma"], evaluation["target"], draws=32, seed=seed + 900)
+-    expanded_es = energy_score_mc(beta0["q"], beta0["xy"], beta0["sigma"], evaluation["target"], draws=32, seed=seed + 900)
++    parent_es = zero_mass_safe_energy_score(parent_q, evaluation["xy"], evaluation["sigma"], evaluation["target"], draws=32, seed=seed + 900)
++    expanded_es = zero_mass_safe_energy_score(beta0["q"], beta0["xy"], beta0["sigma"], evaluation["target"], draws=32, seed=seed + 900)
+     assert torch.allclose(parent_nll, expanded_nll) and torch.allclose(parent_es, expanded_es), "beta=0 metric identity failed"
+     for name, chosen in (("2A", selection["2A"]), ("2B", best2), ("2A_beta_only_control", best0)):
+         p = evaluation if chosen["gamma_space"] == 0. else make_pack(ctx, model, ctx["cal_eval"], virtual_gamma=chosen["gamma_space"])
+@@ -669,7 +716,18 @@
+     for dataset in DATASETS:
+         for seed in SEEDS:
+             for variant in VARIANTS.values():
+-                frozen_one(args, dataset, seed, variant)
++                folder = Path(args.output) / "frozen" / f"{dataset}_seed{seed}" / variant
++                if getattr(args, "resume_authorized", False) and folder.exists():
++                    if (folder / "RESULT.json").is_file():
++                        result = read_json(folder / "RESULT.json")
++                        assert (result["dataset"], result["seed"], result["backbone"]) == (dataset, seed, variant)
++                        assert result["checkpoint_sha256"] == sha(checkpoint(args.root, dataset, seed, variant))
++                        assert result["selection_sha256"] == sha(folder / "CAL_FIT_SELECTION.json")
++                        emit("preserved_completed_frozen_run", dataset=dataset, seed=seed, variant=variant)
++                        continue
++                    frozen_one(args, dataset, seed, variant, resume=True)
++                else:
++                    frozen_one(args, dataset, seed, variant)
+                 if torch.cuda.is_available():
+                     torch.cuda.empty_cache()
+     # Read-only numerical audit is mandatory before Phase T.
+@@ -962,6 +1020,8 @@
+         p.add_argument("--root", default=str(DEFAULT_INPUT))
+         p.add_argument("--output", default=str(DEFAULT_OUTPUT))
+         p.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
++        if name == "frozen":
++            p.add_argument("--resume-authorized", action="store_true")
+     p = sub.add_parser("aggregate")
+     p.add_argument("--root", default=str(DEFAULT_OUTPUT))
+     args = parser.parse_args()

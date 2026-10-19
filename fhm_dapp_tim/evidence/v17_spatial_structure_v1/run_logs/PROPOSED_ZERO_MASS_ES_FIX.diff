@@ -1,0 +1,45 @@
+--- fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py
++++ fhm_dapp_tim\fhm_dapp\msep_v17_spatial_structure_v1.py (PROPOSED ONLY)
+@@ -465,6 +465,22 @@
+                 sigma=torch.cat((scales, vscales), dim=1), ids=ids, cell_logits=cell_logits)
+ 
+ 
++def zero_mass_safe_energy_score(weights, centers, scales, target, *, draws=32, seed=19602):
++    """Ignore globally zero-mass components only inside the Monte Carlo sampler.
++
++    No positive probability, component parameter, random stream or predictive law
++    is changed. Inputs retain the required compact N+E representation. CUDA's
++    float32 cumsum can otherwise change physical CDF rounding when zero columns
++    are appended; this can flip a discrete sampled ID under common uniforms.
++    """
++    assert torch.isfinite(weights).all() and (weights >= 0).all()
++    active = (weights > 0).any(dim=0)
++    assert active.any()
++    if not bool(active.all()):
++        weights, centers, scales = weights[:, active], centers[:, active], scales[:, active]
++    return energy_score_mc(weights, centers, scales, target, draws=draws, seed=seed)
++
++
+ @torch.no_grad()
+ def score_mixture(pack, ctx, q, *, centers=None, scales=None, ids=None, seed):
+     centers = pack["xy"] if centers is None else centers
+@@ -476,7 +492,7 @@
+                                    ctx["classes"], ctx["class_pairs"], keys=pack["keys"])
+     nll = op.joint_bf_xy_nll(q, ids, centers, scales, pack["target"], pack["building"], pack["floor"],
+                             ctx["memory"]["building"], ctx["memory"]["floor"])
+-    es = energy_score_mc(q, centers, scales, pack["target"], draws=32, seed=seed)
++    es = zero_mass_safe_energy_score(q, centers, scales, pack["target"], draws=32, seed=seed)
+     risk = op.component_center_transport_risk(q, centers, pack["target"])
+     rows = {"mae_full_m": np.asarray(row["err_full"]),
+             "mae_predicted_bf_m": np.asarray(row["err_predicted_bf"]),
+@@ -633,8 +649,8 @@
+         evaluation["target"], evaluation["building"], evaluation["floor"], model.anchor_buildings, model.anchor_floors)
+     expanded_nll = op.joint_bf_xy_nll(beta0["q"], beta0["ids"], beta0["xy"], beta0["sigma"],
+         evaluation["target"], evaluation["building"], evaluation["floor"], model.anchor_buildings, model.anchor_floors)
+-    parent_es = energy_score_mc(parent_q, evaluation["xy"], evaluation["sigma"], evaluation["target"], draws=32, seed=seed + 900)
+-    expanded_es = energy_score_mc(beta0["q"], beta0["xy"], beta0["sigma"], evaluation["target"], draws=32, seed=seed + 900)
++    parent_es = zero_mass_safe_energy_score(parent_q, evaluation["xy"], evaluation["sigma"], evaluation["target"], draws=32, seed=seed + 900)
++    expanded_es = zero_mass_safe_energy_score(beta0["q"], beta0["xy"], beta0["sigma"], evaluation["target"], draws=32, seed=seed + 900)
+     assert torch.allclose(parent_nll, expanded_nll) and torch.allclose(parent_es, expanded_es), "beta=0 metric identity failed"
+     for name, chosen in (("2A", selection["2A"]), ("2B", best2), ("2A_beta_only_control", best0)):
+         p = evaluation if chosen["gamma_space"] == 0. else make_pack(ctx, model, ctx["cal_eval"], virtual_gamma=chosen["gamma_space"])

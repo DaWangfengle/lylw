@@ -1,0 +1,8 @@
+{
+  "dataset": "tuji",
+  "seed": 17301,
+  "variant": "same_floor_neighbors",
+  "checkpoint_sha256": "b56d44de062adf88f8b5e488a57d1719b30f0a9cb7ac1e5d2627b385dcd22e39",
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}

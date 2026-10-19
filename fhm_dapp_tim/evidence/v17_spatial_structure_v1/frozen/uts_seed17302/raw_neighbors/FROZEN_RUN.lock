@@ -1,0 +1,8 @@
+{
+  "dataset": "uts",
+  "seed": 17302,
+  "variant": "raw_neighbors",
+  "checkpoint_sha256": "388bd5bcf9a4123bf1a591b655a5edbe1f0117399be3259963082f451e721732",
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}

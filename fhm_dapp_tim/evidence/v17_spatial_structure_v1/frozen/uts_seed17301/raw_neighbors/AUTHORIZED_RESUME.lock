@@ -1,0 +1,8 @@
+{
+  "authorization_sha256": "a407173987dfe32cb303847564c3d5a409b6c5b9535b5b95b72f50134cc4d9a2",
+  "selection_sha256": "2b4db10a47dfe653be8fe62939768f485b638311d58f7cdde206ac3955aacaaf",
+  "original_locks_preserved": true,
+  "refit_performed": false,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}

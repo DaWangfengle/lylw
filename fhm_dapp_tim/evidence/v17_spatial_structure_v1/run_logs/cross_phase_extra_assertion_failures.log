@@ -1,0 +1,4 @@
+Auxiliary extra cross-phase read-only checks failed:
+1) AssertionError: ('tuji', 17301, 'O', 'energy_score_m', 0.007473587989807129)
+2) AssertionError while checking a new per-site 2e-5 point threshold; detailed differences are retained in CROSS_PHASE_OA_NUMERICAL_REVIEW.json.
+These extra cross-phase checks are not the protocol's within-F beta-zero invariants. No required scientific gate changed. No scores rerun or overwritten.

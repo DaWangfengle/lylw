@@ -1,0 +1,47 @@
+{
+  "phase": "T",
+  "dataset": "uji",
+  "seed": 17301,
+  "backbone": "A",
+  "selected_epoch": 38,
+  "checkpoint": {
+    "reused": true,
+    "path": "fhm_dapp_tim\\evidence\\v17_two_stage_freeze_v1\\uji_seed17301\\same_floor_neighbors_best_dev_epoch_21_80.pt",
+    "sha256": "0cadf15d10edd4dd515f156f3c124f9e141e3ec92cd5160bb83046851930c856",
+    "source_config_split_epoch_verified": true,
+    "new_optimizer_updates": 0
+  },
+  "epochs": 80,
+  "batch": 64,
+  "methods": {
+    "A": {
+      "params": {
+        "temperature": 1.0,
+        "theta": [
+          0.0,
+          0.0
+        ],
+        "alpha": 0.0
+      },
+      "metrics": {
+        "macro_mae_full_m": 7.682107448577881,
+        "macro_mae_predicted_bf_m": 7.894988536834717,
+        "macro_bf_accuracy": 0.9572755694389343,
+        "row_bf_accuracy": 0.9651795625686646,
+        "site_p95_full_m": 16.605474342107772,
+        "macro_es_m": 6.049973099069162,
+        "macro_joint_nll": 14.407089000398463,
+        "macro_transport_risk_m": 11.65578031539917,
+        "site_p99_full_m": 20.733313544392587,
+        "worst_site_mae_m": 21.92809573809306,
+        "n_sites": 44,
+        "n_scans": 919
+      }
+    }
+  },
+  "calibration_performed": false,
+  "evaluation_role": "CAL-eval",
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "elapsed_seconds": 3.82851970000047
+}

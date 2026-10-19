@@ -1,0 +1,26 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_cuda_appending_virtual_field_keeps_parent_features_bitwise_equal ____
+
+    @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA shape-dependent reduction regression")
+    def test_cuda_appending_virtual_field_keeps_parent_features_bitwise_equal():
+        rng = np.random.default_rng(791)
+        device = "cuda"
+        n, e, aps, batch = 646, 2946, 120, 8
+        x = torch.tensor(rng.uniform(-.9, .4, (batch, aps)), dtype=torch.float32, device=device)
+        x[:, ::3] = -1.
+        seen = torch.ones(aps, dtype=torch.bool, device=device)
+        pi = torch.tensor(rng.uniform(.05, .95, (n + e, aps)), dtype=torch.float32, device=device)
+        mu = torch.tensor(rng.uniform(-.8, .4, (n + e, aps)), dtype=torch.float32, device=device)
+        var = torch.tensor(rng.uniform(.0036, .5, (n + e, aps)), dtype=torch.float32, device=device)
+        parents = op.g13_continuous_field_features(x, seen, pi[:n], mu[:n], var[:n], n_physical=n)
+        expanded = op.g13_continuous_field_features(x, seen, pi, mu, var, n_physical=n)
+>       assert torch.equal(expanded[:, :n], parents)
+E       AssertionError: assert False
+E        +  where False = <built-in method equal of type object at 0x00007FFC62EDFA70>(tensor([[[-0.0425,  0.2636],\n         [-0.2281, -0.5288],\n         [ 0.0508, -0.3074],\n         ...,\n         [ 0.0664...         ...,\n         [ 0.0664,  0.1915],\n         [ 0.2239,  0.0213],\n         [ 0.2921,  0.1974]]], device='cuda:0'), tensor([[[-0.0425,  0.2636],\n         [-0.2281, -0.5288],\n         [ 0.0508, -0.3074],\n         ...,\n         [ 0.0664...         ...,\n         [ 0.0664,  0.1915],\n         [ 0.2239,  0.0213],\n         [ 0.2921,  0.1974]]], device='cuda:0'))
+E        +    where <built-in method equal of type object at 0x00007FFC62EDFA70> = torch.equal
+
+tests\test_msep_v17_spatial_structure_v1.py:176: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_msep_v17_spatial_structure_v1.py::test_cuda_appending_virtual_field_keeps_parent_features_bitwise_equal
+1 failed in 4.31s

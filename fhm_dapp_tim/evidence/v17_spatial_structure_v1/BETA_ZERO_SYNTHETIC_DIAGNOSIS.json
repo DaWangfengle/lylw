@@ -1,0 +1,15 @@
+{
+  "data": "purely synthetic; no CAL-eval or E5 inference",
+  "records": [
+    {
+      "synthetic_seed": 17,
+      "cdf_prefix_max_difference": 4.172325134277344e-07,
+      "es_max_difference": 0.14511680603027344,
+      "es_allclose": false,
+      "es_rows_different": 1,
+      "batch": 414,
+      "parents": 1052,
+      "zero_suffix": 5000
+    }
+  ]
+}

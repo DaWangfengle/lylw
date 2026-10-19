@@ -1,0 +1,321 @@
+{
+  "scope": "extra read-only cross-phase diagnostic, not the mandatory within-F beta=0 test",
+  "same_checkpoint_controls": 18,
+  "max_differences": {
+    "mae_full_m": 0.0006201863288879395,
+    "mae_predicted_bf_m": 0.0006046891212463379,
+    "energy_score_m": 0.0982663631439209,
+    "bf_accuracy": 0.0
+  },
+  "records": [
+    {
+      "dataset": "tuji",
+      "seed": 17301,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 1.5795230865478516e-06,
+        "mae_predicted_bf_m": 1.817941665649414e-06,
+        "energy_score_m": 0.007473587989807129,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 9.327263074218002e-08,
+        "mae_predicted_bf_m": 9.976759339201126e-08,
+        "energy_score_m": -0.00016244857207588527,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17301,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 1.3113021850585938e-06,
+        "mae_predicted_bf_m": 1.3113021850585938e-06,
+        "energy_score_m": 0.001348257064819336,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 1.1427462962855095e-07,
+        "mae_predicted_bf_m": 1.5445377517302847e-07,
+        "energy_score_m": -2.9287908388220746e-05,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17302,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 1.430511474609375e-06,
+        "mae_predicted_bf_m": 1.4255444207300627e-06,
+        "energy_score_m": 0.0018601417541503906,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 4.82074160518023e-08,
+        "mae_predicted_bf_m": 6.220694901222332e-08,
+        "energy_score_m": 4.040935765142026e-05,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17302,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 1.26411517431535e-06,
+        "mae_predicted_bf_m": 1.2874603267931661e-06,
+        "energy_score_m": 0.0018756985664367676,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 8.881308028138458e-08,
+        "mae_predicted_bf_m": 8.016392802466461e-08,
+        "energy_score_m": -4.07669855200726e-05,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17303,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 1.2695789335381846e-06,
+        "mae_predicted_bf_m": 1.597404479802833e-06,
+        "energy_score_m": 0.0644521713256836,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 1.0069081744960066e-07,
+        "mae_predicted_bf_m": 1.3445598489181737e-07,
+        "energy_score_m": 0.0014011458210323167,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17303,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 9.040037789453947e-07,
+        "mae_predicted_bf_m": 1.1424223580469572e-06,
+        "energy_score_m": 0.001861572265625,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 1.4372061994611553e-08,
+        "mae_predicted_bf_m": 4.245751146069804e-08,
+        "energy_score_m": -4.047803256822669e-05,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uts",
+      "seed": 17301,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 0.000118255615234375,
+        "mae_predicted_bf_m": 3.7670135498046875e-05,
+        "energy_score_m": 0.0648193359375,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 2.2662936946567216e-06,
+        "mae_predicted_bf_m": 8.937733748080335e-07,
+        "energy_score_m": 0.0012025971343551857,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uts",
+      "seed": 17301,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 9.393692016601562e-05,
+        "mae_predicted_bf_m": 9.322166442871094e-05,
+        "energy_score_m": 0.016889095306396484,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 2.886955463576868e-08,
+        "mae_predicted_bf_m": 9.114979565395065e-07,
+        "energy_score_m": -0.00028191787609155625,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uts",
+      "seed": 17302,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 4.57763671875e-05,
+        "mae_predicted_bf_m": 3.62396240234375e-05,
+        "energy_score_m": 0.0982663631439209,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 3.102568039153955e-06,
+        "mae_predicted_bf_m": 1.953450769395833e-06,
+        "energy_score_m": 0.0012528032496355581,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uts",
+      "seed": 17302,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 7.009506225585938e-05,
+        "mae_predicted_bf_m": 5.3942203521728516e-05,
+        "energy_score_m": 0.0002796649932861328,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": -1.7910686552237975e-07,
+        "mae_predicted_bf_m": -1.9743812650497222e-07,
+        "energy_score_m": 4.060026528178781e-06,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uts",
+      "seed": 17303,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 1.9629796346176676e-05,
+        "mae_predicted_bf_m": 3.0040740966796875e-05,
+        "energy_score_m": 0.007666587829589844,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": -4.504185652034991e-07,
+        "mae_predicted_bf_m": -3.306618059683969e-07,
+        "energy_score_m": 0.0002834088560463726,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uts",
+      "seed": 17303,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 3.24249267578125e-05,
+        "mae_predicted_bf_m": 4.00543212890625e-05,
+        "energy_score_m": 0.0015723705291748047,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 4.714562612528894e-07,
+        "mae_predicted_bf_m": 1.2410067354315097e-06,
+        "energy_score_m": 2.2774157316788383e-05,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uji",
+      "seed": 17301,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 8.490681648254395e-05,
+        "mae_predicted_bf_m": 0.00012311339378356934,
+        "energy_score_m": 0.007185935974121094,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 3.433615958760925e-06,
+        "mae_predicted_bf_m": 3.216773994601064e-06,
+        "energy_score_m": 0.000313634222204035,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uji",
+      "seed": 17301,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 0.0006201863288879395,
+        "mae_predicted_bf_m": 0.0006046891212463379,
+        "energy_score_m": 0.008490562438964844,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 1.4091276277000182e-05,
+        "mae_predicted_bf_m": 1.5184775070809458e-05,
+        "energy_score_m": -0.00021501562812111595,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uji",
+      "seed": 17302,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 5.7637691497802734e-05,
+        "mae_predicted_bf_m": 5.173683166503906e-05,
+        "energy_score_m": 0.04376506805419922,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 6.844687748404481e-07,
+        "mae_predicted_bf_m": -7.271842580465608e-07,
+        "energy_score_m": 0.001185243779962713,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uji",
+      "seed": 17302,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 0.00024309754371643066,
+        "mae_predicted_bf_m": 0.00027307868003845215,
+        "energy_score_m": 0.04210233688354492,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 5.74296531451569e-06,
+        "mae_predicted_bf_m": 6.729081978316322e-06,
+        "energy_score_m": -0.00087140906940807,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uji",
+      "seed": 17303,
+      "arm": "O",
+      "maximum_site_differences": {
+        "mae_full_m": 0.00021564960479736328,
+        "mae_predicted_bf_m": 0.00024323910474777222,
+        "energy_score_m": 0.06727409362792969,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": 5.122534936346563e-06,
+        "mae_predicted_bf_m": 4.871109905513709e-06,
+        "energy_score_m": -0.0015268759293989701,
+        "bf_accuracy": 0.0
+      }
+    },
+    {
+      "dataset": "uji",
+      "seed": 17303,
+      "arm": "A",
+      "maximum_site_differences": {
+        "mae_full_m": 7.845461368560791e-05,
+        "mae_predicted_bf_m": 6.514787673950195e-05,
+        "energy_score_m": 0.0008873939514160156,
+        "bf_accuracy": 0.0
+      },
+      "macro_differences": {
+        "mae_full_m": -1.189334156835965e-06,
+        "mae_predicted_bf_m": -2.1627667905073492e-07,
+        "energy_score_m": -2.017346295443448e-05,
+        "bf_accuracy": 0.0
+      }
+    }
+  ],
+  "no_model_inference_or_metric_overwrite": true,
+  "implementation_fact": "F inference blocks=8 with virtual pack; T inference blocks=32 without evidence. Common RNG seeds and canonical IDs are the same; finite-precision forward/CDF arithmetic need not match bitwise.",
+  "cause_limit": "Saved artifacts do not include q/center tensors; observed differences are documented without claiming a new E5 forward diagnosis."
+}

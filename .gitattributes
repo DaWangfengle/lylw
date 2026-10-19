@@ -172,3 +172,12 @@ fhm_dapp_tim/fhm_dapp/msep_v17_two_stage_freeze_v1.py -text
 tests/test_msep_v17_two_stage_freeze_v1.py -text
 V17_TWO_STAGE_FREEZE_CODEX_RUN.txt -text
 fhm_dapp_tim/evidence/v17_two_stage_freeze_v1/** -text
+
+# V17 spatial study: preserve exact frozen source and evidence SHA256.
+fhm_dapp_tim/fhm_dapp/msep_v17_spatial_operators_v1.py -text
+fhm_dapp_tim/fhm_dapp/msep_v17_spatial_structure_v1.py -text
+tests/test_msep_v17_spatial_operators_v1.py -text
+tests/test_msep_v17_spatial_structure_v1.py -text
+tests/test_msep_v17_spatial_resume_v1.py -text
+V17_SPATIAL_STRUCTURE_CODEX_RUN.txt -text
+fhm_dapp_tim/evidence/v17_spatial_structure_v1/** -text

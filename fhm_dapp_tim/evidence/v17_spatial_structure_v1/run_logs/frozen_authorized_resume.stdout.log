@@ -1,0 +1,31 @@
+{"stage": "preserved_completed_frozen_run", "dataset": "tuji", "seed": 17301, "variant": "raw_neighbors"}
+{"stage": "preserved_completed_frozen_run", "dataset": "tuji", "seed": 17301, "variant": "same_floor_neighbors"}
+{"stage": "preserved_completed_frozen_run", "dataset": "tuji", "seed": 17302, "variant": "raw_neighbors"}
+{"stage": "preserved_completed_frozen_run", "dataset": "tuji", "seed": 17302, "variant": "same_floor_neighbors"}
+{"stage": "preserved_completed_frozen_run", "dataset": "tuji", "seed": 17303, "variant": "raw_neighbors"}
+{"stage": "preserved_completed_frozen_run", "dataset": "tuji", "seed": 17303, "variant": "same_floor_neighbors"}
+{"stage": "authorized_frozen_resume", "dataset": "uts", "seed": 17301, "variant": "raw_neighbors", "selection_sha256": "2b4db10a47dfe653be8fe62939768f485b638311d58f7cdde206ac3955aacaaf", "refit_performed": false}
+{"stage": "frozen_complete", "dataset": "uts", "seed": 17301, "variant": "raw_neighbors", "elapsed_seconds": 5.281769699999131, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 7.994174003601074}}
+{"stage": "clean_calibration", "dataset": "uts", "seed": 17301, "variant": "same_floor_neighbors", "params": {"temperature": 0.9704945602939673, "theta": [1.5, 1.5]}, "objective": 12.365615844726562, "grid_count": 1750}
+{"stage": "frozen_complete", "dataset": "uts", "seed": 17301, "variant": "same_floor_neighbors", "elapsed_seconds": 18.970886700000847, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 7.569751739501953}}
+{"stage": "clean_calibration", "dataset": "uts", "seed": 17302, "variant": "raw_neighbors", "params": {"temperature": 0.8933474401087248, "theta": [1.5, 1.5]}, "objective": 12.625219345092773, "grid_count": 1750}
+{"stage": "frozen_complete", "dataset": "uts", "seed": 17302, "variant": "raw_neighbors", "elapsed_seconds": 19.24091159999807, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 7.752162456512451}}
+{"stage": "clean_calibration", "dataset": "uts", "seed": 17302, "variant": "same_floor_neighbors", "params": {"temperature": 0.8054795374885969, "theta": [1.5, 1.25]}, "objective": 12.267932891845703, "grid_count": 2170}
+{"stage": "frozen_complete", "dataset": "uts", "seed": 17302, "variant": "same_floor_neighbors", "elapsed_seconds": 19.16796730000351, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 7.517993927001953}}
+{"stage": "clean_calibration", "dataset": "uts", "seed": 17303, "variant": "raw_neighbors", "params": {"temperature": 0.8933474401087248, "theta": [1.5, 1.5]}, "objective": 12.76620101928711, "grid_count": 1750}
+{"stage": "frozen_complete", "dataset": "uts", "seed": 17303, "variant": "raw_neighbors", "elapsed_seconds": 19.043065600002592, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 7.8927717208862305}}
+{"stage": "clean_calibration", "dataset": "uts", "seed": 17303, "variant": "same_floor_neighbors", "params": {"temperature": 0.9215314530743932, "theta": [1.25, 1.375]}, "objective": 12.25442123413086, "grid_count": 1750}
+{"stage": "frozen_complete", "dataset": "uts", "seed": 17303, "variant": "same_floor_neighbors", "elapsed_seconds": 19.30938530000276, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 7.494498252868652}}
+{"stage": "clean_calibration", "dataset": "uji", "seed": 17301, "variant": "raw_neighbors", "params": {"temperature": 0.8660254037844386, "theta": [1.5, 0.5625]}, "objective": 17.608482360839844, "grid_count": 2170}
+{"stage": "frozen_complete", "dataset": "uji", "seed": 17301, "variant": "raw_neighbors", "elapsed_seconds": 25.715337900001032, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 13.93349552154541}}
+{"stage": "clean_calibration", "dataset": "uji", "seed": 17301, "variant": "same_floor_neighbors", "params": {"temperature": 0.8482765367941033, "theta": [1.5, 0.5625]}, "objective": 17.64990234375, "grid_count": 2170}
+{"stage": "frozen_complete", "dataset": "uji", "seed": 17301, "variant": "same_floor_neighbors", "elapsed_seconds": 28.00946479999402, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.01, "objective": 13.823511123657227}}
+{"stage": "clean_calibration", "dataset": "uji", "seed": 17302, "variant": "raw_neighbors", "params": {"temperature": 1.011531611649396, "theta": [1.5, 0.8125]}, "objective": 17.951499938964844, "grid_count": 2170}
+{"stage": "frozen_complete", "dataset": "uji", "seed": 17302, "variant": "raw_neighbors", "elapsed_seconds": 26.146808199999214, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 14.102289199829102}}
+{"stage": "clean_calibration", "dataset": "uji", "seed": 17302, "variant": "same_floor_neighbors", "params": {"temperature": 0.8054795374885969, "theta": [1.5, 0.5]}, "objective": 17.602783203125, "grid_count": 2170}
+{"stage": "frozen_complete", "dataset": "uji", "seed": 17302, "variant": "same_floor_neighbors", "elapsed_seconds": 25.9152854999993, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 13.907004356384277}}
+{"stage": "clean_calibration", "dataset": "uji", "seed": 17303, "variant": "raw_neighbors", "params": {"temperature": 0.9908006493089963, "theta": [1.5, 0.625]}, "objective": 18.024520874023438, "grid_count": 2170}
+{"stage": "frozen_complete", "dataset": "uji", "seed": 17303, "variant": "raw_neighbors", "elapsed_seconds": 26.126826799998526, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 14.120077133178711}}
+{"stage": "clean_calibration", "dataset": "uji", "seed": 17303, "variant": "same_floor_neighbors", "params": {"temperature": 0.9408130652357323, "theta": [1.5, 0.8125]}, "objective": 17.831884384155273, "grid_count": 2170}
+{"stage": "frozen_complete", "dataset": "uji", "seed": 17303, "variant": "same_floor_neighbors", "elapsed_seconds": 25.75322790000064, "methods": 20, "selected_2B": {"beta": 0.8, "gamma_space": 0.0, "objective": 14.052906036376953}}
+{"stage": "phase_audit_complete", "phase": "F", "completed": 18, "max_site_reduction_error": 1.7270027319327141e-06}

@@ -1,0 +1,8 @@
+{
+  "dataset": "uji",
+  "seed": 17301,
+  "variant": "raw_neighbors",
+  "checkpoint_sha256": "b7eebaa69d22d94b564f868cad31075eb494fbee0451407b80328c173438c103",
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}
