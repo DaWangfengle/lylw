@@ -191,8 +191,9 @@ def test_s1_delta_propagates_to_virtual_edges_and_preserves_s2_residual():
         diffused_parent, expected_virtual, edges, beta,
         pack["xy"], pack["sigma"], pack["virtual_xy"], pack["virtual_sigma"],
     )
-    for key in ("q", "cell_logits", "xy", "sigma", "ids"):
+    for key in ("q", "cell_logits", "xy", "sigma"):
         assert torch.allclose(actual[key], expected[key], atol=2e-6, rtol=2e-6)
+    assert torch.equal(actual["ids"], expected["ids"])
 
     unpropagated = composition.compose_cell_mixture(
         pack, ctx, clean_params, diffused_parent, beta
