@@ -25,7 +25,7 @@ Structure 1 is not summarized by the shared-alpha 1C arm. The primary arms here 
 
 For every dataset × seed × C/D/E checkpoint:
 
-1. S3 baseline: independently fit clean joint calibration (T, theta_visibility, theta_strength) on CAL-fit; evaluate joint_calibrated_base.
+1. S3 baseline: evaluate raw_backbone first with T=1 and theta=[0, 0] (no post-hoc calibration), then independently fit clean joint calibration (T, theta_visibility, theta_strength) on CAL-fit and evaluate joint_calibrated_base.
 2. S3 + S1: evaluate 1A_global (prior-only diffusion) and 1D_global (independent prior/observation diffusion). Select alpha parameters on CAL-fit using the existing site-equal joint BF-XY NLL + 0.30 transport objective.
 3. S3 + S2: evaluate the existing compact N+E midpoint-cell mixture. Select (beta, gamma_space) on CAL-fit. 2A uses the beta selected by 2B with gamma_space=0; also retain the best gamma-zero beta-only control.
 4. S3 + S1 + S2: freeze the corresponding 1A_global or 1D_global alpha selected in group 2, then select (beta, gamma_space) conditionally on those diffused parent logits using CAL-fit only. Evaluate combo_1A_2A, combo_1A_2B, combo_1A_2A_beta_only_control, and the analogous three 1D methods.
@@ -39,8 +39,11 @@ This is a deliberately progressive composition protocol: the S1 alpha is fixed f
 - For S1, diffuse the prior channel and G13 observation channel independently with the existing symmetric doubly-stochastic same-building/same-floor graph. 1A fixes alpha_obs=0; 1D uses separately selected alpha_prior and alpha_obs.
 - Preserve the exact existing graph construction: union of same-building/same-floor k=8 nearest-neighbor edges, 8 m exponential kernel, symmetric Sinkhorn scaling, and no maximum-distance cutoff. Record edge-length P50/P95/max and the count/fraction of edges longer than 30 m. This makes the known UJI remote-neighbor limitation visible without changing the tested operator.
 - For S2, use the existing virtual retrieval score computed from the interpolated neural key and FIT-only RSS prototype with the original distance law; use the existing interpolated G13 features, residual-interpolated continuous centers, interpolated scales, and compact unique-edge Cell LSE.
-- For S1+S2, apply S1 to the physical parent logits first. Then feed those parent logits and the normal S2 virtual logits into the existing Cell LSE. Do not replace virtual retrieval scores by endpoint-logit averages; virtual candidates are not graph vertices in this protocol.
+- For S1+S2, apply S1 to the physical parent logits first. For each virtual edge e=(i,j), propagate the mean endpoint displacement from the clean calibrated parent logits: virtual_logit_e_combined = virtual_logit_e_S2 + 0.5 * [(parent_logit_i_S1 - parent_logit_i_clean) + (parent_logit_j_S1 - parent_logit_j_clean)]. Then feed the diffused parent logits and propagated virtual logits into the existing Cell LSE. This preserves the S2 virtual logit residual relative to the clean endpoint mean, while ensuring every virtual edge inherits the S1 displacement of its endpoints.
+- When the S1 displacement is zero, propagated virtual logits must equal the original S2 virtual logits exactly, reducing to standalone S2. Apply this propagation both during CAL-fit selection of combo beta/gamma and during CAL-eval scoring; never select parameters on CAL-eval.
+- Do not replace virtual retrieval scores by endpoint-logit averages: the virtual candidate retains its interpolated-key, FIT RSS-prototype, and interpolated G13 evidence, with only the mean endpoint S1 displacement added.
 - The expanded component order is exactly N physical parents followed by E unique undirected midpoint edges, with no padding. BF representative IDs for edges are valid only because each edge is same-building/same-floor.
+- raw_backbone is the un-calibrated frozen C/D/E output (T=1, theta=[0, 0]); E still contains its trained-in checkpoint graph layer. Paired comparisons include raw_backbone → every method, including raw_backbone → joint_calibrated_base.
 - Use global softmax normalization for the requested 1A_global/1D_global comparisons. Do not silently mix BF-mass-preserving results into these arms.
 
 ## Calibration and evaluation isolation
