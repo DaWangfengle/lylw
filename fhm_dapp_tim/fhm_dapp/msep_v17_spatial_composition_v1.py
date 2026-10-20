@@ -778,6 +778,11 @@ def audit_results(root, *, require_complete=True, write=False):
         raise RuntimeError(f"composition study incomplete: {len(paths)}/{expected} run results")
     max_reduction_error = 0.0
     expected_method_set = set(METHOD_NAMES)
+    expected_identities = {
+        (dataset, seed, arm)
+        for dataset in s3.DATASETS for seed in s3.SEEDS for arm in ARMS
+    }
+    seen_identities = set()
     manifest_path = root / "EXECUTION_MANIFEST.json"
     if not manifest_path.is_file():
         raise FileNotFoundError(f"composition execution manifest missing: {manifest_path}")
@@ -793,7 +798,13 @@ def audit_results(root, *, require_complete=True, write=False):
         lock = s3.read_json(path.with_name("CAL_EVAL.lock"))
         selection = s3.read_json(path.with_name("CAL_FIT_SELECTION.json"))
         run_lock = s3.read_json(path.with_name("RUN.lock"))
+        identity = (result["dataset"], int(result["seed"]), result["backbone"])
+        if identity not in expected_identities or identity in seen_identities:
+            raise RuntimeError(f"unexpected or duplicate result identity: {identity} in {path}")
+        seen_identities.add(identity)
         run_key = f"{result['dataset']}_seed{result['seed']}"
+        if path.parent.name != result["backbone"] or path.parent.parent.name != run_key:
+            raise RuntimeError(f"result identity disagrees with its run directory: {path}")
         if run_key not in manifest["splits"]:
             raise RuntimeError(f"run split is absent from preflight manifest: {run_key}")
         split = manifest["splits"][run_key]
@@ -866,6 +877,8 @@ def audit_results(root, *, require_complete=True, write=False):
                 error = abs(float(entry["metrics"][metric]) - expected_value)
                 if error >= 2e-5:
                     raise RuntimeError(f"tail metric mismatch: {path}/{name}/{metric}: {error}")
+    if require_complete and seen_identities != expected_identities:
+        raise RuntimeError(f"composition run identities incomplete: missing={sorted(expected_identities-seen_identities)}")
     record = {
         "status": "PASS",
         "study": "V17 zero-retraining composition",
@@ -878,6 +891,10 @@ def audit_results(root, *, require_complete=True, write=False):
         "retraining_performed": False,
         "evaluation_role": "CAL-eval",
         "selection_role": "CAL-fit",
+        "source_sha256": manifest["source_sha256"],
+        "checkpoint_sha256": manifest["checkpoint_sha256"],
+        "phase_t_integrity_review_sha256": manifest["phase_t_integrity_review_sha256"],
+        "splits": manifest["splits"],
         **TEST_COUNTS,
     }
     if write:
