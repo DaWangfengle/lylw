@@ -30,6 +30,8 @@ NON-NEGOTIABLE SCIENTIFIC RULES
 - Do not add any TEST-row feature/target access for prediction, calibration, model selection, or metric computation. The existing frozen reconstruct path reads canonical metadata to rebuild the pre-existing physical-site split keys; do not alter that frozen source path. No TEST row may be packed, predicted, calibrated on, or scored. Internal TEST and official TEST score counts must remain exactly zero.
 - CAL-fit selects every parameter. CAL-eval is scored only after CAL_FIT_SELECTION.json and CAL_EVAL.lock are written.
 - Preserve old source files, prior results, checkpoints, and hashes. Do not delete incomplete artifacts; fail closed and report exact paths if an integrity gate fails.
+- Preserve the existing graph exactly (same-building/same-floor k=8 union, 8 m exponential kernel, symmetric Sinkhorn, no distance cutoff). Report P50/P95/max edge length and count/fraction of edges longer than 30 m; do not silently alter the graph to suppress the known UJI remote-neighbor issue in this composition comparison.
+- The preflight locks the selected device. If CUDA is unavailable before preflight, run the full command with --device cpu. If a manifest already locks a different device, do not reuse that output root; preserve it and choose a fresh output root for the new device.
 - Do not run Git commands, commit, push, or upload anything. The user handles repository publication.
 
 METHODS PER CHECKPOINT
@@ -84,7 +86,7 @@ POST-RUN GATES
    PAIRED_DELTAS.csv
    SITE_DELTAS_ALL_RUNS.csv
    INTEGRITY_REVIEW.json
-   RUN_REPORT_V17_SPATIAL_COMPOSITION.md
+   RUN_REPORT_V17_SPATIAL_COMPOSITION.md (including graph edge diagnostics and exact per-checkpoint selected parameters)
 5. Confirm no checkpoint file was created or modified and no training/optimizer step was executed.
 6. Do not commit, push, or upload results.
 
