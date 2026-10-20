@@ -608,7 +608,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         extra = {
             "group": group,
             "composition_order": (
-                "S1 diffuses physical parent prior/observation channels, then S2 Cell LSE"
+                "S1 diffuses physical parent prior/observation channels and propagates mean endpoint logit displacement to virtual edges, then S2 Cell LSE"
                 if s1_method else "S2 virtual field and Cell LSE on clean parent logits"
             ),
         }
@@ -714,6 +714,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
                 },
                 "S3+S1+S2",
                 s1_method=name,
+                clean_parent_logits=clean_parent,
             )
     del evaluation0
     if torch.cuda.is_available():
