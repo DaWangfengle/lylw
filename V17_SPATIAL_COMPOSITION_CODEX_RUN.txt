@@ -27,7 +27,7 @@ NON-NEGOTIABLE SCIENTIFIC RULES
 - Output root:
   fhm_dapp_tim/evidence/v17_spatial_composition_v1
 - Datasets: tuji, uts, uji. Seeds: 17301, 17302, 17303. Backbones: C, D, E. Expected total: 27 run folders.
-- Do not load, pack, predict, score, select on, or inspect TEST labels. Internal TEST and official TEST score counts must remain exactly zero.
+- Do not add any TEST-row feature/target access for prediction, calibration, model selection, or metric computation. The existing frozen reconstruct path reads canonical metadata to rebuild the pre-existing physical-site split keys; do not alter that frozen source path. No TEST row may be packed, predicted, calibrated on, or scored. Internal TEST and official TEST score counts must remain exactly zero.
 - CAL-fit selects every parameter. CAL-eval is scored only after CAL_FIT_SELECTION.json and CAL_EVAL.lock are written.
 - Preserve old source files, prior results, checkpoints, and hashes. Do not delete incomplete artifacts; fail closed and report exact paths if an integrity gate fails.
 - Do not run Git commands, commit, push, or upload anything. The user handles repository publication.
