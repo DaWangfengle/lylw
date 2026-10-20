@@ -159,6 +159,9 @@ def _verify_source_manifest(manifest):
         changed = sorted(set(current) | set(manifest["source_sha256"]))
         changed = [p for p in changed if current.get(p) != manifest["source_sha256"].get(p)]
         raise RuntimeError(f"source changed after preflight; rerun preflight on a fresh output root: {changed[:20]}")
+    review_path = Path(manifest["checkpoint_root"]) / "PHASE_T_INTEGRITY_REVIEW.json"
+    if not review_path.is_file() or s3.sha(review_path) != manifest["phase_t_integrity_review_sha256"]:
+        raise RuntimeError("Phase-T integrity review changed after preflight")
 
 
 def preflight(args):
@@ -420,14 +423,29 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             )
         selection = s3.read_json(selection_path)
         lock = s3.read_json(eval_lock_path)
-        assert selection.get("selection_role") == "CAL-fit"
-        assert lock["selection_sha256"] == s3.sha(selection_path)
-        assert lock["checkpoint_sha256"] == checkpoint_sha
-        assert lock["cal_fit_key_sha256"] == s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"])
-        assert lock["cal_eval_key_sha256"] == s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"])
-        assert lock["cal_fit_rows"] == len(ctx["cal_fit"])
-        assert lock["cal_eval_rows"] == len(ctx["cal_eval"])
-        assert all(lock.get(k) == 0 for k in TEST_COUNTS)
+        run_lock = s3.read_json(run_dir / "RUN.lock")
+        if selection.get("selection_role") != "CAL-fit" or selection.get("cal_eval_not_used_for_selection") is not True:
+            raise RuntimeError(f"resume selection is not a frozen CAL-fit selection: {selection_path}")
+        if lock["selection_sha256"] != s3.sha(selection_path):
+            raise RuntimeError(f"resume selection SHA mismatch: {eval_lock_path}")
+        if lock["checkpoint_sha256"] != checkpoint_sha or run_lock["checkpoint_sha256"] != checkpoint_sha:
+            raise RuntimeError(f"resume checkpoint SHA mismatch: {run_dir}")
+        if lock["source_sha256"] != manifest["source_sha256"] if "source_sha256" in lock else False:
+            raise RuntimeError(f"resume source SHA mismatch: {eval_lock_path}")
+        expected_fit_sha = s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"])
+        expected_eval_sha = s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"])
+        if (lock["cal_fit_key_sha256"], run_lock["cal_fit_key_sha256"]) != (expected_fit_sha, expected_fit_sha):
+            raise RuntimeError(f"resume CAL-fit key hash mismatch: {run_dir}")
+        if (lock["cal_eval_key_sha256"], run_lock["cal_eval_key_sha256"]) != (expected_eval_sha, expected_eval_sha):
+            raise RuntimeError(f"resume CAL-eval key hash mismatch: {run_dir}")
+        if lock["cal_fit_rows"] != len(ctx["cal_fit"]) or run_lock["cal_fit_rows"] != len(ctx["cal_fit"]):
+            raise RuntimeError(f"resume CAL-fit row count mismatch: {run_dir}")
+        if lock["cal_eval_rows"] != len(ctx["cal_eval"]) or run_lock["cal_eval_rows"] != len(ctx["cal_eval"]):
+            raise RuntimeError(f"resume CAL-eval row count mismatch: {run_dir}")
+        if run_lock["source_sha256"] != manifest["source_sha256"]:
+            raise RuntimeError(f"resume source SHA mismatch: {run_dir / 'RUN.lock'}")
+        if any(lock.get(k) != 0 or run_lock.get(k) != 0 for k in TEST_COUNTS):
+            raise RuntimeError(f"resume lock records nonzero TEST scoring: {run_dir}")
         emit("resume_locked_cal_eval", dataset=dataset, seed=seed, arm=arm,
              selection_sha256=lock["selection_sha256"])
     else:
