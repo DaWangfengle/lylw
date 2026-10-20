@@ -99,6 +99,7 @@ def test_expected_composition_methods_are_complete_and_do_not_include_training_a
     assert all(not name.startswith(("O_", "A_", "C_", "D_", "E_")) for name in composition.METHOD_NAMES)
     pairs = set(composition._comparisons(set(composition.METHOD_NAMES)))
     assert ("raw_backbone", "joint_calibrated_base") in pairs
+    assert ("joint_calibrated_base", "raw_backbone") not in pairs
     assert all(
         ("raw_backbone", candidate) in pairs
         for candidate in composition.METHOD_NAMES if candidate != "raw_backbone"
