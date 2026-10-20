@@ -748,12 +748,31 @@ def audit_results(root, *, require_complete=True, write=False):
     manifest = s3.read_json(manifest_path)
     if manifest.get("status") != "PASS":
         raise RuntimeError("composition execution manifest is not PASS")
+    _verify_source_manifest(manifest)
+    if len(manifest.get("checkpoint_sha256", {})) != expected:
+        raise RuntimeError("preflight manifest does not bind all 27 frozen checkpoints")
     for path in paths:
         result = s3.read_json(path)
         diagnostics = s3.read_json(path.with_name("SITE_DIAGNOSTICS.json"))
         lock = s3.read_json(path.with_name("CAL_EVAL.lock"))
         selection = s3.read_json(path.with_name("CAL_FIT_SELECTION.json"))
         run_lock = s3.read_json(path.with_name("RUN.lock"))
+        run_key = f"{result['dataset']}_seed{result['seed']}"
+        if run_key not in manifest["splits"]:
+            raise RuntimeError(f"run split is absent from preflight manifest: {run_key}")
+        split = manifest["splits"][run_key]
+        expected_split = (
+            split["cal_fit_key_sha256"], split["cal_eval_key_sha256"],
+            split["cal_fit_rows"], split["cal_eval_rows"],
+            split["physical_anchors"], split["unique_midpoint_edges"],
+        )
+        actual_split = (
+            result["cal_fit_key_sha256"], result["cal_eval_key_sha256"],
+            lock.get("cal_fit_rows", split["cal_fit_rows"]), lock.get("cal_eval_rows", split["cal_eval_rows"]),
+            result["physical_anchors"], result["unique_virtual_edges"],
+        )
+        if actual_split != expected_split:
+            raise RuntimeError(f"run split/anchor/edge identity differs from preflight manifest: {path}")
         assert result["evaluation_role"] == "CAL-eval" and result["selection_role"] == "CAL-fit"
         assert selection["selection_role"] == "CAL-fit" and selection["cal_eval_not_used_for_selection"] is True
         assert (selection["dataset"], selection["seed"], selection["backbone"]) == (
@@ -769,6 +788,7 @@ def audit_results(root, *, require_complete=True, write=False):
         assert run_lock["selected_epoch"] == result["selected_epoch"]
         assert run_lock["cal_fit_key_sha256"] == result["cal_fit_key_sha256"]
         assert run_lock["cal_eval_key_sha256"] == result["cal_eval_key_sha256"]
+        assert run_lock["source_sha256"] == manifest["source_sha256"]
         assert all(result.get(key) == 0 and lock.get(key) == 0 and run_lock.get(key) == 0 for key in TEST_COUNTS)
         relative_checkpoint = result["checkpoint_relpath"]
         if manifest["checkpoint_sha256"].get(relative_checkpoint) != result["checkpoint_sha256"]:
@@ -930,12 +950,43 @@ def _write_report(root, summaries, paired, audit):
         "- For E checkpoints, the saved training-time graph layer remains active; S1 is an additional post-hoc graph operation.",
         "- Combination order: dual-channel S1 on physical parent logits, then S2 Cell LSE with normal interpolated-key/prototype virtual retrieval scores and G13 evidence.",
         "- All methods use the same physical CAL-eval rows and the same seed+900 Energy Score Monte Carlo seed within each run.",
+        "- Exact per-run selected values are printed below; the corresponding full calibration grids and hashes are preserved in CAL_FIT_SELECTION.json.",
+        "",
+        "## Selected parameters (one row per frozen checkpoint)",
+        "",
+        "|Dataset|Seed|Backbone|T|theta visibility/strength|1A alpha prior/obs|1D alpha prior/obs|S2 2B beta/gamma|S1+S2 1A beta/gamma|S1+S2 1D beta/gamma|",
+        "|---|---:|---|---:|---|---|---|---|---|---|",
+        "",
+        "|Dataset|Backbone|Method|MAE m|ES m|Joint NLL|BF accuracy|P95 m|P99 m|Worst site m|",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    selection_paths = sorted((Path(root) / "runs").glob("*/*/CAL_FIT_SELECTION.json"))
+    if len(selection_paths) != audit["expected_runs"]:
+        raise RuntimeError(f"parameter report requires all {audit['expected_runs']} frozen selections")
+    for selection_path in selection_paths:
+        selected = s3.read_json(selection_path)
+        s1a = selected["structure1"]["1A_global"]
+        s1d = selected["structure1"]["1D_global"]
+        c1a = selected["combined"]["1A_global"]["2B"]
+        c1d = selected["combined"]["1D_global"]["2B"]
+        theta = selected["joint_calibrated_base"]["theta"]
+        lines.append(
+            f"|{selected['dataset']}|{selected['seed']}|{selected['backbone']}|"
+            f"{selected['joint_calibrated_base']['temperature']:.5f}|"
+            f"{theta[0]:.4f}/{theta[1]:.4f}|"
+            f"{s1a['alpha_prior']:.3f}/{s1a['alpha_obs']:.3f}|"
+            f"{s1d['alpha_prior']:.3f}/{s1d['alpha_obs']:.3f}|"
+            f"{selected['2B']['beta']:.3f}/{selected['2B']['gamma_space']:.3f}|"
+            f"{c1a['beta']:.3f}/{c1a['gamma_space']:.3f}|"
+            f"{c1d['beta']:.3f}/{c1d['gamma_space']:.3f}|"
+        )
+    lines.extend([
         "",
         "## Metrics by dataset, backbone, and method",
         "",
         "|Dataset|Backbone|Method|MAE m|ES m|Joint NLL|BF accuracy|P95 m|P99 m|Worst site m|",
         "|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
-    ]
+    ])
     for row in summaries:
         fmt = lambda name: f"{row[name + '_mean']:.5f} ± {row[name + '_sd']:.5f}"
         lines.append(
