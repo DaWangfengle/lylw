@@ -1050,9 +1050,6 @@ def _write_report(root, summaries, paired, audit):
         "",
         "|Dataset|Seed|Physical anchors|Unique edges|Edge P95 m|Max edge m|Edges >30 m|Fraction >30 m|",
         "|---|---:|---:|---:|---:|---:|---:|---:|",
-        "",
-        "|Dataset|Seed|Backbone|T|theta visibility/strength|1A alpha prior/obs|1D alpha prior/obs|S2 2B beta/gamma|S1+S2 1A beta/gamma|S1+S2 1D beta/gamma|",
-        "|---|---:|---|---:|---|---|---|---|---|---|",
     ]
     manifest = s3.read_json(Path(root) / "EXECUTION_MANIFEST.json")
     for run_key, split in sorted(manifest["splits"].items()):
