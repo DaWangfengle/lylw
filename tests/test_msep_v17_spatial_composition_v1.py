@@ -100,3 +100,32 @@ def test_expected_composition_methods_are_complete_and_do_not_include_training_a
         "internal_test_rows_scored": 0,
         "official_test_rows_scored": 0,
     }
+
+
+def test_fast_cell_mixture_matches_public_cell_lse_operator():
+    coords, building, floor, graph, edges = _toy_graph()
+    batch, n, e = 3, len(coords), len(edges)
+    parent_logits = torch.tensor(
+        [[0.1, 0.7, -0.4, 0.2], [0.8, -0.2, 0.3, 0.1], [-0.5, 0.2, 0.4, -0.1]],
+        dtype=torch.float32,
+    )
+    virtual_logits = torch.linspace(-0.6, 0.7, batch * e).reshape(batch, e)
+    parent_centers = torch.as_tensor(coords)[None].expand(batch, -1, -1).clone()
+    parent_scales = torch.ones((batch, n, 2), dtype=torch.float32)
+    virtual_centers = torch.zeros((batch, e, 2), dtype=torch.float32)
+    virtual_scales = torch.full((batch, e, 2), 1.5, dtype=torch.float32)
+    class_ids = torch.as_tensor(building * 2 + floor, dtype=torch.long)
+    for beta in (0.0, 0.2, 0.65):
+        fast = composition.s3.fast_cell_mixture(
+            parent_logits, virtual_logits, edges, beta,
+            parent_centers, parent_scales, virtual_centers, virtual_scales,
+        )
+        public = op.cell_lse_expansion(
+            parent_logits, virtual_logits, edges, beta,
+            parent_centers, parent_scales, virtual_centers, virtual_scales,
+            class_ids,
+        )
+        assert torch.allclose(fast["q"], public["expanded_weights"], atol=2e-6, rtol=2e-6)
+        assert torch.allclose(fast["cell_logits"], public["cell_logits"], atol=2e-6, rtol=2e-6)
+        assert torch.allclose(fast["xy"], public["expanded_centers"], atol=1e-7, rtol=1e-7)
+        assert torch.allclose(fast["sigma"], public["expanded_scales"], atol=1e-7, rtol=1e-7)
