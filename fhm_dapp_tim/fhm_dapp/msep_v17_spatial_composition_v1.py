@@ -195,6 +195,24 @@ def preflight(args):
         for seed in s3.SEEDS:
             ctx = s3.reconstruct(dataset, seed, input_root, torch.device("cpu"))
             run_key = f"{dataset}_seed{seed}"
+            fit_xy = ctx["memory"]["coords"].detach().cpu().numpy()
+            fit_edges = ctx["edges"].detach().cpu().numpy()
+            if len(fit_edges):
+                edge_lengths = np.linalg.norm(
+                    fit_xy[fit_edges[:, 0]] - fit_xy[fit_edges[:, 1]], axis=1
+                )
+                edge_diagnostics = {
+                    "length_p50_m": float(np.quantile(edge_lengths, .50)),
+                    "length_p95_m": float(np.quantile(edge_lengths, .95)),
+                    "length_max_m": float(edge_lengths.max()),
+                    "count_gt_30m": int((edge_lengths > 30.0).sum()),
+                    "fraction_gt_30m": float((edge_lengths > 30.0).mean()),
+                }
+            else:
+                edge_diagnostics = {
+                    "length_p50_m": 0.0, "length_p95_m": 0.0, "length_max_m": 0.0,
+                    "count_gt_30m": 0, "fraction_gt_30m": 0.0,
+                }
             splits[run_key] = {
                 "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
                 "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
@@ -202,6 +220,7 @@ def preflight(args):
                 "cal_eval_rows": int(len(ctx["cal_eval"])),
                 "physical_anchors": int(len(ctx["memory"]["coords"])),
                 "unique_midpoint_edges": int(len(ctx["edges"])),
+                "graph_edge_diagnostics": edge_diagnostics,
             }
             for arm in ARMS:
                 record = _verify_checkpoint(checkpoint_root, dataset, seed, arm, phase_t_hashes)
@@ -222,6 +241,13 @@ def preflight(args):
         "seeds": list(s3.SEEDS),
         "backbones": list(ARMS),
         "calibration_objective": "site-equal joint BF-XY NLL + 0.30 component-center transport risk",
+        "graph_spec": {
+            "builder": "build_doubly_stochastic_floor_graph",
+            "nearest_neighbor_count": 8,
+            "temperature_m": 8.0,
+            "maximum_edge_distance_cutoff_m": None,
+            "note": "Exact existing graph retained; edge-length diagnostics expose remote-neighbor risk rather than silently changing Structure 1.",
+        },
         "selection_policy": S1_SELECTION_POLICY,
         "training_runs": 0,
         "optimizer_steps": 0,
@@ -493,6 +519,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
             "cal_fit_rows": int(len(ctx["cal_fit"])),
             "cal_eval_rows": int(len(ctx["cal_eval"])),
+            "graph_edge_diagnostics": manifest["splits"][f"{dataset}_seed{seed}"]["graph_edge_diagnostics"],
             "retraining_performed": False,
             "optimizer_steps": 0,
             **TEST_COUNTS,
@@ -694,6 +721,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         "methods": results,
         "physical_anchors": int(len(ctx["memory"]["coords"])),
         "unique_virtual_edges": int(len(ctx["edges"])),
+        "graph_edge_diagnostics": manifest["splits"][f"{dataset}_seed{seed}"]["graph_edge_diagnostics"],
         "native_checkpoint_alpha": native_alpha,
         "evaluation_role": "CAL-eval",
         "selection_role": "CAL-fit",
@@ -818,6 +846,10 @@ def audit_results(root, *, require_complete=True, write=False):
             result["cal_fit_rows"], result["cal_eval_rows"],
             result["physical_anchors"], result["unique_virtual_edges"],
         )
+        if result.get("graph_edge_diagnostics") != split["graph_edge_diagnostics"]:
+            raise RuntimeError(f"graph edge diagnostics differ from preflight manifest: {path}")
+        if run_lock.get("graph_edge_diagnostics") != split["graph_edge_diagnostics"]:
+            raise RuntimeError(f"RUN.lock graph diagnostics differ from preflight manifest: {path}")
         if actual_split != expected_split:
             raise RuntimeError(f"run split/anchor/edge identity differs from preflight manifest: {path}")
         assert result["evaluation_role"] == "CAL-eval" and result["selection_role"] == "CAL-fit"
