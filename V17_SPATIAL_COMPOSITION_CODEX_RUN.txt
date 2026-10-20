@@ -35,6 +35,7 @@ NON-NEGOTIABLE SCIENTIFIC RULES
 - Do not run Git commands, commit, push, or upload anything. The user handles repository publication.
 
 METHODS PER CHECKPOINT
+0. raw_backbone: frozen C/D/E output without post-hoc calibration, T=1.0 and theta=[0.0, 0.0].
 1. joint_calibrated_base: clean T/theta calibration.
 2. 1A_global: prior-only graph diffusion; alpha_obs fixed to zero.
 3. 1D_global: separately selected prior and observation diffusion.
@@ -49,8 +50,9 @@ Composition order must be exact:
 - Select 1A/1D alpha on CAL-fit and freeze those values.
 - Select standalone 2A/2B beta/gamma on CAL-fit.
 - For each combo, freeze the corresponding S1 alpha selected by its S1-only CAL-fit fit, then select beta/gamma conditional on the diffused physical-parent logits on CAL-fit.
-- At inference, apply S1 to physical parent prior/observation channels first, then use those parent logits with the normal S2 virtual logits in compact Cell LSE.
-- Virtual retrieval scores must use the existing interpolated neural key + FIT-only RSS-prototype distance law. Do not replace virtual logits with the average of endpoint complete logits.
+- At inference, apply S1 to physical parent prior/observation channels first. For each virtual edge (i,j), add the mean endpoint displacement to its original S2 virtual logit: virtual_logit_combined = virtual_logit_S2 + 0.5 * [(parent_logit_i_S1 - parent_logit_i_clean) + (parent_logit_j_S1 - parent_logit_j_clean)]. Then run compact Cell LSE.
+- Use this same propagation during CAL-fit combo beta/gamma selection and CAL-eval scoring. If the endpoint displacement is zero, the virtual logits must exactly reduce to standalone S2.
+- Virtual retrieval scores must retain the existing interpolated neural key + FIT-only RSS-prototype distance law and interpolated G13 evidence. Do not replace virtual logits with the average of endpoint complete logits.
 - For E checkpoints, retain the saved training-time graph layer and alpha. Post-hoc S1 is an additional inference-time operator and must be recorded as such.
 - Use global normalization for 1A_global/1D_global.
 - Use the existing site-equal objective: joint BF-XY NLL + 0.30 component-center transport risk, with the existing deterministic grids and tie-breaks.
@@ -75,7 +77,7 @@ If the pipeline is interrupted:
 - If a run folder exists without both selection and lock, do not delete it or silently rebuild over it; stop and report the exact path and failure.
 
 POST-RUN GATES
-1. Confirm 27/27 run results, each with exactly 12 methods.
+1. Confirm 27/27 run results, each with exactly 13 methods (including raw_backbone).
 2. Confirm every CAL_EVAL.lock binds the matching selection SHA256, checkpoint SHA256, CAL-fit/CAL-eval site-key hashes, and zero TEST-score counts.
 3. Confirm INTEGRITY_REVIEW.json says PASS; source/checkpoint hashes match the manifest.
 4. Confirm outputs exist:
