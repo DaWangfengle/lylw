@@ -968,9 +968,6 @@ def _write_report(root, summaries, paired, audit):
         "",
         "|Dataset|Seed|Backbone|T|theta visibility/strength|1A alpha prior/obs|1D alpha prior/obs|S2 2B beta/gamma|S1+S2 1A beta/gamma|S1+S2 1D beta/gamma|",
         "|---|---:|---|---:|---|---|---|---|---|---|",
-        "",
-        "|Dataset|Backbone|Method|MAE m|ES m|Joint NLL|BF accuracy|P95 m|P99 m|Worst site m|",
-        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     selection_paths = sorted((Path(root) / "runs").glob("*/*/CAL_FIT_SELECTION.json"))
     if len(selection_paths) != audit["expected_runs"]:
