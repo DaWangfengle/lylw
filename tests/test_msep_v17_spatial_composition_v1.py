@@ -129,3 +129,5 @@ def test_fast_cell_mixture_matches_public_cell_lse_operator():
         assert torch.allclose(fast["cell_logits"], public["cell_logits"], atol=2e-6, rtol=2e-6)
         assert torch.allclose(fast["xy"], public["expanded_centers"], atol=1e-7, rtol=1e-7)
         assert torch.allclose(fast["sigma"], public["expanded_scales"], atol=1e-7, rtol=1e-7)
+        assert torch.equal(fast["ids"], public["expanded_ids"])
+        assert torch.allclose(fast["q"].sum(1), torch.ones(batch), atol=2e-6, rtol=2e-6)
