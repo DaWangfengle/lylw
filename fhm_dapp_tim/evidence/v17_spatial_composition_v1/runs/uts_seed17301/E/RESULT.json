@@ -1,0 +1,441 @@
+{
+  "phase": "COMPOSITION",
+  "dataset": "uts",
+  "seed": 17301,
+  "backbone": "E",
+  "selected_epoch": 79,
+  "checkpoint_relpath": "trained/uts_seed17301/E/best_dev_epoch_21_80.pt",
+  "checkpoint_sha256": "aa53a5ab96dc069b5905650265fe1fbaaa39171c0e6351c3f88cffe233219fdf",
+  "device": "cuda",
+  "selection_sha256": "e0ab4fc3b584232c27c44f41802048d8a94d0e1be51c09491bd64fb2033e423e",
+  "cal_fit_key_sha256": "4d103d7a1175d710bf206142fe10af8d467f8339825c499b6b4b4b6064ad452a",
+  "cal_eval_key_sha256": "263db27f64b3333b31defc39e58b95c8e0343ecbe89c403aa7949fdbe04e4042",
+  "cal_fit_rows": 444,
+  "cal_eval_rows": 414,
+  "methods": {
+    "raw_backbone": {
+      "params": {
+        "temperature": 1.0,
+        "theta": [
+          0.0,
+          0.0
+        ],
+        "calibration": "none"
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.1208367347717285,
+        "macro_mae_predicted_bf_m": 4.120595932006836,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 9.336176039955832,
+        "macro_es_m": 3.222177647162175,
+        "macro_joint_nll": 10.874233815980995,
+        "macro_transport_risk_m": 5.897464769473975,
+        "site_p99_full_m": 11.237961417304135,
+        "worst_site_mae_m": 12.332007646560669,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "raw_backbone",
+      "composition_order": "un-calibrated frozen C/D/E output with T=1 and theta=[0, 0]",
+      "native_checkpoint_alpha": 0.052165593951940536
+    },
+    "joint_calibrated_base": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ]
+      },
+      "metrics": {
+        "macro_mae_full_m": 3.861795663833618,
+        "macro_mae_predicted_bf_m": 3.9174273014068604,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.013623440265654,
+        "macro_es_m": 3.171991507212321,
+        "macro_joint_nll": 10.851452647775844,
+        "macro_transport_risk_m": 4.98051693474037,
+        "site_p99_full_m": 12.489565963745106,
+        "worst_site_mae_m": 13.678035020828247,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3",
+      "composition_order": "clean joint calibration"
+    },
+    "1A_global": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.0,
+        "objective": 12.25478458404541,
+        "normalization": "global",
+        "structure": "1A"
+      },
+      "metrics": {
+        "macro_mae_full_m": 3.8521511554718018,
+        "macro_mae_predicted_bf_m": 3.901970386505127,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.449261927604672,
+        "macro_es_m": 3.1372573600299116,
+        "macro_joint_nll": 10.787931469903477,
+        "macro_transport_risk_m": 5.194036597790926,
+        "site_p99_full_m": 12.471473922729485,
+        "worst_site_mae_m": 13.135358572006226,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1",
+      "composition_order": "post-hoc dual-channel S1 on physical parent logits",
+      "native_checkpoint_alpha": 0.052165593951940536
+    },
+    "1D_global": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.05,
+        "objective": 12.254660606384277,
+        "normalization": "global",
+        "structure": "1D"
+      },
+      "metrics": {
+        "macro_mae_full_m": 3.856156587600708,
+        "macro_mae_predicted_bf_m": 3.9048244953155518,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.462224817275997,
+        "macro_es_m": 3.170482283053191,
+        "macro_joint_nll": 10.782136778900588,
+        "macro_transport_risk_m": 5.215463735055232,
+        "site_p99_full_m": 12.507453193664546,
+        "worst_site_mae_m": 13.095041990280151,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1",
+      "composition_order": "post-hoc dual-channel S1 on physical parent logits",
+      "native_checkpoint_alpha": 0.052165593951940536
+    },
+    "2A": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.50565767288208,
+        "center_mode": "residual_interpolated"
+      },
+      "metrics": {
+        "macro_mae_full_m": 3.950153350830078,
+        "macro_mae_predicted_bf_m": 3.98115873336792,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.253156171061775,
+        "macro_es_m": 2.845356497211733,
+        "macro_joint_nll": 5.7756807449935135,
+        "macro_transport_risk_m": 5.163917330728061,
+        "site_p99_full_m": 12.728965988159176,
+        "worst_site_mae_m": 13.03025484085083,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S2",
+      "composition_order": "S2 virtual field and Cell LSE on clean parent logits"
+    },
+    "2A_beta_only_control": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.50565767288208,
+        "center_mode": "residual_interpolated"
+      },
+      "metrics": {
+        "macro_mae_full_m": 3.950153350830078,
+        "macro_mae_predicted_bf_m": 3.98115873336792,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.253156171061775,
+        "macro_es_m": 2.845356497211733,
+        "macro_joint_nll": 5.7756807449935135,
+        "macro_transport_risk_m": 5.163917330728061,
+        "site_p99_full_m": 12.728965988159176,
+        "worst_site_mae_m": 13.03025484085083,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S2",
+      "composition_order": "S2 virtual field and Cell LSE on clean parent logits"
+    },
+    "combo_1A_2A": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.577990531921387,
+        "s1_method": "1A_global",
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.0,
+        "center_mode": "residual_interpolated",
+        "selection_policy": "Select alpha_prior/alpha_obs for 1A/1D on CAL-fit with clean T/theta; freeze those alpha values for composition; select beta/gamma conditionally on the diffused parent logits using CAL-fit only."
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.079535484313965,
+        "macro_mae_predicted_bf_m": 4.107540130615234,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.241984581947325,
+        "macro_es_m": 2.92928989123607,
+        "macro_joint_nll": 5.739343164623648,
+        "macro_transport_risk_m": 5.40524020747862,
+        "site_p99_full_m": 12.746684989929197,
+        "worst_site_mae_m": 12.977256536483765,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1+S2",
+      "composition_order": "S1 diffuses physical parent prior/observation channels and propagates mean endpoint logit displacement to virtual edges, then S2 Cell LSE",
+      "s1_method": "1A_global"
+    },
+    "combo_1A_2A_beta_only_control": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.577990531921387,
+        "s1_method": "1A_global",
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.0,
+        "center_mode": "residual_interpolated",
+        "selection_policy": "Select alpha_prior/alpha_obs for 1A/1D on CAL-fit with clean T/theta; freeze those alpha values for composition; select beta/gamma conditionally on the diffused parent logits using CAL-fit only."
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.079535484313965,
+        "macro_mae_predicted_bf_m": 4.107540130615234,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.241984581947325,
+        "macro_es_m": 2.92928989123607,
+        "macro_joint_nll": 5.739343164623648,
+        "macro_transport_risk_m": 5.40524020747862,
+        "site_p99_full_m": 12.746684989929197,
+        "worst_site_mae_m": 12.977256536483765,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1+S2",
+      "composition_order": "S1 diffuses physical parent prior/observation channels and propagates mean endpoint logit displacement to virtual edges, then S2 Cell LSE",
+      "s1_method": "1A_global"
+    },
+    "combo_1D_2A": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.586868762969971,
+        "s1_method": "1D_global",
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.05,
+        "center_mode": "residual_interpolated",
+        "selection_policy": "Select alpha_prior/alpha_obs for 1A/1D on CAL-fit with clean T/theta; freeze those alpha values for composition; select beta/gamma conditionally on the diffused parent logits using CAL-fit only."
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.096212863922119,
+        "macro_mae_predicted_bf_m": 4.123754501342773,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.224374151229858,
+        "macro_es_m": 2.972198218539141,
+        "macro_joint_nll": 5.739554079546445,
+        "macro_transport_risk_m": 5.430315753687983,
+        "site_p99_full_m": 12.74769203186035,
+        "worst_site_mae_m": 12.94828462600708,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1+S2",
+      "composition_order": "S1 diffuses physical parent prior/observation channels and propagates mean endpoint logit displacement to virtual edges, then S2 Cell LSE",
+      "s1_method": "1D_global"
+    },
+    "combo_1D_2A_beta_only_control": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.586868762969971,
+        "s1_method": "1D_global",
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.05,
+        "center_mode": "residual_interpolated",
+        "selection_policy": "Select alpha_prior/alpha_obs for 1A/1D on CAL-fit with clean T/theta; freeze those alpha values for composition; select beta/gamma conditionally on the diffused parent logits using CAL-fit only."
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.096212863922119,
+        "macro_mae_predicted_bf_m": 4.123754501342773,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.224374151229858,
+        "macro_es_m": 2.972198218539141,
+        "macro_joint_nll": 5.739554079546445,
+        "macro_transport_risk_m": 5.430315753687983,
+        "site_p99_full_m": 12.74769203186035,
+        "worst_site_mae_m": 12.94828462600708,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1+S2",
+      "composition_order": "S1 diffuses physical parent prior/observation channels and propagates mean endpoint logit displacement to virtual edges, then S2 Cell LSE",
+      "s1_method": "1D_global"
+    },
+    "2B": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.50565767288208,
+        "center_mode": "residual_interpolated"
+      },
+      "metrics": {
+        "macro_mae_full_m": 3.950153350830078,
+        "macro_mae_predicted_bf_m": 3.98115873336792,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.253156171061775,
+        "macro_es_m": 2.845356497211733,
+        "macro_joint_nll": 5.7756807449935135,
+        "macro_transport_risk_m": 5.163917330728061,
+        "site_p99_full_m": 12.728965988159176,
+        "worst_site_mae_m": 13.03025484085083,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S2",
+      "composition_order": "S2 virtual field and Cell LSE on clean parent logits"
+    },
+    "combo_1A_2B": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.577990531921387,
+        "s1_method": "1A_global",
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.0,
+        "center_mode": "residual_interpolated",
+        "selection_policy": "Select alpha_prior/alpha_obs for 1A/1D on CAL-fit with clean T/theta; freeze those alpha values for composition; select beta/gamma conditionally on the diffused parent logits using CAL-fit only."
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.079535484313965,
+        "macro_mae_predicted_bf_m": 4.107540130615234,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.241984581947325,
+        "macro_es_m": 2.92928989123607,
+        "macro_joint_nll": 5.739343164623648,
+        "macro_transport_risk_m": 5.40524020747862,
+        "site_p99_full_m": 12.746684989929197,
+        "worst_site_mae_m": 12.977256536483765,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1+S2",
+      "composition_order": "S1 diffuses physical parent prior/observation channels and propagates mean endpoint logit displacement to virtual edges, then S2 Cell LSE",
+      "s1_method": "1A_global"
+    },
+    "combo_1D_2B": {
+      "params": {
+        "temperature": 1.043444189866937,
+        "theta": [
+          1.5,
+          1.5
+        ],
+        "beta": 0.8,
+        "gamma_space": 0.0,
+        "objective": 7.586868762969971,
+        "s1_method": "1D_global",
+        "alpha_prior": 0.35,
+        "alpha_obs": 0.05,
+        "center_mode": "residual_interpolated",
+        "selection_policy": "Select alpha_prior/alpha_obs for 1A/1D on CAL-fit with clean T/theta; freeze those alpha values for composition; select beta/gamma conditionally on the diffused parent logits using CAL-fit only."
+      },
+      "metrics": {
+        "macro_mae_full_m": 4.096212863922119,
+        "macro_mae_predicted_bf_m": 4.123754501342773,
+        "macro_bf_accuracy": 1.0,
+        "row_bf_accuracy": 1.0,
+        "site_p95_full_m": 8.224374151229858,
+        "macro_es_m": 2.972198218539141,
+        "macro_joint_nll": 5.739554079546445,
+        "macro_transport_risk_m": 5.430315753687983,
+        "site_p99_full_m": 12.74769203186035,
+        "worst_site_mae_m": 12.94828462600708,
+        "n_sites": 69,
+        "n_scans": 414
+      },
+      "group": "S3+S1+S2",
+      "composition_order": "S1 diffuses physical parent prior/observation channels and propagates mean endpoint logit displacement to virtual edges, then S2 Cell LSE",
+      "s1_method": "1D_global"
+    }
+  },
+  "physical_anchors": 1052,
+  "unique_virtual_edges": 5000,
+  "graph_edge_diagnostics": {
+    "length_p50_m": 6.061220169067383,
+    "length_p95_m": 12.072623252868652,
+    "length_max_m": 21.26771354675293,
+    "count_gt_30m": 0,
+    "fraction_gt_30m": 0.0
+  },
+  "native_checkpoint_alpha": 0.052165593951940536,
+  "evaluation_role": "CAL-eval",
+  "selection_role": "CAL-fit",
+  "cal_eval_not_used_for_selection": true,
+  "retraining_performed": false,
+  "training_runs": 0,
+  "optimizer_steps": 0,
+  "elapsed_seconds": 17.93166490001022,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}

@@ -214,3 +214,7 @@ local_notes/
 # V17 spatial study: retain raw evidence logs and exclude local test fixtures.
 !/fhm_dapp_tim/evidence/v17_spatial_structure_v1/run_logs/*.log
 /fhm_dapp_tim/evidence/v17_spatial_structure_v1/pytest_tmp/
+
+# V17 spatial composition publication: retain raw scientific command logs.
+!/fhm_dapp_tim/evidence/v17_spatial_composition_execution_v1/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_spatial_composition_execution_v1/*.stderr.log

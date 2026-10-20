@@ -1,0 +1,30 @@
+{"stage": "phase_audit_complete", "phase": "T", "completed": 45, "max_site_reduction_error": 9.471060824495225e-07}
+{"stage": "preflight_complete", "output": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_spatial_composition_v1", "checkpoints": 27, "runs": 27, "elapsed_seconds": 25.308399000001373, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17301, "arm": "C", "methods": 13, "elapsed_seconds": 5.705496700014919, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17301, "arm": "D", "methods": 13, "elapsed_seconds": 5.351627800002461, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17301, "arm": "E", "methods": 13, "elapsed_seconds": 5.532402500015451, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17302, "arm": "C", "methods": 13, "elapsed_seconds": 5.431287800020073, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17302, "arm": "D", "methods": 13, "elapsed_seconds": 5.3375124000012875, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17302, "arm": "E", "methods": 13, "elapsed_seconds": 5.498301099985838, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17303, "arm": "C", "methods": 13, "elapsed_seconds": 5.361288800020702, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17303, "arm": "D", "methods": 13, "elapsed_seconds": 5.429438099992694, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "tuji", "seed": 17303, "arm": "E", "methods": 13, "elapsed_seconds": 5.414059899980202, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17301, "arm": "C", "methods": 13, "elapsed_seconds": 19.291882399993483, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17301, "arm": "D", "methods": 13, "elapsed_seconds": 19.35419039998669, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17301, "arm": "E", "methods": 13, "elapsed_seconds": 17.93166490001022, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17302, "arm": "C", "methods": 13, "elapsed_seconds": 16.859497099998407, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17302, "arm": "D", "methods": 13, "elapsed_seconds": 17.36276469999575, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17302, "arm": "E", "methods": 13, "elapsed_seconds": 17.27997749997303, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17303, "arm": "C", "methods": 13, "elapsed_seconds": 16.81681559997378, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17303, "arm": "D", "methods": 13, "elapsed_seconds": 19.307401300000492, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uts", "seed": 17303, "arm": "E", "methods": 13, "elapsed_seconds": 18.862868099997286, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17301, "arm": "C", "methods": 13, "elapsed_seconds": 24.44459589998587, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17301, "arm": "D", "methods": 13, "elapsed_seconds": 24.999521099991398, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17301, "arm": "E", "methods": 13, "elapsed_seconds": 25.11784789999365, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17302, "arm": "C", "methods": 13, "elapsed_seconds": 24.949483199976385, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17302, "arm": "D", "methods": 13, "elapsed_seconds": 24.763705300021684, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17302, "arm": "E", "methods": 13, "elapsed_seconds": 24.84398269999656, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17303, "arm": "C", "methods": 13, "elapsed_seconds": 25.930716799979564, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17303, "arm": "D", "methods": 13, "elapsed_seconds": 24.6751127000025, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_run_complete", "dataset": "uji", "seed": 17303, "arm": "E", "methods": 13, "elapsed_seconds": 23.835532299999613, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}
+{"stage": "composition_aggregate_complete", "run_metric_rows": 351, "summary_rows": 117, "paired_comparisons": 1053, "paired_site_rows": 55809, "internal_test_rows_scored": 0, "official_test_rows_scored": 0}

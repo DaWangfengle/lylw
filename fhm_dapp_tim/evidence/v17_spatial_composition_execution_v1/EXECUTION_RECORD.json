@@ -1,0 +1,115 @@
+{
+  "started_at": "2026-10-20T14:30:13.944072+08:00",
+  "cwd": "D:\\liuyanlunwen",
+  "python": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "instruction_source": "V17_SPATIAL_COMPOSITION_CODEX_RUN.txt",
+  "requested_attachment_missing": "D:/liulanqi/V17_SPATIAL_COMPOSITION_CODEX_RUN (1).txt",
+  "commands": [
+    {
+      "label": "environment",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/v17_spatial_composition_execution_v1/audit_environment.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-20T14:30:13.944072+08:00",
+      "stdout": "environment.stdout.log",
+      "stderr": "environment.stderr.log",
+      "status": "COMPLETE",
+      "exit_code": 0,
+      "ended_at": "2026-10-20T14:30:28.423740+08:00",
+      "elapsed_seconds": 14.47855620001792,
+      "stdout_sha256": "2d823cd50c478f760fcdc9b2fc6966056b6af564bf7a4046f5aa18a0f5899e1a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "pre_run_tests",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_msep_v17_spatial_operators_v1.py",
+        "tests/test_msep_v17_spatial_structure_v1.py",
+        "tests/test_msep_v17_spatial_composition_v1.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-20T14:32:02.260185+08:00",
+      "stdout": "pre_run_tests.stdout.log",
+      "stderr": "pre_run_tests.stderr.log",
+      "status": "COMPLETE",
+      "exit_code": 0,
+      "ended_at": "2026-10-20T14:32:18.754474+08:00",
+      "elapsed_seconds": 16.493609600001946,
+      "stdout_sha256": "9c8dc7ce5fa2af36fec4e85dceea95741681cd5b07aaddc1fb73ad590d83b9fd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "composition_all",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_v17_spatial_composition_v1",
+        "all",
+        "--input-root",
+        "fhm_dapp_tim/evidence/v17_two_stage_freeze_v1",
+        "--checkpoint-root",
+        "fhm_dapp_tim/evidence/v17_spatial_structure_v1",
+        "--output",
+        "fhm_dapp_tim/evidence/v17_spatial_composition_v1",
+        "--device",
+        "cuda"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-20T14:32:38.987683+08:00",
+      "stdout": "composition_all.stdout.log",
+      "stderr": "composition_all.stderr.log",
+      "status": "COMPLETE",
+      "exit_code": 0,
+      "ended_at": "2026-10-20T14:40:53.555791+08:00",
+      "elapsed_seconds": 494.5674025999906,
+      "stdout_sha256": "052d427adb3849118c8829ee917f1ca3258872f0d0b2ff9f49bfa91fa68cc919",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "closeout_read_only",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "fhm_dapp_tim/evidence/v17_spatial_composition_execution_v1/closeout_read_only.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-20T14:41:04.156310+08:00",
+      "stdout": "closeout_read_only.stdout.log",
+      "stderr": "closeout_read_only.stderr.log",
+      "status": "COMPLETE",
+      "exit_code": 0,
+      "ended_at": "2026-10-20T14:41:08.286827+08:00",
+      "elapsed_seconds": 4.12988910000422,
+      "stdout_sha256": "9606f60ab2a8c4205a6131f1055e7997c49665b87326e65f6bb3bc5d3ef0852f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "latest_user_instruction": {
+    "path": "D:\\liulanqi\\V17_SPATIAL_COMPOSITION_CODEX_RUN.txt",
+    "sha256": "0213f476260f0e00b87fd29d805dcf186c79f7223aff7964e30a4ec85471630f",
+    "canonical_protocol_sha256": "2830561b7b8bdae78a4ab26774a070be55149fbd197e809ebe30449807188875",
+    "normalized_text_matches_repository": true,
+    "resumption_state": "environment audit complete; pre-run tests and formal experiment not yet started"
+  },
+  "auxiliary_process_inventory_warning": "Get-CimInstance Win32_Process was denied; no experiment was running and no process was changed.",
+  "status": "COMPLETE",
+  "finished_at": "2026-10-20T14:42:17.268341+08:00",
+  "regression_tests_passed": 36,
+  "formal_pipeline_invocations": 1,
+  "completed_checkpoint_runs": 27,
+  "methods_per_run": 13,
+  "integrity_status": "PASS",
+  "independent_artifact_review": "PASS",
+  "scientific_source_changes": false,
+  "training_runs": 0,
+  "optimizer_steps": 0,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "scientific_git_operations": false,
+  "final_artifact_review_sha256": "486a997c65cd0efdb8cced8140b3c2135aadcfc0d498e34195f6c166ba007028"
+}
