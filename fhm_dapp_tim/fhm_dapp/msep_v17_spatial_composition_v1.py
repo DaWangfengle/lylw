@@ -23,6 +23,8 @@ import torch
 from . import msep_v17_spatial_operators_v1 as op
 from . import msep_v17_spatial_structure_v1 as s3
 
+emit = s3.emit
+
 REPO = s3.REPO
 DEFAULT_INPUT = s3.DEFAULT_INPUT
 DEFAULT_CHECKPOINT_ROOT = s3.DEFAULT_OUTPUT
@@ -30,6 +32,7 @@ DEFAULT_OUTPUT = REPO / "fhm_dapp_tim/evidence/v17_spatial_composition_v1"
 ARMS = ("C", "D", "E")
 S1_METHODS = ("1A_global", "1D_global")
 METHOD_NAMES = (
+    "raw_backbone",
     "joint_calibrated_base",
     "1A_global",
     "1D_global",
@@ -299,14 +302,41 @@ def compose_parent_logits(pack, ctx, clean_params, *, s1_arm=None, s1_params=Non
     return logits
 
 
-def compose_cell_mixture(pack, ctx, clean_params, parent_logits, beta):
-    """Expand the supplied physical parent logits with the existing S2 virtual field."""
+def propagate_s1_delta_to_virtual_logits(virtual_logits, parent_logits, clean_parent_logits, edges):
+    """Transfer the mean endpoint S1 logit displacement to each virtual edge."""
+    if parent_logits.ndim != 2 or clean_parent_logits.shape != parent_logits.shape:
+        raise ValueError("parent and clean-parent logits must share [batch, physical_anchor] shape")
+    if virtual_logits.ndim != 2 or virtual_logits.shape[0] != parent_logits.shape[0]:
+        raise ValueError("virtual logits must share the parent batch dimension")
+    edge_index = torch.as_tensor(edges, dtype=torch.long, device=parent_logits.device)
+    if edge_index.ndim != 2 or edge_index.shape[1] != 2:
+        raise ValueError("edges must have shape [n_edges, 2]")
+    if edge_index.shape[0] != virtual_logits.shape[1]:
+        raise ValueError("virtual-logit count must equal the number of unique edges")
+    if edge_index.numel() and (int(edge_index.min()) < 0 or int(edge_index.max()) >= parent_logits.shape[1]):
+        raise ValueError("edge endpoint index is outside the physical parent-logit range")
+    clean = clean_parent_logits.to(device=parent_logits.device, dtype=parent_logits.dtype)
+    delta = parent_logits - clean
+    edge_delta = 0.5 * (
+        delta.index_select(1, edge_index[:, 0]) + delta.index_select(1, edge_index[:, 1])
+    )
+    return virtual_logits + edge_delta.to(device=virtual_logits.device, dtype=virtual_logits.dtype)
+
+
+def compose_cell_mixture(
+    pack, ctx, clean_params, parent_logits, beta, *, clean_parent_logits=None
+):
+    """Expand the S2 virtual field; optionally propagate S1 endpoint deltas to virtual edges."""
     virtual_logits = op.combine_retrieval_and_g13_logits(
         pack["virtual_scores"],
         pack["virtual_z"],
         clean_params["temperature"],
         torch.as_tensor(clean_params["theta"], dtype=parent_logits.dtype, device=parent_logits.device),
     )
+    if clean_parent_logits is not None:
+        virtual_logits = propagate_s1_delta_to_virtual_logits(
+            virtual_logits, parent_logits, clean_parent_logits, ctx["edges"]
+        )
     return s3.fast_cell_mixture(
         parent_logits,
         virtual_logits,
@@ -350,8 +380,13 @@ def _select_s2_and_combinations(ctx, model, fit_pack, clean, s1_selected):
         )
         for beta in s3.BETAS:
             for name, parent in parent_logits.items():
+                cell_virtual_logits = virtual_logits
+                if name != "base":
+                    cell_virtual_logits = propagate_s1_delta_to_virtual_logits(
+                        virtual_logits, parent, parent_logits["base"], ctx["edges"]
+                    )
                 cell = s3.fast_cell_mixture(
-                    parent, virtual_logits, ctx["edges"], float(beta),
+                    parent, cell_virtual_logits, ctx["edges"], float(beta),
                     pack["xy"], pack["sigma"], pack["virtual_xy"], pack["virtual_sigma"],
                 )
                 objective = float(s3.objective_from_q(cell["q"], cache).detach().cpu())
@@ -564,8 +599,12 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         }
         diagnostics[name] = sites
 
-    def record_cell(name, pack, parent_logits, beta, params, group, s1_method=None):
-        cell = compose_cell_mixture(pack, ctx, clean, parent_logits, beta)
+    def record_cell(
+        name, pack, parent_logits, beta, params, group, s1_method=None, clean_parent_logits=None
+    ):
+        cell = compose_cell_mixture(
+            pack, ctx, clean, parent_logits, beta, clean_parent_logits=clean_parent_logits
+        )
         extra = {
             "group": group,
             "composition_order": (
@@ -582,6 +621,16 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
 
     evaluation0 = s3.make_pack(ctx, model, ctx["cal_eval"], virtual_gamma=0.0)
     clean_parent = compose_parent_logits(evaluation0, ctx, clean)
+    raw_params = {"temperature": 1.0, "theta": [0.0, 0.0], "calibration": "none"}
+    raw_parent = compose_parent_logits(evaluation0, ctx, raw_params)
+    record(
+        "raw_backbone", evaluation0, torch.softmax(raw_parent, dim=1), raw_params,
+        extra={
+            "group": "raw_backbone",
+            "composition_order": "un-calibrated frozen C/D/E output with T=1 and theta=[0, 0]",
+            "native_checkpoint_alpha": native_alpha,
+        },
+    )
     record(
         "joint_calibrated_base", evaluation0, torch.softmax(clean_parent, dim=1), clean,
         extra={"group": "S3", "composition_order": "clean joint calibration"},
@@ -626,6 +675,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             },
             "S3+S1+S2",
             s1_method=name,
+            clean_parent_logits=clean_parent,
         )
         record_cell(
             f"combo_{name[:2]}_2A_beta_only_control", evaluation0, eval_s1_logits[name],
@@ -641,6 +691,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             },
             "S3+S1+S2",
             s1_method=name,
+            clean_parent_logits=clean_parent,
         )
     if float(s2_best["gamma_space"]) == 0.0:
         record_cell(
@@ -702,6 +753,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
                 },
                 "S3+S1+S2",
                 s1_method=name,
+                clean_parent_logits=parent_clean,
             )
         del evaluation
         if torch.cuda.is_available():
@@ -781,6 +833,7 @@ def run(args):
 
 def _comparisons(methods):
     pairs = {("joint_calibrated_base", name) for name in methods if name != "joint_calibrated_base"}
+    pairs.update({("raw_backbone", name) for name in methods if name != "raw_backbone"})
     pairs.update({
         ("2A", "2B"),
         ("2A", "2A_beta_only_control"),
