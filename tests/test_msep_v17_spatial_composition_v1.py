@@ -266,3 +266,15 @@ def test_preflight_emitter_binding_and_entrypoint(tmp_path, monkeypatch, capsys)
     assert manifest["splits"]["TOY_seed17"]["unique_midpoint_edges"] == 1
     emitted = capsys.readouterr().out
     assert "preflight_complete" in emitted
+
+
+def test_raw_backbone_parameters_leave_parent_scores_uncalibrated():
+    scores = torch.tensor([[0.2, -0.7, 1.1], [-0.3, 0.5, 0.8]], dtype=torch.float32)
+    evidence = torch.tensor(
+        [[[1.0, -2.0], [0.4, 0.6], [-0.5, 0.3]],
+         [[-1.0, 0.2], [0.8, -0.6], [0.1, 1.2]]],
+        dtype=torch.float32,
+    )
+    raw_params = {"temperature": 1.0, "theta": [0.0, 0.0], "calibration": "none"}
+    logits = composition.compose_parent_logits({"scores": scores, "z": evidence}, {}, raw_params)
+    assert torch.equal(logits, scores)
