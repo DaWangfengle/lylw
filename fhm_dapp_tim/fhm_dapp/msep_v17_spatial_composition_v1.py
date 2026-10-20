@@ -1048,8 +1048,8 @@ def _write_report(root, summaries, paired, audit):
         "",
         "The graph is unchanged from the prior Structure 1 study: same-building/same-floor k=8 union graph, Sinkhorn-scaled, with no maximum-distance cutoff. These diagnostics make remote-neighbor risk visible rather than changing the operator mid-comparison.",
         "",
-        "|Dataset|Seed|Physical anchors|Unique edges|Edge P95 m|Max edge m|Edges >30 m|Fraction >30 m|",
-        "|---|---:|---:|---:|---:|---:|---:|---:|",
+        "|Dataset|Seed|Physical anchors|Unique edges|Edge P50 m|Edge P95 m|Max edge m|Edges >30 m|Fraction >30 m|",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     manifest = s3.read_json(Path(root) / "EXECUTION_MANIFEST.json")
     for run_key, split in sorted(manifest["splits"].items()):
@@ -1057,7 +1057,7 @@ def _write_report(root, summaries, paired, audit):
         lines.append(
             f"|{run_key.rsplit('_seed', 1)[0]}|{run_key.rsplit('_seed', 1)[1]}|"
             f"{split['physical_anchors']}|{split['unique_midpoint_edges']}|"
-            f"{diag['length_p95_m']:.3f}|{diag['length_max_m']:.3f}|"
+            f"{diag['length_p50_m']:.3f}|{diag['length_p95_m']:.3f}|{diag['length_max_m']:.3f}|"
             f"{diag['count_gt_30m']}|{diag['fraction_gt_30m']:.4f}|"
         )
     lines.extend([
