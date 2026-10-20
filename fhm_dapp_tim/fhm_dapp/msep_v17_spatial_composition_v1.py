@@ -454,6 +454,10 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         run_lock = s3.read_json(run_dir / "RUN.lock")
         if selection.get("selection_role") != "CAL-fit" or selection.get("cal_eval_not_used_for_selection") is not True:
             raise RuntimeError(f"resume selection is not a frozen CAL-fit selection: {selection_path}")
+        if (selection.get("dataset"), selection.get("seed"), selection.get("backbone")) != (dataset, seed, arm):
+            raise RuntimeError(f"resume selection identity mismatch: {selection_path}")
+        if lock.get("selection_role") != "CAL-fit" or lock.get("evaluation_role") != "CAL-eval" or lock.get("selection_frozen_before_cal_eval") is not True:
+            raise RuntimeError(f"resume CAL-eval lock has invalid role/order metadata: {eval_lock_path}")
         if lock["selection_sha256"] != s3.sha(selection_path):
             raise RuntimeError(f"resume selection SHA mismatch: {eval_lock_path}")
         if lock["checkpoint_sha256"] != checkpoint_sha or run_lock["checkpoint_sha256"] != checkpoint_sha:
@@ -857,6 +861,8 @@ def audit_results(root, *, require_complete=True, write=False):
         assert (selection["dataset"], selection["seed"], selection["backbone"]) == (
             result["dataset"], result["seed"], result["backbone"]
         )
+        assert selection["selected_epoch"] == result["selected_epoch"]
+        assert lock["selection_role"] == "CAL-fit" and lock["evaluation_role"] == "CAL-eval"
         assert lock["selection_sha256"] == s3.sha(path.with_name("CAL_FIT_SELECTION.json"))
         assert result["selection_sha256"] == lock["selection_sha256"]
         assert result["checkpoint_sha256"] == lock["checkpoint_sha256"] == selection["checkpoint_sha256"]
@@ -868,6 +874,10 @@ def audit_results(root, *, require_complete=True, write=False):
         assert lock["cal_eval_rows"] == result["cal_eval_rows"]
         assert run_lock["cal_fit_rows"] == result["cal_fit_rows"]
         assert run_lock["cal_eval_rows"] == result["cal_eval_rows"]
+        assert (run_lock["dataset"], run_lock["seed"], run_lock["backbone"]) == (
+            result["dataset"], result["seed"], result["backbone"]
+        )
+        assert run_lock["checkpoint_relpath"] == result["checkpoint_relpath"]
         assert run_lock["checkpoint_sha256"] == result["checkpoint_sha256"]
         assert run_lock["device"] == result["device"] == manifest["device_requested"]
         assert lock["device"] == result["device"]
