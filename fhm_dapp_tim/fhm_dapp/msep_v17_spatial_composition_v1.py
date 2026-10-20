@@ -430,7 +430,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             raise RuntimeError(f"resume selection SHA mismatch: {eval_lock_path}")
         if lock["checkpoint_sha256"] != checkpoint_sha or run_lock["checkpoint_sha256"] != checkpoint_sha:
             raise RuntimeError(f"resume checkpoint SHA mismatch: {run_dir}")
-        if lock["source_sha256"] != manifest["source_sha256"] if "source_sha256" in lock else False:
+        if lock["source_sha256"] != manifest["source_sha256"]:
             raise RuntimeError(f"resume source SHA mismatch: {eval_lock_path}")
         expected_fit_sha = s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"])
         expected_eval_sha = s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"])
@@ -496,6 +496,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         s3.write_json(eval_lock_path, {
             "selection_sha256": s3.sha(selection_path),
             "checkpoint_sha256": checkpoint_sha,
+            "source_sha256": manifest["source_sha256"],
             "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
             "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
             "cal_fit_rows": int(len(ctx["cal_fit"])),
@@ -808,6 +809,7 @@ def audit_results(root, *, require_complete=True, write=False):
         assert result["selection_sha256"] == lock["selection_sha256"]
         assert result["checkpoint_sha256"] == lock["checkpoint_sha256"] == selection["checkpoint_sha256"]
         assert lock["selection_frozen_before_cal_eval"] is True
+        assert lock["source_sha256"] == manifest["source_sha256"]
         assert lock["cal_fit_key_sha256"] == result["cal_fit_key_sha256"]
         assert lock["cal_eval_key_sha256"] == result["cal_eval_key_sha256"]
         assert lock["cal_fit_rows"] == result["cal_fit_rows"]
