@@ -833,7 +833,10 @@ def run(args):
 
 
 def _comparisons(methods):
-    pairs = {("joint_calibrated_base", name) for name in methods if name != "joint_calibrated_base"}
+    pairs = {
+        ("joint_calibrated_base", name)
+        for name in methods if name not in ("joint_calibrated_base", "raw_backbone")
+    }
     pairs.update({("raw_backbone", name) for name in methods if name != "raw_backbone"})
     pairs.update({
         ("2A", "2B"),
