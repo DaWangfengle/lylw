@@ -425,6 +425,8 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         assert lock["checkpoint_sha256"] == checkpoint_sha
         assert lock["cal_fit_key_sha256"] == s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"])
         assert lock["cal_eval_key_sha256"] == s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"])
+        assert lock["cal_fit_rows"] == len(ctx["cal_fit"])
+        assert lock["cal_eval_rows"] == len(ctx["cal_eval"])
         assert all(lock.get(k) == 0 for k in TEST_COUNTS)
         emit("resume_locked_cal_eval", dataset=dataset, seed=seed, arm=arm,
              selection_sha256=lock["selection_sha256"])
@@ -466,6 +468,8 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             "source_sha256": manifest["source_sha256"],
             "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
             "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
+            "cal_fit_rows": int(len(ctx["cal_fit"])),
+            "cal_eval_rows": int(len(ctx["cal_eval"])),
             "retraining_performed": False,
             "optimizer_steps": 0,
             **TEST_COUNTS,
@@ -476,6 +480,8 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             "checkpoint_sha256": checkpoint_sha,
             "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
             "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
+            "cal_fit_rows": int(len(ctx["cal_fit"])),
+            "cal_eval_rows": int(len(ctx["cal_eval"])),
             "selection_role": "CAL-fit",
             "evaluation_role": "CAL-eval",
             "selection_frozen_before_cal_eval": True,
@@ -657,6 +663,8 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         "selection_sha256": s3.sha(selection_path),
         "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
         "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
+        "cal_fit_rows": int(len(ctx["cal_fit"])),
+        "cal_eval_rows": int(len(ctx["cal_eval"])),
         "methods": results,
         "physical_anchors": int(len(ctx["memory"]["coords"])),
         "unique_virtual_edges": int(len(ctx["edges"])),
@@ -768,7 +776,7 @@ def audit_results(root, *, require_complete=True, write=False):
         )
         actual_split = (
             result["cal_fit_key_sha256"], result["cal_eval_key_sha256"],
-            lock.get("cal_fit_rows", split["cal_fit_rows"]), lock.get("cal_eval_rows", split["cal_eval_rows"]),
+            result["cal_fit_rows"], result["cal_eval_rows"],
             result["physical_anchors"], result["unique_virtual_edges"],
         )
         if actual_split != expected_split:
@@ -784,6 +792,10 @@ def audit_results(root, *, require_complete=True, write=False):
         assert lock["selection_frozen_before_cal_eval"] is True
         assert lock["cal_fit_key_sha256"] == result["cal_fit_key_sha256"]
         assert lock["cal_eval_key_sha256"] == result["cal_eval_key_sha256"]
+        assert lock["cal_fit_rows"] == result["cal_fit_rows"]
+        assert lock["cal_eval_rows"] == result["cal_eval_rows"]
+        assert run_lock["cal_fit_rows"] == result["cal_fit_rows"]
+        assert run_lock["cal_eval_rows"] == result["cal_eval_rows"]
         assert run_lock["checkpoint_sha256"] == result["checkpoint_sha256"]
         assert run_lock["selected_epoch"] == result["selected_epoch"]
         assert run_lock["cal_fit_key_sha256"] == result["cal_fit_key_sha256"]
