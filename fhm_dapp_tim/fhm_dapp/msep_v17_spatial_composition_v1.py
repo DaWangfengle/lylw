@@ -166,6 +166,8 @@ def _verify_source_manifest(manifest):
 
 def preflight(args):
     started = time.perf_counter()
+    if args.device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA was requested but is unavailable; rerun preflight/all explicitly with --device cpu")
     input_root = Path(args.input_root).resolve()
     checkpoint_root = Path(args.checkpoint_root).resolve()
     output_root = Path(args.output).resolve()
@@ -244,7 +246,7 @@ def preflight(args):
     manifest_path = output_root / "EXECUTION_MANIFEST.json"
     if manifest_path.is_file():
         existing = s3.read_json(manifest_path)
-        for field in ("status", "input_root", "checkpoint_root", "output_root", "source_sha256", "checkpoint_sha256", "phase_t_integrity_review_sha256", "splits"):
+        for field in ("status", "input_root", "checkpoint_root", "output_root", "device_requested", "source_sha256", "checkpoint_sha256", "phase_t_integrity_review_sha256", "splits"):
             if existing.get(field) != manifest.get(field):
                 raise RuntimeError(f"existing composition manifest differs in {field}; use a fresh output root")
         emit("preflight_reused", output=str(output_root), existing_runs=len(list((output_root / "runs").glob("*/*/RESULT.json"))) if (output_root / "runs").exists() else 0)
@@ -430,6 +432,8 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             raise RuntimeError(f"resume selection SHA mismatch: {eval_lock_path}")
         if lock["checkpoint_sha256"] != checkpoint_sha or run_lock["checkpoint_sha256"] != checkpoint_sha:
             raise RuntimeError(f"resume checkpoint SHA mismatch: {run_dir}")
+        if lock["device"] != args.device or run_lock["device"] != args.device:
+            raise RuntimeError(f"resume device differs from frozen CAL-fit selection: {run_dir}")
         if lock["source_sha256"] != manifest["source_sha256"]:
             raise RuntimeError(f"resume source SHA mismatch: {eval_lock_path}")
         expected_fit_sha = s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"])
@@ -483,6 +487,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
             "checkpoint_relpath": relative_checkpoint,
             "checkpoint_sha256": checkpoint_sha,
             "selected_epoch": int(payload["selected_epoch"]),
+            "device": args.device,
             "source_sha256": manifest["source_sha256"],
             "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
             "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
@@ -496,6 +501,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         s3.write_json(eval_lock_path, {
             "selection_sha256": s3.sha(selection_path),
             "checkpoint_sha256": checkpoint_sha,
+            "device": args.device,
             "source_sha256": manifest["source_sha256"],
             "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
             "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
@@ -679,6 +685,7 @@ def run_one(args, ctx, dataset, seed, arm, manifest):
         "selected_epoch": int(payload["selected_epoch"]),
         "checkpoint_relpath": relative_checkpoint,
         "checkpoint_sha256": checkpoint_sha,
+        "device": args.device,
         "selection_sha256": s3.sha(selection_path),
         "cal_fit_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
         "cal_eval_key_sha256": s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
@@ -719,6 +726,8 @@ def run(args):
         raise RuntimeError("checkpoint-root differs from the preflight-locked checkpoint root")
     if output_root != Path(manifest["output_root"]):
         raise RuntimeError("output root differs from the preflight-locked output root")
+    if args.device != manifest["device_requested"]:
+        raise RuntimeError("runtime device differs from preflight; use a fresh output root and rerun preflight")
     _verify_source_manifest(manifest)
     for relative, expected in manifest["checkpoint_sha256"].items():
         if s3.sha(Path(args.checkpoint_root).resolve() / relative) != expected:
@@ -817,6 +826,8 @@ def audit_results(root, *, require_complete=True, write=False):
         assert run_lock["cal_fit_rows"] == result["cal_fit_rows"]
         assert run_lock["cal_eval_rows"] == result["cal_eval_rows"]
         assert run_lock["checkpoint_sha256"] == result["checkpoint_sha256"]
+        assert run_lock["device"] == result["device"] == manifest["device_requested"]
+        assert lock["device"] == result["device"]
         assert run_lock["selected_epoch"] == result["selected_epoch"]
         assert run_lock["cal_fit_key_sha256"] == result["cal_fit_key_sha256"]
         assert run_lock["cal_eval_key_sha256"] == result["cal_eval_key_sha256"]
