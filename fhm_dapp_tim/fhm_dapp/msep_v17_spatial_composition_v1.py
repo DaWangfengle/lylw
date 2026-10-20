@@ -1044,11 +1044,32 @@ def _write_report(root, summaries, paired, audit):
         "- All methods use the same physical CAL-eval rows and the same seed+900 Energy Score Monte Carlo seed within each run.",
         "- Exact per-run selected values are printed below; the corresponding full calibration grids and hashes are preserved in CAL_FIT_SELECTION.json.",
         "",
-        "## Selected parameters (one row per frozen checkpoint)",
+        "## Frozen graph edge diagnostics",
+        "",
+        "The graph is unchanged from the prior Structure 1 study: same-building/same-floor k=8 union graph, Sinkhorn-scaled, with no maximum-distance cutoff. These diagnostics make remote-neighbor risk visible rather than changing the operator mid-comparison.",
+        "",
+        "|Dataset|Seed|Physical anchors|Unique edges|Edge P95 m|Max edge m|Edges >30 m|Fraction >30 m|",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
         "",
         "|Dataset|Seed|Backbone|T|theta visibility/strength|1A alpha prior/obs|1D alpha prior/obs|S2 2B beta/gamma|S1+S2 1A beta/gamma|S1+S2 1D beta/gamma|",
         "|---|---:|---|---:|---|---|---|---|---|---|",
     ]
+    manifest = s3.read_json(Path(root) / "EXECUTION_MANIFEST.json")
+    for run_key, split in sorted(manifest["splits"].items()):
+        diag = split["graph_edge_diagnostics"]
+        lines.append(
+            f"|{run_key.rsplit('_seed', 1)[0]}|{run_key.rsplit('_seed', 1)[1]}|"
+            f"{split['physical_anchors']}|{split['unique_midpoint_edges']}|"
+            f"{diag['length_p95_m']:.3f}|{diag['length_max_m']:.3f}|"
+            f"{diag['count_gt_30m']}|{diag['fraction_gt_30m']:.4f}|"
+        )
+    lines.extend([
+        "",
+        "## Selected parameters (one row per frozen checkpoint)",
+        "",
+        "|Dataset|Seed|Backbone|T|theta visibility/strength|1A alpha prior/obs|1D alpha prior/obs|S2 2B beta/gamma|S1+S2 1A beta/gamma|S1+S2 1D beta/gamma|",
+        "|---|---:|---|---:|---|---|---|---|---|---|",
+    ])
     selection_paths = sorted((Path(root) / "runs").glob("*/*/CAL_FIT_SELECTION.json"))
     if len(selection_paths) != audit["expected_runs"]:
         raise RuntimeError(f"parameter report requires all {audit['expected_runs']} frozen selections")
