@@ -153,10 +153,11 @@ def normalized_virtual_endpoint_weights(edges,coords,tau_virt_m):
         k=np.maximum(k,np.finfo(np.float64).tiny); deg=np.bincount(e.reshape(-1),minlength=n); den=np.zeros(n)
         np.add.at(den,e[:,0],k); np.add.at(den,e[:,1],k)
         wi=k/den[e[:,0]]; wj=k/den[e[:,1]]
-        for node in range(n):
-            ix=np.flatnonzero((e[:,0]==node)|(e[:,1]==node))
-            total=sum(wi[z] if e[z,0]==node else wj[z] for z in ix)
-            if len(ix) and not np.isclose(total,1.0,atol=1e-10): raise RuntimeError("virtual endpoint weights do not conserve mass")
+        endpoint_sum=np.zeros(n,dtype=np.float64)
+        np.add.at(endpoint_sum,e[:,0],wi); np.add.at(endpoint_sum,e[:,1],wj)
+        active=deg>0
+        if not np.allclose(endpoint_sum[active],1.0,atol=1e-10,rtol=1e-10):
+            raise RuntimeError("virtual endpoint weights do not conserve mass")
     else:
         d=k=wi=wj=np.empty(0); deg=np.zeros(n,dtype=np.int64)
     return {"edges":e,"lengths_m":d,"kernel":k,"degree":deg,"weight_i":wi,"weight_j":wj,
@@ -177,7 +178,15 @@ def weighted_cell_mixture(parent_logits,virtual_logits,edges,endpoint_weights,be
     wi=torch.as_tensor(endpoint_weights["weight_i"],dtype=parent_logits.dtype,device=parent_logits.device)
     wj=torch.as_tensor(endpoint_weights["weight_j"],dtype=parent_logits.dtype,device=parent_logits.device)
     degree=torch.as_tensor(endpoint_weights["degree"],dtype=torch.long,device=parent_logits.device)
+    incident=torch.zeros(n,dtype=parent_logits.dtype,device=parent_logits.device)
+    if ne:
+        incident.scatter_add_(0,e[:,0],wi); incident.scatter_add_(0,e[:,1],wj)
+    if not torch.allclose(incident,(degree>0).to(parent_logits.dtype),atol=2e-6,rtol=2e-6):
+        raise ValueError("per-parent virtual measure is not normalized")
     pmass=torch.where(degree>0,parent_logits.new_full((n,),1.0-float(beta)),parent_logits.new_ones((n,)))
+    measure_total=pmass.sum()+float(beta)*(wi+wj).sum()
+    if not torch.allclose(measure_total,parent_logits.new_tensor(float(n)),atol=2e-5,rtol=2e-5):
+        raise ValueError("physical-plus-virtual pre-normalization measure is not conserved")
     pterms=parent_logits+pmass.log()[None]
     if float(beta)==0.0 or ne==0:
         q=torch.softmax(parent_logits,dim=1); ids=torch.arange(n,device=parent_logits.device)[None].expand(batch,-1)
@@ -236,9 +245,9 @@ def _calibration_candidates():
         alpha_prior=float(ap),alpha_obs=float(ao),beta=float(beta))
         for i,(t,tv,ts,ap,ao,beta) in enumerate(itertools.product(TEMPERATURES,THETAS,THETAS,ALPHAS,ALPHAS,BETAS))]
 
-def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,chunk_size=16,row_chunk_size=256):
+def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endpoint_cache=None,chunk_size=16,row_chunk_size=256):
     device=pack_all["scores"].device; coords=ctx["memory"]["coords"].detach().cpu().numpy()
-    ep=normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
+    ep=endpoint_cache if endpoint_cache is not None else normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
     all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
     lookup={tuple(map(int,e)):i for i,e in enumerate(all_edges.tolist())}
     edge_ids=[lookup[tuple(map(int,e))] for e in ep["edges"].tolist()]
@@ -597,7 +606,7 @@ def run(args):
             candidates=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
               tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],tau_virt_m=geom["tau_virt_m"],
               geometry_role=geom["role"]) for x in inner]
-            rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2,geom,candidates)
+            rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2,geom,candidates,endpoint_cache=epdiag)
             for r in rows: r.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
               split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),
               anchor_order_sha256=_hash_anchor_order(coords,b,f))
