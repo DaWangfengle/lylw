@@ -143,6 +143,8 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,
 
 def normalized_virtual_endpoint_weights(edges,coords,tau_virt_m):
     e=np.asarray(torch.as_tensor(edges).detach().cpu(),dtype=np.int64).reshape(-1,2); xy=np.asarray(coords,dtype=np.float64); n=len(xy)
+    if xy.ndim!=2 or xy.shape[1]!=2 or not np.isfinite(xy).all():
+        raise ValueError("virtual-edge coordinates must be finite with shape [N,2]")
     if not (float(tau_virt_m)==math.inf or (math.isfinite(float(tau_virt_m)) and tau_virt_m>0)): raise ValueError("tau_virt must be positive or +inf")
     if len(e):
         e=np.sort(e,axis=1)
@@ -200,18 +202,35 @@ def weighted_cell_mixture(parent_logits,virtual_logits,edges,endpoint_weights,be
 
 
 def _geometry_value_pool(diag):
-    q=diag["kth_neighbor_distance_m"]["1"]
-    quant=[q[k] for k in ("p50","p75","p90","p95") if q.get(k) is not None and q[k]>0]
-    if not quant:
+    # Four empirical scales (one median per k) plus four fixed physical scales;
+    # k=1/2/4/8 upper-tail quantiles fill any slots lost to duplicate distances.
+    empirical=[]
+    for k in (1,2,4,8):
+        q=diag["kth_neighbor_distance_m"][str(k)]
+        value=q.get("p50")
+        if value is not None and math.isfinite(float(value)) and float(value)>0:
+            empirical.append(float(value))
+    if not empirical:
         raise RuntimeError("FIT-only nearest-neighbor geometry is unavailable; fail closed rather than guessing scales")
     out=[]
-    for value in quant+[1.,2.,5.,8.,10.,20.,40.,60.]:
-        value=float(value)
-        if not any(abs(value-x)<=1e-8*max(1.,value) for x in out): out.append(value)
+    for value in empirical+[1.,8.,20.,40.]:
+        if not any(abs(value-x)<=1e-8*max(1.,value) for x in out): out.append(float(value))
+    for k in (1,2,4,8):
+        q=diag["kth_neighbor_distance_m"][str(k)]
+        for name in ("p90","p75","p95","p25"):
+            value=q.get(name)
+            if value is not None and math.isfinite(float(value)) and float(value)>0 and not any(
+                abs(float(value)-x)<=1e-8*max(1.,float(value)) for x in out):
+                out.append(float(value))
+            if len(out)>=8: break
         if len(out)>=8: break
-    if not out: raise RuntimeError("no valid FIT-only nearest-neighbor distances; fail closed")
-    while len(out)<4: out.append(float(2**len(out)))
-    return out
+    for value in (2.,5.,10.,60.):
+        if len(out)>=8: break
+        if not any(abs(value-x)<=1e-8*max(1.,value) for x in out): out.append(value)
+    if len(out)<4:
+        raise RuntimeError("fewer than four distinct positive FIT/physical geometry scales")
+    # Stable ordering makes the geometry design reproducible across runs.
+    return out[:8]
 
 def geometry_candidates(diag):
     pool=_geometry_value_pool(diag); n=len(pool)
@@ -251,7 +270,7 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
     cached_graph=graph.to(device).coalesce()
     ep=endpoint_cache if endpoint_cache is not None else normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
     all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
-    lookup={tuple(map(int,e)):i for i,e in enumerate(all_edges.tolist())}
+    lookup={tuple(sorted(map(int,e))):i for i,e in enumerate(all_edges.tolist())}
     edge_ids=[lookup[tuple(map(int,e))] for e in ep["edges"].tolist()]
     pack=_subset_virtual_pack(pack_all,edge_ids); edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=device)
     endpoint={"weight_i":torch.as_tensor(ep["weight_i"],device=device),"weight_j":torch.as_tensor(ep["weight_j"],device=device),
