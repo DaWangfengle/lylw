@@ -90,3 +90,13 @@ FIT 几何诊断
    RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md
 
 最终报告必须回答：FIT-only 分位数是多少；每个 dataset × backbone × seed 选出的 R/tau 是多少；联合参数/seed 是否稳定；相对 clean、single S1、single S2、旧 combo 的 MAE/ES/NLL/BF/P95/P99/Worst-site 差异；BF accuracy 是否保持；gamma 是否始终为 0；internal/official TEST 是否始终 0。
+
+
+新增执行闸门（必须落实）
+========================
+- CAL-fit 联合搜索、候选筛选、参数配置写入和 CAL_EVAL.lock 写入完成后，必须重新读取并验证 selection/lock；验证参数配置哈希、算法源码 SHA、EXECUTION_MANIFEST SHA、历史输入文件 SHA、FIT/CAL-eval split SHA、anchor-order SHA 和 TEST score count=0。任一不匹配立即失败。
+- 在上述锁验证通过之前，严禁调用 s3.make_pack(ctx, cal_eval, ...)，也严禁计算或读取 CAL-eval 目标坐标。CAL-eval 只在锁验证通过后构建一次并报告。
+- run() 必须显式定义 manifest_path=output/EXECUTION_MANIFEST.json，不能引用 preflight() 的局部变量。
+- 空间尺度候选必须覆盖 FIT 同 building/floor 的 k=1/2/4/8 邻居尺度，并结合固定物理尺度；不能只从 k=1 生成。
+- 虚拟边坐标必须显式验证为有限 [N,2] 数组；边索引和 canonical edge lookup 必须支持无向边端点顺序。
+- 运行测试：python -m pytest tests/test_v17_dataset_adaptive_joint_fit_v1.py -q；随后 py_compile；最后才执行真实数据 preflight 和 smoke test。当前开发环境若不能访问冻结数据，不得宣称实验已运行。
