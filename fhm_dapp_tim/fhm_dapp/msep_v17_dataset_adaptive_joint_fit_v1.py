@@ -397,8 +397,9 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
     lookup={tuple(sorted(map(int,e))):i for i,e in enumerate(all_edges.tolist())}
     edge_ids=[lookup[tuple(map(int,e))] for e in ep["edges"].tolist()]
     pack=_subset_virtual_pack(pack_all,edge_ids); edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=device)
-    endpoint={"weight_i":torch.as_tensor(ep["weight_i"],device=device),"weight_j":torch.as_tensor(ep["weight_j"],device=device),
-              "degree":torch.as_tensor(ep["degree"],device=device)}
+    endpoint={"weight_i":torch.as_tensor(ep["weight_i"],dtype=pack["scores"].dtype,device=device),
+              "weight_j":torch.as_tensor(ep["weight_j"],dtype=pack["scores"].dtype,device=device),
+              "degree":torch.as_tensor(ep["degree"],dtype=torch.long,device=device)}
     n=len(ctx["memory"]["coords"]); class_ids=torch.cat([ctx["classes"].to(device).long(),
         ctx["classes"].to(device).long()[edges[:,0]]])
     centers=torch.cat([pack["xy"],pack["virtual_xy"]],dim=1); scales=torch.cat([pack["sigma"],pack["virtual_sigma"]],dim=1)
@@ -722,8 +723,6 @@ def run(args):
             rd=out/"runs"/f"{ds}_seed{seed}"/arm
             rd.mkdir(parents=True,exist_ok=True)
             sp=rd/"CAL_FIT_SELECTION.json"; rp=rd/"CAL_EVAL_REPORT.json"
-            for stale in (rd/"CAL_EVAL.lock",rd/"RUN.lock"):
-                stale.unlink(missing_ok=True)
             ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm)
             ckpt_sha=s3.sha(ckpt)
             model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
@@ -746,9 +745,11 @@ def run(args):
                     "retained_fraction":float(len(s2)/len(base_edges)) if len(base_edges) else 0.0,
                     "distance_m":_quantiles(s2lens),"distance_threshold_counts":_threshold_counts(s2lens),
                     "zero_virtual_neighbor_nodes":int((epdiag["degree"]==0).sum()),
+                    "effective_virtual_mass_by_parent":epdiag["effective_virtual_mass_by_parent"],
                     "effective_virtual_mass_quantiles":_quantiles(epdiag["effective_virtual_mass_by_parent"])}
                 geometry_diagnostics[geom["geometry_id"]]=gdiag
-                candidates=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
+                candidates=[dict(x,candidate_id=f'{geom["geometry_id"]}__{x["candidate_id"]}',
+                    geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
                     tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],
                     tau_virt_m=geom["tau_virt_m"],geometry_role=geom["role"]) for x in inner]
                 rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2,geom,candidates,endpoint_cache=epdiag)
