@@ -1,36 +1,82 @@
-V17 数据集自适应空间尺度 + 联合参数搜索：本轮实验指令
-====================================================
+V17 数据集自适应空间尺度 + 联合参数搜索：修订后的 Codex 执行指令
+====================================================================
 
-目标：快速验证统一 S1+S2 结构是否值得继续。只做推理期拟合，不训练 backbone，不读取 TEST 标签，不做工程重构。
-
-注意：这些命令要在本地具有 v17_two_stage_freeze_v1 证据文件和 C/D/E checkpoint 的工作副本中执行。GitHub 云端 quick-check 只验证语法和单元测试；不要在没有这些数据文件的云端 runner 上执行 preflight/run。
+研究规则（不可违背）
+====================
+模型架构与数学公式在 TUJI、UTS、UJI 三个数据集上保持统一；但空间尺度和校准参数必须严格依据当前数据集、当前检查点的实际几何与 CAL-fit 基线独立适配。三个数据集是三个独立实验，必须按 TUJI -> UTS -> UJI 顺序一个一个跑完。跑一个数据集时不得读取其他数据集的几何统计来设置米制参数；不得在三个数据集之间临时改代码或选择规则。
 
 代码入口：
   fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
 
-搜索设计：
-- 按 TUJI / UTS / UJI 的 FIT 锚点几何分别生成 R_max_S1、tau_graph、R_max_S2、tau_virt 候选。
-- 每个空间候选上联合搜索 T、theta_v、theta_s、alpha_prior、alpha_obs、beta，不再分步冻结。
-- beta 固定为 0, 0.05, 0.10, 0.15, 0.20, 0.35, 0.50, 0.65, 0.80；gamma_space 固定为 0。
-- 目标为归一化 (MAE + 0.30 W1) + 0.25 × 归一化 BF-CE 变化 + lambda × 归一化 Joint NLL 变化；分别比较 lambda=0.02 和 0.05。BF accuracy 不得低于 clean，BF-CE 最多允许 1% 变化。
+本次修复的四个硬要求
+====================
 
-为避免旧结果混入，使用一个新的输出目录：
+1. 空间候选完全从当前数据集 FIT 几何产生
+--------------------------------------
+- 彻底删除跨数据集硬编码的 physical=[1,2,5,8,10,15,20,30,40,60] 等米制列表。
+- R_max_S1、tau_graph、R_max_S2、tau_virt 的所有有限候选值必须从当前数据集的 FIT k=1/2/4/8 近邻分位数和当前 union-kNN 边长分位数产生。允许对这些真实分位数应用明确记录的无量纲倍率，以细化局部搜索；禁止把固定米数列表混进候选池。
+- 每个 dataset/seed 生成 12～16 组不同的几何配置；至少包含 tau_virt=+infinity 对照。
+- 强制 R_max_S2 <= R_max_S1。预检与运行时都要检查，不允许违规配置进入搜索。
+- 旧的 unbounded 8m clean baseline 只作为报告比较基线，不得混入新的 FIT 几何候选池，也不得被搜索器选为胜出候选。
+- 如果真实 FIT 分位数不足以生成至少 12 组有效配置，必须明确失败，不得回退到固定米制参数。
+
+2. T / theta 网格围绕当前 dataset × seed × checkpoint 的 clean baseline 动态生成
+----------------------------------------------------------------------------------
+- 在每个 checkpoint 的 CAL-fit 搜索前，先解析当前 checkpoint 的 baseline_config。
+- temperature、theta_v、theta_s 各生成三个局部相对倍率邻域值，必须包含该 baseline 的精确原值。候选应受现有合法参数范围约束，并将实际中心值、实际候选值及来源写入 CAL_FIT_SELECTION.json。
+- 不允许继续对所有数据集强制套 TEMPERATURES=(0.25,0.75,1,3)、THETAS=(0,0.75,1.5) 这种全局粗网格。
+- alpha_prior 固定候选为 (0,0.05,0.10,0.20,0.35,0.65)；alpha_obs 固定候选为 (0,0.10,0.25)。
+- beta 候选为 (0,0.05,0.10,0.15,0.20,0.35,0.50,0.65,0.80)。
+- 在同一候选评价循环里联合选择 T、theta_v、theta_s、alpha_prior、alpha_obs、beta 与空间参数，不允许退回 sequential freezing。
+
+3. BF-CE 目标归一化与可行性门槛必须修复
+-------------------------------------
+- BF-CE 归一化分母必须为 max(bfbase, 0.05)，避免 TUJI/UTS 的近零 BF-CE 微扰被放大。
+- 可行性护栏必须为：
+    bf_cross_entropy <= bfbase * 1.02 + 0.005
+- 仍保留候选 BF accuracy 不低于 clean baseline 的约束。不能因为 1e-4 级别 BF-CE 微扰而把楼层准确率保持 100% 的有效候选误判为 infeasible。
+- 在搜索空间、选择 JSON 和汇总报告中记录实际归一化底限与护栏公式。
+
+4. beta 广播必须放在 torch.sparse.mm 之后
+---------------------------------------
+- parent logits 与 virtual logits 不依赖 beta。按 (T, theta_v, theta_s, alpha_prior, alpha_obs) 分组，先完成 S1 两通道稀疏图乘法并形成 parent/v_logits。
+- 然后再广播全部九个 beta 值计算 mixture 与指标。对于同一组非 beta 参数，torch.sparse.mm 不得因 beta 变化而重复执行。
+- 加回归测试：对九个 beta 候选，稀疏乘法调用次数必须仍为两次（prior 与 observation 各一次），指标结果均有限。
+
+运行流程
+========
+输出目录使用新的迭代目录，避免覆盖旧产物：
   fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2
 
-先做一次语法和基础测试：
+先检查并运行测试：
   python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
   python -m pytest -q tests/test_v17_dataset_adaptive_joint_fit_v1.py
 
-然后执行 FIT 几何诊断：
+然后执行 FIT 几何预检：
   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 preflight --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2
 
-先看 FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md 和 SPATIAL_SCALE_SEARCH_SPACE.json，确认真实的 k=1/2/4/8 近邻分位数、union-kNN 边长分位数和候选尺度。
+检查 FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md 与 SPATIAL_SCALE_SEARCH_SPACE.json，确认每个数据集的近邻分位数、候选尺度来源、12～16 组几何配置、R_max_S2 <= R_max_S1 及 tau_virt=+infinity 对照。
 
-确认诊断正常后，依次运行（不要并行）：
+确认预检通过后，必须按顺序独立运行，不能并行：
+
+第一步 TUJI：
   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset tuji --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2 --device cuda
+
+第二步 UTS（TUJI 全部 seed × C/D/E 运行结束后才开始）：
   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uts --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2 --device cuda
+
+第三步 UJI（UTS 全部 seed × C/D/E 运行结束后才开始）：
   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uji --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2 --device cuda
 
-如果 CUDA 不可用，三条 run 命令全部改为 --device cpu。不要在数据集之间修改代码、参数网格或目标函数。前两个数据集结束时 aggregate 尚未完整是正常现象；第三个结束后看最终汇总。
+如果 CUDA 不可用，所有运行统一改为 --device cpu。不得在三个数据集之间修改候选网格、目标函数或实现。
 
-重点比较：每个数据集的精细距离分位数；每个 run 选择的四个空间尺度和六个联合参数；相对同 checkpoint clean 的 MAE、Energy Score、Joint NLL、BF Accuracy、P95/P99/Worst-site；两个 lambda 是否给出相同方向。如果没有改善，就报告没有改善。TEST score count 必须保持 0。
+每个 dataset × seed × checkpoint 的最终报告必须记录：
+- 实际 baseline_config 的 T_clean、theta_v_clean、theta_s_clean；
+- 动态生成的 T/theta 候选列表；
+- 四个空间参数的候选来源与最终选值；
+- alpha_prior、alpha_obs、beta 选值；
+- CAL-fit 的完整候选指标、Pareto 与近优敏感性；
+- CAL-eval 上相对 clean baseline 的 MAE、ES、Joint NLL、BF Accuracy、P95/P99/Worst-site 差异；
+- internal_test_rows_scored=0、official_test_rows_scored=0。
+
+不得伪造分位数、参数最优值、测试结果或性能提升。不要访问或评分 TEST。不要训练 backbone，不要开 PR，不要执行 Git push/upload；Git 操作由我负责。
