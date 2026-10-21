@@ -863,6 +863,11 @@ def aggregate(args):
             lock_checks.append(False)
     expected=len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)
     status="PASS" if len(reports)==expected and len(selections)==expected and all(lock_checks) and len(files)==expected else "INCOMPLETE"
+    _write_json(out/"JOINT_FIT_SELECTION.json",{"status":status,"runs":selections,
+      "cal_eval_report_count":len(reports),"expected_run_count":expected,
+      "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,
+      "lambda_2d_nll":list(LAMBDAS),"selection_locks_verified":bool(len(lock_checks)==expected and all(lock_checks)),
+      **TEST_COUNTS})
     _write_json(out/"INTEGRITY_REVIEW.json",{"status":status,"phase":"aggregate","completed_runs":len(reports),
       "expected_runs":expected,"selection_lock_checks_passed":int(sum(lock_checks)),
       "selection_locks_verified":bool(len(lock_checks)==expected and all(lock_checks)),
