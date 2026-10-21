@@ -157,6 +157,8 @@ def test_run_locks_cal_fit_before_constructing_cal_eval_pack():
     eval_pack = run_body.index('evalpack=s3.make_pack(ctx,model,ev')
     assert 'manifest_path=out/"EXECUTION_MANIFEST.json"' in run_body
     assert "comp._verify_source_manifest(manifest)" in run_body
+    assert "checkpoint_sha=s3.sha(checkpoint_path)" in run_body
+    assert "frozen checkpoint changed since selection" in run_body
     assert lock_write < lock_verify < eval_pack
 
 
