@@ -100,3 +100,10 @@ FIT 几何诊断
 - 空间尺度候选必须覆盖 FIT 同 building/floor 的 k=1/2/4/8 邻居尺度，并结合固定物理尺度；不能只从 k=1 生成。
 - 虚拟边坐标必须显式验证为有限 [N,2] 数组；边索引和 canonical edge lookup 必须支持无向边端点顺序。
 - 运行测试：python -m pytest tests/test_v17_dataset_adaptive_joint_fit_v1.py -q；随后 py_compile；最后才执行真实数据 preflight 和 smoke test。当前开发环境若不能访问冻结数据，不得宣称实验已运行。
+
+
+基线与恢复保护
+==============
+- 历史 joint_calibrated_base 和 old_combo 只有在其 checkpoint_sha256 与当前冻结 checkpoint 完全相同的情况下才可比较；否则在当前 checkpoint 的 CAL-fit 上重算 clean baseline，并将旧 combo 标记为不可用。
+- 恢复已有 CAL-eval 报告时，必须重新验证 selection/lock、当前源码/输入哈希及实际 checkpoint SHA；不允许仅因报告文件存在就跳过完整性检查。
+- JOINT_FIT_SELECTION.json 的最终 status 必须来自所有预期 run、selection lock 和 TEST-zero 检查；任何不完整情况不得标记 PASS。
