@@ -641,7 +641,18 @@ def run(args):
        for arm in ARMS:
         rd=out/"runs"/f"{ds}_seed{seed}"/arm; rd.mkdir(parents=True,exist_ok=True)
         sp=rd/"CAL_FIT_SELECTION.json"; lock=rd/"CAL_EVAL.lock"; rp=rd/"CAL_EVAL_REPORT.json"
-        if rp.is_file(): reports.append(_read_json(rp)); continue
+        if rp.is_file():
+            if not sp.is_file() or not lock.is_file():
+                raise RuntimeError(f"completed CAL-eval report lacks its selection/lock: {rd}")
+            locked_selection=_verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
+            saved_report=_read_json(rp)
+            if (saved_report.get("selection_sha256")!=s3.sha(sp)
+                or saved_report.get("checkpoint_sha256")!=locked_selection.get("checkpoint_sha256")
+                or saved_report.get("cal_eval_used_for_selection") is not False
+                or any(saved_report.get(k)!=0 for k in TEST_COUNTS)):
+                raise RuntimeError(f"existing CAL-eval report failed integrity checks: {rp}")
+            reports.append(saved_report)
+            continue
         if sp.exists() or lock.exists(): raise RuntimeError(f"incomplete locked run exists at {rd}; preserve and inspect")
         ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm); ckpt_sha=s3.sha(ckpt)
         model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
