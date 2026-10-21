@@ -216,6 +216,8 @@ def weighted_cell_mixture(parent_logits,virtual_logits,edges,endpoint_weights,be
     if not 0<=float(beta)<1: raise ValueError("beta must be in [0,1)")
     if parent_logits.ndim!=2: raise ValueError("parent logits must be [B,N]")
     batch,n=parent_logits.shape; e=torch.as_tensor(edges,dtype=torch.long,device=parent_logits.device).reshape(-1,2); ne=len(e)
+    if ne == 0 and float(beta) > 0:
+        raise ValueError("positive beta requires at least one retained S2 edge")
     if virtual_logits.shape!=(batch,ne): raise ValueError("virtual logits/edge count mismatch")
     if parent_centers.shape!=(batch,n,2) or parent_scales.shape!=parent_centers.shape: raise ValueError("parent components shape mismatch")
     if virtual_centers.shape!=(batch,ne,2) or virtual_scales.shape!=virtual_centers.shape: raise ValueError("virtual components shape mismatch")
@@ -435,7 +437,31 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
             row.update(site_p95_mae_m=float(p95[i]),site_p99_mae_m=float(p99[i]),
                 worst_site_mae_m=float(worst[i]),n_fit_rows=len(pack["scores"]),n_fit_sites=len(unique_sites))
             rows_out.append(row)
-    return rows_out
+    return _invalidate_empty_s2_edge_candidates(rows_out, has_s2_edges=bool(len(edges)))
+
+
+def _invalidate_empty_s2_edge_candidates(rows, *, has_s2_edges):
+    """Reject beta>0 candidates when cutoff removes every S2 edge.
+
+    Without this guard, such candidates silently collapse to the clean model and
+    can be mislabeled as a successful single-S2 ablation despite beta having no
+    operational effect.
+    """
+    metric_fields = (
+        "coordinate_mae_m", "transport_w1_m", "bf_accuracy", "bf_cross_entropy",
+        "joint_nll", "site_p95_mae_m", "site_p99_mae_m", "worst_site_mae_m",
+    )
+    for row in rows:
+        if not has_s2_edges and float(row.get("beta", 0.0)) > 0.0:
+            row["candidate_valid"] = False
+            row["invalid_reason"] = "positive_beta_without_retained_s2_edges"
+            for field in metric_fields:
+                row[field] = math.inf
+        else:
+            row["candidate_valid"] = True
+            row["invalid_reason"] = None
+    return rows
+
 
 def _primary(r): return float(r["coordinate_mae_m"])+.30*float(r["transport_w1_m"])
 def _clean_baseline(rows):
@@ -459,7 +485,7 @@ def _choose(rows,lam,kind="joint"):
     objective_key=f"selection_objective_lambda_{lam:.2f}"
     metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
                    "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
-    rs=[r for r in rows if r.get("feasible") and
+    rs=[r for r in rows if r.get("feasible") and r.get("candidate_valid", True) and
         math.isfinite(float(r.get(objective_key,math.inf))) and
         all(math.isfinite(float(r.get(field,math.nan))) for field in metric_fields)]
     if kind=="single_S1": rs=[r for r in rs if r["beta"]==0 and (r["alpha_prior"]!=0 or r["alpha_obs"]!=0)]
@@ -787,13 +813,16 @@ def smoke(args):
     model,payload,native_alpha=comp._load_model(ctx,checkpoint_root,ds,seed,arm,args.device)
     fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
     geometry_set=_read_json(search_path)["outer_geometry_candidates"][f"{ds}_seed{seed}"]["geometry_candidates"]
-    geom=next(x for x in geometry_set if x.get("role")!="legacy_reference")
     coords=ctx["memory"]["coords"].detach().cpu().numpy()
     buildings=ctx["memory"]["building"].detach().cpu().numpy()
     floors=ctx["memory"]["floor"].detach().cpu().numpy()
     all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
-    graph,_,gdiag=build_cutoff_graph(coords,buildings,floors,all_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
     edge_lengths=np.linalg.norm(coords[all_edges[:,0]]-coords[all_edges[:,1]],axis=1) if len(all_edges) else np.empty(0)
+    geom=next((x for x in geometry_set if x.get("role")!="legacy_reference"
+               and np.any(edge_lengths<=float(x["r_max_s2_m"]))),None)
+    if geom is None:
+        raise RuntimeError("smoke cannot find a FIT-derived geometry with retained S2 edges")
+    graph,_,gdiag=build_cutoff_graph(coords,buildings,floors,all_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
     s2_edges=all_edges[edge_lengths<=float(geom["r_max_s2_m"])] if len(all_edges) else all_edges
     ep=normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
     grid=_calibration_candidates()
@@ -837,7 +866,9 @@ def run(args):
     comp._verify_source_manifest(manifest)
     search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
     inner=_calibration_candidates(); reports=[]
-    for ds in s3.DATASETS:
+    requested_dataset=getattr(args,"dataset","all")
+    datasets=s3.DATASETS if requested_dataset=="all" else (requested_dataset,)
+    for ds in datasets:
       for seed in s3.SEEDS:
        ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
        fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit"); ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
@@ -1139,6 +1170,7 @@ def main():
         q=sub.add_parser(name); q.add_argument("--input-root",default=str(DEFAULT_INPUT))
         q.add_argument("--checkpoint-root",default=str(DEFAULT_CHECKPOINT_ROOT)); q.add_argument("--output",default=str(DEFAULT_OUTPUT))
         q.add_argument("--device",choices=("cpu","cuda"),default="cuda")
+        if name=="run": q.add_argument("--dataset",choices=("all",*s3.DATASETS),default="all")
     args=p.parse_args(); torch.set_num_threads(4)
     if args.command=="preflight": preflight(args)
     elif args.command=="smoke": smoke(args)
