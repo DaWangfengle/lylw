@@ -486,6 +486,21 @@ def _safe_rows(ctx,rows,role):
     if set(map(int,arr))&set(map(int,ctx["roles"]["test"])): raise RuntimeError("TEST row guard blocked pack construction")
     return arr
 
+def _verify_selection_context(selection,ctx):
+    """Recompute the split and anchor hashes from the currently reconstructed context."""
+    fit_hash=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"])
+    eval_hash=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"])
+    coords=ctx["memory"]["coords"].detach().cpu().numpy()
+    buildings=ctx["memory"]["building"].detach().cpu().numpy()
+    floors=ctx["memory"]["floor"].detach().cpu().numpy()
+    anchor_hash=_hash_anchor_order(coords,buildings,floors)
+    actual={"fit_split_sha256":fit_hash,"eval_split_sha256":eval_hash,"anchor_order_sha256":anchor_hash}
+    failed=[key for key,value in actual.items() if selection.get(key)!=value]
+    if failed:
+        raise RuntimeError(f"selection context hashes differ from reconstructed data: {failed}")
+    return actual
+
+
 def _verify_locked_selection(selection_path,lock_path,manifest_path,input_root):
     selection=_read_json(selection_path); lock=_read_json(lock_path)
     unhashed=dict(selection); config_hash=unhashed.pop("parameter_config_sha256",None)
@@ -791,6 +806,7 @@ def run(args):
             if not sp.is_file() or not lock.is_file():
                 raise RuntimeError(f"completed CAL-eval report lacks its selection/lock: {rd}")
             locked_selection=_verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
+            _verify_selection_context(locked_selection,ctx)
             checkpoint_path=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm)
             checkpoint_sha=s3.sha(checkpoint_path)
             if locked_selection.get("checkpoint_sha256")!=checkpoint_sha:
@@ -878,7 +894,8 @@ def run(args):
           "algorithm_code_sha256":selection["algorithm_code_sha256"],"source_manifest_sha256":selection["source_manifest_sha256"],
           "input_run_file_sha256":selection["input_run_file_sha256"],**TEST_COUNTS},exclusive=True)
         # CAL-eval targets and RSS may only be accessed after the immutable selection lock verifies.
-        _verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
+        locked_selection=_verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
+        _verify_selection_context(locked_selection,ctx)
         evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
         configs={"joint_lambda_0.02":chosen["lambda_0.02"],"joint_lambda_0.05":chosen["lambda_0.05"],"joint_calibrated_base":clean}
         for lam_key in ("lambda_0.02","lambda_0.05"):
@@ -1008,6 +1025,9 @@ def aggregate(args):
         sp=rd/"CAL_FIT_SELECTION.json"; lk=rd/"CAL_EVAL.lock"
         try:
             selection=_read_json(sp); lock=_read_json(lk)
+            checkpoint_path=comp._checkpoint_path(Path(manifest["checkpoint_root"]),report["dataset"],int(report["seed"]),report["backbone"])
+            checkpoint_hash_ok=(checkpoint_path.is_file() and s3.sha(checkpoint_path)==report.get("checkpoint_sha256")
+                and report.get("checkpoint_sha256")==selection.get("checkpoint_sha256")==lock.get("checkpoint_sha256"))
             config_hash=selection.get("parameter_config_sha256")
             unhashed=dict(selection); unhashed.pop("parameter_config_sha256",None)
             input_hash_ok=all((input_root/f"{report['dataset']}_seed{report['seed']}"/name).is_file() and
@@ -1018,8 +1038,11 @@ def aggregate(args):
                 config_hash==_stable_hash(unhashed) and
                 selection.get("algorithm_code_sha256")==s3.sha(Path(__file__)) and
                 selection.get("source_manifest_sha256")==s3.sha(out/"EXECUTION_MANIFEST.json") and
-                lock.get("parameter_config_sha256")==config_hash and input_hash_ok and
-                all(report.get(k)==0 and lock.get(k)==0 for k in TEST_COUNTS)))
+                lock.get("parameter_config_sha256")==config_hash and input_hash_ok and checkpoint_hash_ok and
+                report.get("cal_eval_used_for_selection") is False and
+                report.get("dataset")==selection.get("dataset") and report.get("seed")==selection.get("seed")
+                and report.get("backbone")==selection.get("backbone") and
+                all(report.get(k)==0 and lock.get(k)==0 and selection.get(k)==0 for k in TEST_COUNTS)))
         except (OSError,KeyError,ValueError):
             lock_checks.append(False)
     expected=len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)
