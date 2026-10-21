@@ -45,7 +45,7 @@ Fit all four spatial parameters independently for every dataset × backbone × s
 Search the spatial scales and all calibration parameters in the same candidate evaluation loop on CAL-fit:
 psi = (R_max_S1, tau_graph, R_max_S2, tau_virt, T, theta_v, theta_s, alpha_prior, alpha_obs, beta), with gamma_space fixed at zero and excluded from the search vector.
 
-Use a deterministic FIT-derived outer geometry design, cache each candidate's balanced S1 graph and S2 edge/endpoint statistics, and evaluate the full inner Cartesian grid by vectorized tensor broadcasting in fixed candidate order. The current locked grid has 5 temperatures × 3 theta_v × 3 theta_s × 5 alpha_prior × 5 alpha_obs × 9 beta = 10,125 inner candidates per outer geometry; keep chunking only as a memory-control mechanism, not as sequential parameter freezing. Beta candidates must include [0, .05, .10, .15, .20, .35, .50, .65, .80]. Report total evaluated candidates, failures, and near-optimal sensitivity.
+Use a deterministic FIT-derived outer geometry design, cache each candidate's balanced S1 graph and S2 edge/endpoint statistics, and evaluate the full inner Cartesian grid by vectorized tensor broadcasting in fixed candidate order. The fast first-iteration grid has 4 temperatures × 3 theta_v × 3 theta_s × 4 alpha_prior × 4 alpha_obs × 9 beta = 5,184 inner candidates per outer geometry; keep chunking only as a memory-control mechanism, not as sequential parameter freezing. Beta candidates must include [0, .05, .10, .15, .20, .35, .50, .65, .80]. Report total evaluated candidates, failures, and near-optimal sensitivity.
 
 ## Objective and model selection
 
@@ -86,7 +86,7 @@ The final report must state the actual FIT-only quantiles; selected dataset × b
 
 For each lambda, report the feasible CAL-fit candidates whose normalized selection objective is within an absolute 0.01 of the best feasible objective. This tolerance is a descriptive stability window, not a new selection objective. Summarize candidate/geometry counts and finite min/median/max for each spatial and calibration parameter, separately reporting unbounded values. Save the per-run detail in JOINT_FIT_SELECTION.json and aggregate it in NEAR_OPTIMAL_SENSITIVITY.csv. Do not use CAL-eval to change the tolerance or pick among near-optimal candidates.
 
-5. **Selection objective and BF non-degradation guard are predeclared.** The physical primary is Coordinate MAE + 0.30 L_W1. Normalize the primary and joint-NLL delta against the clean CAL-fit baseline, run lambda_2d_nll=0.02 and 0.05 separately, constrain BF cross entropy to no more than 1% degradation from the clean baseline, and require macro BF accuracy to be no lower than that same checkpoint's clean CAL-fit baseline. If no candidate improves while satisfying the constraints, report that result rather than relaxing constraints or using CAL-eval to select.
+5. **Selection objective and BF non-degradation guard are predeclared.** The dimensionless objective is normalized (Coordinate MAE + 0.30 L_W1) + 0.25 × normalized BF-CE delta + lambda_2d_nll × normalized joint-NLL delta. Run lambda_2d_nll=0.02 and 0.05 separately, keep BF cross entropy within 1% of the clean baseline, and require macro BF accuracy to be no lower than that checkpoint's clean CAL-fit baseline. If no candidate improves while satisfying the constraints, report that result rather than relaxing constraints or using CAL-eval to select.
 
 Implementation entrypoint: fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py.
 Test file: tests/test_v17_dataset_adaptive_joint_fit_v1.py.
@@ -105,10 +105,3 @@ Test file: tests/test_v17_dataset_adaptive_joint_fit_v1.py.
 - A historical clean baseline or old-combo result is reusable only if its frozen checkpoint SHA exactly matches the checkpoint under evaluation. Otherwise, recompute the clean baseline on the current checkpoint's CAL-fit rows and omit the mismatched old-combo comparison.
 - Resuming an existing CAL-eval report requires re-verifying the selection lock, code/source manifest, historical input hashes, and the actual checkpoint file hash. A report's mere existence is not sufficient to skip a run.
 - The final JOINT_FIT_SELECTION status mirrors the aggregate integrity result and cannot remain PASS when runs or locks are incomplete.
-
-
-## Empty-S2 boundary and sequential dataset execution
-
-- If an S2 cutoff retains zero virtual edges, every candidate with beta > 0 is invalid, not a valid single-S2 result that happens to equal Clean. Such rows must be excluded from feasible selection and Pareto claims; beta=0 remains a valid boundary.
-- The mathematical family is shared across datasets, but FIT-derived scale pools and selected parameters are dataset-specific. Within each dataset, this version allows the spatial regularization scales to depend on the frozen backbone/seed because their interaction with the predictor can differ; this is explicitly reported as a finer-grained calibration choice, not evidence that the datasets share scales.
-- Execute the three datasets as separate, ordered runs (tuji, then uts, then uji) with `run --dataset ...`, using the same output root so run artifacts remain in distinct `runs/{dataset}_seed{seed}/{C,D,E}` directories. The aggregate status is expected to remain INCOMPLETE after the first two datasets and must become PASS only after all 27 checkpoint runs and their locks are verified.
