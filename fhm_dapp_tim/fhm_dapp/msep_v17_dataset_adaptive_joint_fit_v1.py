@@ -728,7 +728,7 @@ def preflight(args):
         spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pools["shared_union_m"],
           "geometry_candidate_pools_m":pools["by_parameter_m"],"geometry_candidates":geoms,
           "calibration_candidate_count":len(_calibration_candidates()),"gamma_space":{"locked":0.0,"searched":False},"gamma_candidate_count":0,
-          "lambda_2d_nll":list(LAMBDAS),"bf_ce_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
+          "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,"bf_ce_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
           "candidate_count_per_run":len(geoms)*len(_calibration_candidates())}
     _write_json(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json",{"status":"PASS","source":"FIT anchor dictionary only",
       "datasets_and_seeds":diagnostics,**TEST_COUNTS})
@@ -751,14 +751,14 @@ def preflight(args):
       "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},"inner_joint_grid_size":len(_calibration_candidates()),
       "gamma_space_fixed":0.0,"gamma_candidate_count":0,"search_method":"joint vectorized grid for every cached geometry; no sequential freezing",
       "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
-      "lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
+      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,**TEST_COUNTS})
     manifest.update({"study":"V17 dataset-adaptive spatial joint fit",
       "fit_neighbor_diagnostics_sha256":s3.sha(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json"),
       "spatial_search_space_sha256":s3.sha(out/"SPATIAL_SCALE_SEARCH_SPACE.json"),
       "spatial_parameters_fit_per_dataset_backbone_seed":True,"gamma_space":{"locked":0.0,"searched":False},"gamma_candidate_count":0,
       "selection_protocol":{"primary":"Coordinate MAE + 0.30 * component-center W1",
-      "normalized_objective":"normalized primary + lambda * normalized joint-NLL delta",
-      "lambda_2d_nll":list(LAMBDAS),"BF CE relative tolerance":BF_CE_RELATIVE_TOLERANCE,
+      "normalized_objective":"normalized (MAE + 0.30 W1) + BF_CE_WEIGHT * normalized BF-CE delta + lambda * normalized joint-NLL delta",
+      "bf_ce_weight":BF_CE_WEIGHT,"lambda_2d_nll":list(LAMBDAS),"BF CE relative tolerance":BF_CE_RELATIVE_TOLERANCE,
       "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
       "hard_constraint":"macro BF accuracy must not fall below same-checkpoint CAL-fit clean baseline"},
       "preflight_elapsed_seconds":time.perf_counter()-started,**TEST_COUNTS})
