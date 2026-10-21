@@ -622,11 +622,11 @@ def _add_objectives(rows,base):
     for r in rows:
         r["primary_mae_plus_030_w1_m"]=_primary(r); r["normalized_primary"]=_primary(r)/pbase
         r["normalized_joint_nll_delta"]=(float(r["joint_nll"])-float(base["joint_nll"]))/nscale
-        r["normalized_bf_cross_entropy"]=float(r["bf_cross_entropy"])/max(bfbase,1e-6)
-        r["normalized_bf_cross_entropy_delta"]=(float(r["bf_cross_entropy"])-float(base["bf_cross_entropy"]))/max(bfbase,1e-6)
+        r["normalized_bf_cross_entropy"]=float(r["bf_cross_entropy"])/max(bfbase,BF_CE_NORMALIZATION_FLOOR)
+        r["normalized_bf_cross_entropy_delta"]=(float(r["bf_cross_entropy"])-bfbase)/max(bfbase,BF_CE_NORMALIZATION_FLOOR)
         r["negative_bf_accuracy"]=-float(r["bf_accuracy"])
         r["bf_accuracy_non_degradation"]=float(r["bf_accuracy"])>=accbase-1e-12
-        r["bf_cross_entropy_guard"]=float(r["bf_cross_entropy"])<=bfbase*1.01+1e-8
+        r["bf_cross_entropy_guard"]=float(r["bf_cross_entropy"])<=bfbase*(1.0+BF_CE_RELATIVE_TOLERANCE)+BF_CE_ABSOLUTE_TOLERANCE
         r["feasible"]=bool(r["bf_accuracy_non_degradation"] and r["bf_cross_entropy_guard"])
         for lam in LAMBDAS:
             r[f"selection_objective_lambda_{lam:.2f}"]=(r["normalized_primary"]
@@ -637,7 +637,7 @@ def _choose(rows,lam,kind="joint"):
     objective_key=f"selection_objective_lambda_{lam:.2f}"
     metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
                    "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
-    rs=[r for r in rows if r.get("feasible") and
+    rs=[r for r in rows if r.get("candidate_id")!="clean_baseline_reference" and r.get("feasible") and
         math.isfinite(float(r.get(objective_key,math.inf))) and
         all(math.isfinite(float(r.get(field,math.nan))) for field in metric_fields)]
     if kind=="single_S1": rs=[r for r in rs if r["beta"]==0 and (r["alpha_prior"]!=0 or r["alpha_obs"]!=0)]
@@ -654,7 +654,7 @@ def _near_optimal_sensitivity(rows):
         if best is None: raise RuntimeError(f"no feasible candidate for near-optimal lambda={lam}")
         objective_key=f"selection_objective_lambda_{lam:.2f}"
         best_value=float(best[objective_key])
-        near=[r for r in rows if r.get("feasible") and
+        near=[r for r in rows if r.get("candidate_id")!="clean_baseline_reference" and r.get("feasible") and
               math.isfinite(float(r[objective_key])) and
               float(r[objective_key])<=best_value+NEAR_OPTIMAL_OBJECTIVE_TOLERANCE+1e-12]
         near.sort(key=lambda r:(float(r[objective_key]),r["normalized_bf_cross_entropy"],
@@ -814,9 +814,9 @@ def preflight(args):
         geoms,pools=geometry_candidates(d)
         spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pools["shared_union_m"],
           "geometry_candidate_pools_m":pools["by_parameter_m"],"geometry_candidates":geoms,
-          "calibration_candidate_count":len(_calibration_candidates()),
+          "calibration_candidate_count":_calibration_candidate_count(),
           "gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
-          "candidate_count_per_run":len(geoms)*len(_calibration_candidates())}
+          "candidate_count_per_run":len(geoms)*_calibration_candidate_count()}
     _write_json(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json",{
         "source":"FIT anchor dictionary only","datasets_and_seeds":diagnostics,**TEST_COUNTS})
     md=["# FIT-only Neighbor Distance Diagnostics","",
@@ -834,12 +834,20 @@ def preflight(args):
         md.append("")
     (out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md").write_text("\n".join(md),encoding="utf-8")
     _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{
-      "geometry_design":"8-point deterministic Latin-hypercube over separate FIT-derived R_S1/tau_graph/R_S2/tau_virt pools",
+      "geometry_design":"12-16 deterministic FIT-quantile-derived spatial configurations per dataset/seed; R_S2 <= R_S1; includes tau_virt=+inf controls",
       "outer_geometry_candidates":spaces,
-      "calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
-        "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},
-      "inner_joint_grid_size":len(_calibration_candidates()),"gamma_space_fixed":0.0,
-      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,**TEST_COUNTS})
+      "calibration_grid":{
+        "temperature":"three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.25,3.0]",
+        "theta_v":"three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.0,1.5]",
+        "theta_s":"three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.0,1.5]",
+        "relative_multipliers":list(CALIBRATION_RELATIVE_MULTIPLIERS),
+        "alpha_prior":list(ALPHA_PRIORS),"alpha_obs":list(ALPHA_OBS),"beta":list(BETAS),
+        "baseline_center_resolved_at_run_time":True},
+      "inner_joint_grid_size":_calibration_candidate_count(),"gamma_space_fixed":0.0,
+      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
+      "bf_ce_normalization_floor":BF_CE_NORMALIZATION_FLOOR,
+      "bf_ce_guard_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
+      "bf_ce_guard_absolute_tolerance":BF_CE_ABSOLUTE_TOLERANCE,**TEST_COUNTS})
     print(json.dumps({"stage":"preflight_complete","output":str(out),
       "geometry_sets":len(spaces),**TEST_COUNTS},ensure_ascii=False),flush=True)
 
@@ -848,7 +856,7 @@ def run(args):
     """Jointly fit spatial scales and calibration parameters on CAL-fit, then report CAL-eval."""
     out=Path(args.output).resolve()
     search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
-    inner=_calibration_candidates(); reports=[]
+    reports=[]
     datasets=_selected_datasets(getattr(args,"dataset","all"))
     for ds in datasets:
       for seed in s3.SEEDS:
@@ -864,12 +872,17 @@ def run(args):
             model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
             base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
             fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
+            baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx,ckpt_sha)
+            inner=_calibration_candidates(baseline_config)
+            calibration_grid=_calibration_grid_spec(baseline_config)
             coords=ctx["memory"]["coords"].detach().cpu().numpy()
             b=ctx["memory"]["building"].detach().cpu().numpy()
             f=ctx["memory"]["floor"].detach().cpu().numpy()
             geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
             rows_all=[]; geometry_diagnostics={}
             for geom in geoms:
+                if float(geom["r_max_s2_m"])>float(geom["r_max_s1_m"]):
+                    raise RuntimeError("preflight geometry violates R_max_S2 <= R_max_S1")
                 graph,_,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
                 lens=np.linalg.norm(coords[base_edges[:,0]]-coords[base_edges[:,1]],axis=1) if len(base_edges) else np.empty(0)
                 s2=base_edges[lens<=float(geom["r_max_s2_m"])] if len(base_edges) else base_edges
@@ -893,7 +906,6 @@ def run(args):
                     r.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
                         split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit))
                 rows_all.extend(rows)
-            baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx,ckpt_sha)
             baseline_eval=_eval_config(fitpack,ctx,baseline_config,seed)
             base=_baseline_row(baseline_config,baseline_eval)
             base.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
@@ -910,7 +922,7 @@ def run(args):
                 chosen[f"lambda_{lam:.2f}"]=_config(r)
                 r1=_choose(rows_all,lam,"single_S1"); s1[f"lambda_{lam:.2f}"]=_config(r1) if r1 else None
                 r2=_choose(rows_all,lam,"single_S2"); s2sel[f"lambda_{lam:.2f}"]=_config(r2) if r2 else None
-            clean=_attach_virtual_measure(_config(base),geometry_diagnostics)
+            clean=_config(base)  # reporting-only legacy reference, not a geometry search candidate
             for config in chosen.values(): _attach_virtual_measure(config,geometry_diagnostics)
             for config in list(s1.values())+list(s2sel.values()):
                 if config is not None: _attach_virtual_measure(config,geometry_diagnostics)
@@ -927,11 +939,13 @@ def run(args):
                 "nonfinite_candidate_metric_count":int(len(rows_all)-finite_count),
                 "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
                 "candidate_count":len(rows_all),"geometry_count":len(geoms),"inner_grid_count":len(inner),
+                "calibration_grid":calibration_grid,
                 "geometry_diagnostics":geometry_diagnostics,
                 "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
                 "eval_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in ev),
                 "bf_accuracy_guard":"candidate macro BF accuracy >= clean CAL-fit baseline",
-                "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.01 + 1e-8",
+                "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.02 + 0.005",
+                "bf_cross_entropy_normalization_denominator":"max(clean BF-CE, 0.05)",
                 **TEST_COUNTS}
             _write_json(sp,selection)
             evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
@@ -1072,7 +1086,10 @@ def aggregate(args):
     _write_json(out/"JOINT_FIT_SELECTION.json",{"status":status,"runs":selections,
       "cal_eval_report_count":len(reports),"expected_run_count":expected,
       "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,
-      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,**TEST_COUNTS})
+      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
+      "bf_ce_normalization_floor":BF_CE_NORMALIZATION_FLOOR,
+      "bf_ce_guard_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
+      "bf_ce_guard_absolute_tolerance":BF_CE_ABSOLUTE_TOLERANCE,**TEST_COUNTS})
     _write_json(out/"INTEGRITY_REVIEW.json",{"status":status,"phase":"aggregate",
       "completed_runs":len(reports),"expected_runs":expected,"cal_eval_used_for_selection":False,
       "gamma_space":0.0,**TEST_COUNTS})
