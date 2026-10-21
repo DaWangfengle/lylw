@@ -170,9 +170,10 @@ smoke 未 PASS 不得启动完整实验。
 - runs/{dataset}_seed{seed}/{C,D,E}/CAL_EVAL.lock
 - runs/{dataset}_seed{seed}/{C,D,E}/CAL_EVAL_REPORT.json
 - runs/{dataset}_seed{seed}/{C,D,E}/CANDIDATE_METRICS.csv
-- JOINT_FIT_SELECTION.json
+- JOINT_FIT_SELECTION.json（包含每个 run、每个 lambda 的 near-optimal 参数范围与候选数）
 - CANDIDATE_METRICS.csv
 - PARETO_FRONTIER.csv
+- NEAR_OPTIMAL_SENSITIVITY.csv（按 dataset × backbone × seed × lambda 汇总可行 near-optimal 候选参数范围）
 - CAL_EVAL_REPORT.md
 - INTEGRITY_REVIEW.json
 - EXECUTION_MANIFEST.json
@@ -183,7 +184,7 @@ smoke 未 PASS 不得启动完整实验。
 1. 测试与 py_compile 是否真正运行、退出码是多少；不能把“代码已提交”写成“测试通过”。
 2. preflight 的真实 FIT k=1/2/4/8 分位数、union-kNN 边长分布和候选池是什么。
 3. 每个 dataset × backbone × seed × lambda 的 R_max_S1、tau_graph、R_max_S2、tau_virt、T、theta_v、theta_s、alpha_prior、alpha_obs、beta。
-4. 两个 lambda 的联合参数和三 seed 稳定性如何；边界候选、near-optimal 候选和几何诊断是否支持相同结论。
+4. 两个 lambda 的联合参数和三 seed 稳定性如何；near-optimal 绝对目标容差固定为 0.01，需报告候选数量、几何数和每个参数的有限值范围/中位数；边界候选和几何诊断是否支持相同结论。
 5. 相对同 checkpoint clean、single S1、single S2 和可用 old combo 的 MAE/ES/NLL/BF CE/BF accuracy/P95/P99/Worst-site 差异。
 6. BF accuracy 是否保持、BF CE 是否在 1% 容差内；若无可行改善，必须明确报告无改善。
 7. gamma 是否始终严格固定为 0。
