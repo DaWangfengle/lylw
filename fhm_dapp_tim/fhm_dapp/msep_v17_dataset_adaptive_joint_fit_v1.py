@@ -207,9 +207,9 @@ def _geometry_value_pool(diag):
     empirical=[]
     for k in (1,2,4,8):
         q=diag["kth_neighbor_distance_m"][str(k)]
-        value=q.get("p50")
-        if value is not None and math.isfinite(float(value)) and float(value)>0:
-            empirical.append(float(value))
+        value=next((q.get(name) for name in ("p50","p75","p90","p95","p99","p25")
+                    if q.get(name) is not None and math.isfinite(float(q[name])) and float(q[name])>0),None)
+        if value is not None: empirical.append(float(value))
     if not empirical:
         raise RuntimeError("FIT-only nearest-neighbor geometry is unavailable; fail closed rather than guessing scales")
     out=[]
@@ -417,11 +417,12 @@ def _verify_locked_selection(selection_path,lock_path,manifest_path,input_root):
       "split_hashes":all(lock.get(k)==selection.get(sk) for k,sk in (
           ("fit_split_sha256","fit_split_sha256"),("eval_split_sha256","eval_split_sha256"),
           ("anchor_order_sha256","anchor_order_sha256"))),
-      "input_hashes":input_hash_ok and lock.get("input_run_file_sha256")==selection.get("input_run_file_sha256"),
+      "input_hashes":bool(selection.get("input_run_file_sha256")) and input_hash_ok
+          and lock.get("input_run_file_sha256")==selection.get("input_run_file_sha256"),
       "selection_frozen":lock.get("selection_frozen_before_cal_eval") is True,
       "test_rows_zero":test_zero,
       "selection_role":selection.get("selection_role")=="CAL-fit"
-          and lock.get("evaluation_role")=="CAL-eval",
+          and lock.get("selection_role")=="CAL-fit" and lock.get("evaluation_role")=="CAL-eval",
     }
     failed=[k for k,v in checks.items() if not v]
     if failed: raise RuntimeError(f"CAL-eval lock verification failed; refusing CAL-eval access: {failed}")
@@ -608,7 +609,7 @@ def preflight(args):
         md.append("")
     (out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md").write_text("\n".join(md),encoding="utf-8")
     _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{"status":"PASS",
-      "geometry_design":"deterministic bounded Latin-hypercube from FIT k=1 quantiles plus meter-scale candidates",
+      "geometry_design":"deterministic bounded Latin-hypercube from FIT k=1/2/4/8 median/upper-tail scales plus meter-scale candidates",
       "outer_geometry_candidates":spaces,"calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
       "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},"inner_joint_grid_size":len(_calibration_candidates()),
       "gamma_space_fixed":0.0,"search_method":"joint coarse grid for every cached geometry; no sequential freezing",
@@ -718,8 +719,9 @@ def run(args):
         _verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
         evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
         configs={"joint_lambda_0.02":chosen["lambda_0.02"],"joint_lambda_0.05":chosen["lambda_0.05"],"joint_calibrated_base":clean}
-        if s1["lambda_0.02"]: configs["single_S1_lambda_0.02"]=s1["lambda_0.02"]
-        if s2sel["lambda_0.02"]: configs["single_S2_lambda_0.02"]=s2sel["lambda_0.02"]
+        for lam_key in ("lambda_0.02","lambda_0.05"):
+            if s1[lam_key]: configs[f"single_S1_{lam_key}"]=s1[lam_key]
+            if s2sel[lam_key]: configs[f"single_S2_{lam_key}"]=s2sel[lam_key]
         old=_old_combo(ds,seed,arm)
         if old: configs["old_combo_1D_2A"]=old
         metrics={}
