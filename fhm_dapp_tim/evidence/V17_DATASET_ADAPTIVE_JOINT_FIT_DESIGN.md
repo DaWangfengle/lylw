@@ -86,3 +86,11 @@ The final report must state the actual FIT-only quantiles; selected dataset-spec
 
 Implementation entrypoint: fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py.
 Test file: tests/test_v17_dataset_adaptive_joint_fit_v1.py.
+
+
+## Execution-order and geometry audit corrections (2026-10-21)
+
+- The CAL-eval pack is created only after writing and re-reading the immutable selection and lock, then verifying selection/configuration hashes, algorithm code SHA, manifest SHA, historical-input hashes, split/anchor-order hashes, and zero TEST-score counters. Any failed check aborts before CAL-eval pack construction.
+- The runner defines its own manifest_path; it must not depend on the preflight function's local variables.
+- FIT geometry scale candidates use the same-building/floor k=1/2/4/8 distance distributions plus fixed physical scales. Virtual coordinates are checked for finite [N,2] values, and undirected edge lookups are canonicalized.
+- Unit tests cover measure conservation, graph invariants, TEST row guards, and CAL-eval lock ordering. These tests must pass before any real-data run; remote repository edits alone are not evidence that tests executed.
