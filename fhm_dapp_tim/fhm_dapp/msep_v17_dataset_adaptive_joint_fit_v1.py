@@ -1024,7 +1024,8 @@ def aggregate(args):
             sensitivity_rows.append(row)
     _csv_write(out/"NEAR_OPTIMAL_SENSITIVITY.csv",sensitivity_rows)
     md=["# V17 Dataset-Adaptive Spatial Joint Fit: CAL-eval Report","",
-      "Selection is locked on CAL-fit before CAL-eval. CAL-eval is reporting-only. Internal/official TEST scores: 0. Gamma-space is fixed at 0.","",
+      "Selection is locked on CAL-fit before CAL-eval. CAL-eval is reporting-only. Internal/official TEST scores: 0. Gamma-space is fixed at 0.",
+      "Near-optimal sensitivity is computed on CAL-fit only, using the predeclared absolute objective tolerance 0.01; see NEAR_OPTIMAL_SENSITIVITY.csv.","",
       "| Dataset | Seed | Backbone | Method | MAE m | ES m | Joint NLL | BF accuracy | BF CE | P95 site | P99 site | Worst site |",
       "|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for r in reports:
