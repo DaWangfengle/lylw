@@ -546,7 +546,11 @@ def preflight(args):
           f"- Zero-distance pairs: {d['zero_distance_pairs_within_building_floor']}",
           f"- Existing union-kNN edges: {d['base_union_knn_edges']}",
           f"- Union-kNN edge quantiles: {json.dumps(d['base_union_knn_edge_distance_m'],ensure_ascii=False)}"]
-        for k,v in d["kth_neighbor_distance_m"].items(): md.append(f"- k={k} neighbor distances: {json.dumps(v,ensure_ascii=False)}")
+        for k,v in d["kth_neighbor_distance_m"].items():
+            md.append(f"- k={k} neighbor distances: {json.dumps(v,ensure_ascii=False)}")
+        md.append(f"- k-neighbor threshold counts: {json.dumps(d['kth_neighbor_threshold_counts'],ensure_ascii=False)}")
+        md.append(f"- exp(-d/8m) at distance quantiles: {json.dumps(d['exp_neg_distance_over_8_at_quantiles'],ensure_ascii=False)}")
+        md.append("- Building/floor-stratified neighbor and union-kNN edge distributions are in the JSON file.")
         md.append("")
     (out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md").write_text("\n".join(md),encoding="utf-8")
     _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{"status":"PASS",
