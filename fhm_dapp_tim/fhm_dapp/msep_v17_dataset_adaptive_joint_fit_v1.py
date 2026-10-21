@@ -726,7 +726,7 @@ def preflight(args):
         diagnostics[key]=d; geoms,pools=geometry_candidates(d)
         spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pools["shared_union_m"],
           "geometry_candidate_pools_m":pools["by_parameter_m"],"geometry_candidates":geoms,
-          "calibration_candidate_count":len(_calibration_candidates()),"gamma_space":{"locked":0.0,"searched":False},
+          "calibration_candidate_count":len(_calibration_candidates()),"gamma_space":{"locked":0.0,"searched":False},"gamma_candidate_count":0,
           "lambda_2d_nll":list(LAMBDAS),"bf_ce_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
           "candidate_count_per_run":len(geoms)*len(_calibration_candidates())}
     _write_json(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json",{"status":"PASS","source":"FIT anchor dictionary only",
@@ -748,13 +748,13 @@ def preflight(args):
       "geometry_design":"8-point deterministic Latin-hypercube with separate R_S1/tau_graph/R_S2/tau_virt pools derived from FIT k=1/2/4/8 quantiles, union-kNN edge-length quantiles, and fixed physical scales",
       "outer_geometry_candidates":spaces,"calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
       "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},"inner_joint_grid_size":len(_calibration_candidates()),
-      "gamma_space_fixed":0.0,"search_method":"joint vectorized grid for every cached geometry; no sequential freezing",
+      "gamma_space_fixed":0.0,"gamma_candidate_count":0,"search_method":"joint vectorized grid for every cached geometry; no sequential freezing",
       "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
       "lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
     manifest.update({"study":"V17 dataset-adaptive spatial joint fit",
       "fit_neighbor_diagnostics_sha256":s3.sha(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json"),
       "spatial_search_space_sha256":s3.sha(out/"SPATIAL_SCALE_SEARCH_SPACE.json"),
-      "spatial_parameters_fit_per_dataset_backbone_seed":True,"gamma_space":{"locked":0.0,"searched":False},
+      "spatial_parameters_fit_per_dataset_backbone_seed":True,"gamma_space":{"locked":0.0,"searched":False},"gamma_candidate_count":0,
       "selection_protocol":{"primary":"Coordinate MAE + 0.30 * component-center W1",
       "normalized_objective":"normalized primary + lambda * normalized joint-NLL delta",
       "lambda_2d_nll":list(LAMBDAS),"BF CE relative tolerance":BF_CE_RELATIVE_TOLERANCE,
@@ -919,7 +919,7 @@ def run(args):
         near_optimal=_near_optimal_sensitivity(rows_all)
         selection={"status":"LOCKED_CAL_FIT","dataset":ds,"seed":int(seed),"backbone":arm,
           "checkpoint_sha256":ckpt_sha,"selected_epoch":int(payload["selected_epoch"]),"native_E_alpha":native_alpha,
-          "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,
+          "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,"gamma_candidate_count":0,
           "joint_calibrated_base":clean,"baseline_reference_source":baseline_config["baseline_source"],
           "selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
           "near_optimal_sensitivity":near_optimal,
@@ -1115,7 +1115,7 @@ def aggregate(args):
     status="PASS" if len(reports)==expected and len(selections)==expected and all(lock_checks) and len(files)==expected and len(sensitivity_rows)==expected*len(LAMBDAS) else "INCOMPLETE"
     _write_json(out/"JOINT_FIT_SELECTION.json",{"status":status,"runs":selections,
       "cal_eval_report_count":len(reports),"expected_run_count":expected,
-      "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,
+      "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,"gamma_candidate_count":0,
       "lambda_2d_nll":list(LAMBDAS),"selection_locks_verified":bool(len(lock_checks)==expected and all(lock_checks)),
       **TEST_COUNTS})
     _write_json(out/"INTEGRITY_REVIEW.json",{"status":status,"phase":"aggregate","completed_runs":len(reports),
