@@ -207,3 +207,23 @@ def test_selection_lock_verifies_config_code_manifest_and_input_hashes(tmp_path)
     source_file.write_text('{"immutable": false}', encoding="utf-8")
     with pytest.raises(RuntimeError, match="input_hashes"):
         joint._verify_locked_selection(selection_path, lock_path, manifest_path, input_root)
+
+
+def test_historical_clean_and_old_combo_must_match_frozen_checkpoint(monkeypatch, tmp_path):
+    run_dir = tmp_path / "runs" / "fixture_seed7" / "D"
+    run_dir.mkdir(parents=True)
+    selection_path = run_dir / "CAL_FIT_SELECTION.json"
+    selection_path.write_text(json.dumps({
+        "checkpoint_sha256": "old-checkpoint",
+        "joint_calibrated_base": {"temperature": 0.5, "theta": [1.0, 1.0]},
+        "structure1": {"1D_global": {"alpha_prior": 0.1, "alpha_obs": 0.2}},
+        "combined": {"1D_global": {"2A": {"beta": 0.35}}},
+    }), encoding="utf-8")
+    monkeypatch.setattr(joint.comp, "DEFAULT_OUTPUT", tmp_path)
+    monkeypatch.setattr(joint.s3, "grid_calibrate",
+                        lambda pack, ctx: ({"temperature": 1.25, "theta": [0.25, 0.75]}, [], 0.0))
+
+    clean = joint._legacy_clean_config("fixture", 7, "D", {}, {}, "current-checkpoint")
+    assert clean["baseline_source"] == "recomputed_current_checkpoint_CAL_fit_only"
+    assert clean["temperature"] == pytest.approx(1.25)
+    assert joint._old_combo("fixture", 7, "D", "current-checkpoint") is None
