@@ -1,36 +1,34 @@
 V17 数据集自适应空间尺度 + 联合参数搜索：本轮实验指令
 ====================================================
 
-目标：只研究冻结 C/D/E 检查点的推理期 S1/S2 空间结构，不训练 backbone，不读取 TEST 标签，不做工程重构。
+目标：快速验证统一 S1+S2 结构是否值得继续。只做推理期拟合，不训练 backbone，不读取 TEST 标签，不做工程重构。
 
 代码入口：
   fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
 
-本轮实际搜索：
-- 数据集分别从 FIT 锚点几何中构建 R_max_S1、tau_graph、R_max_S2、tau_virt 候选。
-- 同一个候选评估中联合搜索 T、theta_v、theta_s、alpha_prior、alpha_obs、beta；不再分步冻结 T/theta 和 alpha。
-- beta 网格固定为 0, 0.05, 0.10, 0.15, 0.20, 0.35, 0.50, 0.65, 0.80；gamma_space 固定为 0。
-- 目标为归一化 (MAE + 0.30 W1) + 0.25 × 归一化 BF-CE 变化 + lambda × 归一化 Joint NLL 变化，分别比较 lambda=0.02 和 0.05。BF accuracy 不得低于同 checkpoint 的 clean 基线，BF-CE 最多允许 1% 变化。
-- 先输出 FIT 近邻诊断，再看搜索结果；不要预设新结构一定胜出，也不要根据 CAL-eval 改参数。
+搜索设计：
+- 按 TUJI / UTS / UJI 的 FIT 锚点几何分别生成 R_max_S1、tau_graph、R_max_S2、tau_virt 候选。
+- 每个空间候选上联合搜索 T、theta_v、theta_s、alpha_prior、alpha_obs、beta，不再分步冻结。
+- beta 固定为 0, 0.05, 0.10, 0.15, 0.20, 0.35, 0.50, 0.65, 0.80；gamma_space 固定为 0。
+- 目标为归一化 (MAE + 0.30 W1) + 0.25 × 归一化 BF-CE 变化 + lambda × 归一化 Joint NLL 变化；分别比较 lambda=0.02 和 0.05。BF accuracy 不得低于 clean，BF-CE 最多允许 1% 变化。
 
-执行：
-1. 用当前环境可用的 device（CUDA 可用则 cuda，否则 cpu）运行：
-   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 preflight --device cuda
-2. 查看以下两个文件，确认真实的 k=1/2/4/8 近邻分位数、union-kNN 边长分位数和候选尺度：
-   fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1/FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md
-   fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1/SPATIAL_SCALE_SEARCH_SPACE.json
-3. 在不改代码和搜索目标的前提下，依次运行：
-   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset tuji --device cuda
-   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uts --device cuda
-   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uji --device cuda
+为避免旧结果混入，使用一个新的输出目录：
+  fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2
 
-如果 CUDA 不可用，把三条命令中的 cuda 全部改为 cpu。数据集之间不要并行，以便出现问题时能定位到具体数据集。前两个数据集结束时总汇总尚不完整是正常的；三个数据集都结束后再看 aggregate 报告。
+先做一次语法和基础测试：
+  python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
+  python -m pytest -q tests/test_v17_dataset_adaptive_joint_fit_v1.py
 
-重点产物：
-- FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md / .json
-- SPATIAL_SCALE_SEARCH_SPACE.json
-- 每个 dataset × seed × C/D/E 的 CAL_FIT_SELECTION.json、CANDIDATE_METRICS.csv 和 CAL_EVAL_REPORT.json
-- CANDIDATE_METRICS.csv、PARETO_FRONTIER.csv、CAL_EVAL_REPORT.md
-- RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md
+然后执行 FIT 几何诊断：
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 preflight --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2
 
-最终只回答实验事实：每个数据集的精细近邻分位数；各 run 选出的空间尺度和联合参数；MAE、Energy Score、Joint NLL、BF Accuracy、P95/P99/Worst-site 相对同 checkpoint clean 的变化；两个 lambda 的结论是否一致；如果没有改善就如实报告。TEST score count 必须保持 0。不要添加新的通用框架、重做仓库结构或把这轮包装成最终发布。
+先看 FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md 和 SPATIAL_SCALE_SEARCH_SPACE.json，确认真实的 k=1/2/4/8 近邻分位数、union-kNN 边长分位数和候选尺度。
+
+确认诊断正常后，依次运行（不要并行）：
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset tuji --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2 --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uts --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2 --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uji --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2 --device cuda
+
+如果 CUDA 不可用，三条 run 命令全部改为 --device cpu。不要在数据集之间修改代码、参数网格或目标函数。前两个数据集结束时 aggregate 尚未完整是正常现象；第三个结束后看最终汇总。
+
+重点比较：每个数据集的精细距离分位数；每个 run 选择的四个空间尺度和六个联合参数；相对同 checkpoint clean 的 MAE、Energy Score、Joint NLL、BF Accuracy、P95/P99/Worst-site；两个 lambda 是否给出相同方向。如果没有改善，就报告没有改善。TEST score count 必须保持 0。
