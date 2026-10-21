@@ -245,7 +245,8 @@ def _calibration_candidates():
         alpha_prior=float(ap),alpha_obs=float(ao),beta=float(beta))
         for i,(t,tv,ts,ap,ao,beta) in enumerate(itertools.product(TEMPERATURES,THETAS,THETAS,ALPHAS,ALPHAS,BETAS))]
 
-def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endpoint_cache=None,chunk_size=16,row_chunk_size=256):
+@torch.no_grad()
+def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endpoint_cache=None,chunk_size=16,row_chunk_size=512):
     device=pack_all["scores"].device; coords=ctx["memory"]["coords"].detach().cpu().numpy()
     ep=endpoint_cache if endpoint_cache is not None else normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
     all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
