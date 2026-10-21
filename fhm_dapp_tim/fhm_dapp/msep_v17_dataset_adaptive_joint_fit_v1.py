@@ -31,6 +31,10 @@ def _json_safe(value):
         return "Infinity" if value>0 else ("-Infinity" if value<0 else "NaN")
     return value
 
+def _stable_hash(value):
+    payload=json.dumps(_json_safe(value),sort_keys=True,separators=(",",":"),allow_nan=False).encode()
+    return hashlib.sha256(payload).hexdigest()
+
 def _write_json(path,value,exclusive=False):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
     with path.open("x" if exclusive else "w",encoding="utf-8") as f:
@@ -548,7 +552,12 @@ def run(args):
           "eval_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in ev),
           "anchor_order_sha256":_hash_anchor_order(coords,b,f),
           "bf_accuracy_guard":"candidate macro BF accuracy >= clean CAL-fit baseline",
-          "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.01 + 1e-8",**TEST_COUNTS}
+          "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.01 + 1e-8",
+          "algorithm_code_sha256":s3.sha(Path(__file__)),
+          "source_manifest_sha256":s3.sha(manifest_path),
+          "input_run_file_sha256":{p.name:s3.sha(p) for p in sorted(Path(ctx["historical_run"]).iterdir()) if p.is_file()},
+          **TEST_COUNTS}
+        selection["parameter_config_sha256"]=_stable_hash(selection)
         _write_json(sp,selection,exclusive=True)
         _write_json(lock,{"selection_role":"CAL-fit","evaluation_role":"CAL-eval","selection_frozen_before_cal_eval":True,
           "selection_sha256":s3.sha(sp),"checkpoint_sha256":ckpt_sha,"fit_split_sha256":selection["fit_split_sha256"],
@@ -567,7 +576,9 @@ def run(args):
         _write_json(rp,report,exclusive=True); _csv_write(rd/"CANDIDATE_METRICS.csv",rows_all)
         _write_json(rd/"RUN.lock",{"checkpoint_sha256":ckpt_sha,"selection_sha256":s3.sha(sp),
           "fit_split_sha256":selection["fit_split_sha256"],"eval_split_sha256":selection["eval_split_sha256"],
-          "anchor_order_sha256":selection["anchor_order_sha256"],"device":args.device,"gamma_space":0.0,**TEST_COUNTS},exclusive=True)
+          "anchor_order_sha256":selection["anchor_order_sha256"],"parameter_config_sha256":selection["parameter_config_sha256"],
+          "algorithm_code_sha256":selection["algorithm_code_sha256"],"source_manifest_sha256":selection["source_manifest_sha256"],
+          "input_run_file_sha256":selection["input_run_file_sha256"],"device":args.device,"gamma_space":0.0,**TEST_COUNTS},exclusive=True)
         reports.append(report)
         print(json.dumps({"stage":"run_complete","dataset":ds,"seed":seed,"backbone":arm,
           "candidate_count":len(rows_all),"selected_lambda_0.02":chosen["lambda_0.02"],
