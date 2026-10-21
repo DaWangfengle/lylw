@@ -94,3 +94,10 @@ Test file: tests/test_v17_dataset_adaptive_joint_fit_v1.py.
 - The runner defines its own manifest_path; it must not depend on the preflight function's local variables.
 - FIT geometry scale candidates use the same-building/floor k=1/2/4/8 distance distributions plus fixed physical scales. Virtual coordinates are checked for finite [N,2] values, and undirected edge lookups are canonicalized.
 - Unit tests cover measure conservation, graph invariants, TEST row guards, and CAL-eval lock ordering. These tests must pass before any real-data run; remote repository edits alone are not evidence that tests executed.
+
+
+## Baseline comparability and resume protection
+
+- A historical clean baseline or old-combo result is reusable only if its frozen checkpoint SHA exactly matches the checkpoint under evaluation. Otherwise, recompute the clean baseline on the current checkpoint's CAL-fit rows and omit the mismatched old-combo comparison.
+- Resuming an existing CAL-eval report requires re-verifying the selection lock, code/source manifest, historical input hashes, and the actual checkpoint file hash. A report's mere existence is not sufficient to skip a run.
+- The final JOINT_FIT_SELECTION status mirrors the aggregate integrity result and cannot remain PASS when runs or locks are incomplete.
