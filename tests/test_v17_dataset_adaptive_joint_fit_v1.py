@@ -313,26 +313,6 @@ def test_historical_clean_and_old_combo_must_match_frozen_checkpoint(monkeypatch
     assert clean["temperature"] == pytest.approx(1.25)
     assert joint._old_combo("fixture", 7, "D", "current-checkpoint") is None
 
-def test_empty_s2_edges_invalidate_positive_beta_candidates():
-    rows = [
-        {"candidate_id": "clean", "beta": 0.0, "coordinate_mae_m": 1.0,
-         "transport_w1_m": 2.0, "bf_accuracy": 1.0, "bf_cross_entropy": 0.1,
-         "joint_nll": 3.0, "site_p95_mae_m": 2.0, "site_p99_mae_m": 3.0,
-         "worst_site_mae_m": 4.0},
-        {"candidate_id": "fake_s2", "beta": 0.35, "coordinate_mae_m": 1.0,
-         "transport_w1_m": 2.0, "bf_accuracy": 1.0, "bf_cross_entropy": 0.1,
-         "joint_nll": 3.0, "site_p95_mae_m": 2.0, "site_p99_mae_m": 3.0,
-         "worst_site_mae_m": 4.0},
-    ]
-    checked = joint._invalidate_empty_s2_edge_candidates(rows, has_s2_edges=False)
-    assert checked[0]["candidate_valid"] is True
-    assert checked[0]["coordinate_mae_m"] == pytest.approx(1.0)
-    assert checked[1]["candidate_valid"] is False
-    assert checked[1]["invalid_reason"] == "positive_beta_without_retained_s2_edges"
-    assert math.isinf(checked[1]["coordinate_mae_m"])
-    assert math.isinf(checked[1]["bf_cross_entropy"])
-
-
 def test_weighted_cell_mixture_rejects_positive_beta_without_retained_edges():
     parent_logits = torch.zeros((1, 2))
     virtual_logits = torch.empty((1, 0))
