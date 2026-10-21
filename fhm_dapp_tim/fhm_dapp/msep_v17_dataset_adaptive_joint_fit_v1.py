@@ -22,10 +22,19 @@ LAMBDAS=(0.02,0.05)
 BF_CE_RELATIVE_TOLERANCE=0.01
 QUANTILES=(0.00,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1.00)
 
+def _json_safe(value):
+    if isinstance(value,dict): return {str(k):_json_safe(v) for k,v in value.items()}
+    if isinstance(value,(list,tuple)): return [_json_safe(v) for v in value]
+    if isinstance(value,np.ndarray): return _json_safe(value.tolist())
+    if isinstance(value,np.generic): return _json_safe(value.item())
+    if isinstance(value,float) and not math.isfinite(value):
+        return "Infinity" if value>0 else ("-Infinity" if value<0 else "NaN")
+    return value
+
 def _write_json(path,value,exclusive=False):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
     with path.open("x" if exclusive else "w",encoding="utf-8") as f:
-        json.dump(s3._json_safe(value),f,ensure_ascii=False,indent=2,allow_nan=False); f.write("\n")
+        json.dump(_json_safe(value),f,ensure_ascii=False,indent=2,allow_nan=False); f.write("\n")
 
 def _read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
