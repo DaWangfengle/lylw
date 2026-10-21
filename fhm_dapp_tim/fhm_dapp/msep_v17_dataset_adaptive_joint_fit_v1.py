@@ -1023,8 +1023,6 @@ def aggregate(args):
                 for stat,value in stats.items(): row[f"{parameter}_{stat}"]=value
             sensitivity_rows.append(row)
     _csv_write(out/"NEAR_OPTIMAL_SENSITIVITY.csv",sensitivity_rows)
-    _write_json(out/"JOINT_FIT_SELECTION.json",{"status":"PASS","runs":selections,"cal_eval_report_count":len(reports),
-      "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
     md=["# V17 Dataset-Adaptive Spatial Joint Fit: CAL-eval Report","",
       "Selection is locked on CAL-fit before CAL-eval. CAL-eval is reporting-only. Internal/official TEST scores: 0. Gamma-space is fixed at 0.","",
       "| Dataset | Seed | Backbone | Method | MAE m | ES m | Joint NLL | BF accuracy | BF CE | P95 site | P99 site | Worst site |",
