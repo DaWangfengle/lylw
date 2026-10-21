@@ -486,7 +486,12 @@ def _attach_virtual_measure(config,geometry_diagnostics):
     beta=float(config["beta"])
     config["retained_virtual_edges"]=int(diag["retained_virtual_edges"])
     config["beta_weighted_virtual_mass_by_parent"]=[beta*float(x) for x in parent_measure]
+    config["physical_measure_by_parent"]=[(1.0-beta if float(x)>0 else 1.0) for x in parent_measure]
     config["pre_normalization_virtual_measure_total"]=float(beta*sum(parent_measure))
+    config["pre_normalization_physical_measure_total"]=float(sum(config["physical_measure_by_parent"]))
+    config["pre_normalization_total_measure"]=config["pre_normalization_virtual_measure_total"]+config["pre_normalization_physical_measure_total"]
+    if not math.isclose(config["pre_normalization_total_measure"],float(len(parent_measure)),rel_tol=1e-8,abs_tol=1e-8):
+        raise RuntimeError("selected S2 physical-plus-virtual measure is not conserved")
     return config
 
 def _legacy_clean_config(dataset,seed,arm,fitpack,ctx):
