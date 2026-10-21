@@ -32,7 +32,7 @@ A. gamma_space 固定为 0
 ------------------------
 - 只运行 2A，gamma_space 恒等于 0.0。
 - gamma 不得进入候选向量、搜索表或 CLI 参数。
-- manifest、selection、报告明确记录 gamma_space=0.0、searched=false；不得借其他名称重新引入空间方差膨胀。
+- manifest、selection、搜索空间与报告明确记录 gamma_space=0.0、searched=false、gamma_candidate_count=0；不得借其他名称重新引入空间方差膨胀。
 
 B. S2 虚拟边逐父锚点归一化
 --------------------------
