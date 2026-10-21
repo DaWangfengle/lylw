@@ -1,109 +1,194 @@
-V17 数据集自适应空间尺度 + 联合校准：Codex 执行指令（锁定版）
+V17 数据集自适应空间尺度 + 联合校准：Codex 执行指令（修订锁定版）
 
-分支
-====
+Git 分支
+========
 v17-dataset-adaptive-spatial-joint-fit-v1
 
-主实现
-====
-fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
-测试
-====
-tests/test_v17_dataset_adaptive_joint_fit_v1.py
-
-研究范围与硬约束
+本轮主实现与测试
 ================
-- 只加载冻结 C/D/E checkpoint，不训练主干，不更新任何模型参数。
-- 算法数学家族统一，但每个 dataset × backbone × seed 独立拟合 R_max_S1、tau_graph、R_max_S2、tau_virt。D 是主要分析基准；E 的 checkpoint-native 训练期 8m 图扩散保留为模型自身一部分，推理期新增 S1 是独立因子，不得让 D/E 共享强制空间尺度。
-- 只使用 FIT anchor dictionary 的坐标/楼层/建筑信息生成几何候选；CAL-fit 标签负责选择参数。全部选择锁定并写入 SHA256 锁后，才允许读 CAL-eval 标签用于一次性报告。
-- internal TEST 与 official TEST 的任何标签不得被打包、预测、评分或用于参数选择；TEST score counts 必须始终为 0。若 split/路径守卫触发，立即失败关闭。
-- 旧 evidence 只读不可变；新增产物只写入 fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1/。不要 push/upload，不开 PR；Git 操作由用户负责。
+- fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
+- fhm_dapp_tim/fhm_dapp/msep_v17_spatial_operators_v1.py
+- fhm_dapp_tim/fhm_dapp/msep_v17_spatial_composition_v1.py
+- fhm_dapp_tim/fhm_dapp/msep_v17_spatial_structure_v1.py
+- tests/test_v17_dataset_adaptive_joint_fit_v1.py
+- 设计规范：fhm_dapp_tim/evidence/V17_DATASET_ADAPTIVE_JOINT_FIT_DESIGN.md
 
-锁定细节 1：gamma_space 恒等于 0
-================================
-- 本轮只运行 2A。
-- gamma_space 固定为 0.0，不能加入搜索向量或候选表，不能通过 CLI 暴露为可调参数。
-- 选择配置、manifest、结果报告均明确写 gamma_space=0，且记录 gamma 搜索数为 0。
+你的任务是按以下顺序完成实现审查、测试和真实数据实验。研究正确性优先；不要为显示“测试通过”而弱化科学约束，不要伪造运行结果。
 
-锁定细节 2：S2 虚拟边逐元胞测度守恒
-==================================
-对每个唯一无向虚拟边 e=(i,j)，距离核 k_e=exp(-d_ij/tau_virt)。必须在每个父锚点的关联边集合内归一化：
+一、不可变研究边界
+==================
+1. 只加载冻结的 C/D/E checkpoint；不训练主干、不更新任何模型参数、不重选 epoch。
+2. 同一数据集内，C/D/E 各自独立拟合空间参数；参数拟合单位为 dataset × backbone × seed。D 是主要科学基准。E checkpoint 中原生训练期图扩散保留在模型 retrieval logits 中；推理期新增 S1 是另一个独立算子，不能与原生层混称。
+3. 几何候选只能来自 FIT anchor dictionary 的坐标、building、floor 和 FIT anchor 的同层邻居/原 union-kNN 边长分布。CAL-fit 标签只用于候选评价和选择。不能用 CAL-eval、internal TEST 或 official TEST 选参数。
+4. internal TEST 和 official TEST 的标签不得进入 pack、预测、评分、参数选择或报告指标。所有产物中的 internal_test_rows_scored 与 official_test_rows_scored 必须恒为 0。若任何 split/路径/角色守卫触发，立即失败关闭。
+5. 旧 evidence 只读，不改写。新增运行产物仅写入：
+   fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1/
+6. 不执行 git push/upload，不创建 PR，不代替用户做 Git 操作。只负责当前分支中的代码、测试、实验和报告质量。
+
+二、锁定数学规范
+================
+
+A. gamma_space 固定为 0
+------------------------
+- 只运行 2A，gamma_space 恒等于 0.0。
+- gamma 不得进入候选向量、搜索表或 CLI 参数。
+- manifest、selection、报告明确记录 gamma_space=0.0、searched=false；不得借其他名称重新引入空间方差膨胀。
+
+B. S2 虚拟边逐父锚点归一化
+--------------------------
+对唯一无向边 e=(i,j)，距离核为 k_e=exp(-d_e/tau_virt)。在每个父锚点 i 的关联边集合内部归一化：
   w_tilde(i->e) = k_e / sum_{e' incident to i} k_e'
-虚拟边在全局混合中的未归一化质量是 beta * (w_tilde(i->e)+w_tilde(j->e)) * exp(ell_e)；非孤立父锚点的物理质量为 1-beta；截断后无虚拟邻居的父锚点物理质量为 1。
-- 当 tau_virt -> infinity 时，w_tilde(i->e) 必须精确退化为 1/degree(i)，从而还原 beta*(1/d_i+1/d_j) 的旧度数先验。
-- 每个有虚拟边的父锚点关联权重之和必须为 1；报告有效虚拟质量/父锚点、边长、长边剔除、零邻居节点。
-- 物理 + 虚拟先验测度总量必须守恒；全局 softmax/Z 只在混合所有组件时执行。不得只把距离核乘到旧度数先验上而不做逐父锚点归一化。
-- S1 cutoff 后保持图对称；空邻居节点保留自环 W_ii=1；检查双随机误差、连通分量与 NaN/Inf。
 
-锁定细节 3：D/E 空间尺度独立
-============================
-- 参数拟合单位是 dataset × backbone × seed；可在汇总阶段比较三个种子的稳定性。
-- D 是主要科学基准；C/D/E 各自拟合空间尺度，不允许同数据集跨 backbone 强行共享。
-- E 训练期原生 8m 图扩散不能和推理期新增 S1 混称为同一层。报告 E 原生 alpha 与新增推理图的 R/tau/alpha。
+边 e 的全局混合未归一化质量必须是：
+  beta * (w_tilde(i->e) + w_tilde(j->e)) * exp(ell_e)
 
-锁定细节 4：缓存几何算子 + 向量化联合校准
-========================================
-- 外层几何参数为 (R_max_S1, tau_graph, R_max_S2, tau_virt)；先从 FIT-only k=1/2/4/8 近邻分布与同楼层 union-kNN 边长分布生成候选。
-- 对每个外层候选，预先构建并缓存 S1 双随机图 W、截断虚拟边、逐父锚点归一化权重及虚拟边统计。不要在内层每个校准候选重复构图或重复推理神经网络。
-- 内层必须在同一向量化候选评价循环中联合搜索 T、theta_v、theta_s、alpha_prior、alpha_obs、beta；不准 sequential freezing。
-- beta 必须包含 [0, .05, .10, .15, .20, .35, .50, .65, .80]。
-- 搜索空间必须同时包含 alpha_prior=0、alpha_obs=0、beta=0 等退化边界，从而精确包含 clean base、单 S1 和单 S2。
-- 固定候选顺序、seed、tie-break 与预算；保留所有候选 selection metrics 和敏感性结果。
+- 每个有虚拟边的父锚点，其所有关联 endpoint weights 之和必须为 1。
+- tau_virt -> infinity 时精确退化到 1/degree(i)，并还原旧 beta*(1/d_i+1/d_j) 先验。
+- 有虚拟邻居的物理父锚点质量为 1-beta；截断后没有虚拟邻居的父锚点物理质量为 1。
+- 物理质量 + 虚拟质量的混合前总测度必须等于物理锚点数 N。
+- 禁止只把距离核乘在旧度数先验上而不做逐父锚点归一化。
+- 对虚拟坐标显式验证有限 [N,2]；检查边索引、唯一无向边和 canonical edge lookup，查找时不得依赖边端点原始顺序。
 
-锁定细节 5：选择目标与 BF 防退化约束
+C. S1 图与计算复杂度
+--------------------
+- S1 cutoff 后图必须对称、同 building/floor，不允许跨建筑/楼层边。
+- 没有保留邻边的锚点保留自环 W_ii=1。
+- W 必须双随机，记录实际 float32 算子行/列和误差、Sinkhorn 迭代/收敛、保留/删除边、距离分布、零邻居和连通分量。
+- 图是“单位阵 + 稀疏 union-kNN 边”，构图/平衡应使用 O(N+E) 内存；禁止构建 dense N×N 中间矩阵。
+- 检查 NaN/Inf、对称性、双随机误差；出现数值失败立即终止。
+
+D. 空间尺度候选
+----------------
+- 分别构造 R_max_S1、tau_graph、R_max_S2、tau_virt 四个候选池，不得强行令 S1/S2 半径或温度相同。
+- 只用 FIT 同 building/floor 的 k=1/2/4/8 最近邻距离分布、现有 union-kNN 边长分布，以及预先固定的物理尺度生成候选。
+- 每个数据集/seed 需报告 P0/P1/P5/P10/P25/P50/P75/P90/P95/P99/P100、均值/标准差、零距离对数，以及边长超过 5/10/15/20/30/40m 的计数与比例。
+- exp(-d/8m) 仅是距离核直观诊断，不是最终图权重。
+- 候选顺序确定、可复现。外层每个几何候选只构建一次 S1 图、S2 截断边与 endpoint 权重，并在内层重复使用；不允许每个校准组合重新构图或重新跑神经网络。
+- 候选空间需覆盖 k=1/2/4/8 的邻居尺度，而非只覆盖 k=1。
+
+E. 内层联合搜索，不得 sequential freezing
+------------------------------------------
+联合搜索向量仅包含：
+  (T, theta_v, theta_s, alpha_prior, alpha_obs, beta)
+
+当前锁定网格：
+- T ∈ {0.25, 0.5, 1, 2, 3}
+- theta_v、theta_s ∈ {0, 0.75, 1.5}
+- alpha_prior、alpha_obs ∈ {0, 0.1, 0.35, 0.65, 1}
+- beta ∈ {0, 0.05, 0.10, 0.15, 0.20, 0.35, 0.50, 0.65, 0.80}
+- 每个外层几何候选对应 10,125 个内层组合。
+- 必须含 alpha_prior=0、alpha_obs=0、beta=0 等边界组合，严格包含 Clean Base、单 S1、单 S2。
+- 以向量化张量广播在同一联合候选循环评价全部参数组合。可以按固定 chunk 分块控制显存，但不得改成逐组冻结参数的 sequential search。
+- 记录实际候选数、几何数、失败/非有限候选和 near-optimal 敏感性；禁止按 CAL-eval 结果反向缩减候选或挑选模型。
+
+F. 目标函数与 BF 退化约束
+-------------------------
+主物理目标：
+  primary = Coordinate MAE + 0.30 * L_W1
+其中 L_W1 为后验组件中心到真值的加权距离。
+
+在 CAL-fit clean baseline 上归一化主目标和 joint-NLL 增量，分别运行：
+  lambda_2d_nll ∈ {0.02, 0.05}
+目标为：
+  normalized_primary + lambda_2d_nll * normalized_joint_nll_delta
+
+不得直接把米、nats、交叉熵原始值相加。
+- 候选 macro BF accuracy 不得低于同一 checkpoint 的 clean CAL-fit baseline。
+- BF cross entropy 不得比 clean baseline 恶化超过 1%（预先锁定的相对容差）。
+- 如果没有满足约束且有意义的改进，保留可行 clean baseline 并如实报告；绝不放宽约束、改目标或使用 CAL-eval 反选。
+- 记录 MAE、W1、BF CE/accuracy、joint NLL、ES、P95/P99/Worst-site。
+- D 是主分析；C/E 用于判断空间尺度选择是否具有跨 backbone 一致性，而不是强制共享尺度。
+
+三、CAL-fit / CAL-eval 隔离与恢复安全
 ====================================
-- 主物理目标为 Coordinate MAE + 0.30 * L_W1，其中 L_W1 是后验组件中心到真值的加权距离。
-- 不直接将米、nats、交叉熵的原始值相加。先以 clean CAL-fit 基线归一化主目标和 joint-NLL 增量；分别运行 lambda_2d_nll=0.02 与 0.05，两个配置都锁定后再做 CAL-eval。
-- BF cross entropy 采用预先声明的归一化与退化约束；默认不允许比 clean CAL-fit baseline 恶化超过 1%。
-- 硬约束：候选 macro BF accuracy 不得低于同一 checkpoint 的 clean/joint_calibrated_base CAL-fit accuracy。
-- 如无满足约束的改进候选，必须如实选择可行的 clean baseline/报告无改进，不得放宽约束或使用 CAL-eval 反选。
-- 报告 MAE、W1、BF CE/accuracy、Joint NLL、ES、P95/P99/Worst-site；不承诺所有指标同时改善。
+1. 每个 dataset × backbone × seed 独立拟合。
+2. 在 CAL-fit 完成候选评价、筛选、配置写入后，写入 CAL_EVAL.lock。
+3. 必须重新读取并核验 selection 与 lock：参数配置哈希、算法源码 SHA、EXECUTION_MANIFEST SHA、历史输入文件 SHA、当前 checkpoint SHA、FIT/CAL-eval split SHA、anchor-order SHA、selection/lock SHA，以及 TEST 计数全零。
+4. 所有核验通过之前，严禁构建 CAL-eval pack，严禁读取/计算 CAL-eval 目标坐标或评分。
+5. CAL-eval 只在 selection lock 验证通过后构建一次，用于报告，绝不用于选择。
+6. 若报告已存在，恢复时仍需重新验证 lock、当前源码/输入哈希和实际 checkpoint SHA；不能只因报告文件存在就跳过完整性验证。
+7. 历史 clean baseline / old combo 仅当 checkpoint SHA 与当前冻结 checkpoint 完全一致才可比较。否则在当前 checkpoint 的 CAL-fit 上重算 clean baseline，并把旧 combo 标记不可用。
+8. selection 或 lock 不完整时不得自动覆盖、猜测修复或继续评估；保留现场并报告准确阻断原因。
+9. JOINT_FIT_SELECTION.json 和 INTEGRITY_REVIEW.json 只有在全部预期 run、全部 lock、全部 TEST-zero 检查通过后才能标记 PASS。
 
-FIT 几何诊断
-============
-- 对每个 dataset × seed，输出同 building/floor 的 k=1,2,4,8 最近邻距离完整分位数 P0/P1/P5/P10/P25/P50/P75/P90/P95/P99/P100、均值/标准差、零距离对数。
-- 独立输出现有 union-kNN 图边长分布；按 building/floor 分组；输出超过 5/10/15/20/30/40m 的计数比例。
-- 报告 exp(-d/8m) 在 FIT 最近邻和旧图边长分位点的值，但只能作为核值直观诊断，不得冒充最终图权重。
-- 验证 anchor canonical order、坐标单位、建筑/楼层边界、split hash。若无法验证，立即 fail closed。
-
-运行步骤
-========
-1. 先做静态审查，修正任何 import/类型/shape/数值稳定性错误。
-2. 运行：
-   python -m pytest tests/test_v17_dataset_adaptive_joint_fit_v1.py -q
-   python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
-3. 在本地仓库和真实冻结数据环境运行 FIT-only preflight 与小规模 smoke test；确认 checkpoint 路径、输入 manifest 和 CAL-fit/CAL-eval split 锁正确。
-4. 执行正式运行：
-   python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 all --device cuda
-   如果没有 CUDA，显式使用 --device cpu。
-5. 不得声称已运行本地不可访问的数据实验。若缺少 checkpoint/data，写明准确阻断原因；不能编造任何 FIT 分位数、最优参数或 MAE。
-6. 检查候选数量、NaN/Inf、图对称/双随机误差、逐父锚点测度守恒、锁文件 SHA、TEST score count=0。
-7. 最终交付：
-   FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json/.md
-   SPATIAL_SCALE_SEARCH_SPACE.json
-   JOINT_FIT_SELECTION.json
-   CANDIDATE_METRICS.csv
-   PARETO_FRONTIER.csv
-   CAL_EVAL_REPORT.md
-   INTEGRITY_REVIEW.json
-   EXECUTION_MANIFEST.json
-   RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md
-
-最终报告必须回答：FIT-only 分位数是多少；每个 dataset × backbone × seed 选出的 R/tau 是多少；联合参数/seed 是否稳定；相对 clean、single S1、single S2、旧 combo 的 MAE/ES/NLL/BF/P95/P99/Worst-site 差异；BF accuracy 是否保持；gamma 是否始终为 0；internal/official TEST 是否始终 0。
-
-
-新增执行闸门（必须落实）
+四、必须按顺序执行的命令
 ========================
-- CAL-fit 联合搜索、候选筛选、参数配置写入和 CAL_EVAL.lock 写入完成后，必须重新读取并验证 selection/lock；验证参数配置哈希、算法源码 SHA、EXECUTION_MANIFEST SHA、历史输入文件 SHA、FIT/CAL-eval split SHA、anchor-order SHA 和 TEST score count=0。任一不匹配立即失败。
-- 在上述锁验证通过之前，严禁调用 s3.make_pack(ctx, cal_eval, ...)，也严禁计算或读取 CAL-eval 目标坐标。CAL-eval 只在锁验证通过后构建一次并报告。
-- run() 必须显式定义 manifest_path=output/EXECUTION_MANIFEST.json，不能引用 preflight() 的局部变量。
-- 空间尺度候选必须覆盖 FIT 同 building/floor 的 k=1/2/4/8 邻居尺度，并结合固定物理尺度；不能只从 k=1 生成。
-- 虚拟边坐标必须显式验证为有限 [N,2] 数组；边索引和 canonical edge lookup 必须支持无向边端点顺序。
-- 运行测试：python -m pytest tests/test_v17_dataset_adaptive_joint_fit_v1.py -q；随后 py_compile；最后才执行真实数据 preflight 和 smoke test。当前开发环境若不能访问冻结数据，不得宣称实验已运行。
+先进入当前仓库根目录，确认当前分支为：
+  v17-dataset-adaptive-spatial-joint-fit-v1
 
+优先使用 CUDA。如果 CUDA 不可用，所有命令统一显式改用 --device cpu，不要混用不同 device 的半成品输出。
 
-基线与恢复保护
-==============
-- 历史 joint_calibrated_base 和 old_combo 只有在其 checkpoint_sha256 与当前冻结 checkpoint 完全相同的情况下才可比较；否则在当前 checkpoint 的 CAL-fit 上重算 clean baseline，并将旧 combo 标记为不可用。
-- 恢复已有 CAL-eval 报告时，必须重新验证 selection/lock、当前源码/输入哈希及实际 checkpoint SHA；不允许仅因报告文件存在就跳过完整性检查。
-- JOINT_FIT_SELECTION.json 的最终 status 必须来自所有预期 run、selection lock 和 TEST-zero 检查；任何不完整情况不得标记 PASS。
+第 1 步：单元测试
+-----------------
+  python -m pytest tests/test_v17_dataset_adaptive_joint_fit_v1.py -q
+
+测试失败必须先修复，禁止带着失败进入真实数据阶段。新增稀疏大图测试必须验证图仍是 sparse COO、nnz=N+2E，不因孤立锚点构建 dense N×N 矩阵。
+
+第 2 步：语法编译
+-----------------
+  python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
+  python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_spatial_operators_v1.py
+  python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_spatial_composition_v1.py
+  python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_spatial_structure_v1.py
+
+第 3 步：FIT-only preflight
+---------------------------
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 preflight --device cuda
+
+检查 preflight 输出真实 FIT-only 分位数、候选池、anchor/split hash、checkpoint/source manifest 与 TEST=0。若输入数据、历史完整性审计、冻结 checkpoint 或 Phase-T audit 缺失/不匹配，立即停止并报告准确文件路径与错误；不得伪造结果。
+
+第 4 步：小规模端到端 smoke
+---------------------------
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 smoke --device cuda
+
+smoke 只允许在第一个数据集、seed 和主干 D 的 CAL-fit 上运行三个边界候选（clean、单 S1、单 S2）；它必须：
+- 加载冻结 checkpoint，不训练；
+- 验证一个外层几何候选的 S1/S2 算子；
+- 运行向量化联合评估并验证有限指标；
+- 验证逐父锚点测度守恒；
+- 写 SMOKE_TEST.json，明确 cal_eval_pack_constructed=false、cal_eval_rows_scored=0、TEST=0；
+- 不写 selection/lock，不进行 CAL-eval，不影响正式候选选择。
+smoke 未 PASS 不得启动完整实验。
+
+第 5 步：正式实验
+-----------------
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --device cuda
+
+不要在 run 前执行 all，避免重复 preflight/smoke 和覆盖本轮诊断。run 完成后必须自动 aggregate；检查终端退出码、stdout/stderr、每个 run 的锁与报告。若 CUDA 不可用，上述三个阶段全部统一改为 --device cpu。
+
+五、必须检查和交付的产物
+========================
+产物根目录：
+  fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1/
+
+必需产物：
+- FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json
+- FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md
+- SPATIAL_SCALE_SEARCH_SPACE.json
+- SMOKE_TEST.json
+- runs/{dataset}_seed{seed}/{C,D,E}/CAL_FIT_SELECTION.json
+- runs/{dataset}_seed{seed}/{C,D,E}/CAL_EVAL.lock
+- runs/{dataset}_seed{seed}/{C,D,E}/CAL_EVAL_REPORT.json
+- runs/{dataset}_seed{seed}/{C,D,E}/CANDIDATE_METRICS.csv
+- JOINT_FIT_SELECTION.json
+- CANDIDATE_METRICS.csv
+- PARETO_FRONTIER.csv
+- CAL_EVAL_REPORT.md
+- INTEGRITY_REVIEW.json
+- EXECUTION_MANIFEST.json
+- RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md
+
+六、最终执行摘要必须如实回答
+============================
+1. 测试与 py_compile 是否真正运行、退出码是多少；不能把“代码已提交”写成“测试通过”。
+2. preflight 的真实 FIT k=1/2/4/8 分位数、union-kNN 边长分布和候选池是什么。
+3. 每个 dataset × backbone × seed × lambda 的 R_max_S1、tau_graph、R_max_S2、tau_virt、T、theta_v、theta_s、alpha_prior、alpha_obs、beta。
+4. 两个 lambda 的联合参数和三 seed 稳定性如何；边界候选、near-optimal 候选和几何诊断是否支持相同结论。
+5. 相对同 checkpoint clean、single S1、single S2 和可用 old combo 的 MAE/ES/NLL/BF CE/BF accuracy/P95/P99/Worst-site 差异。
+6. BF accuracy 是否保持、BF CE 是否在 1% 容差内；若无可行改善，必须明确报告无改善。
+7. gamma 是否始终严格固定为 0。
+8. internal/official TEST score counts 是否始终为 0。
+9. 所有预期 run 数、selection/lock、checkpoint/source/input/split/anchor hashes 是否通过；最终 status 是 PASS 还是 INCOMPLETE。
+10. 如果运行环境无法访问真实数据/checkpoint，给出具体阻断路径和错误，不得编造 FIT 分位数、最优参数、MAE、耗时或实验结论。
+
+最后提醒：本轮目标是得到可信的科学结果，不是制造 PASS。真实实验结束前不要做结论性 MAE 判断，也不要根据 CAL-eval 反复改模型。
