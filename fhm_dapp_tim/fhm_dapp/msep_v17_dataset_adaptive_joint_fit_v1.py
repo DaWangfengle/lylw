@@ -14,11 +14,13 @@ DEFAULT_CHECKPOINT_ROOT=comp.DEFAULT_CHECKPOINT_ROOT
 DEFAULT_OUTPUT=REPO/"fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1"
 ARMS=("C","D","E")
 TEST_COUNTS={"internal_test_rows_scored":0,"official_test_rows_scored":0}
-TEMPERATURES=(0.25,0.5,1.0,2.0,3.0)
+# Coarse joint grid for a fast first iteration; beta remains deliberately fine.
+TEMPERATURES=(0.25,0.75,1.0,3.0)
 THETAS=(0.0,0.75,1.5)
-ALPHAS=(0.0,0.1,0.35,0.65,1.0)
+ALPHAS=(0.0,0.25,0.65,1.0)
 BETAS=(0.0,0.05,0.10,0.15,0.20,0.35,0.50,0.65,0.80)
 LAMBDAS=(0.02,0.05)
+BF_CE_WEIGHT=0.25
 BF_CE_RELATIVE_TOLERANCE=0.01
 NEAR_OPTIMAL_OBJECTIVE_TOLERANCE=0.01
 QUANTILES=(0.00,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1.00)
@@ -106,7 +108,7 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
             raise RuntimeError("cross-building/floor edge in frozen union-kNN graph")
         if len({tuple(sorted(map(int,x))) for x in e.tolist()})!=len(e): raise RuntimeError("duplicate edge")
     else: lengths=np.asarray([],dtype=np.float64)
-    return {"anchors":int(len(xy)),"building_floor_strata":len(strata),
+    result={"anchors":int(len(xy)),"building_floor_strata":len(strata),
         "zero_distance_pairs_within_building_floor":int(zero_pairs),
         "kth_neighbor_distance_m":{str(k):_quantiles(v) for k,v in kth.items()},
         "kth_neighbor_threshold_counts":{str(k):_threshold_counts(v) for k,v in kth.items()},
@@ -115,6 +117,22 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
         "base_union_knn_edges":int(len(e)),
         "base_union_knn_edge_isolated_anchor_count":int(len(xy)-len(set(e.reshape(-1).tolist()))),
         "groups":groups,"distance_semantics":"FIT anchor k-neighbors are within same building/floor; union-kNN edge lengths are reported separately."}
+    result["exp_neg_distance_over_8_at_quantiles"]={
+        f"FIT_k{k}_nearest_neighbor":{key:(float(math.exp(-value/8.0)) if value is not None else None)
+            for key,value in result["kth_neighbor_distance_m"][str(k)].items() if key.startswith("p")}
+        for k in (1,2,4,8)}
+    result["exp_neg_distance_over_8_at_quantiles"]["base_union_knn_edges"]={
+        key:(float(math.exp(-value/8.0)) if value is not None else None)
+        for key,value in result["base_union_knn_edge_distance_m"].items() if key.startswith("p")}
+    result["exp_neg_distance_over_8_at_quantiles"]["note"]="Descriptive only; normalized operator weights also depend on graph topology and Sinkhorn."
+    for key,group in result["groups"].items():
+        bb,ff=(int(x) for x in key.split("::",1))
+        mask=(b[e[:,0]]==bb)&(f[e[:,0]]==ff)&(b[e[:,1]]==bb)&(f[e[:,1]]==ff) if len(e) else np.zeros(0,dtype=bool)
+        vals=lengths[mask] if len(e) else np.empty(0,dtype=np.float64)
+        group["union_knn_edge_count"]=int(len(vals))
+        group["union_knn_edge_distance_m"]=_quantiles(vals)
+        group["union_knn_edge_threshold_counts"]=_threshold_counts(vals)
+    return result
 
 def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,sinkhorn_iterations=20000,tolerance=1e-10):
     """Build the symmetric doubly-stochastic cutoff graph in O(N+E) memory.
@@ -186,14 +204,24 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,
     if max(actual_re,actual_ce)>2e-6:
         raise RuntimeError(f"float32 graph residual too large: {actual_re},{actual_ce}")
     deg=np.bincount(kept.reshape(-1),minlength=n) if len(kept) else np.zeros(n,dtype=np.int64)
-    return graph,torch.as_tensor(kept.copy(),dtype=torch.long),{
-        "r_max_s1_m":float(r_max_m),"tau_graph_m":float(tau_graph_m),"base_edges":int(len(e)),
+    diag={"r_max_s1_m":float(r_max_m),"tau_graph_m":float(tau_graph_m),"base_edges":int(len(e)),
         "retained_edges":int(len(kept)),"removed_edges":removed,
         "retained_fraction":float(len(kept)/len(e)) if len(e) else 0.0,
         "degree_min":int(deg.min()),"degree_median":float(np.median(deg)),"degree_max":int(deg.max()),
         "zero_neighbor_nodes":int((deg==0).sum()),"sinkhorn_converged":converged,
         "sinkhorn_iterations":iterations,"sinkhorn_row_error":actual_re,"sinkhorn_col_error":actual_ce,
         "retained_edge_distance_m":_quantiles(d),"retained_edge_threshold_counts":_threshold_counts(d)}
+    parent=np.arange(n,dtype=np.int64)
+    def find(x):
+        while parent[x]!=x:
+            parent[x]=parent[parent[x]]; x=parent[x]
+        return x
+    for i,j in kept:
+        a,b0=find(int(i)),find(int(j))
+        if a!=b0: parent[a]=b0
+    diag["connected_components"]=len({find(i) for i in range(n)})
+    diag["isolated_component_count"]=int((deg==0).sum())
+    return graph,torch.as_tensor(kept.copy(),dtype=torch.long),diag
 
 def normalized_virtual_endpoint_weights(edges,coords,tau_virt_m):
     e=np.asarray(torch.as_tensor(edges).detach().cpu(),dtype=np.int64).reshape(-1,2); xy=np.asarray(coords,dtype=np.float64); n=len(xy)
@@ -445,30 +473,8 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
             row.update(site_p95_mae_m=float(p95[i]),site_p99_mae_m=float(p99[i]),
                 worst_site_mae_m=float(worst[i]),n_fit_rows=len(pack["scores"]),n_fit_sites=len(unique_sites))
             rows_out.append(row)
-    return _invalidate_empty_s2_edge_candidates(rows_out, has_s2_edges=bool(len(edges)))
-
-
-def _invalidate_empty_s2_edge_candidates(rows, *, has_s2_edges):
-    """Reject beta>0 candidates when cutoff removes every S2 edge.
-
-    Without this guard, such candidates silently collapse to the clean model and
-    can be mislabeled as a successful single-S2 ablation despite beta having no
-    operational effect.
-    """
-    metric_fields = (
-        "coordinate_mae_m", "transport_w1_m", "bf_accuracy", "bf_cross_entropy",
-        "joint_nll", "site_p95_mae_m", "site_p99_mae_m", "worst_site_mae_m",
-    )
-    for row in rows:
-        if not has_s2_edges and float(row.get("beta", 0.0)) > 0.0:
-            row["candidate_valid"] = False
-            row["invalid_reason"] = "positive_beta_without_retained_s2_edges"
-            for field in metric_fields:
-                row[field] = math.inf
-        else:
-            row["candidate_valid"] = True
-            row["invalid_reason"] = None
-    return rows
+    # If no S2 edge survives the cutoff, beta cannot be identified; retain only beta=0.
+    return rows_out if len(edges) else [r for r in rows_out if float(r["beta"]) == 0.0]
 
 
 def _primary(r): return float(r["coordinate_mae_m"])+.30*float(r["transport_w1_m"])
@@ -483,17 +489,21 @@ def _add_objectives(rows,base):
         r["primary_mae_plus_030_w1_m"]=_primary(r); r["normalized_primary"]=_primary(r)/pbase
         r["normalized_joint_nll_delta"]=(float(r["joint_nll"])-float(base["joint_nll"]))/nscale
         r["normalized_bf_cross_entropy"]=float(r["bf_cross_entropy"])/max(bfbase,1e-6)
+        r["normalized_bf_cross_entropy_delta"]=(float(r["bf_cross_entropy"])-float(base["bf_cross_entropy"]))/max(bfbase,1e-6)
         r["negative_bf_accuracy"]=-float(r["bf_accuracy"])
         r["bf_accuracy_non_degradation"]=float(r["bf_accuracy"])>=accbase-1e-12
         r["bf_cross_entropy_guard"]=float(r["bf_cross_entropy"])<=bfbase*1.01+1e-8
         r["feasible"]=bool(r["bf_accuracy_non_degradation"] and r["bf_cross_entropy_guard"])
-        for lam in LAMBDAS: r[f"selection_objective_lambda_{lam:.2f}"]=r["normalized_primary"]+lam*r["normalized_joint_nll_delta"]
+        for lam in LAMBDAS:
+            r[f"selection_objective_lambda_{lam:.2f}"]=(r["normalized_primary"]
+                + BF_CE_WEIGHT*r["normalized_bf_cross_entropy_delta"]
+                + lam*r["normalized_joint_nll_delta"])
     return rows
 def _choose(rows,lam,kind="joint"):
     objective_key=f"selection_objective_lambda_{lam:.2f}"
     metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
                    "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
-    rs=[r for r in rows if r.get("feasible") and r.get("candidate_valid", True) and
+    rs=[r for r in rows if r.get("feasible") and
         math.isfinite(float(r.get(objective_key,math.inf))) and
         all(math.isfinite(float(r.get(field,math.nan))) for field in metric_fields)]
     if kind=="single_S1": rs=[r for r in rs if r["beta"]==0 and (r["alpha_prior"]!=0 or r["alpha_obs"]!=0)]
@@ -542,6 +552,7 @@ def _config(r):
         "gamma_space":0.0,"selection_objective":{f"lambda_{lam:.2f}":float(r[f"selection_objective_lambda_{lam:.2f}"]) for lam in LAMBDAS},
         "normalized_primary":float(r["normalized_primary"]),"normalized_joint_nll_delta":float(r["normalized_joint_nll_delta"]),
         "normalized_bf_cross_entropy":float(r["normalized_bf_cross_entropy"]),
+        "normalized_bf_cross_entropy_delta":float(r["normalized_bf_cross_entropy_delta"]),
         "bf_accuracy_non_degradation":bool(r["bf_accuracy_non_degradation"]),
         "bf_cross_entropy_guard":bool(r["bf_cross_entropy_guard"]),
         "fit_metrics":{k:float(r[k]) for k in ("coordinate_mae_m","transport_w1_m","bf_accuracy",
@@ -653,50 +664,6 @@ def _group_indices(buildings,floors):
     for i,key in enumerate(zip(np.asarray(buildings).tolist(),np.asarray(floors).tolist())):
         groups.setdefault(tuple(key),[]).append(i)
     return groups
-
-_pairwise_fit_geometry_basic = _pairwise_fit_geometry
-def _pairwise_fit_geometry(coords,buildings,floors,edges):
-    result=_pairwise_fit_geometry_basic(coords,buildings,floors,edges)
-    xy=np.asarray(coords,dtype=np.float64); b=np.asarray(buildings,dtype=np.int64); f=np.asarray(floors,dtype=np.int64)
-    e=np.asarray(torch.as_tensor(edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
-    if len(e):
-        ed=np.linalg.norm(xy[e[:,0]]-xy[e[:,1]],axis=1)
-        exp_edge={k:(float(math.exp(-v/8.0)) if v is not None else None)
-                  for k,v in result["base_union_knn_edge_distance_m"].items() if k.startswith("p")}
-    else:
-        ed=np.asarray([],dtype=np.float64); exp_edge={}
-    result["exp_neg_distance_over_8_at_quantiles"]={
-        f"FIT_k{k}_nearest_neighbor":{key:(float(math.exp(-value/8.0)) if value is not None else None)
-            for key,value in result["kth_neighbor_distance_m"][str(k)].items() if key.startswith("p")}
-        for k in (1,2,4,8)}
-    result["exp_neg_distance_over_8_at_quantiles"]["base_union_knn_edges"]=exp_edge
-    result["exp_neg_distance_over_8_at_quantiles"]["note"]=(
-        "Kernel values are descriptive only; actual normalized operator weights also depend on graph topology and Sinkhorn.")
-    for key,group in result["groups"].items():
-        try: bb,ff=(int(x) for x in key.split("::",1))
-        except ValueError: continue
-        mask=(b[e[:,0]]==bb)&(f[e[:,0]]==ff)&(b[e[:,1]]==bb)&(f[e[:,1]]==ff) if len(e) else np.zeros(0,dtype=bool)
-        vals=ed[mask] if len(e) else np.asarray([],dtype=np.float64)
-        group["union_knn_edge_count"]=int(len(vals))
-        group["union_knn_edge_distance_m"]=_quantiles(vals)
-        group["union_knn_edge_threshold_counts"]=_threshold_counts(vals)
-    return result
-
-_build_cutoff_graph_basic = build_cutoff_graph
-def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,**kwargs):
-    graph,kept,diag=_build_cutoff_graph_basic(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,**kwargs)
-    n=len(coords); parent=list(range(n))
-    def find(x):
-        while parent[x]!=x:
-            parent[x]=parent[parent[x]]; x=parent[x]
-        return x
-    for i,j in np.asarray(kept.detach().cpu(),dtype=np.int64).reshape(-1,2):
-        a,b=find(int(i)),find(int(j))
-        if a!=b: parent[a]=b
-    roots={find(i) for i in range(n)}
-    diag["connected_components"]=len(roots)
-    diag["isolated_component_count"]=int(diag["zero_neighbor_nodes"])
-    return graph,kept,diag
 
 def _attach_virtual_measure(config,geometry_diagnostics):
     diag=geometry_diagnostics[config["geometry_id"]]["S2"]
