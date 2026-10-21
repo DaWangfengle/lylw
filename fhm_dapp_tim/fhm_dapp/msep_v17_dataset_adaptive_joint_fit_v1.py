@@ -496,11 +496,22 @@ def run(args):
         fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0); evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
         coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
         f=ctx["memory"]["floor"].detach().cpu().numpy(); geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
-        rows_all=[]
+        rows_all=[]; geometry_diagnostics={}
         for geom in geoms:
             graph,_,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
             lens=np.linalg.norm(coords[base_edges[:,0]]-coords[base_edges[:,1]],axis=1) if len(base_edges) else np.empty(0)
             s2=base_edges[lens<=float(geom["r_max_s2_m"])] if len(base_edges) else base_edges
+            epdiag=normalized_virtual_endpoint_weights(s2,coords,geom["tau_virt_m"])
+            s2lens=np.linalg.norm(coords[s2[:,0]]-coords[s2[:,1]],axis=1) if len(s2) else np.empty(0)
+            gdiag["S2"]={"r_max_s2_m":float(geom["r_max_s2_m"]),"tau_virt_m":float(geom["tau_virt_m"]),
+                "base_edges":int(len(base_edges)),"retained_virtual_edges":int(len(s2)),
+                "removed_virtual_edges":int(len(base_edges)-len(s2)),
+                "retained_fraction":float(len(s2)/len(base_edges)) if len(base_edges) else 0.0,
+                "distance_m":_quantiles(s2lens),"distance_threshold_counts":_threshold_counts(s2lens),
+                "zero_virtual_neighbor_nodes":int((epdiag["degree"]==0).sum()),
+                "effective_virtual_mass_by_parent":epdiag["effective_virtual_mass_by_parent"],
+                "effective_virtual_mass_quantiles":_quantiles(epdiag["effective_virtual_mass_by_parent"])}
+            geometry_diagnostics[geom["geometry_id"]]=gdiag
             candidates=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
               tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],tau_virt_m=geom["tau_virt_m"],
               geometry_role=geom["role"]) for x in inner]
@@ -523,7 +534,8 @@ def run(args):
           "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,
           "joint_calibrated_base":clean,"selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
           "lambda_2d_nll":list(LAMBDAS),"candidate_count":len(rows_all),"geometry_count":len(geoms),
-          "inner_grid_count":len(inner),"fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
+          "inner_grid_count":len(inner),"geometry_diagnostics":geometry_diagnostics,
+          "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
           "eval_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in ev),
           "anchor_order_sha256":_hash_anchor_order(coords,b,f),
           "bf_accuracy_guard":"candidate macro BF accuracy >= clean CAL-fit baseline",
@@ -567,9 +579,10 @@ def _pareto(rows,metrics):
     return [r for r,_ in front]
 
 def aggregate(args):
-    out=Path(args.output).resolve(); reports=[]; files=[]
+    out=Path(args.output).resolve(); reports=[]; selections=[]; files=[]
     (out/"PARETO_FRONTIER.csv").unlink(missing_ok=True)
     for p in sorted((out/"runs").glob("*/[CDE]/CAL_EVAL_REPORT.json")): reports.append(_read_json(p))
+    for p in sorted((out/"runs").glob("*/[CDE]/CAL_FIT_SELECTION.json")): selections.append(_read_json(p))
     for p in sorted((out/"runs").glob("*/[CDE]/CANDIDATE_METRICS.csv")): files.append(p)
     if not reports: raise RuntimeError("no CAL-eval reports found")
     with (out/"CANDIDATE_METRICS.csv").open("w",newline="",encoding="utf-8-sig") as target:
@@ -585,8 +598,8 @@ def aggregate(args):
                 else:
                     old=_csv_read(out/"PARETO_FRONTIER.csv"); old.extend(pareto); _csv_write(out/"PARETO_FRONTIER.csv",old)
     if not (out/"PARETO_FRONTIER.csv").exists(): _csv_write(out/"PARETO_FRONTIER.csv",[])
-    _write_json(out/"JOINT_FIT_SELECTION.json",{"status":"PASS","runs":reports,"selection_role":"CAL-fit",
-      "evaluation_role":"CAL-eval","gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
+    _write_json(out/"JOINT_FIT_SELECTION.json",{"status":"PASS","runs":selections,"cal_eval_report_count":len(reports),
+      "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
     md=["# V17 Dataset-Adaptive Spatial Joint Fit: CAL-eval Report","",
       "Selection is locked on CAL-fit before CAL-eval. CAL-eval is reporting-only. Internal/official TEST scores: 0. Gamma-space is fixed at 0.","",
       "| Dataset | Seed | Backbone | Method | MAE m | ES m | Joint NLL | BF accuracy | BF CE | P95 site | P99 site | Worst site |",
@@ -598,6 +611,21 @@ def aggregate(args):
               f"{m.get('macro_joint_nll',float('nan')):.4f} | {m.get('macro_bf_accuracy',float('nan')):.4f} | "
               f"{m.get('bf_cross_entropy',float('nan')):.4f} | {m.get('site_p95_full_m',float('nan')):.4f} | "
               f"{m.get('site_p99_full_m',float('nan')):.4f} | {m.get('worst_site_mae_m',float('nan')):.4f} |")
+    md += ["","## Paired deltas versus clean baseline","",
+      "| Dataset | Seed | Backbone | Method | Δ MAE m | Δ ES m | Δ Joint NLL | Δ BF accuracy | Δ P95 m | Δ P99 m | Δ Worst-site m | Δ MAE vs old combo m |",
+      "|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    for r in reports:
+        clean=r["metrics"].get("joint_calibrated_base",{}).get("metrics",{})
+        oldm=r["metrics"].get("old_combo_1D_2A",{}).get("metrics",{})
+        for name,entry in r["metrics"].items():
+            m=entry["metrics"]
+            def delta(field, reference=clean):
+                return m.get(field,float("nan"))-reference.get(field,float("nan")) if field in m and field in reference else float("nan")
+            old_delta=delta("macro_mae_full_m",oldm) if oldm else float("nan")
+            md.append(f"| {r['dataset']} | {r['seed']} | {r['backbone']} | {name} | "
+              f"{delta('macro_mae_full_m'):.4f} | {delta('macro_es_m'):.4f} | {delta('macro_joint_nll'):.4f} | "
+              f"{delta('macro_bf_accuracy'):.4f} | {delta('site_p95_full_m'):.4f} | {delta('site_p99_full_m'):.4f} | "
+              f"{delta('worst_site_mae_m'):.4f} | {old_delta:.4f} |")
     md += ["","## Integrity","",f"- Completed run reports: {len(reports)}",f"- Candidate files: {len(files)}",
       "- Gamma-space fixed at zero.","- Internal TEST scored: 0.","- Official TEST scored: 0.",
       "- Historical old combo is evaluated only when its frozen CAL-fit selection is available."]
