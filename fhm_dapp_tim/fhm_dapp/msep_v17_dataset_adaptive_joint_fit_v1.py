@@ -456,10 +456,11 @@ def _eval_config(pack,ctx,config,seed):
     metrics["bf_cross_entropy"]=float(((-tm.clamp_min(torch.finfo(mix["q"].dtype).tiny).log())*sub["weight"]).sum().cpu())
     metrics["geometry_diagnostics"]=gdiag
     return {"config":config,"metrics":metrics,"site_diagnostics":sites}
-def _old_combo(dataset,seed,arm):
+def _old_combo(dataset,seed,arm,checkpoint_sha256):
     path=comp.DEFAULT_OUTPUT/"runs"/f"{dataset}_seed{seed}"/arm/"CAL_FIT_SELECTION.json"
     if not path.is_file(): return None
     s=_read_json(path)
+    if s.get("checkpoint_sha256")!=checkpoint_sha256: return None
     try:
         clean=s["joint_calibrated_base"]; s1=s["structure1"]["1D_global"]; combo=s["combined"]["1D_global"]["2A"]
         return {"geometry_id":"legacy_unbounded_8m","R_max_S1_m":math.inf,"tau_graph_m":8.,
@@ -543,15 +544,15 @@ def _attach_virtual_measure(config,geometry_diagnostics):
         raise RuntimeError("selected S2 physical-plus-virtual measure is not conserved")
     return config
 
-def _legacy_clean_config(dataset,seed,arm,fitpack,ctx):
+def _legacy_clean_config(dataset,seed,arm,fitpack,ctx,checkpoint_sha256):
     path=comp.DEFAULT_OUTPUT/"runs"/f"{dataset}_seed{seed}"/arm/"CAL_FIT_SELECTION.json"
-    if path.is_file():
-        saved=_read_json(path); clean=saved.get("joint_calibrated_base")
-        if clean is None: raise RuntimeError(f"legacy clean baseline missing from {path}")
-        source="frozen_prior_CAL_FIT_SELECTION"
+    saved=_read_json(path) if path.is_file() else {}
+    clean=saved.get("joint_calibrated_base")
+    if clean is not None and saved.get("checkpoint_sha256")==checkpoint_sha256:
+        source="frozen_prior_CAL_FIT_SELECTION_same_checkpoint"
     else:
         clean,_,_=s3.grid_calibrate(fitpack,ctx)
-        source="recomputed_legacy_clean_CAL_fit_only"
+        source="recomputed_current_checkpoint_CAL_fit_only"
     return {"geometry_id":"legacy_unbounded_8m","R_max_S1_m":math.inf,"tau_graph_m":8.0,
         "R_max_S2_m":math.inf,"tau_virt_m":math.inf,"temperature":float(clean["temperature"]),
         "theta":[float(x) for x in clean["theta"]],"alpha_prior":0.0,"alpha_obs":0.0,"beta":0.0,
@@ -688,7 +689,7 @@ def run(args):
               split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),
               anchor_order_sha256=_hash_anchor_order(coords,b,f))
             rows_all.extend(rows)
-        baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx)
+        baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx,ckpt_sha)
         baseline_eval=_eval_config(fitpack,ctx,baseline_config,seed)
         base=_baseline_row(baseline_config,baseline_eval)
         base.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
@@ -738,7 +739,7 @@ def run(args):
         for lam_key in ("lambda_0.02","lambda_0.05"):
             if s1[lam_key]: configs[f"single_S1_{lam_key}"]=s1[lam_key]
             if s2sel[lam_key]: configs[f"single_S2_{lam_key}"]=s2sel[lam_key]
-        old=_old_combo(ds,seed,arm)
+        old=_old_combo(ds,seed,arm,ckpt_sha)
         if old: configs["old_combo_1D_2A"]=old
         metrics={}
         for name,config in configs.items(): metrics[name]=_eval_config(evalpack,ctx,config,seed)
