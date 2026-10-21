@@ -27,6 +27,24 @@ def test_cutoff_graph_is_symmetric_bistochastic_and_keeps_isolated_self_loops():
     assert diag["connected_components"] == 3
 
 
+def test_cutoff_graph_scales_with_edges_instead_of_dense_anchor_square():
+    # A sparse graph with many isolated anchors must remain sparse internally;
+    # its stored operator has exactly one diagonal per anchor and two entries
+    # per retained undirected edge.
+    n = 12000
+    xy = np.column_stack((np.arange(n, dtype=np.float64), np.zeros(n)))
+    building = np.zeros(n, dtype=np.int64)
+    floor = np.zeros(n, dtype=np.int64)
+    edges = np.asarray([[0, 1], [10, 11], [100, 101], [n - 2, n - 1]], dtype=np.int64)
+    graph, kept, diag = joint.build_cutoff_graph(xy, building, floor, edges, 1.01, 2.0)
+    assert graph.layout == torch.sparse_coo
+    assert graph._nnz() == n + 2 * len(kept)
+    assert len(kept) == len(edges)
+    assert diag["zero_neighbor_nodes"] == n - 2 * len(edges)
+    assert diag["sinkhorn_row_error"] <= 2e-6
+    assert diag["sinkhorn_col_error"] <= 2e-6
+
+
 def test_cutoff_graph_rejects_cross_floor_or_building_edges():
     xy = np.asarray([[0., 0.], [0.5, 0.]])
     with pytest.raises(ValueError, match="cross-BF"):
