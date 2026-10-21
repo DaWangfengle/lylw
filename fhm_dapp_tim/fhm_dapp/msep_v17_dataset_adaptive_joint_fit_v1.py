@@ -585,7 +585,10 @@ def run(args):
         _write_json(sp,selection,exclusive=True)
         _write_json(lock,{"selection_role":"CAL-fit","evaluation_role":"CAL-eval","selection_frozen_before_cal_eval":True,
           "selection_sha256":s3.sha(sp),"checkpoint_sha256":ckpt_sha,"fit_split_sha256":selection["fit_split_sha256"],
-          "eval_split_sha256":selection["eval_split_sha256"],"anchor_order_sha256":selection["anchor_order_sha256"],**TEST_COUNTS},exclusive=True)
+          "eval_split_sha256":selection["eval_split_sha256"],"anchor_order_sha256":selection["anchor_order_sha256"],
+          "parameter_config_sha256":selection["parameter_config_sha256"],
+          "algorithm_code_sha256":selection["algorithm_code_sha256"],"source_manifest_sha256":selection["source_manifest_sha256"],
+          "input_run_file_sha256":selection["input_run_file_sha256"],**TEST_COUNTS},exclusive=True)
         configs={"joint_lambda_0.02":chosen["lambda_0.02"],"joint_lambda_0.05":chosen["lambda_0.05"],"joint_calibrated_base":clean}
         if s1["lambda_0.02"]: configs["single_S1_lambda_0.02"]=s1["lambda_0.02"]
         if s2sel["lambda_0.02"]: configs["single_S2_lambda_0.02"]=s2sel["lambda_0.02"]
