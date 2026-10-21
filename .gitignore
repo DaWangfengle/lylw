@@ -218,3 +218,6 @@ local_notes/
 # V17 spatial composition publication: retain raw scientific command logs.
 !/fhm_dapp_tim/evidence/v17_spatial_composition_execution_v1/*.stdout.log
 !/fhm_dapp_tim/evidence/v17_spatial_composition_execution_v1/*.stderr.log
+
+# DeepSeek exploratory study: retain the original scientific execution logs.
+!/outputs/v17_gmrf_bandwidth_v1/*.log
