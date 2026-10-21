@@ -187,6 +187,8 @@ def weighted_cell_mixture(parent_logits,virtual_logits,edges,endpoint_weights,be
 def _geometry_value_pool(diag):
     q=diag["kth_neighbor_distance_m"]["1"]
     quant=[q[k] for k in ("p50","p75","p90","p95") if q.get(k) is not None and q[k]>0]
+    if not quant:
+        raise RuntimeError("FIT-only nearest-neighbor geometry is unavailable; fail closed rather than guessing scales")
     out=[]
     for value in quant+[1.,2.,5.,8.,10.,20.,40.,60.]:
         value=float(value)
@@ -461,6 +463,15 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,**
     diag["isolated_component_count"]=int(diag["zero_neighbor_nodes"])
     return graph,kept,diag
 
+def _attach_virtual_measure(config,geometry_diagnostics):
+    diag=geometry_diagnostics[config["geometry_id"]]["S2"]
+    parent_measure=diag["effective_virtual_mass_by_parent"]
+    beta=float(config["beta"])
+    config["retained_virtual_edges"]=int(diag["retained_virtual_edges"])
+    config["beta_weighted_virtual_mass_by_parent"]=[beta*float(x) for x in parent_measure]
+    config["pre_normalization_virtual_measure_total"]=float(beta*sum(parent_measure))
+    return config
+
 def _legacy_clean_config(dataset,seed,arm,fitpack,ctx):
     path=comp.DEFAULT_OUTPUT/"runs"/f"{dataset}_seed{seed}"/arm/"CAL_FIT_SELECTION.json"
     if path.is_file():
@@ -597,7 +608,10 @@ def run(args):
             chosen[f"lambda_{lam:.2f}"]=_config(r)
             r1=_choose(rows_all,lam,"single_S1"); s1[f"lambda_{lam:.2f}"]=_config(r1) if r1 else None
             r2=_choose(rows_all,lam,"single_S2"); s2sel[f"lambda_{lam:.2f}"]=_config(r2) if r2 else None
-        clean=_config(base)
+        clean=_attach_virtual_measure(_config(base),geometry_diagnostics)
+        for config in chosen.values(): _attach_virtual_measure(config,geometry_diagnostics)
+        for config in list(s1.values())+list(s2sel.values()):
+            if config is not None: _attach_virtual_measure(config,geometry_diagnostics)
         selection={"status":"LOCKED_CAL_FIT","dataset":ds,"seed":int(seed),"backbone":arm,
           "checkpoint_sha256":ckpt_sha,"selected_epoch":int(payload["selected_epoch"]),"native_E_alpha":native_alpha,
           "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,
