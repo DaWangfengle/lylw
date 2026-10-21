@@ -461,6 +461,34 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,**
     diag["isolated_component_count"]=int(diag["zero_neighbor_nodes"])
     return graph,kept,diag
 
+def _legacy_clean_config(dataset,seed,arm,fitpack,ctx):
+    path=comp.DEFAULT_OUTPUT/"runs"/f"{dataset}_seed{seed}"/arm/"CAL_FIT_SELECTION.json"
+    if path.is_file():
+        saved=_read_json(path); clean=saved.get("joint_calibrated_base")
+        if clean is None: raise RuntimeError(f"legacy clean baseline missing from {path}")
+        source="frozen_prior_CAL_FIT_SELECTION"
+    else:
+        clean,_,_=s3.grid_calibrate(fitpack,ctx)
+        source="recomputed_legacy_clean_CAL_fit_only"
+    return {"geometry_id":"legacy_unbounded_8m","R_max_S1_m":math.inf,"tau_graph_m":8.0,
+        "R_max_S2_m":math.inf,"tau_virt_m":math.inf,"temperature":float(clean["temperature"]),
+        "theta":[float(x) for x in clean["theta"]],"alpha_prior":0.0,"alpha_obs":0.0,"beta":0.0,
+        "gamma_space":0.0,"baseline_source":source}
+
+def _baseline_row(config,metrics):
+    m=metrics["metrics"]
+    row={"candidate_id":"clean_baseline_reference","geometry_id":"legacy_unbounded_8m",
+        "r_max_s1_m":math.inf,"tau_graph_m":8.0,"r_max_s2_m":math.inf,"tau_virt_m":math.inf,
+        "temperature":float(config["temperature"]),"theta_v":float(config["theta"][0]),
+        "theta_s":float(config["theta"][1]),"alpha_prior":0.0,"alpha_obs":0.0,"beta":0.0,
+        "coordinate_mae_m":float(m["macro_mae_full_m"]),
+        "transport_w1_m":float(m["macro_transport_risk_m"]),
+        "bf_accuracy":float(m["macro_bf_accuracy"]),"bf_cross_entropy":float(m["bf_cross_entropy"]),
+        "joint_nll":float(m["macro_joint_nll"]),"site_p95_mae_m":float(m["site_p95_full_m"]),
+        "site_p99_mae_m":float(m["site_p99_full_m"]),"worst_site_mae_m":float(m["worst_site_mae_m"]),
+        "baseline_source":config["baseline_source"]}
+    return row
+
 def preflight(args):
     started=time.perf_counter()
     if args.device=="cuda" and not torch.cuda.is_available(): raise RuntimeError("CUDA unavailable; rerun with --device cpu")
@@ -557,7 +585,11 @@ def run(args):
               split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),
               anchor_order_sha256=_hash_anchor_order(coords,b,f))
             rows_all.extend(rows)
-        base=_clean_baseline(rows_all); rows_all=_add_objectives(rows_all,base)
+        baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx)
+        baseline_eval=_eval_config(fitpack,ctx,baseline_config,seed)
+        base=_baseline_row(baseline_config,baseline_eval)
+        base=_add_objectives([base],base)[0]
+        rows_all=_add_objectives(rows_all,base)
         chosen={}; s1={}; s2sel={}
         for lam in LAMBDAS:
             r=_choose(rows_all,lam)
@@ -569,7 +601,8 @@ def run(args):
         selection={"status":"LOCKED_CAL_FIT","dataset":ds,"seed":int(seed),"backbone":arm,
           "checkpoint_sha256":ckpt_sha,"selected_epoch":int(payload["selected_epoch"]),"native_E_alpha":native_alpha,
           "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,
-          "joint_calibrated_base":clean,"selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
+          "joint_calibrated_base":clean,"baseline_reference_source":baseline_config["baseline_source"],
+          "selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
           "lambda_2d_nll":list(LAMBDAS),"candidate_count":len(rows_all),"geometry_count":len(geoms),
           "inner_grid_count":len(inner),"geometry_diagnostics":geometry_diagnostics,
           "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
