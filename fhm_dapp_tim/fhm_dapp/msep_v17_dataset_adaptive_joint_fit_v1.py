@@ -379,6 +379,35 @@ def _safe_rows(ctx,rows,role):
     if set(map(int,arr))&set(map(int,ctx["roles"]["test"])): raise RuntimeError("TEST row guard blocked pack construction")
     return arr
 
+def _verify_locked_selection(selection_path,lock_path,manifest_path,input_root):
+    selection=_read_json(selection_path); lock=_read_json(lock_path)
+    unhashed=dict(selection); config_hash=unhashed.pop("parameter_config_sha256",None)
+    run_root=Path(input_root)/f"{selection['dataset']}_seed{selection['seed']}"
+    input_hash_ok=all((run_root/name).is_file() and s3.sha(run_root/name)==digest
+        for name,digest in selection.get("input_run_file_sha256",{}).items())
+    test_zero=all(selection.get(k)==0 and lock.get(k)==0 for k in TEST_COUNTS)
+    checks={
+      "selection_sha256":lock.get("selection_sha256")==s3.sha(selection_path),
+      "parameter_config_sha256":bool(config_hash) and config_hash==_stable_hash(unhashed)
+          and lock.get("parameter_config_sha256")==config_hash,
+      "algorithm_code_sha256":selection.get("algorithm_code_sha256")==s3.sha(Path(__file__))
+          and lock.get("algorithm_code_sha256")==selection.get("algorithm_code_sha256"),
+      "source_manifest_sha256":selection.get("source_manifest_sha256")==s3.sha(manifest_path)
+          and lock.get("source_manifest_sha256")==selection.get("source_manifest_sha256"),
+      "checkpoint_sha256":lock.get("checkpoint_sha256")==selection.get("checkpoint_sha256"),
+      "split_hashes":all(lock.get(k)==selection.get(sk) for k,sk in (
+          ("fit_split_sha256","fit_split_sha256"),("eval_split_sha256","eval_split_sha256"),
+          ("anchor_order_sha256","anchor_order_sha256"))),
+      "input_hashes":input_hash_ok and lock.get("input_run_file_sha256")==selection.get("input_run_file_sha256"),
+      "selection_frozen":lock.get("selection_frozen_before_cal_eval") is True,
+      "test_rows_zero":test_zero,
+      "selection_role":selection.get("selection_role")=="CAL-fit"
+          and lock.get("evaluation_role")=="CAL-eval",
+    }
+    failed=[k for k,v in checks.items() if not v]
+    if failed: raise RuntimeError(f"CAL-eval lock verification failed; refusing CAL-eval access: {failed}")
+    return selection
+
 def _make_probability(pack_all,ctx,config):
     coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
     f=ctx["memory"]["floor"].detach().cpu().numpy(); all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
@@ -580,7 +609,8 @@ def preflight(args):
     print(json.dumps({"stage":"preflight_complete","output":str(out),"geometry_sets":len(spaces),**TEST_COUNTS},ensure_ascii=False),flush=True)
 
 def run(args):
-    out=Path(args.output).resolve(); manifest=_read_json(out/"EXECUTION_MANIFEST.json")
+    out=Path(args.output).resolve(); manifest_path=out/"EXECUTION_MANIFEST.json"
+    manifest=_read_json(manifest_path)
     search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
     inner=_calibration_candidates(); reports=[]
     for ds in s3.DATASETS:
@@ -595,7 +625,7 @@ def run(args):
         ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm); ckpt_sha=s3.sha(ckpt)
         model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
         base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
-        fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0); evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
+        fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
         coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
         f=ctx["memory"]["floor"].detach().cpu().numpy(); geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
         rows_all=[]; geometry_diagnostics={}
@@ -665,6 +695,9 @@ def run(args):
           "parameter_config_sha256":selection["parameter_config_sha256"],
           "algorithm_code_sha256":selection["algorithm_code_sha256"],"source_manifest_sha256":selection["source_manifest_sha256"],
           "input_run_file_sha256":selection["input_run_file_sha256"],**TEST_COUNTS},exclusive=True)
+        # CAL-eval targets and RSS may only be accessed after the immutable selection lock verifies.
+        _verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
+        evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
         configs={"joint_lambda_0.02":chosen["lambda_0.02"],"joint_lambda_0.05":chosen["lambda_0.05"],"joint_calibrated_base":clean}
         if s1["lambda_0.02"]: configs["single_S1_lambda_0.02"]=s1["lambda_0.02"]
         if s2sel["lambda_0.02"]: configs["single_S2_lambda_0.02"]=s2sel["lambda_0.02"]
