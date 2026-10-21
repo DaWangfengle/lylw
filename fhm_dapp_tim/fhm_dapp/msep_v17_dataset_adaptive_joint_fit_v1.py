@@ -201,50 +201,93 @@ def weighted_cell_mixture(parent_logits,virtual_logits,edges,endpoint_weights,be
         "sigma":torch.cat([parent_scales,virtual_scales],dim=1),"ids":ids}
 
 
-def _geometry_value_pool(diag):
-    # Four empirical scales (one median per k) plus four fixed physical scales;
-    # k=1/2/4/8 upper-tail quantiles fill any slots lost to duplicate distances.
-    empirical=[]
-    for k in (1,2,4,8):
-        q=diag["kth_neighbor_distance_m"][str(k)]
-        value=next((q.get(name) for name in ("p50","p75","p90","p95","p99","p25")
-                    if q.get(name) is not None and math.isfinite(float(q[name])) and float(q[name])>0),None)
-        if value is not None: empirical.append(float(value))
-    if not empirical:
-        raise RuntimeError("FIT-only nearest-neighbor geometry is unavailable; fail closed rather than guessing scales")
+def _unique_positive_scales(values):
+    ordered=sorted(float(x) for x in values if x is not None and math.isfinite(float(x)) and float(x)>0)
     out=[]
-    for value in empirical+[1.,8.,20.,40.]:
-        if not any(abs(value-x)<=1e-8*max(1.,value) for x in out): out.append(float(value))
-    for k in (1,2,4,8):
-        q=diag["kth_neighbor_distance_m"][str(k)]
-        for name in ("p90","p75","p95","p25"):
-            value=q.get(name)
-            if value is not None and math.isfinite(float(value)) and float(value)>0 and not any(
-                abs(float(value)-x)<=1e-8*max(1.,float(value)) for x in out):
-                out.append(float(value))
-            if len(out)>=8: break
-        if len(out)>=8: break
-    for value in (2.,5.,10.,60.):
-        if len(out)>=8: break
-        if not any(abs(value-x)<=1e-8*max(1.,value) for x in out): out.append(value)
-    if len(out)<4:
-        raise RuntimeError("fewer than four distinct positive FIT/physical geometry scales")
-    # Stable ordering makes the geometry design reproducible across runs.
-    return out[:8]
+    for value in ordered:
+        if not out or abs(value-out[-1])>1e-8*max(1.0,value,out[-1]): out.append(value)
+    return out
+
+
+def _sample_scale_pool(values,required=(),limit=8):
+    all_values=_unique_positive_scales(values)
+    chosen=_unique_positive_scales(required)
+    if len(chosen)>limit:
+        chosen=[chosen[int(round(i*(len(chosen)-1)/(limit-1)))] for i in range(limit)]
+        chosen=_unique_positive_scales(chosen)
+    remaining=[x for x in all_values if not any(abs(x-y)<=1e-8*max(1.0,x,y) for y in chosen)]
+    need=max(0,limit-len(chosen))
+    if need and remaining:
+        ids=np.unique(np.round(np.linspace(0,len(remaining)-1,min(need,len(remaining)))).astype(int))
+        chosen.extend(remaining[int(i)] for i in ids)
+    return _unique_positive_scales(chosen)[:limit]
+
+
+def _geometry_candidate_pools(diag):
+    # Geometry is derived only from the FIT anchor dictionary. Use both the
+    # within-building/floor k-NN distributions and the frozen union-kNN edge
+    # lengths; cutoff pools emphasize edge quantiles while kernel pools retain
+    # the k=1/2/4/8 physical spacing scales.
+    kth=diag["kth_neighbor_distance_m"]
+    edge=diag.get("base_union_knn_edge_distance_m",{})
+    quantile_names=("p50","p75","p90","p95","p99")
+    k_medians=[kth[str(k)].get("p50") for k in (1,2,4,8)]
+    k_all=[kth[str(k)].get(q) for k in (1,2,4,8) for q in quantile_names]
+    edge_all=[edge.get(q) for q in quantile_names]
+    physical=[1.,2.,5.,8.,10.,15.,20.,30.,40.,60.]
+    required_k=[x for x in k_medians if x is not None]
+    required_edge=[edge.get(q) for q in ("p50","p75","p90","p95") if edge.get(q) is not None]
+    if not required_k:
+        raise RuntimeError("FIT-only nearest-neighbor geometry is unavailable; refusing to guess spatial scales")
+    pools={
+      "r_max_s1_m":_sample_scale_pool(k_all+edge_all+physical,required=required_k),
+      "tau_graph_m":_sample_scale_pool(k_all+[edge.get(q) for q in ("p50","p75","p90")]+physical,
+                                      required=required_k),
+      "r_max_s2_m":_sample_scale_pool(edge_all+k_all+physical,
+                                      required=required_edge or required_k),
+      "tau_virt_m":_sample_scale_pool(edge_all+k_all+physical,
+                                      required=(required_edge[:3]+required_k[:4])[:8] or required_k),
+    }
+    for name,values in pools.items():
+        if not values: raise RuntimeError(f"no finite FIT-derived scale candidates for {name}")
+    return pools
+
+
+def _geometry_value_pool(diag):
+    pools=_geometry_candidate_pools(diag)
+    # Compact backward-compatible summary, preserving every k median while
+    # surfacing edge-length and upper-tail scales in the remaining slots.
+    all_values=[]
+    for values in pools.values(): all_values.extend(values)
+    k_medians=[diag["kth_neighbor_distance_m"][str(k)].get("p50") for k in (1,2,4,8)]
+    return _sample_scale_pool(all_values,required=[x for x in k_medians if x is not None],limit=8)
+
 
 def geometry_candidates(diag):
-    pool=_geometry_value_pool(diag); n=len(pool)
+    pools=_geometry_candidate_pools(diag)
+    shared=_geometry_value_pool(diag)
     out=[{"geometry_id":"legacy_unbounded_8m","r_max_s1_m":math.inf,"tau_graph_m":8.,
           "r_max_s2_m":math.inf,"tau_virt_m":math.inf,"role":"legacy_reference"}]
-    for i in range(n):
-        ix=(i,(i*3+1)%n,(i*5+2)%n,(i*7+3)%n)
-        row={"geometry_id":f"fit_lhs_{i:02d}","r_max_s1_m":pool[ix[0]],
-             "tau_graph_m":pool[ix[1]],"r_max_s2_m":pool[ix[2]],"tau_virt_m":pool[ix[3]],
-             "role":"FIT_quantile_plus_physical_LHS"}
-        key=tuple(row[k] for k in ("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m"))
-        if not any(tuple(x[k] for k in ("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m"))==key for x in out):
-            out.append(row)
-    return out,pool
+    # Eight-point deterministic Latin-hypercube design: each parameter gets its
+    # own FIT-derived pool, and every pool is traversed as evenly as its size
+    # allows. This avoids coupling cutoff values to kernel temperatures.
+    multipliers=(1,3,5,7); offsets=(0,1,2,3)
+    names=("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m")
+    for i in range(8):
+        row={"geometry_id":f"fit_lhs_{i:02d}","role":"FIT_neighbor_and_union_edge_LHS"}
+        for j,name in enumerate(names):
+            rank=(i*multipliers[j]+offsets[j])%8
+            values=pools[name]
+            row[name]=float(values[min(len(values)-1,int(rank*len(values)/8))])
+        out.append(row)
+    # Defensive deduplication is scientifically relevant here: tiny datasets
+    # may have repeated quantiles, and repeated geometry tuples waste a full
+    # inner calibration sweep.
+    unique=[]; seen=set()
+    for row in out:
+        key=tuple(row[k] for k in names)
+        if key not in seen: unique.append(row); seen.add(key)
+    return unique,{"shared_union_m":shared,"by_parameter_m":pools}
 
 def _subset_virtual_pack(pack,edge_ids):
     out=dict(pack); idx=torch.as_tensor(edge_ids,dtype=torch.long,device=pack["scores"].device)
@@ -435,8 +478,8 @@ def _make_probability(pack_all,ctx,config):
     lengths=np.linalg.norm(coords[all_edges[:,0]]-coords[all_edges[:,1]],axis=1) if len(all_edges) else np.empty(0)
     e=all_edges[lengths<=float(config["R_max_S2_m"])] if len(all_edges) else all_edges
     ep=normalized_virtual_endpoint_weights(e,coords,config["tau_virt_m"])
-    lookup={tuple(map(int,x)):i for i,x in enumerate(all_edges.tolist())}
-    pack=_subset_virtual_pack(pack_all,[lookup[tuple(map(int,x))] for x in ep["edges"].tolist()])
+    lookup={tuple(sorted(map(int,x))):i for i,x in enumerate(all_edges.tolist())}
+    pack=_subset_virtual_pack(pack_all,[lookup[tuple(sorted(map(int,x)))] for x in ep["edges"].tolist()])
     edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=pack["scores"].device)
     weights={k:torch.as_tensor(ep[k],device=pack["scores"].device) for k in ("weight_i","weight_j","degree")}
     theta=torch.as_tensor(config["theta"],dtype=pack["scores"].dtype,device=pack["scores"].device)
@@ -589,8 +632,9 @@ def preflight(args):
           cal_fit_key_sha256=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
           cal_eval_key_sha256=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
           anchor_order_sha256=_hash_anchor_order(xy,b,f))
-        diagnostics[key]=d; geoms,pool=geometry_candidates(d)
-        spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pool,"geometry_candidates":geoms,
+        diagnostics[key]=d; geoms,pools=geometry_candidates(d)
+        spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pools["shared_union_m"],
+          "geometry_candidate_pools_m":pools["by_parameter_m"],"geometry_candidates":geoms,
           "calibration_candidate_count":len(_calibration_candidates()),"gamma_space":{"locked":0.0,"searched":False},
           "lambda_2d_nll":list(LAMBDAS),"bf_ce_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
           "candidate_count_per_run":len(geoms)*len(_calibration_candidates())}
@@ -610,7 +654,7 @@ def preflight(args):
         md.append("")
     (out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md").write_text("\n".join(md),encoding="utf-8")
     _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{"status":"PASS",
-      "geometry_design":"deterministic bounded Latin-hypercube from FIT k=1/2/4/8 median/upper-tail scales plus meter-scale candidates",
+      "geometry_design":"8-point deterministic Latin-hypercube with separate R_S1/tau_graph/R_S2/tau_virt pools derived from FIT k=1/2/4/8 quantiles, union-kNN edge-length quantiles, and fixed physical scales",
       "outer_geometry_candidates":spaces,"calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
       "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},"inner_joint_grid_size":len(_calibration_candidates()),
       "gamma_space_fixed":0.0,"search_method":"joint coarse grid for every cached geometry; no sequential freezing",
