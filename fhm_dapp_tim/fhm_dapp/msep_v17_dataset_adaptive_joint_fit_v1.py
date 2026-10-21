@@ -631,6 +631,7 @@ def preflight(args):
 def run(args):
     out=Path(args.output).resolve(); manifest_path=out/"EXECUTION_MANIFEST.json"
     manifest=_read_json(manifest_path)
+    comp._verify_source_manifest(manifest)
     search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
     inner=_calibration_candidates(); reports=[]
     for ds in s3.DATASETS:
