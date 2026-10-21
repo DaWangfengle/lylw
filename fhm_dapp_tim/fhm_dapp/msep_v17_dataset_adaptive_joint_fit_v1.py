@@ -340,6 +340,7 @@ def _add_objectives(rows,base):
         r["primary_mae_plus_030_w1_m"]=_primary(r); r["normalized_primary"]=_primary(r)/pbase
         r["normalized_joint_nll_delta"]=(float(r["joint_nll"])-float(base["joint_nll"]))/nscale
         r["normalized_bf_cross_entropy"]=float(r["bf_cross_entropy"])/max(bfbase,1e-6)
+        r["negative_bf_accuracy"]=-float(r["bf_accuracy"])
         r["bf_accuracy_non_degradation"]=float(r["bf_accuracy"])>=accbase-1e-12
         r["bf_cross_entropy_guard"]=float(r["bf_cross_entropy"])<=bfbase*1.01+1e-8
         r["feasible"]=bool(r["bf_accuracy_non_degradation"] and r["bf_cross_entropy_guard"])
@@ -701,7 +702,9 @@ def aggregate(args):
                 reader=csv.DictReader(source)
                 if writer is None: writer=csv.DictWriter(target,fieldnames=reader.fieldnames,extrasaction="ignore"); writer.writeheader()
                 writer.writerows(reader)
-            pareto=_pareto(_csv_read(p),["coordinate_mae_m","transport_w1_m","bf_cross_entropy","joint_nll","site_p95_mae_m"])
+            feasible=[r for r in _csv_read(p) if str(r.get("feasible","")).lower()=="true"]
+            pareto=_pareto(feasible,["coordinate_mae_m","transport_w1_m","bf_cross_entropy","joint_nll",
+                "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m","negative_bf_accuracy"])
             if pareto:
                 if not (out/"PARETO_FRONTIER.csv").exists(): _csv_write(out/"PARETO_FRONTIER.csv",pareto)
                 else:
