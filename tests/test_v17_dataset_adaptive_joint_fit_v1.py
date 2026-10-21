@@ -85,7 +85,7 @@ def test_weighted_cell_mixture_beta_zero_is_exact_clean_softmax():
 def test_joint_grid_contains_clean_s1_s2_boundaries_and_locks_gamma_zero():
     candidates = joint._calibration_candidates()
     assert {x["beta"] for x in candidates} >= {0., .05, .10, .15, .20, .35, .50, .65, .80}
-    assert all("gamma" not in x for x in candidates)
+    assert all("gamma" not in x and "gamma_space" not in x for x in candidates)
     assert any(x["alpha_prior"] == 0 and x["alpha_obs"] == 0 and x["beta"] == 0 for x in candidates)
     assert any(x["beta"] == 0 and (x["alpha_prior"] > 0 or x["alpha_obs"] > 0) for x in candidates)
     assert any(x["alpha_prior"] == 0 and x["alpha_obs"] == 0 and x["beta"] > 0 for x in candidates)
