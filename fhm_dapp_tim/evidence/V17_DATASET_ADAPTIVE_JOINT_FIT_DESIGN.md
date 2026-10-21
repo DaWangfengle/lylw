@@ -1,107 +1,44 @@
-# V17 Dataset-Adaptive Spatial Scale + Joint Fit
+# V17 Dataset-Adaptive Spatial Joint Fit — Iteration Note
 
-## Research decision
+## Question
 
-Keep one mathematical model family, but fit physically meaningful hyperparameters separately for TUJI, UTS and UJI. This is not an invitation to select whichever sub-method happens to win each metric after seeing CAL-eval. The protocol must be predeclared, deterministic, and tested on CAL-eval only after fitting is locked. Internal and official TEST must remain untouched.
+Does one unified S1+S2 inference architecture improve localization when physical scales and coupled calibration parameters are fitted per dataset, instead of using an unbounded graph with a fixed 8 m temperature and sequentially freezing parameters?
 
-## Why this experiment is justified
+## Existing geometry evidence
 
-The frozen graph diagnostic in the previous report gives union-kNN edge P50/P95/max:
-- TUJI: 1.190 / 1.787 / 2.977 m.
-- UTS: 6.061 / 12.073 / 21.268 m.
-- UJI: 12.984 / 41.445 / 77.537 m, with 384/3232 (11.88%) edges longer than 30 m.
+These values come from the previous frozen union-kNN graph report; they are not the new k-th-neighbor quantiles.
 
-These are current graph-edge statistics, not yet the requested FIT-only nearest-neighbor distribution. The first deliverable must calculate true FIT-anchor nearest-neighbor and k-th-neighbor distributions from the exact coordinates and split metadata. Do not report the table above as FIT quantiles unless code verifies that the underlying geometry is FIT-only.
+| Dataset | Anchors | Union-kNN edges | P50 | P95 | Max | Edges >30 m |
+|---|---:|---:|---:|---:|---:|---:|
+| TUJI | 646 | 2,946 | 1.190 m | 1.787 m | 2.977 m | 0 |
+| UTS | 1,052 | 5,000 | 6.061 m | 12.073 m | 21.268 m | 0 |
+| UJI | 672 | 3,232 | 12.984 m | 41.445 m | 77.537 m | 384 |
 
-## Scientific hypothesis (not a guaranteed result)
+Preflight computes detailed distributions from the anchor geometry: same-building/same-floor k=1,2,4,8 distances at P0/P1/P5/P10/P25/P50/P75/P90/P95/P99/P100, plus union-kNN edge lengths, threshold counts and exp(-d/8) diagnostics. Do not infer missing quantiles from the table above.
 
-The fixed 8 m graph temperature is 6.72× TUJI edge P50, 1.32× UTS P50, and 0.62× UJI P50. Thus the same numeric kernel scale represents very different smoothing regimes. Unbounded S1 and S2 may also allow remote UJI edges to create inappropriate influence or virtual midpoint candidates. These are plausible mechanisms, but the actual normalized operator weights depend on degrees, logits and Sinkhorn; exp(-d/tau) alone is not a complete causal analysis.
+## Model/search
 
-The old CAL-fit protocol selected T/theta, then alpha, then beta/gamma conditional on frozen alpha. The new experiment should evaluate all parameter families together, without sequential freezing.
+Use one model family for all datasets. Fit separate physical scales from each dataset's geometry:
+- S1: \(R_{\max}^{S1}\), \(\tau_{\mathrm{graph}}\)
+- S2: \(R_{\max}^{S2}\), \(\tau_{\mathrm{virt}}\), with distance-decayed endpoint weights normalized per parent
+- Joint calibration: \(T,\theta_v,\theta_s,\alpha_{\mathrm{prior}},\alpha_{\mathrm{obs}},\beta\)
+- \(\gamma_{\mathrm{space}}=0\) for this iteration
 
-## FIT-only geometry diagnostics
+The spatial search uses a small deterministic outer design over FIT-derived scale pools. Each geometry is evaluated against a joint Cartesian calibration grid; no sequential freezing. The fast first-pass grid has 4 temperatures × 3 visibility weights × 3 strength weights × 4 prior weights × 4 observation weights × 9 beta values = 5,184 candidates per geometry. Beta remains [0, .05, .10, .15, .20, .35, .50, .65, .80].
 
-For each dataset, seed, building/floor group and permitted anchor set, report:
-- N anchors; duplicate/zero-distance coordinate pairs; k=1,2,4,8 neighbor-distance quantiles P0/P1/P5/P10/P25/P50/P75/P90/P95/P99/P100, mean and standard deviation.
-- Current union-kNN edge-distance quantiles and counts/fractions over 5/10/15/20/30/40 m.
-- Degree distribution, nodes with no neighbors after cutoff, connected components, cutoff edge retention, Sinkhorn convergence and symmetry.
-- Evaluate exp(-d/8) at each quantile as a diagnostic only.
-- Verify coordinate units, building/floor semantics, canonical anchor mapping and split provenance. Fail closed on uncertainty rather than infer missing metadata.
+Choose among CAL-fit candidates using the dimensionless objective:
 
-## Unified model with dataset-specific spatial scales
+\[
+J_\lambda =
+\frac{\mathrm{MAE}+0.30\,W_1}{(\mathrm{MAE}+0.30\,W_1)_{\mathrm{clean}}}
++0.25\frac{\mathrm{BFCE}-\mathrm{BFCE}_{\mathrm{clean}}}{\max(\mathrm{BFCE}_{\mathrm{clean}},10^{-6})}
++\lambda\frac{\mathrm{NLL}-\mathrm{NLL}_{\mathrm{clean}}}{\max(|\mathrm{NLL}_{\mathrm{clean}}|,1)}
+\]
 
-Fit per dataset:
-- R_max_S1: cutoff for S1 graph edges.
-- R_max_S2: cutoff for S2 virtual-edge candidates.
-- tau_graph: S1 distance-kernel temperature.
-- tau_virt: S2 virtual-edge length-decay temperature.
+Run \(\lambda\in\{0.02,0.05\}\). Keep BF accuracy no worse than the clean CAL-fit baseline and BF cross entropy within 1% of baseline. These constraints do not guarantee simultaneous wins; report trade-offs honestly. Energy Score and tail metrics are reported for selected candidates on CAL-eval, not used to repeatedly retune against CAL-eval.
 
-Use separate, predeclared FIT-only candidate pools for R_max_S1, tau_graph, R_max_S2 and tau_virt, drawing from same-building/floor k=1/2/4/8 neighbor distributions, union-kNN edge-length quantiles and fixed meter-scale values. Do not assume S1 and S2 cutoffs are equal. Keep W symmetric and doubly stochastic with W_ii=1 for isolated nodes; construct and balance the identity-plus-edge operator in O(N+E) memory rather than materializing dense N×N matrices. Prevent empty rows and NaN/Inf. For S2, normalize distance-decayed edge weights separately at each parent anchor before global mixture normalization; do not multiply a distance kernel onto the old degree prior without per-parent renormalization.
+## Run/output
 
-Fit all four spatial parameters independently for every dataset × backbone × seed. D is the primary scientific reference; C/D/E must not share forced spatial parameters. Fit T, theta_v, theta_s, alpha_prior, alpha_obs and beta jointly for each same run. E's checkpoint-native trained graph diffusion remains in its frozen retrieval logits; the newly selected inference-time S1 operator is an additional, separate factor. gamma_space is fixed at exactly zero and is not a search dimension.
+Use a fresh output directory for each iteration so old metrics cannot be mixed with new ones. Preflight writes the FIT geometry diagnostics and scale search space. Run tuji, then uts, then uji; each run selects on CAL-fit and evaluates once on CAL-eval. TEST labels and TEST scoring are not used.
 
-## Joint search
-
-Search the spatial scales and all calibration parameters in the same candidate evaluation loop on CAL-fit:
-psi = (R_max_S1, tau_graph, R_max_S2, tau_virt, T, theta_v, theta_s, alpha_prior, alpha_obs, beta), with gamma_space fixed at zero and excluded from the search vector.
-
-Use a deterministic FIT-derived outer geometry design, cache each candidate's balanced S1 graph and S2 edge/endpoint statistics, and evaluate the full inner Cartesian grid by vectorized tensor broadcasting in fixed candidate order. The fast first-iteration grid has 4 temperatures × 3 theta_v × 3 theta_s × 4 alpha_prior × 4 alpha_obs × 9 beta = 5,184 inner candidates per outer geometry; keep chunking only as a memory-control mechanism, not as sequential parameter freezing. Beta candidates must include [0, .05, .10, .15, .20, .35, .50, .65, .80]. Report total evaluated candidates, failures, and near-optimal sensitivity.
-
-## Objective and model selection
-
-Do not directly add raw meters, nats and cross entropy as if they had the same scale. Do not guarantee simultaneous wins across MAE, ES, NLL, BF accuracy and tails before running the experiment. Predeclare:
-1. Primary decision objective (recommended: coordinate MAE) and an explicit acceptable-degradation tolerance.
-2. Dimensionless normalized or constrained secondary objectives for ES, joint NLL, BF loss/accuracy, P95/P99 and worst-site error.
-3. Full Pareto frontier and all metrics for every candidate, rather than only a single hand-tuned scalar.
-4. Sensitivity analyses for lambda_2d_nll = 0.02 and 0.05 if those weights are used; choose the protocol before CAL-eval.
-5. Saturated BF accuracy (e.g. 100% TUJI) must not inflate a composite score; use BF cross entropy/Brier or an explicit constraint.
-
-CAL-fit labels may select parameters. After selection files and hashes are locked, run CAL-eval once for comparison and report. CAL-eval is not TEST, but must not be used to choose the winning configuration. Test score counts must remain zero.
-
-## Required outputs
-
-Write new files only under fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1/:
-- FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json and .md
-- SPATIAL_SCALE_SEARCH_SPACE.json
-- JOINT_FIT_SELECTION.json
-- CANDIDATE_METRICS.csv
-- PARETO_FRONTIER.csv
-- CAL_EVAL_REPORT.md
-- INTEGRITY_REVIEW.json
-- EXECUTION_MANIFEST.json
-- RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md
-
-Keep the prior evidence immutable. Record SHA256 hashes for inputs, checkpoint, code, split and anchor order; record parameters and exact command. Add tests for cutoff symmetry, self-loops, no cross-building/floor edges, monotone kernels, unique virtual edges, normalization, no NaN/Inf, canonical-order stability, deterministic reruns and TEST guards.
-
-The final report must state the actual FIT-only quantiles; selected dataset × backbone × seed radii and temperatures; parameter/seed stability; per-metric changes versus clean, single S1, single S2 and old combo; whether MAE and density metrics actually improve; and confirm that TEST score counts stayed zero. If the environment lacks data/checkpoints or a runnable path, document the exact blocker and do not fabricate diagnostics or results.
-
-
-## Five locked corrections (2026-10-21)
-
-1. **gamma_space is removed from the search vector and fixed at exactly zero.** This is a 2A-only study. The previous 27-run result is treated as the predeclared reason for fixing it; no gamma candidate or gamma-based model selection is allowed.
-2. **S2 uses per-parent-cell measure normalization.** For edge kernel k_e=exp(-d_e/tau_virt), each endpoint allocates w_tilde(i->e)=k_e/sum_{e' incident to i} k_{e'}. The global unnormalized edge mass is beta*(w_tilde(i->e)+w_tilde(j->e))*exp(ell_e)/Z. A non-isolated parent retains physical mass 1-beta; a parent with no retained virtual edge retains physical mass 1. As tau_virt tends to infinity, this reduces exactly to 1/degree(i)+1/degree(j). Multiplying the old degree prior by a distance kernel without endpoint renormalization is forbidden.
-3. **Spatial parameters are fit independently for dataset × backbone × seed.** D is the main scientific reference, while E retains its checkpoint-native training-time 8m graph diffusion and receives an independently selected inference-time S1. C/D/E must not share forced spatial parameters.
-4. **Use cached outer geometry operators and vectorized inner joint calibration.** For each outer tuple (R_max_S1,tau_graph,R_max_S2,tau_virt), cache the doubly stochastic S1 graph and S2 edge set/endpoint weights. The inner tensor-broadcast grid jointly evaluates T, theta_v, theta_s, alpha_prior, alpha_obs and beta. It must contain alpha_prior=0, alpha_obs=0 and beta=0 boundaries. Beta includes [0,.05,.10,.15,.20,.35,.50,.65,.80]. No sequential freezing.
-## Near-optimal sensitivity (fixed before CAL-eval)
-
-For each lambda, report the feasible CAL-fit candidates whose normalized selection objective is within an absolute 0.01 of the best feasible objective. This tolerance is a descriptive stability window, not a new selection objective. Summarize candidate/geometry counts and finite min/median/max for each spatial and calibration parameter, separately reporting unbounded values. Save the per-run detail in JOINT_FIT_SELECTION.json and aggregate it in NEAR_OPTIMAL_SENSITIVITY.csv. Do not use CAL-eval to change the tolerance or pick among near-optimal candidates.
-
-5. **Selection objective and BF non-degradation guard are predeclared.** The dimensionless objective is normalized (Coordinate MAE + 0.30 L_W1) + 0.25 × normalized BF-CE delta + lambda_2d_nll × normalized joint-NLL delta. Run lambda_2d_nll=0.02 and 0.05 separately, keep BF cross entropy within 1% of the clean baseline, and require macro BF accuracy to be no lower than that checkpoint's clean CAL-fit baseline. If no candidate improves while satisfying the constraints, report that result rather than relaxing constraints or using CAL-eval to select.
-
-Implementation entrypoint: fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py.
-Test file: tests/test_v17_dataset_adaptive_joint_fit_v1.py.
-
-
-## Execution-order and geometry audit corrections (2026-10-21)
-
-- The CAL-eval pack is created only after writing and re-reading the immutable selection and lock, then verifying selection/configuration hashes, algorithm code SHA, manifest SHA, historical-input hashes, split/anchor-order hashes, and zero TEST-score counters. Any failed check aborts before CAL-eval pack construction.
-- The runner defines its own manifest_path; it must not depend on the preflight function's local variables.
-- FIT geometry scale candidates use the same-building/floor k=1/2/4/8 distance distributions plus fixed physical scales. Virtual coordinates are checked for finite [N,2] values, and undirected edge lookups are canonicalized.
-- Unit tests cover measure conservation, graph invariants, TEST row guards, and CAL-eval lock ordering. These tests must pass before any real-data run; remote repository edits alone are not evidence that tests executed.
-
-
-## Baseline comparability and resume protection
-
-- A historical clean baseline or old-combo result is reusable only if its frozen checkpoint SHA exactly matches the checkpoint under evaluation. Otherwise, recompute the clean baseline on the current checkpoint's CAL-fit rows and omit the mismatched old-combo comparison.
-- Resuming an existing CAL-eval report requires re-verifying the selection lock, code/source manifest, historical input hashes, and the actual checkpoint file hash. A report's mere existence is not sufficient to skip a run.
-- The final JOINT_FIT_SELECTION status mirrors the aggregate integrity result and cannot remain PASS when runs or locks are incomplete.
+Key outputs: FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md/.json, SPATIAL_SCALE_SEARCH_SPACE.json, per-run CAL_FIT_SELECTION.json, CANDIDATE_METRICS.csv, CAL_EVAL_REPORT.json, and aggregate CAL_EVAL_REPORT.md, PARETO_FRONTIER.csv, RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md.
