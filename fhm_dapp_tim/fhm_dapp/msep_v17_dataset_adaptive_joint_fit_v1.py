@@ -70,18 +70,26 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
     for i,key in enumerate(zip(b.tolist(),f.tolist())): strata.setdefault(tuple(key),[]).append(i)
     kth={k:[] for k in (1,2,4,8)}; zero_pairs=0; groups={}
     for key,members in sorted(strata.items()):
-        block=xy[members]; delta=block[:,None,:]-block[None,:,:]
-        dist=np.sqrt(np.maximum((delta*delta).sum(-1),0.0))
-        zeros=int(np.triu(dist==0.0,1).sum()); zero_pairs+=zeros
-        np.fill_diagonal(dist,np.inf); sorted_dist=np.sort(dist,axis=1)
-        groups[f"{key[0]}::{key[1]}"]={"anchors":len(members),"zero_distance_pairs":zeros,"kth_neighbor":{}}
-        for k in (1,2,4,8):
-            if k <= len(members)-1:
-                vals=sorted_dist[:,k-1]; vals=vals[np.isfinite(vals)]
-            else:
-                vals=np.asarray([],dtype=np.float64)
-            kth[k].extend(vals.tolist())
-            groups[f"{key[0]}::{key[1]}"]["kth_neighbor"][str(k)]=_quantiles(vals)
+        block=xy[members]; m=len(members)
+        _,duplicate_counts=np.unique(block,axis=0,return_counts=True)
+        zeros=int(sum(int(count)*(int(count)-1)//2 for count in duplicate_counts)); zero_pairs+=zeros
+        group_kth={k:[] for k in (1,2,4,8)}
+        # Exact nearest neighbors, chunked to avoid a temporary [m,m,2] array
+        # for large building-floor strata. Memory is O(chunk*m), not O(m^2*2).
+        chunk_size=256
+        for start in range(0,m,chunk_size):
+            stop=min(start+chunk_size,m)
+            delta=block[start:stop,None,:]-block[None,:,:]
+            dist=np.sqrt(np.maximum((delta*delta).sum(-1),0.0))
+            dist[np.arange(stop-start),np.arange(start,stop)]=np.inf
+            sorted_dist=np.sort(dist,axis=1)
+            for k in (1,2,4,8):
+                if k<=m-1:
+                    vals=sorted_dist[:,k-1]
+                    vals=vals[np.isfinite(vals)]
+                    group_kth[k].extend(vals.tolist()); kth[k].extend(vals.tolist())
+        groups[f"{key[0]}::{key[1]}"]={"anchors":m,"zero_distance_pairs":zeros,
+            "kth_neighbor":{str(k):_quantiles(group_kth[k]) for k in (1,2,4,8)}}
     e=np.asarray(torch.as_tensor(edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
     if len(e):
         lengths=np.linalg.norm(xy[e[:,0]]-xy[e[:,1]],axis=1)
@@ -92,6 +100,7 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
     return {"anchors":int(len(xy)),"building_floor_strata":len(strata),
         "zero_distance_pairs_within_building_floor":int(zero_pairs),
         "kth_neighbor_distance_m":{str(k):_quantiles(v) for k,v in kth.items()},
+        "kth_neighbor_threshold_counts":{str(k):_threshold_counts(v) for k,v in kth.items()},
         "base_union_knn_edge_distance_m":_quantiles(lengths),
         "base_union_knn_edge_threshold_counts":_threshold_counts(lengths),
         "base_union_knn_edges":int(len(e)),
@@ -567,22 +576,13 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
                   for k,v in result["base_union_knn_edge_distance_m"].items() if k.startswith("p")}
     else:
         ed=np.asarray([],dtype=np.float64); exp_edge={}
-    kth_raw={k:[] for k in (1,2,4,8)}
-    for _,members in _group_indices(b,f).items():
-        block=xy[members]; delta=block[:,None,:]-block[None,:,:]
-        dist=np.sqrt(np.maximum((delta*delta).sum(-1),0.0)); np.fill_diagonal(dist,np.inf)
-        sd=np.sort(dist,axis=1)
-        for k in (1,2,4,8):
-            if k<=len(members)-1:
-                vals=sd[:,k-1]; kth_raw[k].extend(vals[np.isfinite(vals)].tolist())
-    result["kth_neighbor_threshold_counts"]={str(k):_threshold_counts(v) for k,v in kth_raw.items()}
-    q1=result["kth_neighbor_distance_m"]["1"]
     result["exp_neg_distance_over_8_at_quantiles"]={
-        "FIT_k1_nearest_neighbor":{k:(float(math.exp(-v/8.0)) if v is not None else None)
-            for k,v in q1.items() if k.startswith("p")},
-        "base_union_knn_edges":exp_edge,
-        "note":"Kernel values are descriptive only; actual normalized operator weights also depend on graph topology and Sinkhorn."
-    }
+        f"FIT_k{k}_nearest_neighbor":{key:(float(math.exp(-value/8.0)) if value is not None else None)
+            for key,value in result["kth_neighbor_distance_m"][str(k)].items() if key.startswith("p")}
+        for k in (1,2,4,8)}
+    result["exp_neg_distance_over_8_at_quantiles"]["base_union_knn_edges"]=exp_edge
+    result["exp_neg_distance_over_8_at_quantiles"]["note"]=(
+        "Kernel values are descriptive only; actual normalized operator weights also depend on graph topology and Sinkhorn.")
     for key,group in result["groups"].items():
         try: bb,ff=(int(x) for x in key.split("::",1))
         except ValueError: continue
