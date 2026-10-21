@@ -379,6 +379,51 @@ def _old_combo(dataset,seed,arm):
             "legacy_selection_sha256":s3.sha(path)}
     except (KeyError,TypeError,ValueError): return None
 
+
+_pairwise_fit_geometry_basic = _pairwise_fit_geometry
+def _pairwise_fit_geometry(coords,buildings,floors,edges):
+    result=_pairwise_fit_geometry_basic(coords,buildings,floors,edges)
+    xy=np.asarray(coords,dtype=np.float64); b=np.asarray(buildings,dtype=np.int64); f=np.asarray(floors,dtype=np.int64)
+    e=np.asarray(torch.as_tensor(edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
+    if len(e):
+        ed=np.linalg.norm(xy[e[:,0]]-xy[e[:,1]],axis=1)
+        exp_edge={k:(float(math.exp(-v/8.0)) if v is not None else None)
+                  for k,v in result["base_union_knn_edge_distance_m"].items() if k.startswith("p")}
+    else:
+        ed=np.asarray([],dtype=np.float64); exp_edge={}
+    q1=result["kth_neighbor_distance_m"]["1"]
+    result["exp_neg_distance_over_8_at_quantiles"]={
+        "FIT_k1_nearest_neighbor":{k:(float(math.exp(-v/8.0)) if v is not None else None)
+            for k,v in q1.items() if k.startswith("p")},
+        "base_union_knn_edges":exp_edge,
+        "note":"Kernel values are descriptive only; actual normalized operator weights also depend on graph topology and Sinkhorn."
+    }
+    for key,group in result["groups"].items():
+        try: bb,ff=(int(x) for x in key.split("::",1))
+        except ValueError: continue
+        mask=(b[e[:,0]]==bb)&(f[e[:,0]]==ff)&(b[e[:,1]]==bb)&(f[e[:,1]]==ff) if len(e) else np.zeros(0,dtype=bool)
+        vals=ed[mask] if len(e) else np.asarray([],dtype=np.float64)
+        group["union_knn_edge_count"]=int(len(vals))
+        group["union_knn_edge_distance_m"]=_quantiles(vals)
+        group["union_knn_edge_threshold_counts"]=_threshold_counts(vals)
+    return result
+
+_build_cutoff_graph_basic = build_cutoff_graph
+def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,**kwargs):
+    graph,kept,diag=_build_cutoff_graph_basic(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,**kwargs)
+    n=len(coords); parent=list(range(n))
+    def find(x):
+        while parent[x]!=x:
+            parent[x]=parent[parent[x]]; x=parent[x]
+        return x
+    for i,j in np.asarray(kept.detach().cpu(),dtype=np.int64).reshape(-1,2):
+        a,b=find(int(i)),find(int(j))
+        if a!=b: parent[a]=b
+    roots={find(i) for i in range(n)}
+    diag["connected_components"]=len(roots)
+    diag["isolated_component_count"]=int(diag["zero_neighbor_nodes"])
+    return graph,kept,diag
+
 def preflight(args):
     started=time.perf_counter()
     if args.device=="cuda" and not torch.cuda.is_available(): raise RuntimeError("CUDA unavailable; rerun with --device cpu")
@@ -523,6 +568,7 @@ def _pareto(rows,metrics):
 
 def aggregate(args):
     out=Path(args.output).resolve(); reports=[]; files=[]
+    (out/"PARETO_FRONTIER.csv").unlink(missing_ok=True)
     for p in sorted((out/"runs").glob("*/[CDE]/CAL_EVAL_REPORT.json")): reports.append(_read_json(p))
     for p in sorted((out/"runs").glob("*/[CDE]/CANDIDATE_METRICS.csv")): files.append(p)
     if not reports: raise RuntimeError("no CAL-eval reports found")
