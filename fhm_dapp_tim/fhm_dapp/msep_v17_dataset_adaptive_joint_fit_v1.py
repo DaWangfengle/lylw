@@ -771,9 +771,33 @@ def aggregate(args):
       "- Gamma-space fixed at zero.","- Internal TEST scored: 0.","- Official TEST scored: 0.",
       "- Historical old combo is evaluated only when its frozen CAL-fit selection is available."]
     (out/"CAL_EVAL_REPORT.md").write_text("\n".join(md)+"\n",encoding="utf-8")
-    status="PASS" if len(reports)==len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS) else "INCOMPLETE"
+    lock_checks=[]
+    manifest=_read_json(out/"EXECUTION_MANIFEST.json")
+    input_root=Path(manifest["input_root"])
+    for report in reports:
+        rd=out/"runs"/f"{report['dataset']}_seed{report['seed']}"/report["backbone"]
+        sp=rd/"CAL_FIT_SELECTION.json"; lk=rd/"CAL_EVAL.lock"
+        try:
+            selection=_read_json(sp); lock=_read_json(lk)
+            config_hash=selection.get("parameter_config_sha256")
+            unhashed=dict(selection); unhashed.pop("parameter_config_sha256",None)
+            input_hash_ok=all((input_root/f"{report['dataset']}_seed{report['seed']}"/name).is_file() and
+                s3.sha(input_root/f"{report['dataset']}_seed{report['seed']}"/name)==digest
+                for name,digest in selection.get("input_run_file_sha256",{}).items())
+            lock_checks.append(bool(
+                lock.get("selection_sha256")==s3.sha(sp)==report.get("selection_sha256") and
+                config_hash==_stable_hash(unhashed) and
+                selection.get("algorithm_code_sha256")==s3.sha(Path(__file__)) and
+                selection.get("source_manifest_sha256")==s3.sha(out/"EXECUTION_MANIFEST.json") and
+                lock.get("parameter_config_sha256")==config_hash and input_hash_ok and
+                all(report.get(k)==0 and lock.get(k)==0 for k in TEST_COUNTS)))
+        except (OSError,KeyError,ValueError):
+            lock_checks.append(False)
+    expected=len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)
+    status="PASS" if len(reports)==expected and len(selections)==expected and all(lock_checks) and len(files)==expected else "INCOMPLETE"
     _write_json(out/"INTEGRITY_REVIEW.json",{"status":status,"phase":"aggregate","completed_runs":len(reports),
-      "expected_runs":len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS),
+      "expected_runs":expected,"selection_lock_checks_passed":int(sum(lock_checks)),
+      "selection_locks_verified":bool(len(lock_checks)==expected and all(lock_checks)),
       "selection_locked_before_cal_eval":all(r.get("selection_role")=="CAL-fit" and r.get("cal_eval_used_for_selection") is False for r in reports),
       "gamma_space":0.0,"candidate_files":len(files),**TEST_COUNTS})
     (out/"RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md").write_text(
