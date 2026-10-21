@@ -369,7 +369,7 @@ def _ranked_scale_levels(values,count=4):
 def geometry_candidates(diag):
     pools=_geometry_candidate_pools(diag)
     shared=_geometry_value_pool(diag)
-    r1_levels=_ranked_scale_levels(pools["r_max_s1_m"],4)
+    r1_levels=_ranked_scale_levels(pools["r_max_s1_m"],3)
     tau_levels=_ranked_scale_levels(pools["tau_graph_m"],4)
     r2_pool=pools["r_max_s2_m"]
     tau_virt_pool=pools["tau_virt_m"]
@@ -389,10 +389,10 @@ def geometry_candidates(diag):
             "r_max_s1_m":r1,"tau_graph_m":tau_graph,"r_max_s2_m":r2,
             "tau_virt_m":tau_virt,"role":role,"r_max_s2_le_r_max_s1":True})
 
-    # Four FIT-derived R_S1 quantile levels crossed with four FIT-derived
-    # graph-temperature levels. For each radius, S2 uses the low/high eligible
-    # radius ranks; tau_virt has explicit infinity controls and finite low/high
-    # quantile-derived settings. No arbitrary 8-point modulo/LHS pairing.
+    # Three FIT-derived R_S1 quantile levels crossed with four FIT-derived
+    # graph-temperature levels, yielding 12 configurations. For each radius,
+    # S2 uses low/high eligible radius ranks; tau_virt has infinity controls
+    # and finite low/high quantile-derived settings. No arbitrary modulo/LHS.
     tau_virt_low=float(tau_virt_pool[0]); tau_virt_high=float(tau_virt_pool[-1])
     for r1 in r1_levels:
         eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
