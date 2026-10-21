@@ -568,51 +568,6 @@ def _safe_rows(ctx,rows,role):
     if set(map(int,arr))&set(map(int,ctx["roles"]["test"])): raise RuntimeError("TEST row guard blocked pack construction")
     return arr
 
-def _verify_selection_context(selection,ctx):
-    """Recompute the split and anchor hashes from the currently reconstructed context."""
-    fit_hash=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"])
-    eval_hash=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"])
-    coords=ctx["memory"]["coords"].detach().cpu().numpy()
-    buildings=ctx["memory"]["building"].detach().cpu().numpy()
-    floors=ctx["memory"]["floor"].detach().cpu().numpy()
-    anchor_hash=_hash_anchor_order(coords,buildings,floors)
-    actual={"fit_split_sha256":fit_hash,"eval_split_sha256":eval_hash,"anchor_order_sha256":anchor_hash}
-    failed=[key for key,value in actual.items() if selection.get(key)!=value]
-    if failed:
-        raise RuntimeError(f"selection context hashes differ from reconstructed data: {failed}")
-    return actual
-
-
-def _verify_locked_selection(selection_path,lock_path,manifest_path,input_root):
-    selection=_read_json(selection_path); lock=_read_json(lock_path)
-    unhashed=dict(selection); config_hash=unhashed.pop("parameter_config_sha256",None)
-    run_root=Path(input_root)/f"{selection['dataset']}_seed{selection['seed']}"
-    input_hash_ok=all((run_root/name).is_file() and s3.sha(run_root/name)==digest
-        for name,digest in selection.get("input_run_file_sha256",{}).items())
-    test_zero=all(selection.get(k)==0 and lock.get(k)==0 for k in TEST_COUNTS)
-    checks={
-      "selection_sha256":lock.get("selection_sha256")==s3.sha(selection_path),
-      "parameter_config_sha256":bool(config_hash) and config_hash==_stable_hash(unhashed)
-          and lock.get("parameter_config_sha256")==config_hash,
-      "algorithm_code_sha256":selection.get("algorithm_code_sha256")==s3.sha(Path(__file__))
-          and lock.get("algorithm_code_sha256")==selection.get("algorithm_code_sha256"),
-      "source_manifest_sha256":selection.get("source_manifest_sha256")==s3.sha(manifest_path)
-          and lock.get("source_manifest_sha256")==selection.get("source_manifest_sha256"),
-      "checkpoint_sha256":lock.get("checkpoint_sha256")==selection.get("checkpoint_sha256"),
-      "split_hashes":all(lock.get(k)==selection.get(sk) for k,sk in (
-          ("fit_split_sha256","fit_split_sha256"),("eval_split_sha256","eval_split_sha256"),
-          ("anchor_order_sha256","anchor_order_sha256"))),
-      "input_hashes":bool(selection.get("input_run_file_sha256")) and input_hash_ok
-          and lock.get("input_run_file_sha256")==selection.get("input_run_file_sha256"),
-      "selection_frozen":lock.get("selection_frozen_before_cal_eval") is True,
-      "test_rows_zero":test_zero,
-      "selection_role":selection.get("selection_role")=="CAL-fit"
-          and lock.get("selection_role")=="CAL-fit" and lock.get("evaluation_role")=="CAL-eval",
-    }
-    failed=[k for k,v in checks.items() if not v]
-    if failed: raise RuntimeError(f"CAL-eval lock verification failed; refusing CAL-eval access: {failed}")
-    return selection
-
 def _make_probability(pack_all,ctx,config):
     coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
     f=ctx["memory"]["floor"].detach().cpu().numpy(); all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
@@ -987,7 +942,7 @@ def aggregate(args):
     (out/"RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md").write_text(
       "# V17 Dataset-Adaptive Spatial Joint Fit\n\n"
       "See FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md for FIT-only geometry; SPATIAL_SCALE_SEARCH_SPACE.json for candidate design; "
-      "JOINT_FIT_SELECTION.json for locked choices and per-run near-optimal sensitivity; "
+      "JOINT_FIT_SELECTION.json for selected parameters and per-run near-optimal sensitivity; "
       "CANDIDATE_METRICS.csv, PARETO_FRONTIER.csv and NEAR_OPTIMAL_SENSITIVITY.csv for candidate diagnostics; "
       "CAL_EVAL_REPORT.md for reporting-only CAL-eval.\n\n"
       f"Completed run reports: {len(reports)} / {len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)}. Gamma-space=0; TEST scores=0.\n",encoding="utf-8")
