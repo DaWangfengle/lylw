@@ -996,6 +996,21 @@ def aggregate(args):
                 else:
                     old=_csv_read(out/"PARETO_FRONTIER.csv"); old.extend(pareto); _csv_write(out/"PARETO_FRONTIER.csv",old)
     if not (out/"PARETO_FRONTIER.csv").exists(): _csv_write(out/"PARETO_FRONTIER.csv",[])
+    sensitivity_rows=[]
+    for selection in selections:
+        for lambda_key,summary in selection.get("near_optimal_sensitivity",{}).items():
+            row={"dataset":selection.get("dataset"),"seed":selection.get("seed"),
+                "backbone":selection.get("backbone"),"lambda_2d_nll":lambda_key,
+                "objective_tolerance_absolute":summary.get("objective_tolerance_absolute"),
+                "best_objective":summary.get("best_objective"),
+                "best_candidate_id":summary.get("best_candidate_id"),
+                "near_optimal_candidate_count":summary.get("near_optimal_candidate_count"),
+                "near_optimal_geometry_count":summary.get("near_optimal_geometry_count"),
+                "top_candidate_ids":summary.get("top_candidate_ids")}
+            for parameter,stats in summary.get("parameter_ranges",{}).items():
+                for stat,value in stats.items(): row[f"{parameter}_{stat}"]=value
+            sensitivity_rows.append(row)
+    _csv_write(out/"NEAR_OPTIMAL_SENSITIVITY.csv",sensitivity_rows)
     _write_json(out/"JOINT_FIT_SELECTION.json",{"status":"PASS","runs":selections,"cal_eval_report_count":len(reports),
       "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
     md=["# V17 Dataset-Adaptive Spatial Joint Fit: CAL-eval Report","",
@@ -1086,7 +1101,7 @@ def aggregate(args):
         except (OSError,KeyError,ValueError):
             lock_checks.append(False)
     expected=len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)
-    status="PASS" if len(reports)==expected and len(selections)==expected and all(lock_checks) and len(files)==expected else "INCOMPLETE"
+    status="PASS" if len(reports)==expected and len(selections)==expected and all(lock_checks) and len(files)==expected and len(sensitivity_rows)==expected*len(LAMBDAS) else "INCOMPLETE"
     _write_json(out/"JOINT_FIT_SELECTION.json",{"status":status,"runs":selections,
       "cal_eval_report_count":len(reports),"expected_run_count":expected,
       "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,
@@ -1096,11 +1111,13 @@ def aggregate(args):
       "expected_runs":expected,"selection_lock_checks_passed":int(sum(lock_checks)),
       "selection_locks_verified":bool(len(lock_checks)==expected and all(lock_checks)),
       "selection_locked_before_cal_eval":all(r.get("selection_role")=="CAL-fit" and r.get("cal_eval_used_for_selection") is False for r in reports),
-      "gamma_space":0.0,"candidate_files":len(files),**TEST_COUNTS})
+      "gamma_space":0.0,"candidate_files":len(files),"near_optimal_sensitivity_rows":len(sensitivity_rows),
+      "near_optimal_sensitivity_complete":len(sensitivity_rows)==expected*len(LAMBDAS),**TEST_COUNTS})
     (out/"RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md").write_text(
       "# V17 Dataset-Adaptive Spatial Joint Fit\n\n"
       "See FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md for FIT-only geometry; SPATIAL_SCALE_SEARCH_SPACE.json for candidate design; "
-      "JOINT_FIT_SELECTION.json for locked choices; CANDIDATE_METRICS.csv and PARETO_FRONTIER.csv for candidate diagnostics; "
+      "JOINT_FIT_SELECTION.json for locked choices and per-run near-optimal sensitivity; "
+      "CANDIDATE_METRICS.csv, PARETO_FRONTIER.csv and NEAR_OPTIMAL_SENSITIVITY.csv for candidate diagnostics; "
       "CAL_EVAL_REPORT.md for reporting-only CAL-eval.\n\n"
       f"Completed run reports: {len(reports)} / {len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)}. Gamma-space=0; TEST scores=0.\n",encoding="utf-8")
     print(json.dumps({"stage":"aggregate_complete","runs":len(reports),**TEST_COUNTS},ensure_ascii=False),flush=True)
