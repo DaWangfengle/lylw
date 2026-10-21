@@ -24,7 +24,7 @@ Use one model family for all datasets. Fit separate physical scales from each da
 - Joint calibration: \(T,\theta_v,\theta_s,\alpha_{\mathrm{prior}},\alpha_{\mathrm{obs}},\beta\)
 - \(\gamma_{\mathrm{space}}=0\) for this iteration
 
-The spatial search uses a small deterministic outer design over FIT-derived scale pools. Each geometry is evaluated against a joint Cartesian calibration grid; no sequential freezing. The fast first-pass grid has 4 temperatures × 3 visibility weights × 3 strength weights × 4 prior weights × 4 observation weights × 9 beta values = 5,184 candidates per geometry. Beta remains [0, .05, .10, .15, .20, .35, .50, .65, .80].
+The spatial search uses eight deterministic FIT-derived scale combinations plus one unbounded legacy-geometry control. Each geometry is evaluated against a joint Cartesian calibration grid; no sequential freezing. The fast first-pass grid has 4 temperatures × 3 visibility weights × 3 strength weights × 4 prior weights × 4 observation weights × 9 beta values = 5,184 candidates per geometry, or 46,656 grid candidates per checkpoint/run before adding the separate clean-baseline row. Beta remains [0, .05, .10, .15, .20, .35, .50, .65, .80].
 
 Choose among CAL-fit candidates using the dimensionless objective:
 
