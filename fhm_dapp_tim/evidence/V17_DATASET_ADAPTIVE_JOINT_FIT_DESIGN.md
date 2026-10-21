@@ -74,3 +74,15 @@ Write new files only under fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_
 Keep the prior evidence immutable. Record SHA256 hashes for inputs, checkpoint, code, split and anchor order; record parameters and exact command. Add tests for cutoff symmetry, self-loops, no cross-building/floor edges, monotone kernels, unique virtual edges, normalization, no NaN/Inf, canonical-order stability, deterministic reruns and TEST guards.
 
 The final report must state the actual FIT-only quantiles; selected dataset-specific radii and temperatures; parameter/seed stability; per-metric changes versus clean, S1, S2 and old combo; whether MAE and density metrics actually improve; and confirm that TEST remained unaccessed. If the environment lacks data/checkpoints or a runnable path, document the blocker and do not fabricate diagnostics or results.
+
+
+## Five locked corrections (2026-10-21)
+
+1. **gamma_space is removed from the search vector and fixed at exactly zero.** This is a 2A-only study. The previous 27-run result is treated as the predeclared reason for fixing it; no gamma candidate or gamma-based model selection is allowed.
+2. **S2 uses per-parent-cell measure normalization.** For edge kernel k_e=exp(-d_e/tau_virt), each endpoint allocates w_tilde(i->e)=k_e/sum_{e' incident to i} k_{e'}. The global unnormalized edge mass is beta*(w_tilde(i->e)+w_tilde(j->e))*exp(ell_e)/Z. A non-isolated parent retains physical mass 1-beta; a parent with no retained virtual edge retains physical mass 1. As tau_virt tends to infinity, this reduces exactly to 1/degree(i)+1/degree(j). Multiplying the old degree prior by a distance kernel without endpoint renormalization is forbidden.
+3. **Spatial parameters are fit independently for dataset × backbone × seed.** D is the main scientific reference, while E retains its checkpoint-native training-time 8m graph diffusion and receives an independently selected inference-time S1. C/D/E must not share forced spatial parameters.
+4. **Use cached outer geometry operators and vectorized inner joint calibration.** For each outer tuple (R_max_S1,tau_graph,R_max_S2,tau_virt), cache the doubly stochastic S1 graph and S2 edge set/endpoint weights. The inner tensor-broadcast grid jointly evaluates T, theta_v, theta_s, alpha_prior, alpha_obs and beta. It must contain alpha_prior=0, alpha_obs=0 and beta=0 boundaries. Beta includes [0,.05,.10,.15,.20,.35,.50,.65,.80]. No sequential freezing.
+5. **Selection objective and BF non-degradation guard are predeclared.** The physical primary is Coordinate MAE + 0.30 L_W1. Normalize the primary and joint-NLL delta against the clean CAL-fit baseline, run lambda_2d_nll=0.02 and 0.05 separately, constrain BF cross entropy to no more than 1% degradation from the clean baseline, and require macro BF accuracy to be no lower than that same checkpoint's clean CAL-fit baseline. If no candidate improves while satisfying the constraints, report that result rather than relaxing constraints or using CAL-eval to select.
+
+Implementation entrypoint: fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py.
+Test file: tests/test_v17_dataset_adaptive_joint_fit_v1.py.
