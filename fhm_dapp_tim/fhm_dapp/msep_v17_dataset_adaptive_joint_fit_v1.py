@@ -23,6 +23,14 @@ BF_CE_RELATIVE_TOLERANCE=0.01
 NEAR_OPTIMAL_OBJECTIVE_TOLERANCE=0.01
 QUANTILES=(0.00,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1.00)
 
+
+def _selected_datasets(dataset="all"):
+    if dataset == "all":
+        return tuple(s3.DATASETS)
+    if dataset not in s3.DATASETS:
+        raise ValueError(f"unknown dataset {dataset!r}; expected 'all' or one of {s3.DATASETS}")
+    return (dataset,)
+
 def _json_safe(value):
     if isinstance(value,dict): return {str(k):_json_safe(v) for k,v in value.items()}
     if isinstance(value,(list,tuple)): return [_json_safe(v) for v in value]
@@ -866,8 +874,7 @@ def run(args):
     comp._verify_source_manifest(manifest)
     search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
     inner=_calibration_candidates(); reports=[]
-    requested_dataset=getattr(args,"dataset","all")
-    datasets=s3.DATASETS if requested_dataset=="all" else (requested_dataset,)
+    datasets=_selected_datasets(getattr(args,"dataset","all"))
     for ds in datasets:
       for seed in s3.SEEDS:
        ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
