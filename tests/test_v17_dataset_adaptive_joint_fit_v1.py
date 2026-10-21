@@ -118,3 +118,17 @@ def test_test_row_guard_rejects_test_indices_without_reading_labels():
     assert joint._safe_rows(ctx, [2], "CAL-eval").tolist() == [2]
     with pytest.raises(RuntimeError, match="TEST row guard"):
         joint._safe_rows(ctx, [3], "CAL-fit")
+
+
+def test_negative_infinity_scale_and_nonfinite_mixture_logits_are_rejected():
+    xy = np.asarray([[0., 0.], [1., 0.]])
+    with pytest.raises(ValueError, match="R_max"):
+        joint.build_cutoff_graph(xy, np.asarray([0, 0]), np.asarray([0, 0]),
+                                 np.asarray([[0, 1]]), -math.inf, 1.0)
+    endpoint = {"weight_i": np.asarray([1.]), "weight_j": np.asarray([1.]),
+                "degree": np.asarray([1, 1])}
+    bad_logits = torch.tensor([[float("nan"), 0.0]])
+    with pytest.raises(ValueError, match="nonfinite"):
+        joint.weighted_cell_mixture(bad_logits, torch.zeros((1, 1)), torch.tensor([[0, 1]]),
+            endpoint, 0.2, torch.zeros((1, 2, 2)), torch.ones((1, 2, 2)),
+            torch.zeros((1, 1, 2)), torch.ones((1, 1, 2)))
