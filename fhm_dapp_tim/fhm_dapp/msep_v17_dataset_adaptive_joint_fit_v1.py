@@ -456,10 +456,15 @@ def _add_objectives(rows,base):
         for lam in LAMBDAS: r[f"selection_objective_lambda_{lam:.2f}"]=r["normalized_primary"]+lam*r["normalized_joint_nll_delta"]
     return rows
 def _choose(rows,lam,kind="joint"):
-    rs=[r for r in rows if r["feasible"]]
+    objective_key=f"selection_objective_lambda_{lam:.2f}"
+    metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
+                   "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
+    rs=[r for r in rows if r.get("feasible") and
+        math.isfinite(float(r.get(objective_key,math.inf))) and
+        all(math.isfinite(float(r.get(field,math.nan))) for field in metric_fields)]
     if kind=="single_S1": rs=[r for r in rs if r["beta"]==0 and (r["alpha_prior"]!=0 or r["alpha_obs"]!=0)]
     if kind=="single_S2": rs=[r for r in rs if r["alpha_prior"]==0 and r["alpha_obs"]==0 and r["beta"]>0]
-    return min(rs,key=lambda r:(r[f"selection_objective_lambda_{lam:.2f}"],r["normalized_bf_cross_entropy"],
+    return min(rs,key=lambda r:(r[objective_key],r["normalized_bf_cross_entropy"],
         _primary(r),r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],r["alpha_obs"],r["beta"],r["geometry_id"])) if rs else None
 def _near_optimal_sensitivity(rows):
     """Summarize CAL-fit near-optimal parameter ambiguity without CAL-eval access."""
@@ -895,6 +900,11 @@ def run(args):
             anchor_order_sha256=_hash_anchor_order(coords,b,f),geometry_role="clean_baseline_reference")
         rows_all.append(base)
         rows_all=_add_objectives(rows_all,base)
+        scored_metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
+            "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
+        nonfinite_candidate_count=sum(not all(math.isfinite(float(r.get(k,math.nan))) for k in scored_metric_fields)
+            for r in rows_all)
+        finite_candidate_count=len(rows_all)-nonfinite_candidate_count
         chosen={}; s1={}; s2sel={}
         for lam in LAMBDAS:
             r=_choose(rows_all,lam)
@@ -914,6 +924,8 @@ def run(args):
           "selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
           "near_optimal_sensitivity":near_optimal,
           "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
+          "finite_candidate_metric_count":int(finite_candidate_count),
+          "nonfinite_candidate_metric_count":int(nonfinite_candidate_count),
           "lambda_2d_nll":list(LAMBDAS),"candidate_count":len(rows_all),"geometry_count":len(geoms),
           "inner_grid_count":len(inner),"geometry_diagnostics":geometry_diagnostics,
           "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
