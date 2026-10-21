@@ -335,7 +335,12 @@ def _config(r):
         "R_max_S2_m":float(r["r_max_s2_m"]),"tau_virt_m":float(r["tau_virt_m"]),
         "temperature":float(r["temperature"]),"theta":[float(r["theta_v"]),float(r["theta_s"])],
         "alpha_prior":float(r["alpha_prior"]),"alpha_obs":float(r["alpha_obs"]),"beta":float(r["beta"]),
-        "gamma_space":0.0,"fit_metrics":{k:float(r[k]) for k in ("coordinate_mae_m","transport_w1_m","bf_accuracy",
+        "gamma_space":0.0,"selection_objective":{f"lambda_{lam:.2f}":float(r[f"selection_objective_lambda_{lam:.2f}"]) for lam in LAMBDAS},
+        "normalized_primary":float(r["normalized_primary"]),"normalized_joint_nll_delta":float(r["normalized_joint_nll_delta"]),
+        "normalized_bf_cross_entropy":float(r["normalized_bf_cross_entropy"]),
+        "bf_accuracy_non_degradation":bool(r["bf_accuracy_non_degradation"]),
+        "bf_cross_entropy_guard":bool(r["bf_cross_entropy_guard"]),
+        "fit_metrics":{k:float(r[k]) for k in ("coordinate_mae_m","transport_w1_m","bf_accuracy",
         "bf_cross_entropy","joint_nll","site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")}}
 def _csv_write(path,rows):
     rows=list(rows); fields=list(dict.fromkeys(k for r in rows for k in r))
@@ -646,6 +651,35 @@ def aggregate(args):
               f"{delta('macro_mae_full_m'):.4f} | {delta('macro_es_m'):.4f} | {delta('macro_joint_nll'):.4f} | "
               f"{delta('macro_bf_accuracy'):.4f} | {delta('site_p95_full_m'):.4f} | {delta('site_p99_full_m'):.4f} | "
               f"{delta('worst_site_mae_m'):.4f} | {old_delta:.4f} |")
+    md += ["","## Paired deltas versus old combo","",
+      "| Dataset | Seed | Backbone | Method | Δ MAE m | Δ ES m | Δ Joint NLL | Δ BF accuracy | Δ P95 m | Δ P99 m | Δ Worst-site m |",
+      "|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|"]
+    for r in reports:
+        oldm=r["metrics"].get("old_combo_1D_2A",{}).get("metrics",{})
+        if not oldm: continue
+        for name,entry in r["metrics"].items():
+            m=entry["metrics"]
+            def old_delta(field):
+                return m.get(field,float("nan"))-oldm.get(field,float("nan")) if field in m and field in oldm else float("nan")
+            md.append(f"| {r['dataset']} | {r['seed']} | {r['backbone']} | {name} | "
+              f"{old_delta('macro_mae_full_m'):.4f} | {old_delta('macro_es_m'):.4f} | {old_delta('macro_joint_nll'):.4f} | "
+              f"{old_delta('macro_bf_accuracy'):.4f} | {old_delta('site_p95_full_m'):.4f} | "
+              f"{old_delta('site_p99_full_m'):.4f} | {old_delta('worst_site_mae_m'):.4f} |")
+    md += ["","## Spatial parameter stability across seeds","",
+      "| Dataset | Backbone | Lambda | Seed-specific (R_S1, tau_graph, R_S2, tau_virt) | Mean/std over finite values |",
+      "|---|---|---:|---|---|"]
+    for ds in sorted({x["dataset"] for x in selections}):
+      for arm in sorted({x["backbone"] for x in selections if x["dataset"]==ds}):
+        group=[x for x in selections if x["dataset"]==ds and x["backbone"]==arm]
+        for lam in ("lambda_0.02","lambda_0.05"):
+          configs=[(x["seed"],x["selected_joint"][lam]) for x in group if lam in x.get("selected_joint",{})]
+          fields=("R_max_S1_m","tau_graph_m","R_max_S2_m","tau_virt_m")
+          per_seed="; ".join(f"seed {seed}: "+",".join(f"{float(c[k]):.4g}" for k in fields) for seed,c in configs)
+          summaries=[]
+          for k in fields:
+            vals=np.asarray([float(c[k]) for _,c in configs],dtype=float); vals=vals[np.isfinite(vals)]
+            summaries.append(f"{k} mean={vals.mean():.4g}, sd={vals.std():.4g}" if len(vals) else f"{k} n/a")
+          md.append(f"| {ds} | {arm} | {lam} | {per_seed} | {'; '.join(summaries)} |")
     md += ["","## Integrity","",f"- Completed run reports: {len(reports)}",f"- Candidate files: {len(files)}",
       "- Gamma-space fixed at zero.","- Internal TEST scored: 0.","- Official TEST scored: 0.",
       "- Historical old combo is evaluated only when its frozen CAL-fit selection is available."]
