@@ -20,6 +20,7 @@ ALPHAS=(0.0,0.1,0.35,0.65,1.0)
 BETAS=(0.0,0.05,0.10,0.15,0.20,0.35,0.50,0.65,0.80)
 LAMBDAS=(0.02,0.05)
 BF_CE_RELATIVE_TOLERANCE=0.01
+NEAR_OPTIMAL_OBJECTIVE_TOLERANCE=0.01
 QUANTILES=(0.00,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1.00)
 
 def _json_safe(value):
@@ -460,6 +461,40 @@ def _choose(rows,lam,kind="joint"):
     if kind=="single_S2": rs=[r for r in rs if r["alpha_prior"]==0 and r["alpha_obs"]==0 and r["beta"]>0]
     return min(rs,key=lambda r:(r[f"selection_objective_lambda_{lam:.2f}"],r["normalized_bf_cross_entropy"],
         _primary(r),r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],r["alpha_obs"],r["beta"],r["geometry_id"])) if rs else None
+def _near_optimal_sensitivity(rows):
+    """Summarize CAL-fit near-optimal parameter ambiguity without CAL-eval access."""
+    parameter_fields=("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m","temperature",
+                      "theta_v","theta_s","alpha_prior","alpha_obs","beta")
+    result={}
+    for lam in LAMBDAS:
+        best=_choose(rows,lam)
+        if best is None: raise RuntimeError(f"no feasible candidate for near-optimal lambda={lam}")
+        objective_key=f"selection_objective_lambda_{lam:.2f}"
+        best_value=float(best[objective_key])
+        near=[r for r in rows if r.get("feasible") and
+              math.isfinite(float(r[objective_key])) and
+              float(r[objective_key])<=best_value+NEAR_OPTIMAL_OBJECTIVE_TOLERANCE+1e-12]
+        near.sort(key=lambda r:(float(r[objective_key]),r["normalized_bf_cross_entropy"],
+            _primary(r),r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],
+            r["alpha_obs"],r["beta"],r["geometry_id"]))
+        ranges={}
+        for field in parameter_fields:
+            vals=np.asarray([float(r[field]) for r in near],dtype=np.float64)
+            finite=vals[np.isfinite(vals)]
+            ranges[field]={"finite_count":int(len(finite)),
+                "unbounded_count":int(len(vals)-len(finite)),
+                "min":float(finite.min()) if len(finite) else None,
+                "median":float(np.median(finite)) if len(finite) else None,
+                "max":float(finite.max()) if len(finite) else None}
+        result[f"lambda_{lam:.2f}"]={"objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
+            "best_objective":best_value,"best_candidate_id":best.get("candidate_id"),
+            "near_optimal_candidate_count":len(near),
+            "near_optimal_geometry_count":len({r["geometry_id"] for r in near}),
+            "parameter_ranges":ranges,
+            "top_candidate_ids":[r.get("candidate_id") for r in near[:25]]}
+    return result
+
+
 def _config(r):
     return {"geometry_id":r["geometry_id"],"R_max_S1_m":float(r["r_max_s1_m"]),"tau_graph_m":float(r["tau_graph_m"]),
         "R_max_S2_m":float(r["r_max_s2_m"]),"tau_virt_m":float(r["tau_virt_m"]),
@@ -708,7 +743,8 @@ def preflight(args):
       "geometry_design":"8-point deterministic Latin-hypercube with separate R_S1/tau_graph/R_S2/tau_virt pools derived from FIT k=1/2/4/8 quantiles, union-kNN edge-length quantiles, and fixed physical scales",
       "outer_geometry_candidates":spaces,"calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
       "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},"inner_joint_grid_size":len(_calibration_candidates()),
-      "gamma_space_fixed":0.0,"search_method":"joint coarse grid for every cached geometry; no sequential freezing",
+      "gamma_space_fixed":0.0,"search_method":"joint vectorized grid for every cached geometry; no sequential freezing",
+      "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
       "lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
     manifest.update({"study":"V17 dataset-adaptive spatial joint fit",
       "fit_neighbor_diagnostics_sha256":s3.sha(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json"),
@@ -717,6 +753,7 @@ def preflight(args):
       "selection_protocol":{"primary":"Coordinate MAE + 0.30 * component-center W1",
       "normalized_objective":"normalized primary + lambda * normalized joint-NLL delta",
       "lambda_2d_nll":list(LAMBDAS),"BF CE relative tolerance":BF_CE_RELATIVE_TOLERANCE,
+      "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
       "hard_constraint":"macro BF accuracy must not fall below same-checkpoint CAL-fit clean baseline"},
       "preflight_elapsed_seconds":time.perf_counter()-started,**TEST_COUNTS})
     _write_json(manifest_path,manifest)
@@ -869,11 +906,14 @@ def run(args):
         for config in chosen.values(): _attach_virtual_measure(config,geometry_diagnostics)
         for config in list(s1.values())+list(s2sel.values()):
             if config is not None: _attach_virtual_measure(config,geometry_diagnostics)
+        near_optimal=_near_optimal_sensitivity(rows_all)
         selection={"status":"LOCKED_CAL_FIT","dataset":ds,"seed":int(seed),"backbone":arm,
           "checkpoint_sha256":ckpt_sha,"selected_epoch":int(payload["selected_epoch"]),"native_E_alpha":native_alpha,
           "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,
           "joint_calibrated_base":clean,"baseline_reference_source":baseline_config["baseline_source"],
           "selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
+          "near_optimal_sensitivity":near_optimal,
+          "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
           "lambda_2d_nll":list(LAMBDAS),"candidate_count":len(rows_all),"geometry_count":len(geoms),
           "inner_grid_count":len(inner),"geometry_diagnostics":geometry_diagnostics,
           "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
