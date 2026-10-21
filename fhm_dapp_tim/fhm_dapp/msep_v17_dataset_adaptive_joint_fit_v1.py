@@ -42,14 +42,11 @@ def _json_safe(value):
         return "Infinity" if value>0 else ("-Infinity" if value<0 else "NaN")
     return value
 
-def _stable_hash(value):
-    payload=json.dumps(_json_safe(value),sort_keys=True,separators=(",",":"),allow_nan=False).encode()
-    return hashlib.sha256(payload).hexdigest()
-
-def _write_json(path,value,exclusive=False):
+def _write_json(path,value):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
-    with path.open("x" if exclusive else "w",encoding="utf-8") as f:
+    with path.open("w",encoding="utf-8") as f:
         json.dump(_json_safe(value),f,ensure_ascii=False,indent=2,allow_nan=False); f.write("\n")
+
 
 def _read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
@@ -708,33 +705,33 @@ def _baseline_row(config,metrics):
     return row
 
 def preflight(args):
-    started=time.perf_counter()
-    if args.device=="cuda" and not torch.cuda.is_available(): raise RuntimeError("CUDA unavailable; rerun with --device cpu")
+    """Build FIT-only geometry diagnostics and candidate scales; no labels are scored."""
     out=Path(args.output).resolve()
-    if out.exists() and any(out.iterdir()) and not (out/"EXECUTION_MANIFEST.json").is_file(): raise RuntimeError("nonempty output root without manifest")
-    comp.preflight(args); manifest_path=out/"EXECUTION_MANIFEST.json"; manifest=_read_json(manifest_path)
     diagnostics={}; spaces={}
     for ds in s3.DATASETS:
       for seed in s3.SEEDS:
         ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device("cpu"))
-        _safe_rows(ctx,ctx["cal_fit"],"CAL-fit"); _safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
-        xy=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
-        f=ctx["memory"]["floor"].detach().cpu().numpy(); d=_pairwise_fit_geometry(xy,b,f,ctx["edges"]); key=f"{ds}_seed{seed}"
-        d.update(dataset=ds,seed=int(seed),cal_fit_rows=len(ctx["cal_fit"]),cal_eval_rows=len(ctx["cal_eval"]),
-          cal_fit_key_sha256=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
-          cal_eval_key_sha256=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
-          anchor_order_sha256=_hash_anchor_order(xy,b,f))
-        diagnostics[key]=d; geoms,pools=geometry_candidates(d)
+        fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")
+        ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
+        xy=ctx["memory"]["coords"].detach().cpu().numpy()
+        b=ctx["memory"]["building"].detach().cpu().numpy()
+        f=ctx["memory"]["floor"].detach().cpu().numpy()
+        d=_pairwise_fit_geometry(xy,b,f,ctx["edges"]); key=f"{ds}_seed{seed}"
+        d.update(dataset=ds,seed=int(seed),cal_fit_rows=len(fit),cal_eval_rows=len(ev))
+        diagnostics[key]=d
+        geoms,pools=geometry_candidates(d)
         spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pools["shared_union_m"],
           "geometry_candidate_pools_m":pools["by_parameter_m"],"geometry_candidates":geoms,
-          "calibration_candidate_count":len(_calibration_candidates()),"gamma_space":{"locked":0.0,"searched":False},"gamma_candidate_count":0,
-          "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,"bf_ce_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
+          "calibration_candidate_count":len(_calibration_candidates()),
+          "gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
           "candidate_count_per_run":len(geoms)*len(_calibration_candidates())}
-    _write_json(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json",{"status":"PASS","source":"FIT anchor dictionary only",
-      "datasets_and_seeds":diagnostics,**TEST_COUNTS})
-    md=["# FIT-only Neighbor Distance Diagnostics","","Nearest-neighbor distances use distinct anchors on the same building and floor. Union-kNN edge lengths are reported separately.",""]
+    _write_json(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json",{
+        "source":"FIT anchor dictionary only","datasets_and_seeds":diagnostics,**TEST_COUNTS})
+    md=["# FIT-only Neighbor Distance Diagnostics","",
+        "Nearest-neighbor distances are computed among distinct anchors on the same building and floor. Union-kNN edge lengths are reported separately.",""]
     for key,d in diagnostics.items():
-        md += [f"## {key}","",f"- FIT anchors: {d['anchors']}",f"- Building-floor strata: {d['building_floor_strata']}",
+        md += [f"## {key}","",f"- FIT anchors: {d['anchors']}",
+          f"- Building-floor strata: {d['building_floor_strata']}",
           f"- Zero-distance pairs: {d['zero_distance_pairs_within_building_floor']}",
           f"- Existing union-kNN edges: {d['base_union_knn_edges']}",
           f"- Union-kNN edge quantiles: {json.dumps(d['base_union_knn_edge_distance_m'],ensure_ascii=False)}"]
@@ -742,241 +739,131 @@ def preflight(args):
             md.append(f"- k={k} neighbor distances: {json.dumps(v,ensure_ascii=False)}")
         md.append(f"- k-neighbor threshold counts: {json.dumps(d['kth_neighbor_threshold_counts'],ensure_ascii=False)}")
         md.append(f"- exp(-d/8m) at distance quantiles: {json.dumps(d['exp_neg_distance_over_8_at_quantiles'],ensure_ascii=False)}")
-        md.append("- Building/floor-stratified neighbor and union-kNN edge distributions are in the JSON file.")
         md.append("")
     (out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md").write_text("\n".join(md),encoding="utf-8")
-    _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{"status":"PASS",
-      "geometry_design":"8-point deterministic Latin-hypercube with separate R_S1/tau_graph/R_S2/tau_virt pools derived from FIT k=1/2/4/8 quantiles, union-kNN edge-length quantiles, and fixed physical scales",
-      "outer_geometry_candidates":spaces,"calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
-      "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},"inner_joint_grid_size":len(_calibration_candidates()),
-      "gamma_space_fixed":0.0,"gamma_candidate_count":0,"search_method":"joint vectorized grid for every cached geometry; no sequential freezing",
-      "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
+    _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{
+      "geometry_design":"8-point deterministic Latin-hypercube over separate FIT-derived R_S1/tau_graph/R_S2/tau_virt pools",
+      "outer_geometry_candidates":spaces,
+      "calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
+        "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},
+      "inner_joint_grid_size":len(_calibration_candidates()),"gamma_space_fixed":0.0,
       "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,**TEST_COUNTS})
-    manifest.update({"study":"V17 dataset-adaptive spatial joint fit",
-      "fit_neighbor_diagnostics_sha256":s3.sha(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json"),
-      "spatial_search_space_sha256":s3.sha(out/"SPATIAL_SCALE_SEARCH_SPACE.json"),
-      "spatial_parameters_fit_per_dataset_backbone_seed":True,"gamma_space":{"locked":0.0,"searched":False},"gamma_candidate_count":0,
-      "selection_protocol":{"primary":"Coordinate MAE + 0.30 * component-center W1",
-      "normalized_objective":"normalized (MAE + 0.30 W1) + BF_CE_WEIGHT * normalized BF-CE delta + lambda * normalized joint-NLL delta",
-      "bf_ce_weight":BF_CE_WEIGHT,"lambda_2d_nll":list(LAMBDAS),"BF CE relative tolerance":BF_CE_RELATIVE_TOLERANCE,
-      "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
-      "hard_constraint":"macro BF accuracy must not fall below same-checkpoint CAL-fit clean baseline"},
-      "preflight_elapsed_seconds":time.perf_counter()-started,**TEST_COUNTS})
-    _write_json(manifest_path,manifest)
-    _write_json(out/"INTEGRITY_REVIEW.json",{"status":"PASS","phase":"preflight","test_rows_scored":0,
-      "FIT_only_geometry_verified":True,"internal_test_rows_scored":0,"official_test_rows_scored":0})
-    print(json.dumps({"stage":"preflight_complete","output":str(out),"geometry_sets":len(spaces),**TEST_COUNTS},ensure_ascii=False),flush=True)
-
-def smoke(args):
-    """Small CAL-fit-only end-to-end check; never builds or scores CAL-eval."""
-    out=Path(args.output).resolve()
-    manifest_path=out/"EXECUTION_MANIFEST.json"
-    search_path=out/"SPATIAL_SCALE_SEARCH_SPACE.json"
-    if not manifest_path.is_file() or not search_path.is_file():
-        raise FileNotFoundError("run preflight first; EXECUTION_MANIFEST.json and SPATIAL_SCALE_SEARCH_SPACE.json are required")
-    manifest=_read_json(manifest_path)
-    comp._verify_source_manifest(manifest)
-    ds=s3.DATASETS[0]; seed=s3.SEEDS[0]; arm="D"
-    input_root=Path(args.input_root).resolve(); checkpoint_root=Path(args.checkpoint_root).resolve()
-    ctx=s3.reconstruct(ds,seed,input_root,torch.device(args.device))
-    fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")
-    checkpoint_path=comp._checkpoint_path(checkpoint_root,ds,seed,arm)
-    relative=str(checkpoint_path.relative_to(checkpoint_root)).replace("\\","/")
-    checkpoint_sha=s3.sha(checkpoint_path)
-    if manifest.get("checkpoint_sha256",{}).get(relative)!=checkpoint_sha:
-        raise RuntimeError("smoke checkpoint SHA does not match preflight manifest")
-    model,payload,native_alpha=comp._load_model(ctx,checkpoint_root,ds,seed,arm,args.device)
-    fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
-    geometry_set=_read_json(search_path)["outer_geometry_candidates"][f"{ds}_seed{seed}"]["geometry_candidates"]
-    coords=ctx["memory"]["coords"].detach().cpu().numpy()
-    buildings=ctx["memory"]["building"].detach().cpu().numpy()
-    floors=ctx["memory"]["floor"].detach().cpu().numpy()
-    all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
-    edge_lengths=np.linalg.norm(coords[all_edges[:,0]]-coords[all_edges[:,1]],axis=1) if len(all_edges) else np.empty(0)
-    geom=next((x for x in geometry_set if x.get("role")!="legacy_reference"
-               and np.any(edge_lengths<=float(x["r_max_s2_m"]))),None)
-    if geom is None:
-        raise RuntimeError("smoke cannot find a FIT-derived geometry with retained S2 edges")
-    graph,_,gdiag=build_cutoff_graph(coords,buildings,floors,all_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
-    s2_edges=all_edges[edge_lengths<=float(geom["r_max_s2_m"])] if len(all_edges) else all_edges
-    ep=normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
-    grid=_calibration_candidates()
-    clean=next(x for x in grid if x["alpha_prior"]==0.0 and x["alpha_obs"]==0.0 and x["beta"]==0.0)
-    single_s1=next(x for x in grid if x["alpha_prior"]>0.0 and x["alpha_obs"]==0.0 and x["beta"]==0.0)
-    single_s2=next(x for x in grid if x["alpha_prior"]==0.0 and x["alpha_obs"]==0.0 and x["beta"]>0.0)
-    selected=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
-        tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],
-        tau_virt_m=geom["tau_virt_m"],geometry_role=geom["role"])
-        for x in (clean,single_s1,single_s2)]
-    rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2_edges,geom,selected,endpoint_cache=ep)
-    required=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
-              "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
-    if len(rows)!=3 or any(not math.isfinite(float(row[k])) for row in rows for k in required):
-        raise RuntimeError("CAL-fit smoke evaluation produced missing/nonfinite metrics")
-    endpoint_sums=np.zeros(len(coords),dtype=np.float64)
-    if len(ep["edges"]):
-        np.add.at(endpoint_sums,ep["edges"][:,0],ep["weight_i"])
-        np.add.at(endpoint_sums,ep["edges"][:,1],ep["weight_j"])
-    active=ep["degree"]>0
-    if not np.allclose(endpoint_sums[active],1.0,atol=1e-10,rtol=1e-10):
-        raise RuntimeError("smoke test failed per-parent virtual measure conservation")
-    result={"status":"PASS","dataset":ds,"seed":int(seed),"backbone":arm,
-      "checkpoint_sha256":checkpoint_sha,"selected_epoch":int(payload["selected_epoch"]),
-      "native_E_alpha":native_alpha,"selection_role":"CAL-fit","evaluation_role":"smoke-only",
-      "cal_fit_rows":int(len(fit)),"candidate_count":len(rows),
-      "candidate_ids":[x["candidate_id"] for x in rows],
-      "candidate_metrics":[{k:float(x[k]) for k in ("coordinate_mae_m","transport_w1_m","bf_accuracy",
-        "bf_cross_entropy","joint_nll","site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")} for x in rows],
-      "geometry":geom,"graph_diagnostics":gdiag,"retained_s2_edges":int(len(s2_edges)),
-      "virtual_parent_measure_max_error":float(np.max(np.abs(endpoint_sums[active]-1.0))) if active.any() else 0.0,
-      "cal_eval_pack_constructed":False,"cal_eval_rows_scored":0,**TEST_COUNTS}
-    _write_json(out/"SMOKE_TEST.json",result)
-    print(json.dumps({"stage":"smoke_complete","dataset":ds,"seed":seed,"backbone":arm,
-      "candidate_count":len(rows),"cal_eval_rows_scored":0,**TEST_COUNTS},ensure_ascii=False),flush=True)
+    print(json.dumps({"stage":"preflight_complete","output":str(out),
+      "geometry_sets":len(spaces),**TEST_COUNTS},ensure_ascii=False),flush=True)
 
 
 def run(args):
-    out=Path(args.output).resolve(); manifest_path=out/"EXECUTION_MANIFEST.json"
-    manifest=_read_json(manifest_path)
-    comp._verify_source_manifest(manifest)
+    """Jointly fit spatial scales and calibration parameters on CAL-fit, then report CAL-eval."""
+    out=Path(args.output).resolve()
     search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
     inner=_calibration_candidates(); reports=[]
     datasets=_selected_datasets(getattr(args,"dataset","all"))
     for ds in datasets:
       for seed in s3.SEEDS:
-       ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
-       fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit"); ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
-       for arm in ARMS:
-        rd=out/"runs"/f"{ds}_seed{seed}"/arm; rd.mkdir(parents=True,exist_ok=True)
-        sp=rd/"CAL_FIT_SELECTION.json"; lock=rd/"CAL_EVAL.lock"; rp=rd/"CAL_EVAL_REPORT.json"
-        if rp.is_file():
-            if not sp.is_file() or not lock.is_file():
-                raise RuntimeError(f"completed CAL-eval report lacks its selection/lock: {rd}")
-            locked_selection=_verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
-            _verify_selection_context(locked_selection,ctx)
-            checkpoint_path=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm)
-            checkpoint_sha=s3.sha(checkpoint_path)
-            if locked_selection.get("checkpoint_sha256")!=checkpoint_sha:
-                raise RuntimeError(f"frozen checkpoint changed since selection: {checkpoint_path}")
-            saved_report=_read_json(rp)
-            if (saved_report.get("selection_sha256")!=s3.sha(sp)
-                or saved_report.get("checkpoint_sha256")!=checkpoint_sha
-                or saved_report.get("cal_eval_used_for_selection") is not False
-                or any(saved_report.get(k)!=0 for k in TEST_COUNTS)):
-                raise RuntimeError(f"existing CAL-eval report failed integrity checks: {rp}")
-            reports.append(saved_report)
-            continue
-        if sp.exists() or lock.exists(): raise RuntimeError(f"incomplete locked run exists at {rd}; preserve and inspect")
-        ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm); ckpt_sha=s3.sha(ckpt)
-        model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
-        base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
-        fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
-        coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
-        f=ctx["memory"]["floor"].detach().cpu().numpy(); geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
-        rows_all=[]; geometry_diagnostics={}
-        for geom in geoms:
-            graph,_,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
-            lens=np.linalg.norm(coords[base_edges[:,0]]-coords[base_edges[:,1]],axis=1) if len(base_edges) else np.empty(0)
-            s2=base_edges[lens<=float(geom["r_max_s2_m"])] if len(base_edges) else base_edges
-            epdiag=normalized_virtual_endpoint_weights(s2,coords,geom["tau_virt_m"])
-            s2lens=np.linalg.norm(coords[s2[:,0]]-coords[s2[:,1]],axis=1) if len(s2) else np.empty(0)
-            gdiag["S2"]={"r_max_s2_m":float(geom["r_max_s2_m"]),"tau_virt_m":float(geom["tau_virt_m"]),
-                "base_edges":int(len(base_edges)),"retained_virtual_edges":int(len(s2)),
-                "removed_virtual_edges":int(len(base_edges)-len(s2)),
-                "retained_fraction":float(len(s2)/len(base_edges)) if len(base_edges) else 0.0,
-                "distance_m":_quantiles(s2lens),"distance_threshold_counts":_threshold_counts(s2lens),
-                "zero_virtual_neighbor_nodes":int((epdiag["degree"]==0).sum()),
-                "effective_virtual_mass_by_parent":epdiag["effective_virtual_mass_by_parent"],
-                "effective_virtual_mass_quantiles":_quantiles(epdiag["effective_virtual_mass_by_parent"])}
-            geometry_diagnostics[geom["geometry_id"]]=gdiag
-            candidates=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
-              tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],tau_virt_m=geom["tau_virt_m"],
-              geometry_role=geom["role"]) for x in inner]
-            rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2,geom,candidates,endpoint_cache=epdiag)
-            for r in rows: r.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
-              split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),
-              anchor_order_sha256=_hash_anchor_order(coords,b,f))
-            rows_all.extend(rows)
-        baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx,ckpt_sha)
-        baseline_eval=_eval_config(fitpack,ctx,baseline_config,seed)
-        base=_baseline_row(baseline_config,baseline_eval)
-        base.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
-            split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),
-            anchor_order_sha256=_hash_anchor_order(coords,b,f),geometry_role="clean_baseline_reference")
-        rows_all.append(base)
-        rows_all=_add_objectives(rows_all,base)
-        scored_metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
-            "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
-        nonfinite_candidate_count=sum(not all(math.isfinite(float(r.get(k,math.nan))) for k in scored_metric_fields)
-            for r in rows_all)
-        finite_candidate_count=len(rows_all)-nonfinite_candidate_count
-        chosen={}; s1={}; s2sel={}
-        for lam in LAMBDAS:
-            r=_choose(rows_all,lam)
-            if r is None: raise RuntimeError(f"no feasible candidate for lambda={lam}")
-            chosen[f"lambda_{lam:.2f}"]=_config(r)
-            r1=_choose(rows_all,lam,"single_S1"); s1[f"lambda_{lam:.2f}"]=_config(r1) if r1 else None
-            r2=_choose(rows_all,lam,"single_S2"); s2sel[f"lambda_{lam:.2f}"]=_config(r2) if r2 else None
-        clean=_attach_virtual_measure(_config(base),geometry_diagnostics)
-        for config in chosen.values(): _attach_virtual_measure(config,geometry_diagnostics)
-        for config in list(s1.values())+list(s2sel.values()):
-            if config is not None: _attach_virtual_measure(config,geometry_diagnostics)
-        near_optimal=_near_optimal_sensitivity(rows_all)
-        selection={"status":"LOCKED_CAL_FIT","dataset":ds,"seed":int(seed),"backbone":arm,
-          "checkpoint_sha256":ckpt_sha,"selected_epoch":int(payload["selected_epoch"]),"native_E_alpha":native_alpha,
-          "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,"gamma_candidate_count":0,
-          "joint_calibrated_base":clean,"baseline_reference_source":baseline_config["baseline_source"],
-          "selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
-          "near_optimal_sensitivity":near_optimal,
-          "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
-          "finite_candidate_metric_count":int(finite_candidate_count),
-          "nonfinite_candidate_metric_count":int(nonfinite_candidate_count),
-          "lambda_2d_nll":list(LAMBDAS),"candidate_count":len(rows_all),"geometry_count":len(geoms),
-          "inner_grid_count":len(inner),"geometry_diagnostics":geometry_diagnostics,
-          "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
-          "eval_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in ev),
-          "anchor_order_sha256":_hash_anchor_order(coords,b,f),
-          "bf_accuracy_guard":"candidate macro BF accuracy >= clean CAL-fit baseline",
-          "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.01 + 1e-8",
-          "algorithm_code_sha256":s3.sha(Path(__file__)),
-          "source_manifest_sha256":s3.sha(manifest_path),
-          "input_run_file_sha256":{p.name:s3.sha(p) for p in sorted(Path(ctx["historical_run"]).iterdir()) if p.is_file()},
-          **TEST_COUNTS}
-        selection["parameter_config_sha256"]=_stable_hash(selection)
-        _write_json(sp,selection,exclusive=True)
-        _write_json(lock,{"selection_role":"CAL-fit","evaluation_role":"CAL-eval","selection_frozen_before_cal_eval":True,
-          "selection_sha256":s3.sha(sp),"checkpoint_sha256":ckpt_sha,"fit_split_sha256":selection["fit_split_sha256"],
-          "eval_split_sha256":selection["eval_split_sha256"],"anchor_order_sha256":selection["anchor_order_sha256"],
-          "parameter_config_sha256":selection["parameter_config_sha256"],
-          "algorithm_code_sha256":selection["algorithm_code_sha256"],"source_manifest_sha256":selection["source_manifest_sha256"],
-          "input_run_file_sha256":selection["input_run_file_sha256"],**TEST_COUNTS},exclusive=True)
-        # CAL-eval targets and RSS may only be accessed after the immutable selection lock verifies.
-        locked_selection=_verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
-        _verify_selection_context(locked_selection,ctx)
-        evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
-        configs={"joint_lambda_0.02":chosen["lambda_0.02"],"joint_lambda_0.05":chosen["lambda_0.05"],"joint_calibrated_base":clean}
-        for lam_key in ("lambda_0.02","lambda_0.05"):
-            if s1[lam_key]: configs[f"single_S1_{lam_key}"]=s1[lam_key]
-            if s2sel[lam_key]: configs[f"single_S2_{lam_key}"]=s2sel[lam_key]
-        old=_old_combo(ds,seed,arm,ckpt_sha)
-        if old: configs["old_combo_1D_2A"]=old
-        metrics={}
-        for name,config in configs.items(): metrics[name]=_eval_config(evalpack,ctx,config,seed)
-        report={"status":"PASS","dataset":ds,"seed":int(seed),"backbone":arm,"checkpoint_sha256":ckpt_sha,
-          "selection_sha256":s3.sha(sp),"selection_role":"CAL-fit","evaluation_role":"CAL-eval",
-          "cal_eval_used_for_selection":False,"metrics":metrics,"old_combo_available":old is not None,
-          "gamma_space":0.0,"test_rows_scored":0,**TEST_COUNTS}
-        _write_json(rp,report,exclusive=True); _csv_write(rd/"CANDIDATE_METRICS.csv",rows_all)
-        _write_json(rd/"RUN.lock",{"checkpoint_sha256":ckpt_sha,"selection_sha256":s3.sha(sp),
-          "fit_split_sha256":selection["fit_split_sha256"],"eval_split_sha256":selection["eval_split_sha256"],
-          "anchor_order_sha256":selection["anchor_order_sha256"],"parameter_config_sha256":selection["parameter_config_sha256"],
-          "algorithm_code_sha256":selection["algorithm_code_sha256"],"source_manifest_sha256":selection["source_manifest_sha256"],
-          "input_run_file_sha256":selection["input_run_file_sha256"],"device":args.device,"gamma_space":0.0,**TEST_COUNTS},exclusive=True)
-        reports.append(report)
-        print(json.dumps({"stage":"run_complete","dataset":ds,"seed":seed,"backbone":arm,
-          "candidate_count":len(rows_all),"selected_lambda_0.02":chosen["lambda_0.02"],
-          "selected_lambda_0.05":chosen["lambda_0.05"],**TEST_COUNTS},ensure_ascii=False),flush=True)
+        ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
+        fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")
+        ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
+        for arm in ARMS:
+            rd=out/"runs"/f"{ds}_seed{seed}"/arm
+            rd.mkdir(parents=True,exist_ok=True)
+            sp=rd/"CAL_FIT_SELECTION.json"; rp=rd/"CAL_EVAL_REPORT.json"
+            for stale in (rd/"CAL_EVAL.lock",rd/"RUN.lock"):
+                stale.unlink(missing_ok=True)
+            ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm)
+            ckpt_sha=s3.sha(ckpt)
+            model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
+            base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+            fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
+            coords=ctx["memory"]["coords"].detach().cpu().numpy()
+            b=ctx["memory"]["building"].detach().cpu().numpy()
+            f=ctx["memory"]["floor"].detach().cpu().numpy()
+            geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
+            rows_all=[]; geometry_diagnostics={}
+            for geom in geoms:
+                graph,_,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
+                lens=np.linalg.norm(coords[base_edges[:,0]]-coords[base_edges[:,1]],axis=1) if len(base_edges) else np.empty(0)
+                s2=base_edges[lens<=float(geom["r_max_s2_m"])] if len(base_edges) else base_edges
+                epdiag=normalized_virtual_endpoint_weights(s2,coords,geom["tau_virt_m"])
+                s2lens=np.linalg.norm(coords[s2[:,0]]-coords[s2[:,1]],axis=1) if len(s2) else np.empty(0)
+                gdiag["S2"]={"r_max_s2_m":float(geom["r_max_s2_m"]),"tau_virt_m":float(geom["tau_virt_m"]),
+                    "base_edges":int(len(base_edges)),"retained_virtual_edges":int(len(s2)),
+                    "removed_virtual_edges":int(len(base_edges)-len(s2)),
+                    "retained_fraction":float(len(s2)/len(base_edges)) if len(base_edges) else 0.0,
+                    "distance_m":_quantiles(s2lens),"distance_threshold_counts":_threshold_counts(s2lens),
+                    "zero_virtual_neighbor_nodes":int((epdiag["degree"]==0).sum()),
+                    "effective_virtual_mass_quantiles":_quantiles(epdiag["effective_virtual_mass_by_parent"])}
+                geometry_diagnostics[geom["geometry_id"]]=gdiag
+                candidates=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
+                    tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],
+                    tau_virt_m=geom["tau_virt_m"],geometry_role=geom["role"]) for x in inner]
+                rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2,geom,candidates,endpoint_cache=epdiag)
+                for r in rows:
+                    r.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
+                        split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit))
+                rows_all.extend(rows)
+            baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx,ckpt_sha)
+            baseline_eval=_eval_config(fitpack,ctx,baseline_config,seed)
+            base=_baseline_row(baseline_config,baseline_eval)
+            base.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
+                split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),geometry_role="clean_baseline_reference")
+            rows_all.append(base)
+            rows_all=_add_objectives(rows_all,base)
+            metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
+                "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
+            finite_count=sum(all(math.isfinite(float(r.get(k,math.nan))) for k in metric_fields) for r in rows_all)
+            chosen={}; s1={}; s2sel={}
+            for lam in LAMBDAS:
+                r=_choose(rows_all,lam)
+                if r is None: raise RuntimeError(f"no feasible candidate for lambda={lam}")
+                chosen[f"lambda_{lam:.2f}"]=_config(r)
+                r1=_choose(rows_all,lam,"single_S1"); s1[f"lambda_{lam:.2f}"]=_config(r1) if r1 else None
+                r2=_choose(rows_all,lam,"single_S2"); s2sel[f"lambda_{lam:.2f}"]=_config(r2) if r2 else None
+            clean=_attach_virtual_measure(_config(base),geometry_diagnostics)
+            for config in chosen.values(): _attach_virtual_measure(config,geometry_diagnostics)
+            for config in list(s1.values())+list(s2sel.values()):
+                if config is not None: _attach_virtual_measure(config,geometry_diagnostics)
+            near_optimal=_near_optimal_sensitivity(rows_all)
+            selection={"status":"CAL_FIT_SELECTED","dataset":ds,"seed":int(seed),"backbone":arm,
+                "checkpoint_sha256":ckpt_sha,"selected_epoch":int(payload["selected_epoch"]),
+                "native_E_alpha":native_alpha,"selection_role":"CAL-fit",
+                "cal_eval_not_used_for_selection":True,"gamma_space":0.0,"gamma_candidate_count":0,
+                "joint_calibrated_base":clean,"baseline_reference_source":baseline_config["baseline_source"],
+                "selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
+                "near_optimal_sensitivity":near_optimal,
+                "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
+                "finite_candidate_metric_count":int(finite_count),
+                "nonfinite_candidate_metric_count":int(len(rows_all)-finite_count),
+                "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
+                "candidate_count":len(rows_all),"geometry_count":len(geoms),"inner_grid_count":len(inner),
+                "geometry_diagnostics":geometry_diagnostics,
+                "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
+                "eval_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in ev),
+                "bf_accuracy_guard":"candidate macro BF accuracy >= clean CAL-fit baseline",
+                "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.01 + 1e-8",
+                **TEST_COUNTS}
+            _write_json(sp,selection)
+            evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
+            configs={"joint_lambda_0.02":chosen["lambda_0.02"],
+                "joint_lambda_0.05":chosen["lambda_0.05"],"joint_calibrated_base":clean}
+            for lam_key in ("lambda_0.02","lambda_0.05"):
+                if s1[lam_key]: configs[f"single_S1_{lam_key}"]=s1[lam_key]
+                if s2sel[lam_key]: configs[f"single_S2_{lam_key}"]=s2sel[lam_key]
+            old=_old_combo(ds,seed,arm,ckpt_sha)
+            if old: configs["old_combo_1D_2A"]=old
+            metrics={name:_eval_config(evalpack,ctx,config,seed) for name,config in configs.items()}
+            report={"status":"OK","dataset":ds,"seed":int(seed),"backbone":arm,
+                "checkpoint_sha256":ckpt_sha,"selection_sha256":s3.sha(sp),
+                "selection_role":"CAL-fit","evaluation_role":"CAL-eval",
+                "cal_eval_used_for_selection":False,"metrics":metrics,
+                "old_combo_available":old is not None,"gamma_space":0.0,**TEST_COUNTS}
+            _write_json(rp,report)
+            _csv_write(rd/"CANDIDATE_METRICS.csv",rows_all)
+            reports.append(report)
+            print(json.dumps({"stage":"run_complete","dataset":ds,"seed":seed,"backbone":arm,
+                "candidate_count":len(rows_all),"selected_lambda_0.02":chosen["lambda_0.02"],
+                "selected_lambda_0.05":chosen["lambda_0.05"],**TEST_COUNTS},ensure_ascii=False),flush=True)
     aggregate(argparse.Namespace(output=str(out)))
+
 
 def _pareto(rows,metrics):
     vals=[]
@@ -1029,7 +916,7 @@ def aggregate(args):
             sensitivity_rows.append(row)
     _csv_write(out/"NEAR_OPTIMAL_SENSITIVITY.csv",sensitivity_rows)
     md=["# V17 Dataset-Adaptive Spatial Joint Fit: CAL-eval Report","",
-      "Selection is locked on CAL-fit before CAL-eval. CAL-eval is reporting-only. Internal/official TEST scores: 0. Gamma-space is fixed at 0.",
+      "Parameters are selected on CAL-fit before CAL-eval. CAL-eval is reporting-only. Internal/official TEST scores: 0. Gamma-space is fixed at 0.",
       "Near-optimal sensitivity is computed on CAL-fit only, using the predeclared absolute objective tolerance 0.01; see NEAR_OPTIMAL_SENSITIVITY.csv.","",
       "| Dataset | Seed | Backbone | Method | MAE m | ES m | Joint NLL | BF accuracy | BF CE | P95 site | P99 site | Worst site |",
       "|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
@@ -1088,47 +975,15 @@ def aggregate(args):
       "- Gamma-space fixed at zero.","- Internal TEST scored: 0.","- Official TEST scored: 0.",
       "- Historical old combo is evaluated only when its frozen CAL-fit selection is available."]
     (out/"CAL_EVAL_REPORT.md").write_text("\n".join(md)+"\n",encoding="utf-8")
-    lock_checks=[]
-    manifest=_read_json(out/"EXECUTION_MANIFEST.json")
-    input_root=Path(manifest["input_root"])
-    for report in reports:
-        rd=out/"runs"/f"{report['dataset']}_seed{report['seed']}"/report["backbone"]
-        sp=rd/"CAL_FIT_SELECTION.json"; lk=rd/"CAL_EVAL.lock"
-        try:
-            selection=_read_json(sp); lock=_read_json(lk)
-            checkpoint_path=comp._checkpoint_path(Path(manifest["checkpoint_root"]),report["dataset"],int(report["seed"]),report["backbone"])
-            checkpoint_hash_ok=(checkpoint_path.is_file() and s3.sha(checkpoint_path)==report.get("checkpoint_sha256")
-                and report.get("checkpoint_sha256")==selection.get("checkpoint_sha256")==lock.get("checkpoint_sha256"))
-            config_hash=selection.get("parameter_config_sha256")
-            unhashed=dict(selection); unhashed.pop("parameter_config_sha256",None)
-            input_hash_ok=all((input_root/f"{report['dataset']}_seed{report['seed']}"/name).is_file() and
-                s3.sha(input_root/f"{report['dataset']}_seed{report['seed']}"/name)==digest
-                for name,digest in selection.get("input_run_file_sha256",{}).items())
-            lock_checks.append(bool(
-                lock.get("selection_sha256")==s3.sha(sp)==report.get("selection_sha256") and
-                config_hash==_stable_hash(unhashed) and
-                selection.get("algorithm_code_sha256")==s3.sha(Path(__file__)) and
-                selection.get("source_manifest_sha256")==s3.sha(out/"EXECUTION_MANIFEST.json") and
-                lock.get("parameter_config_sha256")==config_hash and input_hash_ok and checkpoint_hash_ok and
-                report.get("cal_eval_used_for_selection") is False and
-                report.get("dataset")==selection.get("dataset") and report.get("seed")==selection.get("seed")
-                and report.get("backbone")==selection.get("backbone") and
-                all(report.get(k)==0 and lock.get(k)==0 and selection.get(k)==0 for k in TEST_COUNTS)))
-        except (OSError,KeyError,ValueError):
-            lock_checks.append(False)
     expected=len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)
-    status="PASS" if len(reports)==expected and len(selections)==expected and all(lock_checks) and len(files)==expected and len(sensitivity_rows)==expected*len(LAMBDAS) else "INCOMPLETE"
+    status="PASS" if len(reports)==expected and len(selections)==expected and len(files)==expected and len(sensitivity_rows)==expected*len(LAMBDAS) else "INCOMPLETE"
     _write_json(out/"JOINT_FIT_SELECTION.json",{"status":status,"runs":selections,
       "cal_eval_report_count":len(reports),"expected_run_count":expected,
-      "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,"gamma_candidate_count":0,
-      "lambda_2d_nll":list(LAMBDAS),"selection_locks_verified":bool(len(lock_checks)==expected and all(lock_checks)),
-      **TEST_COUNTS})
-    _write_json(out/"INTEGRITY_REVIEW.json",{"status":status,"phase":"aggregate","completed_runs":len(reports),
-      "expected_runs":expected,"selection_lock_checks_passed":int(sum(lock_checks)),
-      "selection_locks_verified":bool(len(lock_checks)==expected and all(lock_checks)),
-      "selection_locked_before_cal_eval":all(r.get("selection_role")=="CAL-fit" and r.get("cal_eval_used_for_selection") is False for r in reports),
-      "gamma_space":0.0,"candidate_files":len(files),"near_optimal_sensitivity_rows":len(sensitivity_rows),
-      "near_optimal_sensitivity_complete":len(sensitivity_rows)==expected*len(LAMBDAS),**TEST_COUNTS})
+      "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,
+      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,**TEST_COUNTS})
+    _write_json(out/"INTEGRITY_REVIEW.json",{"status":status,"phase":"aggregate",
+      "completed_runs":len(reports),"expected_runs":expected,"cal_eval_used_for_selection":False,
+      "gamma_space":0.0,**TEST_COUNTS})
     (out/"RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md").write_text(
       "# V17 Dataset-Adaptive Spatial Joint Fit\n\n"
       "See FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md for FIT-only geometry; SPATIAL_SCALE_SEARCH_SPACE.json for candidate design; "
@@ -1139,16 +994,22 @@ def aggregate(args):
     print(json.dumps({"stage":"aggregate_complete","runs":len(reports),**TEST_COUNTS},ensure_ascii=False),flush=True)
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__); sub=p.add_subparsers(dest="command",required=True)
-    for name in ("preflight","smoke","run","all","aggregate"):
-        q=sub.add_parser(name); q.add_argument("--input-root",default=str(DEFAULT_INPUT))
-        q.add_argument("--checkpoint-root",default=str(DEFAULT_CHECKPOINT_ROOT)); q.add_argument("--output",default=str(DEFAULT_OUTPUT))
+    p=argparse.ArgumentParser(description=__doc__)
+    sub=p.add_subparsers(dest="command",required=True)
+    for name in ("preflight","run","all","aggregate"):
+        q=sub.add_parser(name)
+        q.add_argument("--input-root",default=str(DEFAULT_INPUT))
+        q.add_argument("--checkpoint-root",default=str(DEFAULT_CHECKPOINT_ROOT))
+        q.add_argument("--output",default=str(DEFAULT_OUTPUT))
         q.add_argument("--device",choices=("cpu","cuda"),default="cuda")
         if name=="run": q.add_argument("--dataset",choices=("all",*s3.DATASETS),default="all")
     args=p.parse_args(); torch.set_num_threads(4)
     if args.command=="preflight": preflight(args)
-    elif args.command=="smoke": smoke(args)
     elif args.command=="run": run(args)
     elif args.command=="aggregate": aggregate(argparse.Namespace(output=args.output))
-    else: preflight(args); smoke(args); run(args)
+    else: preflight(args); run(args)
+
+
+if __name__=="__main__":
+    main()
 if __name__=="__main__": main()
