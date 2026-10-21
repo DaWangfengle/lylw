@@ -152,8 +152,8 @@ def test_geometry_pool_uses_fit_neighbor_scales_for_k1_k2_k4_k8():
 def test_run_locks_cal_fit_before_constructing_cal_eval_pack():
     source = Path(joint.__file__).read_text(encoding="utf-8")
     run_body = source.split("def run(args):", 1)[1].split("\ndef _pareto", 1)[0]
-    lock_write = run_body.index("_write_json(lock,")
-    lock_verify = run_body.index("_verify_locked_selection(sp,lock")
+    lock_write = run_body.index('_write_json(lock,{"selection_role"')
+    lock_verify = run_body.index("_verify_locked_selection(sp,lock", lock_write)
     eval_pack = run_body.index('evalpack=s3.make_pack(ctx,model,ev')
     assert 'manifest_path=out/"EXECUTION_MANIFEST.json"' in run_body
     assert "comp._verify_source_manifest(manifest)" in run_body
