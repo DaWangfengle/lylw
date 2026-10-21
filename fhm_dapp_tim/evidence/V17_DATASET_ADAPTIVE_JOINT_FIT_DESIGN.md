@@ -36,16 +36,16 @@ Fit per dataset:
 - tau_graph: S1 distance-kernel temperature.
 - tau_virt: S2 virtual-edge length-decay temperature.
 
-Use a predeclared grid derived from FIT geometry quantiles (P50/P75/P90/P95) plus interpretable meter-scale candidates. Do not assume S1 and S2 cutoffs are equal. Retain a self-loop W_ii=1 when a node has no retained neighbor; prevent empty rows and NaN/Inf. Keep graph edges symmetric and same-building/same-floor. For S2, apply exp(-d/tau_virt) to virtual-edge mass and document how it combines with the existing degree prior. Do not silently change the probability measure or virtual-cell normalization.
+Use separate, predeclared FIT-only candidate pools for R_max_S1, tau_graph, R_max_S2 and tau_virt, drawing from same-building/floor k=1/2/4/8 neighbor distributions, union-kNN edge-length quantiles and fixed meter-scale values. Do not assume S1 and S2 cutoffs are equal. Keep W symmetric and doubly stochastic with W_ii=1 for isolated nodes; construct and balance the identity-plus-edge operator in O(N+E) memory rather than materializing dense N×N matrices. Prevent empty rows and NaN/Inf. For S2, normalize distance-decayed edge weights separately at each parent anchor before global mixture normalization; do not multiply a distance kernel onto the old degree prior without per-parent renormalization.
 
-By default, share spatial parameters across C/D/E within a dataset to reduce checkpoint-specific overfitting. Fit calibration parameters T, theta_v, theta_s, alpha_prior, alpha_obs, beta/gamma per dataset × checkpoint, unless the existing model semantics require a different documented unit. Treat E's checkpoint-native trained graph layer separately from an added inference-time S1 layer.
+Fit all four spatial parameters independently for every dataset × backbone × seed. D is the primary scientific reference; C/D/E must not share forced spatial parameters. Fit T, theta_v, theta_s, alpha_prior, alpha_obs and beta jointly for each same run. E's checkpoint-native trained graph diffusion remains in its frozen retrieval logits; the newly selected inference-time S1 operator is an additional, separate factor. gamma_space is fixed at exactly zero and is not a search dimension.
 
 ## Joint search
 
 Search the spatial scales and all calibration parameters in the same candidate evaluation loop on CAL-fit:
-psi = (R_max_S1, R_max_S2, tau_graph, tau_virt, T, theta_v, theta_s, alpha_prior, alpha_obs, beta, gamma).
+psi = (R_max_S1, tau_graph, R_max_S2, tau_virt, T, theta_v, theta_s, alpha_prior, alpha_obs, beta), with gamma_space fixed at zero and excluded from the search vector.
 
-Use deterministic coarse-to-fine or successive-halving search with fixed candidate order, seed, budget, tie-break and logged pruning. If exhaustive Cartesian search is too large, reduce candidates by principled screening, not by freezing whole parameter groups sequentially. Beta candidates must include [0, .05, .10, .15, .20, .35, .50, .65, .80]. Report search budget, evaluated candidate count, failed candidates and near-optimal sensitivity.
+Use a deterministic FIT-derived outer geometry design, cache each candidate's balanced S1 graph and S2 edge/endpoint statistics, and evaluate the full inner Cartesian grid by vectorized tensor broadcasting in fixed candidate order. The current locked grid has 5 temperatures × 3 theta_v × 3 theta_s × 5 alpha_prior × 5 alpha_obs × 9 beta = 10,125 inner candidates per outer geometry; keep chunking only as a memory-control mechanism, not as sequential parameter freezing. Beta candidates must include [0, .05, .10, .15, .20, .35, .50, .65, .80]. Report total evaluated candidates, failures, and near-optimal sensitivity.
 
 ## Objective and model selection
 
@@ -73,7 +73,7 @@ Write new files only under fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_
 
 Keep the prior evidence immutable. Record SHA256 hashes for inputs, checkpoint, code, split and anchor order; record parameters and exact command. Add tests for cutoff symmetry, self-loops, no cross-building/floor edges, monotone kernels, unique virtual edges, normalization, no NaN/Inf, canonical-order stability, deterministic reruns and TEST guards.
 
-The final report must state the actual FIT-only quantiles; selected dataset-specific radii and temperatures; parameter/seed stability; per-metric changes versus clean, S1, S2 and old combo; whether MAE and density metrics actually improve; and confirm that TEST remained unaccessed. If the environment lacks data/checkpoints or a runnable path, document the blocker and do not fabricate diagnostics or results.
+The final report must state the actual FIT-only quantiles; selected dataset × backbone × seed radii and temperatures; parameter/seed stability; per-metric changes versus clean, single S1, single S2 and old combo; whether MAE and density metrics actually improve; and confirm that TEST score counts stayed zero. If the environment lacks data/checkpoints or a runnable path, document the exact blocker and do not fabricate diagnostics or results.
 
 
 ## Five locked corrections (2026-10-21)
