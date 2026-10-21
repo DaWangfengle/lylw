@@ -425,10 +425,10 @@ def test_legacy_clean_baseline_is_comparison_only_not_a_search_candidate():
         "alpha_prior": 0.0, "alpha_obs": 0.0, "beta": 0.0,
     }
     baseline = dict(common, candidate_id="clean_baseline_reference",
-                    geometry_id="legacy_unbounded_8m",
-                    selection_objective_lambda_0.02=-100.0)
+                    geometry_id="legacy_unbounded_8m")
+    baseline["selection_objective_lambda_0.02"] = -100.0
     candidate = dict(common, candidate_id="fit_quantile_candidate",
-                     geometry_id="fit_quantile_geometry_00",
-                     selection_objective_lambda_0.02=1.0)
+                     geometry_id="fit_quantile_geometry_00")
+    candidate["selection_objective_lambda_0.02"] = 1.0
     chosen = joint._choose([baseline, candidate], 0.02)
     assert chosen["candidate_id"] == "fit_quantile_candidate"
