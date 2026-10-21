@@ -102,8 +102,8 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,
     xy=np.asarray(coords,dtype=np.float64); b=np.asarray(buildings,dtype=np.int64); f=np.asarray(floors,dtype=np.int64)
     if xy.ndim!=2 or xy.shape[1]!=2 or len(b)!=len(xy) or len(f)!=len(xy) or len(xy)<1 or not np.isfinite(xy).all(): raise ValueError("invalid/nonfinite coordinates or building-floor arrays")
     e=np.asarray(torch.as_tensor(base_edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
-    if not (math.isinf(float(r_max_m)) or (math.isfinite(float(r_max_m)) and r_max_m>0)): raise ValueError("R_max must be positive or +inf")
-    if not (math.isinf(float(tau_graph_m)) or (math.isfinite(float(tau_graph_m)) and tau_graph_m>0)): raise ValueError("tau_graph must be positive or +inf")
+    if not (float(r_max_m)==math.inf or (math.isfinite(float(r_max_m)) and r_max_m>0)): raise ValueError("R_max must be positive or +inf")
+    if not (float(tau_graph_m)==math.inf or (math.isfinite(float(tau_graph_m)) and tau_graph_m>0)): raise ValueError("tau_graph must be positive or +inf")
     n=len(xy)
     if len(e):
         e=np.unique(np.sort(e,axis=1),axis=0)
@@ -114,7 +114,7 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,
     else: kept=np.empty((0,2),dtype=np.int64); d=np.empty(0); removed=0
     a=np.eye(n,dtype=np.float64)
     for (i,j),dist in zip(kept,d):
-        exponent=0.0 if math.isinf(float(tau_graph_m)) else float(dist)/float(tau_graph_m)
+        exponent=0.0 if float(tau_graph_m)==math.inf else float(dist)/float(tau_graph_m)
         w=max(math.exp(-min(exponent,745.0)),np.finfo(np.float64).tiny); a[i,j]=a[j,i]=max(a[i,j],w)
     scale=np.ones(n); converged=False; iterations=0
     for iterations in range(1,sinkhorn_iterations+1):
@@ -143,13 +143,13 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,
 
 def normalized_virtual_endpoint_weights(edges,coords,tau_virt_m):
     e=np.asarray(torch.as_tensor(edges).detach().cpu(),dtype=np.int64).reshape(-1,2); xy=np.asarray(coords,dtype=np.float64); n=len(xy)
-    if not (math.isinf(float(tau_virt_m)) or (math.isfinite(float(tau_virt_m)) and tau_virt_m>0)): raise ValueError("tau_virt must be positive or +inf")
+    if not (float(tau_virt_m)==math.inf or (math.isfinite(float(tau_virt_m)) and tau_virt_m>0)): raise ValueError("tau_virt must be positive or +inf")
     if len(e):
         e=np.sort(e,axis=1)
         if np.any(e<0) or np.any(e>=n): raise ValueError("virtual edge endpoint outside canonical anchor range")
         if len({tuple(x) for x in e.tolist()})!=len(e) or np.any(e[:,0]==e[:,1]): raise ValueError("virtual edges must be unique undirected non-self edges")
         d=np.linalg.norm(xy[e[:,0]]-xy[e[:,1]],axis=1)
-        k=np.ones(len(e)) if math.isinf(float(tau_virt_m)) else np.exp(-np.minimum(d/float(tau_virt_m),745.0))
+        k=np.ones(len(e)) if float(tau_virt_m)==math.inf else np.exp(-np.minimum(d/float(tau_virt_m),745.0))
         k=np.maximum(k,np.finfo(np.float64).tiny); deg=np.bincount(e.reshape(-1),minlength=n); den=np.zeros(n)
         np.add.at(den,e[:,0],k); np.add.at(den,e[:,1],k)
         wi=k/den[e[:,0]]; wj=k/den[e[:,1]]
