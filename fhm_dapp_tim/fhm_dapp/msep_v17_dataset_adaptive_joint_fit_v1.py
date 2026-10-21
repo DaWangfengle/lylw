@@ -165,3 +165,419 @@ def weighted_cell_mixture(parent_logits,virtual_logits,edges,endpoint_weights,be
     ids=torch.cat([torch.arange(n,device=e.device),e[:,0]])[None].expand(batch,-1)
     return {"q":q,"xy":torch.cat([parent_centers,virtual_centers],dim=1),
         "sigma":torch.cat([parent_scales,virtual_scales],dim=1),"ids":ids}
+
+
+def _geometry_value_pool(diag):
+    q=diag["kth_neighbor_distance_m"]["1"]
+    quant=[q[k] for k in ("p50","p75","p90","p95") if q.get(k) is not None and q[k]>0]
+    out=[]
+    for value in quant+[1.,2.,5.,8.,10.,20.,40.,60.]:
+        value=float(value)
+        if not any(abs(value-x)<=1e-8*max(1.,value) for x in out): out.append(value)
+        if len(out)>=8: break
+    if not out: raise RuntimeError("no valid FIT-only nearest-neighbor distances; fail closed")
+    while len(out)<4: out.append(float(2**len(out)))
+    return out
+
+def geometry_candidates(diag):
+    pool=_geometry_value_pool(diag); n=len(pool)
+    out=[{"geometry_id":"legacy_unbounded_8m","r_max_s1_m":math.inf,"tau_graph_m":8.,
+          "r_max_s2_m":math.inf,"tau_virt_m":math.inf,"role":"legacy_reference"}]
+    for i in range(n):
+        ix=(i,(i*3+1)%n,(i*5+2)%n,(i*7+3)%n)
+        row={"geometry_id":f"fit_lhs_{i:02d}","r_max_s1_m":pool[ix[0]],
+             "tau_graph_m":pool[ix[1]],"r_max_s2_m":pool[ix[2]],"tau_virt_m":pool[ix[3]],
+             "role":"FIT_quantile_plus_physical_LHS"}
+        key=tuple(row[k] for k in ("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m"))
+        if not any(tuple(x[k] for k in ("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m"))==key for x in out):
+            out.append(row)
+    return out,pool
+
+def _subset_virtual_pack(pack,edge_ids):
+    out=dict(pack); idx=torch.as_tensor(edge_ids,dtype=torch.long,device=pack["scores"].device)
+    for name in ("virtual_scores","virtual_z","virtual_xy","virtual_sigma","geometric_xy"):
+        if name in pack: out[name]=pack[name].index_select(1,idx)
+    return out
+
+def _target_class_ids(pack,ctx):
+    pairs=ctx["class_pairs"].to(pack["scores"].device)
+    target=torch.stack([pack["building"].long(),pack["floor"].long()],dim=1)
+    match=(target[:,None,:]==pairs[None,:,:]).all(-1)
+    if not bool(match.any(dim=1).all()): raise RuntimeError("target BF class absent from FIT anchor classes")
+    return match.long().argmax(dim=1)
+
+def _calibration_candidates():
+    return [dict(candidate_id=f"cal_{i:05d}",temperature=float(t),theta_v=float(tv),theta_s=float(ts),
+        alpha_prior=float(ap),alpha_obs=float(ao),beta=float(beta))
+        for i,(t,tv,ts,ap,ao,beta) in enumerate(itertools.product(TEMPERATURES,THETAS,THETAS,ALPHAS,ALPHAS,BETAS))]
+
+def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,chunk_size=16,row_chunk_size=256):
+    device=pack_all["scores"].device; coords=ctx["memory"]["coords"].detach().cpu().numpy()
+    ep=normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
+    all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+    lookup={tuple(map(int,e)):i for i,e in enumerate(all_edges.tolist())}
+    edge_ids=[lookup[tuple(map(int,e))] for e in ep["edges"].tolist()]
+    pack=_subset_virtual_pack(pack_all,edge_ids); edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=device)
+    endpoint={"weight_i":torch.as_tensor(ep["weight_i"],device=device),"weight_j":torch.as_tensor(ep["weight_j"],device=device),
+              "degree":torch.as_tensor(ep["degree"],device=device)}
+    n=len(ctx["memory"]["coords"]); class_ids=torch.cat([ctx["classes"].to(device).long(),
+        ctx["classes"].to(device).long()[edges[:,0]]])
+    centers=torch.cat([pack["xy"],pack["virtual_xy"]],dim=1); scales=torch.cat([pack["sigma"],pack["virtual_sigma"]],dim=1)
+    ab=ctx["memory"]["building"].to(device).long(); af=ctx["memory"]["floor"].to(device).long()
+    component_ids=torch.cat([torch.arange(n,device=device),edges[:,0]])
+    valid=((ab[component_ids][None,:]==pack["building"].long()[:,None])&
+           (af[component_ids][None,:]==pack["floor"].long()[:,None]))
+    lp=s3.student_t_logpdf(centers,scales,pack["target"]).masked_fill(~valid,-torch.inf)
+    keys=pack["keys"]; unique_sites=list(dict.fromkeys(keys)); site_map={k:i for i,k in enumerate(unique_sites)}
+    site_ids=torch.as_tensor([site_map[k] for k in keys],dtype=torch.long,device=device)
+    site_counts=np.bincount(site_ids.cpu().numpy(),minlength=len(unique_sites)).astype(np.float64)
+    rows_out=[]
+    for start in range(0,len(candidates),chunk_size):
+        chunk=candidates[start:start+chunk_size]
+        pars=torch.as_tensor([[r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],r["alpha_obs"],r["beta"]]
+                              for r in chunk],dtype=pack["scores"].dtype,device=device)
+        c=len(chunk); sums={k:torch.zeros(c,dtype=pars.dtype,device=device) for k in
+            ("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll")}
+        site_sums=torch.zeros((c,len(unique_sites)),dtype=pars.dtype,device=device)
+        for rs in range(0,len(pack["scores"]),row_chunk_size):
+            re=min(rs+row_chunk_size,len(pack["scores"])); sl=slice(rs,re)
+            scores=pack["scores"][sl]; z=pack["z"][sl]; bsz=len(scores)
+            temp=pars[:,0,None,None]; tv=pars[:,1,None,None]; ts=pars[:,2,None,None]
+            ap=pars[:,3,None,None]; ao=pars[:,4,None,None]; beta=pars[:,5]
+            prior=scores[None]/temp; obs=z[None,:,:,0]*tv+z[None,:,:,1]*ts
+            w=graph.to(device).coalesce()
+            pn=torch.sparse.mm(w,prior.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
+            on=torch.sparse.mm(w,obs.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
+            base=prior+obs
+            parent=(1-ap)*prior+ap*pn+(1-ao)*obs+ao*on
+            vbase=(pack["virtual_scores"][sl][None]/temp+
+                   pack["virtual_z"][sl][None,:,:,0]*tv+pack["virtual_z"][sl][None,:,:,1]*ts)
+            if len(edges):
+                delta=parent-base
+                v_logits=vbase+.5*(delta.index_select(2,edges[:,0])+delta.index_select(2,edges[:,1]))
+            else: v_logits=vbase
+            deg=endpoint["degree"]
+            pmass=torch.where(deg[None,:]>0,1-beta[:,None],torch.ones((c,n),dtype=pars.dtype,device=device))
+            pterms=parent+pmass.log()[:,None,:]
+            if len(edges):
+                emass=beta[:,None]*(endpoint["weight_i"]+endpoint["weight_j"])[None,:]
+                eterms=v_logits+emass.clamp_min(torch.finfo(pars.dtype).tiny).log()[:,None,:]
+                eterms=eterms.masked_fill(beta[:,None,None]==0.,-torch.inf)
+                q=torch.softmax(torch.cat([pterms,eterms],dim=-1),dim=-1)
+            else: q=torch.softmax(pterms,dim=-1)
+            sub_centers=centers[sl]; sub_lp=lp[sl]; target=pack["target"][sl]
+            target_cls=_target_class_ids({**pack,"building":pack["building"][sl],"floor":pack["floor"][sl],
+                                          "scores":pack["scores"][sl]},ctx)
+            masses=torch.zeros((c*bsz,len(ctx["class_pairs"])),dtype=q.dtype,device=device)
+            masses.scatter_add_(1,class_ids[None,:].expand(c*bsz,-1),q.reshape(c*bsz,-1))
+            masses=masses.reshape(c,bsz,-1); correct=(masses.argmax(-1)==target_cls[None]).to(q.dtype)
+            true_mass=masses.gather(2,target_cls[None,:,None].expand(c,bsz,1)).squeeze(-1)
+            bfce=-true_mass.clamp_min(torch.finfo(q.dtype).tiny).log()
+            point=torch.einsum("cbm,bmd->cbd",q,sub_centers)
+            err=torch.linalg.vector_norm(point-target[None],dim=-1)
+            dist=torch.linalg.vector_norm(sub_centers-target[:,None,:],dim=-1)
+            risk=(q*dist[None]).sum(-1); logq=q.clamp_min(torch.finfo(q.dtype).tiny).log()
+            valid_nll=(class_ids[None,:]==target_cls[:,None])[None]&(q>0)
+            nll=-torch.logsumexp((logq+sub_lp[None]).masked_fill(~valid_nll,-torch.inf),dim=-1)
+            wt=pack["weight"][sl][None]
+            for key,val in (("coordinate_mae_m",err),("transport_w1_m",risk),("bf_accuracy",correct),
+                            ("bf_cross_entropy",bfce),("joint_nll",nll)): sums[key]+=(val*wt).sum(1)
+            site_sums.scatter_add_(1,site_ids[sl][None,:].expand(c,-1),err)
+        site_means=site_sums/torch.as_tensor(site_counts,dtype=pars.dtype,device=device)[None,:]
+        p95=torch.quantile(site_means,.95,dim=1).cpu().tolist()
+        p99=torch.quantile(site_means,.99,dim=1).cpu().tolist(); worst=site_means.max(1).values.cpu().tolist()
+        vals={k:v.cpu().tolist() for k,v in sums.items()}
+        for i,candidate in enumerate(chunk):
+            row=dict(candidate); row.update({k:float(v[i]) for k,v in vals.items()})
+            row.update(site_p95_mae_m=float(p95[i]),site_p99_mae_m=float(p99[i]),
+                worst_site_mae_m=float(worst[i]),n_fit_rows=len(pack["scores"]),n_fit_sites=len(unique_sites))
+            rows_out.append(row)
+    return rows_out
+
+def _primary(r): return float(r["coordinate_mae_m"])+.30*float(r["transport_w1_m"])
+def _clean_baseline(rows):
+    clean=[r for r in rows if r["alpha_prior"]==0 and r["alpha_obs"]==0 and r["beta"]==0]
+    if not clean: raise RuntimeError("joint grid omitted clean-base alpha=0,beta=0 boundary")
+    return min(clean,key=lambda r:(_primary(r),r["bf_cross_entropy"],r["joint_nll"],r["temperature"],r["theta_v"],r["theta_s"]))
+def _add_objectives(rows,base):
+    pbase=max(_primary(base),1e-9); nscale=max(abs(float(base["joint_nll"])),1.0)
+    bfbase=float(base["bf_cross_entropy"]); accbase=float(base["bf_accuracy"])
+    for r in rows:
+        r["primary_mae_plus_030_w1_m"]=_primary(r); r["normalized_primary"]=_primary(r)/pbase
+        r["normalized_joint_nll_delta"]=(float(r["joint_nll"])-float(base["joint_nll"]))/nscale
+        r["normalized_bf_cross_entropy"]=float(r["bf_cross_entropy"])/max(bfbase,1e-6)
+        r["bf_accuracy_non_degradation"]=float(r["bf_accuracy"])>=accbase-1e-12
+        r["bf_cross_entropy_guard"]=float(r["bf_cross_entropy"])<=bfbase*1.01+1e-8
+        r["feasible"]=bool(r["bf_accuracy_non_degradation"] and r["bf_cross_entropy_guard"])
+        for lam in LAMBDAS: r[f"selection_objective_lambda_{lam:.2f}"]=r["normalized_primary"]+lam*r["normalized_joint_nll_delta"]
+    return rows
+def _choose(rows,lam,kind="joint"):
+    rs=[r for r in rows if r["feasible"]]
+    if kind=="single_S1": rs=[r for r in rs if r["beta"]==0 and (r["alpha_prior"]!=0 or r["alpha_obs"]!=0)]
+    if kind=="single_S2": rs=[r for r in rs if r["alpha_prior"]==0 and r["alpha_obs"]==0 and r["beta"]>0]
+    return min(rs,key=lambda r:(r[f"selection_objective_lambda_{lam:.2f}"],r["normalized_bf_cross_entropy"],
+        _primary(r),r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],r["alpha_obs"],r["beta"],r["geometry_id"])) if rs else None
+def _config(r):
+    return {"geometry_id":r["geometry_id"],"R_max_S1_m":float(r["r_max_s1_m"]),"tau_graph_m":float(r["tau_graph_m"]),
+        "R_max_S2_m":float(r["r_max_s2_m"]),"tau_virt_m":float(r["tau_virt_m"]),
+        "temperature":float(r["temperature"]),"theta":[float(r["theta_v"]),float(r["theta_s"])],
+        "alpha_prior":float(r["alpha_prior"]),"alpha_obs":float(r["alpha_obs"]),"beta":float(r["beta"]),
+        "gamma_space":0.0,"fit_metrics":{k:float(r[k]) for k in ("coordinate_mae_m","transport_w1_m","bf_accuracy",
+        "bf_cross_entropy","joint_nll","site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")}}
+def _csv_write(path,rows):
+    rows=list(rows); fields=list(dict.fromkeys(k for r in rows for k in r))
+    with Path(path).open("w",newline="",encoding="utf-8-sig") as f:
+        w=csv.DictWriter(f,fieldnames=fields,extrasaction="ignore"); w.writeheader()
+        for r in rows: w.writerow({k:(json.dumps(v,ensure_ascii=False) if isinstance(v,(dict,list,tuple)) else v) for k,v in r.items()})
+def _csv_read(path):
+    with Path(path).open(encoding="utf-8-sig",newline="") as f: return list(csv.DictReader(f))
+def _safe_rows(ctx,rows,role):
+    if role not in ("CAL-fit","CAL-eval"): raise RuntimeError(f"unauthorized row role {role}")
+    allowed=set(map(int,ctx["cal_fit"] if role=="CAL-fit" else ctx["cal_eval"])); arr=np.asarray(rows,dtype=np.int64)
+    if any(int(i) not in allowed for i in arr): raise RuntimeError(f"{role} rows escaped locked split")
+    if set(map(int,arr))&set(map(int,ctx["roles"]["test"])): raise RuntimeError("TEST row guard blocked pack construction")
+    return arr
+
+def _make_probability(pack_all,ctx,config):
+    coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
+    f=ctx["memory"]["floor"].detach().cpu().numpy(); all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+    graph,_,gdiag=build_cutoff_graph(coords,b,f,all_edges,config["R_max_S1_m"],config["tau_graph_m"])
+    lengths=np.linalg.norm(coords[all_edges[:,0]]-coords[all_edges[:,1]],axis=1) if len(all_edges) else np.empty(0)
+    e=all_edges[lengths<=float(config["R_max_S2_m"])] if len(all_edges) else all_edges
+    ep=normalized_virtual_endpoint_weights(e,coords,config["tau_virt_m"])
+    lookup={tuple(map(int,x)):i for i,x in enumerate(all_edges.tolist())}
+    pack=_subset_virtual_pack(pack_all,[lookup[tuple(map(int,x))] for x in ep["edges"].tolist()])
+    edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=pack["scores"].device)
+    weights={k:torch.as_tensor(ep[k],device=pack["scores"].device) for k in ("weight_i","weight_j","degree")}
+    theta=torch.as_tensor(config["theta"],dtype=pack["scores"].dtype,device=pack["scores"].device)
+    before,logits=op.full_logit_graph_diffusion(pack["scores"],pack["z"],theta,config["temperature"],
+        graph.to(pack["scores"].device),config["alpha_prior"],config["alpha_obs"])
+    v=op.combine_retrieval_and_g13_logits(pack["virtual_scores"],pack["virtual_z"],config["temperature"],theta)
+    if len(edges): v=comp.propagate_s1_delta_to_virtual_logits(v,logits,before,edges)
+    mix=weighted_cell_mixture(logits,v,edges,weights,config["beta"],pack["xy"],pack["sigma"],pack["virtual_xy"],pack["virtual_sigma"])
+    return mix,pack,gdiag
+def _eval_config(pack,ctx,config,seed):
+    mix,sub,gdiag=_make_probability(pack,ctx,config)
+    metrics,sites=s3.score_mixture(sub,ctx,mix["q"],centers=mix["xy"],scales=mix["sigma"],ids=mix["ids"],seed=seed+900)
+    cls=ctx["classes"].to(mix["q"].device)[mix["ids"]]
+    masses=torch.zeros((len(mix["q"]),len(ctx["class_pairs"])),dtype=mix["q"].dtype,device=mix["q"].device)
+    masses.scatter_add_(1,cls,mix["q"]); target_cls=_target_class_ids(sub,ctx)
+    tm=masses.gather(1,target_cls[:,None]).squeeze(1)
+    metrics["bf_cross_entropy"]=float(((-tm.clamp_min(torch.finfo(mix["q"].dtype).tiny).log())*sub["weight"]).sum().cpu())
+    metrics["geometry_diagnostics"]=gdiag
+    return {"config":config,"metrics":metrics,"site_diagnostics":sites}
+def _old_combo(dataset,seed,arm):
+    path=comp.DEFAULT_OUTPUT/"runs"/f"{dataset}_seed{seed}"/arm/"CAL_FIT_SELECTION.json"
+    if not path.is_file(): return None
+    s=_read_json(path)
+    try:
+        clean=s["joint_calibrated_base"]; s1=s["structure1"]["1D_global"]; combo=s["combined"]["1D_global"]["2A"]
+        return {"geometry_id":"legacy_unbounded_8m","R_max_S1_m":math.inf,"tau_graph_m":8.,
+            "R_max_S2_m":math.inf,"tau_virt_m":math.inf,"temperature":float(clean["temperature"]),
+            "theta":[float(x) for x in clean["theta"]],"alpha_prior":float(s1["alpha_prior"]),
+            "alpha_obs":float(s1["alpha_obs"]),"beta":float(combo["beta"]),"gamma_space":0.0,
+            "legacy_selection_sha256":s3.sha(path)}
+    except (KeyError,TypeError,ValueError): return None
+
+def preflight(args):
+    started=time.perf_counter()
+    if args.device=="cuda" and not torch.cuda.is_available(): raise RuntimeError("CUDA unavailable; rerun with --device cpu")
+    out=Path(args.output).resolve()
+    if out.exists() and any(out.iterdir()) and not (out/"EXECUTION_MANIFEST.json").is_file(): raise RuntimeError("nonempty output root without manifest")
+    comp.preflight(args); manifest_path=out/"EXECUTION_MANIFEST.json"; manifest=_read_json(manifest_path)
+    diagnostics={}; spaces={}
+    for ds in s3.DATASETS:
+      for seed in s3.SEEDS:
+        ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device("cpu"))
+        _safe_rows(ctx,ctx["cal_fit"],"CAL-fit"); _safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
+        xy=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
+        f=ctx["memory"]["floor"].detach().cpu().numpy(); d=_pairwise_fit_geometry(xy,b,f,ctx["edges"]); key=f"{ds}_seed{seed}"
+        d.update(dataset=ds,seed=int(seed),cal_fit_rows=len(ctx["cal_fit"]),cal_eval_rows=len(ctx["cal_eval"]),
+          cal_fit_key_sha256=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_fit"]),
+          cal_eval_key_sha256=s3.key_sha(ctx["keys"][int(i)] for i in ctx["cal_eval"]),
+          anchor_order_sha256=_hash_anchor_order(xy,b,f))
+        diagnostics[key]=d; geoms,pool=geometry_candidates(d)
+        spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pool,"geometry_candidates":geoms,
+          "calibration_candidate_count":len(_calibration_candidates()),"gamma_space":{"locked":0.0,"searched":False},
+          "lambda_2d_nll":list(LAMBDAS),"bf_ce_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
+          "candidate_count_per_run":len(geoms)*len(_calibration_candidates())}
+    _write_json(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json",{"status":"PASS","source":"FIT anchor dictionary only",
+      "datasets_and_seeds":diagnostics,**TEST_COUNTS})
+    md=["# FIT-only Neighbor Distance Diagnostics","","Nearest-neighbor distances use distinct anchors on the same building and floor. Union-kNN edge lengths are reported separately.",""]
+    for key,d in diagnostics.items():
+        md += [f"## {key}","",f"- FIT anchors: {d['anchors']}",f"- Building-floor strata: {d['building_floor_strata']}",
+          f"- Zero-distance pairs: {d['zero_distance_pairs_within_building_floor']}",
+          f"- Existing union-kNN edges: {d['base_union_knn_edges']}",
+          f"- Union-kNN edge quantiles: {json.dumps(d['base_union_knn_edge_distance_m'],ensure_ascii=False)}"]
+        for k,v in d["kth_neighbor_distance_m"].items(): md.append(f"- k={k} neighbor distances: {json.dumps(v,ensure_ascii=False)}")
+        md.append("")
+    (out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md").write_text("\n".join(md),encoding="utf-8")
+    _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{"status":"PASS",
+      "geometry_design":"deterministic bounded Latin-hypercube from FIT k=1 quantiles plus meter-scale candidates",
+      "outer_geometry_candidates":spaces,"calibration_grid":{"temperature":TEMPERATURES,"theta_v":THETAS,"theta_s":THETAS,
+      "alpha_prior":ALPHAS,"alpha_obs":ALPHAS,"beta":BETAS},"inner_joint_grid_size":len(_calibration_candidates()),
+      "gamma_space_fixed":0.0,"search_method":"joint coarse grid for every cached geometry; no sequential freezing",
+      "lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
+    manifest.update({"study":"V17 dataset-adaptive spatial joint fit",
+      "fit_neighbor_diagnostics_sha256":s3.sha(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json"),
+      "spatial_search_space_sha256":s3.sha(out/"SPATIAL_SCALE_SEARCH_SPACE.json"),
+      "spatial_parameters_fit_per_dataset_backbone_seed":True,"gamma_space":{"locked":0.0,"searched":False},
+      "selection_protocol":{"primary":"Coordinate MAE + 0.30 * component-center W1",
+      "normalized_objective":"normalized primary + lambda * normalized joint-NLL delta",
+      "lambda_2d_nll":list(LAMBDAS),"BF CE relative tolerance":BF_CE_RELATIVE_TOLERANCE,
+      "hard_constraint":"macro BF accuracy must not fall below same-checkpoint CAL-fit clean baseline"},
+      "preflight_elapsed_seconds":time.perf_counter()-started,**TEST_COUNTS})
+    _write_json(manifest_path,manifest)
+    _write_json(out/"INTEGRITY_REVIEW.json",{"status":"PASS","phase":"preflight","test_rows_scored":0,
+      "FIT_only_geometry_verified":True,"internal_test_rows_scored":0,"official_test_rows_scored":0})
+    print(json.dumps({"stage":"preflight_complete","output":str(out),"geometry_sets":len(spaces),**TEST_COUNTS},ensure_ascii=False),flush=True)
+
+def run(args):
+    out=Path(args.output).resolve(); manifest=_read_json(out/"EXECUTION_MANIFEST.json")
+    search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
+    inner=_calibration_candidates(); reports=[]
+    for ds in s3.DATASETS:
+      for seed in s3.SEEDS:
+       ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
+       fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit"); ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
+       for arm in ARMS:
+        rd=out/"runs"/f"{ds}_seed{seed}"/arm; rd.mkdir(parents=True,exist_ok=True)
+        sp=rd/"CAL_FIT_SELECTION.json"; lock=rd/"CAL_EVAL.lock"; rp=rd/"CAL_EVAL_REPORT.json"
+        if rp.is_file(): reports.append(_read_json(rp)); continue
+        if sp.exists() or lock.exists(): raise RuntimeError(f"incomplete locked run exists at {rd}; preserve and inspect")
+        ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm); ckpt_sha=s3.sha(ckpt)
+        model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
+        base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+        fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0); evalpack=s3.make_pack(ctx,model,ev,virtual_gamma=0.0)
+        coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
+        f=ctx["memory"]["floor"].detach().cpu().numpy(); geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
+        rows_all=[]
+        for geom in geoms:
+            graph,_,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
+            lens=np.linalg.norm(coords[base_edges[:,0]]-coords[base_edges[:,1]],axis=1) if len(base_edges) else np.empty(0)
+            s2=base_edges[lens<=float(geom["r_max_s2_m"])] if len(base_edges) else base_edges
+            candidates=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
+              tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],tau_virt_m=geom["tau_virt_m"],
+              geometry_role=geom["role"]) for x in inner]
+            rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2,geom,candidates)
+            for r in rows: r.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
+              split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),
+              anchor_order_sha256=_hash_anchor_order(coords,b,f))
+            rows_all.extend(rows)
+        base=_clean_baseline(rows_all); rows_all=_add_objectives(rows_all,base)
+        chosen={}; s1={}; s2sel={}
+        for lam in LAMBDAS:
+            r=_choose(rows_all,lam)
+            if r is None: raise RuntimeError(f"no feasible candidate for lambda={lam}")
+            chosen[f"lambda_{lam:.2f}"]=_config(r)
+            r1=_choose(rows_all,lam,"single_S1"); s1[f"lambda_{lam:.2f}"]=_config(r1) if r1 else None
+            r2=_choose(rows_all,lam,"single_S2"); s2sel[f"lambda_{lam:.2f}"]=_config(r2) if r2 else None
+        clean=_config(base)
+        selection={"status":"LOCKED_CAL_FIT","dataset":ds,"seed":int(seed),"backbone":arm,
+          "checkpoint_sha256":ckpt_sha,"selected_epoch":int(payload["selected_epoch"]),"native_E_alpha":native_alpha,
+          "selection_role":"CAL-fit","cal_eval_not_used_for_selection":True,"gamma_space":0.0,
+          "joint_calibrated_base":clean,"selected_joint":chosen,"single_S1":s1,"single_S2":s2sel,
+          "lambda_2d_nll":list(LAMBDAS),"candidate_count":len(rows_all),"geometry_count":len(geoms),
+          "inner_grid_count":len(inner),"fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
+          "eval_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in ev),
+          "anchor_order_sha256":_hash_anchor_order(coords,b,f),
+          "bf_accuracy_guard":"candidate macro BF accuracy >= clean CAL-fit baseline",
+          "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.01 + 1e-8",**TEST_COUNTS}
+        _write_json(sp,selection,exclusive=True)
+        _write_json(lock,{"selection_role":"CAL-fit","evaluation_role":"CAL-eval","selection_frozen_before_cal_eval":True,
+          "selection_sha256":s3.sha(sp),"checkpoint_sha256":ckpt_sha,"fit_split_sha256":selection["fit_split_sha256"],
+          "eval_split_sha256":selection["eval_split_sha256"],"anchor_order_sha256":selection["anchor_order_sha256"],**TEST_COUNTS},exclusive=True)
+        configs={"joint_lambda_0.02":chosen["lambda_0.02"],"joint_lambda_0.05":chosen["lambda_0.05"],"joint_calibrated_base":clean}
+        if s1["lambda_0.02"]: configs["single_S1_lambda_0.02"]=s1["lambda_0.02"]
+        if s2sel["lambda_0.02"]: configs["single_S2_lambda_0.02"]=s2sel["lambda_0.02"]
+        old=_old_combo(ds,seed,arm)
+        if old: configs["old_combo_1D_2A"]=old
+        metrics={}
+        for name,config in configs.items(): metrics[name]=_eval_config(evalpack,ctx,config,seed)
+        report={"status":"PASS","dataset":ds,"seed":int(seed),"backbone":arm,"checkpoint_sha256":ckpt_sha,
+          "selection_sha256":s3.sha(sp),"selection_role":"CAL-fit","evaluation_role":"CAL-eval",
+          "cal_eval_used_for_selection":False,"metrics":metrics,"old_combo_available":old is not None,
+          "gamma_space":0.0,"test_rows_scored":0,**TEST_COUNTS}
+        _write_json(rp,report,exclusive=True); _csv_write(rd/"CANDIDATE_METRICS.csv",rows_all)
+        _write_json(rd/"RUN.lock",{"checkpoint_sha256":ckpt_sha,"selection_sha256":s3.sha(sp),
+          "fit_split_sha256":selection["fit_split_sha256"],"eval_split_sha256":selection["eval_split_sha256"],
+          "anchor_order_sha256":selection["anchor_order_sha256"],"device":args.device,"gamma_space":0.0,**TEST_COUNTS},exclusive=True)
+        reports.append(report)
+        print(json.dumps({"stage":"run_complete","dataset":ds,"seed":seed,"backbone":arm,
+          "candidate_count":len(rows_all),"selected_lambda_0.02":chosen["lambda_0.02"],
+          "selected_lambda_0.05":chosen["lambda_0.05"],**TEST_COUNTS},ensure_ascii=False),flush=True)
+    aggregate(argparse.Namespace(output=str(out)))
+
+def _pareto(rows,metrics):
+    vals=[]
+    for r in rows:
+        try: v=[float(r[m]) for m in metrics]
+        except (KeyError,ValueError): continue
+        if all(math.isfinite(x) for x in v): vals.append((r,v))
+    ordered=sorted(vals,key=lambda x:tuple(x[1])); front=[]
+    for row,v in ordered:
+        if any(all(a<=b+1e-12 for a,b in zip(w,v)) for _,w in front): continue
+        front=[(r,w) for r,w in front if not all(a<=b+1e-12 for a,b in zip(v,w))]
+        front.append((row,v))
+    return [r for r,_ in front]
+
+def aggregate(args):
+    out=Path(args.output).resolve(); reports=[]; files=[]
+    for p in sorted((out/"runs").glob("*/[CDE]/CAL_EVAL_REPORT.json")): reports.append(_read_json(p))
+    for p in sorted((out/"runs").glob("*/[CDE]/CANDIDATE_METRICS.csv")): files.append(p)
+    if not reports: raise RuntimeError("no CAL-eval reports found")
+    with (out/"CANDIDATE_METRICS.csv").open("w",newline="",encoding="utf-8-sig") as target:
+        writer=None
+        for p in files:
+            with p.open(encoding="utf-8-sig",newline="") as source:
+                reader=csv.DictReader(source)
+                if writer is None: writer=csv.DictWriter(target,fieldnames=reader.fieldnames,extrasaction="ignore"); writer.writeheader()
+                writer.writerows(reader)
+            pareto=_pareto(_csv_read(p),["coordinate_mae_m","transport_w1_m","bf_cross_entropy","joint_nll","site_p95_mae_m"])
+            if pareto:
+                if not (out/"PARETO_FRONTIER.csv").exists(): _csv_write(out/"PARETO_FRONTIER.csv",pareto)
+                else:
+                    old=_csv_read(out/"PARETO_FRONTIER.csv"); old.extend(pareto); _csv_write(out/"PARETO_FRONTIER.csv",old)
+    if not (out/"PARETO_FRONTIER.csv").exists(): _csv_write(out/"PARETO_FRONTIER.csv",[])
+    _write_json(out/"JOINT_FIT_SELECTION.json",{"status":"PASS","runs":reports,"selection_role":"CAL-fit",
+      "evaluation_role":"CAL-eval","gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),**TEST_COUNTS})
+    md=["# V17 Dataset-Adaptive Spatial Joint Fit: CAL-eval Report","",
+      "Selection is locked on CAL-fit before CAL-eval. CAL-eval is reporting-only. Internal/official TEST scores: 0. Gamma-space is fixed at 0.","",
+      "| Dataset | Seed | Backbone | Method | MAE m | ES m | Joint NLL | BF accuracy | BF CE | P95 site | P99 site | Worst site |",
+      "|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    for r in reports:
+        for name,e in r["metrics"].items():
+            m=e["metrics"]; md.append(f"| {r['dataset']} | {r['seed']} | {r['backbone']} | {name} | "
+              f"{m.get('macro_mae_full_m',float('nan')):.4f} | {m.get('macro_es_m',float('nan')):.4f} | "
+              f"{m.get('macro_joint_nll',float('nan')):.4f} | {m.get('macro_bf_accuracy',float('nan')):.4f} | "
+              f"{m.get('bf_cross_entropy',float('nan')):.4f} | {m.get('site_p95_full_m',float('nan')):.4f} | "
+              f"{m.get('site_p99_full_m',float('nan')):.4f} | {m.get('worst_site_mae_m',float('nan')):.4f} |")
+    md += ["","## Integrity","",f"- Completed run reports: {len(reports)}",f"- Candidate files: {len(files)}",
+      "- Gamma-space fixed at zero.","- Internal TEST scored: 0.","- Official TEST scored: 0.",
+      "- Historical old combo is evaluated only when its frozen CAL-fit selection is available."]
+    (out/"CAL_EVAL_REPORT.md").write_text("\n".join(md)+"\n",encoding="utf-8")
+    status="PASS" if len(reports)==len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS) else "INCOMPLETE"
+    _write_json(out/"INTEGRITY_REVIEW.json",{"status":status,"phase":"aggregate","completed_runs":len(reports),
+      "expected_runs":len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS),
+      "selection_locked_before_cal_eval":all(r.get("selection_role")=="CAL-fit" and r.get("cal_eval_used_for_selection") is False for r in reports),
+      "gamma_space":0.0,"candidate_files":len(files),**TEST_COUNTS})
+    (out/"RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md").write_text(
+      "# V17 Dataset-Adaptive Spatial Joint Fit\n\n"
+      "See FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md for FIT-only geometry; SPATIAL_SCALE_SEARCH_SPACE.json for candidate design; "
+      "JOINT_FIT_SELECTION.json for locked choices; CANDIDATE_METRICS.csv and PARETO_FRONTIER.csv for candidate diagnostics; "
+      "CAL_EVAL_REPORT.md for reporting-only CAL-eval.\n\n"
+      f"Completed run reports: {len(reports)} / {len(s3.DATASETS)*len(s3.SEEDS)*len(ARMS)}. Gamma-space=0; TEST scores=0.\n",encoding="utf-8")
+    print(json.dumps({"stage":"aggregate_complete","runs":len(reports),**TEST_COUNTS},ensure_ascii=False),flush=True)
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__); sub=p.add_subparsers(dest="command",required=True)
+    for name in ("preflight","run","all","aggregate"):
+        q=sub.add_parser(name); q.add_argument("--input-root",default=str(DEFAULT_INPUT))
+        q.add_argument("--checkpoint-root",default=str(DEFAULT_CHECKPOINT_ROOT)); q.add_argument("--output",default=str(DEFAULT_OUTPUT))
+        q.add_argument("--device",choices=("cpu","cuda"),default="cuda")
+    args=p.parse_args(); torch.set_num_threads(4)
+    if args.command=="preflight": preflight(args)
+    elif args.command=="run": run(args)
+    elif args.command=="aggregate": aggregate(argparse.Namespace(output=args.output))
+    else: preflight(args); run(args)
+if __name__=="__main__": main()
