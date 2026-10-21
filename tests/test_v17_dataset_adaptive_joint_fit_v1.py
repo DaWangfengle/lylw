@@ -112,7 +112,7 @@ def test_virtual_edge_weights_reject_invalid_indices_and_nonfinite_coordinates()
 
 
 def test_test_row_guard_rejects_test_indices_without_reading_labels():
-    ctx = {"cal_fit": np.asarray([0, 1]), "cal_eval": np.asarray([2]),
+    ctx = {"cal_fit": np.asarray([0, 1, 3]), "cal_eval": np.asarray([2]),
            "roles": {"test": np.asarray([3, 4])}}
     assert joint._safe_rows(ctx, [0, 1], "CAL-fit").tolist() == [0, 1]
     assert joint._safe_rows(ctx, [2], "CAL-eval").tolist() == [2]
