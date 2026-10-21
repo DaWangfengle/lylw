@@ -248,6 +248,7 @@ def _calibration_candidates():
 @torch.no_grad()
 def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endpoint_cache=None,chunk_size=16,row_chunk_size=512):
     device=pack_all["scores"].device; coords=ctx["memory"]["coords"].detach().cpu().numpy()
+    cached_graph=graph.to(device).coalesce()
     ep=endpoint_cache if endpoint_cache is not None else normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
     all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
     lookup={tuple(map(int,e)):i for i,e in enumerate(all_edges.tolist())}
@@ -280,9 +281,8 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
             temp=pars[:,0,None,None]; tv=pars[:,1,None,None]; ts=pars[:,2,None,None]
             ap=pars[:,3,None,None]; ao=pars[:,4,None,None]; beta=pars[:,5]
             prior=scores[None]/temp; obs=z[None,:,:,0]*tv+z[None,:,:,1]*ts
-            w=graph.to(device).coalesce()
-            pn=torch.sparse.mm(w,prior.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
-            on=torch.sparse.mm(w,obs.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
+            pn=torch.sparse.mm(cached_graph,prior.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
+            on=torch.sparse.mm(cached_graph,obs.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
             base=prior+obs
             parent=(1-ap)*prior+ap*pn+(1-ao)*obs+ao*on
             vbase=(pack["virtual_scores"][sl][None]/temp+
