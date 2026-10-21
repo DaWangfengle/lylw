@@ -39,8 +39,8 @@ def test_virtual_endpoint_weights_conserve_each_parent_measure_and_infinite_tau_
     edges = np.asarray([[0, 1], [0, 2], [1, 2]], dtype=np.int64)
     finite = joint.normalized_virtual_endpoint_weights(edges, xy, 1.5)
     for node in range(3):
-        total = sum(finite["weight_i"][k] if i == node else finite["weight_j"][k]
-                    for k, (i, j) in enumerate(finite["edges"]))
+        total = sum((finite["weight_i"][k] if i == node else finite["weight_j"][k])
+                    for k, (i, j) in enumerate(finite["edges"]) if i == node or j == node)
         assert total == pytest.approx(1.0)
     assert finite["degree"][3] == 0
     infinite = joint.normalized_virtual_endpoint_weights(edges, xy, math.inf)
