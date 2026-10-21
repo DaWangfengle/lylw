@@ -414,3 +414,21 @@ def test_bf_cross_entropy_guard_uses_floor_and_absolute_tolerance():
     assert checked_worse["bf_cross_entropy_guard"] is False
     assert checked_worse["feasible"] is False
 
+def test_legacy_clean_baseline_is_comparison_only_not_a_search_candidate():
+    common = {
+        "feasible": True,
+        "normalized_bf_cross_entropy": 1.0,
+        "coordinate_mae_m": 2.0, "transport_w1_m": 1.0,
+        "bf_accuracy": 1.0, "bf_cross_entropy": 0.0, "joint_nll": 3.0,
+        "site_p95_mae_m": 3.0, "site_p99_mae_m": 4.0, "worst_site_mae_m": 5.0,
+        "temperature": 1.0, "theta_v": 0.5, "theta_s": 0.5,
+        "alpha_prior": 0.0, "alpha_obs": 0.0, "beta": 0.0,
+    }
+    baseline = dict(common, candidate_id="clean_baseline_reference",
+                    geometry_id="legacy_unbounded_8m",
+                    selection_objective_lambda_0.02=-100.0)
+    candidate = dict(common, candidate_id="fit_quantile_candidate",
+                     geometry_id="fit_quantile_geometry_00",
+                     selection_objective_lambda_0.02=1.0)
+    chosen = joint._choose([baseline, candidate], 0.02)
+    assert chosen["candidate_id"] == "fit_quantile_candidate"
