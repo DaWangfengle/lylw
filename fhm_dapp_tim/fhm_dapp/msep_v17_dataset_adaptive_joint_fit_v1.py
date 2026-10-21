@@ -76,7 +76,11 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
         np.fill_diagonal(dist,np.inf); sorted_dist=np.sort(dist,axis=1)
         groups[f"{key[0]}::{key[1]}"]={"anchors":len(members),"zero_distance_pairs":zeros,"kth_neighbor":{}}
         for k in (1,2,4,8):
-            vals=sorted_dist[:,k-1]; vals=vals[np.isfinite(vals)]; kth[k].extend(vals.tolist())
+            if k <= len(members)-1:
+                vals=sorted_dist[:,k-1]; vals=vals[np.isfinite(vals)]
+            else:
+                vals=np.asarray([],dtype=np.float64)
+            kth[k].extend(vals.tolist())
             groups[f"{key[0]}::{key[1]}"]["kth_neighbor"][str(k)]=_quantiles(vals)
     e=np.asarray(torch.as_tensor(edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
     if len(e):
@@ -398,6 +402,12 @@ def _old_combo(dataset,seed,arm):
     except (KeyError,TypeError,ValueError): return None
 
 
+def _group_indices(buildings,floors):
+    groups={}
+    for i,key in enumerate(zip(np.asarray(buildings).tolist(),np.asarray(floors).tolist())):
+        groups.setdefault(tuple(key),[]).append(i)
+    return groups
+
 _pairwise_fit_geometry_basic = _pairwise_fit_geometry
 def _pairwise_fit_geometry(coords,buildings,floors,edges):
     result=_pairwise_fit_geometry_basic(coords,buildings,floors,edges)
@@ -409,6 +419,15 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
                   for k,v in result["base_union_knn_edge_distance_m"].items() if k.startswith("p")}
     else:
         ed=np.asarray([],dtype=np.float64); exp_edge={}
+    kth_raw={k:[] for k in (1,2,4,8)}
+    for _,members in _group_indices(b,f).items():
+        block=xy[members]; delta=block[:,None,:]-block[None,:,:]
+        dist=np.sqrt(np.maximum((delta*delta).sum(-1),0.0)); np.fill_diagonal(dist,np.inf)
+        sd=np.sort(dist,axis=1)
+        for k in (1,2,4,8):
+            if k<=len(members)-1:
+                vals=sd[:,k-1]; kth_raw[k].extend(vals[np.isfinite(vals)].tolist())
+    result["kth_neighbor_threshold_counts"]={str(k):_threshold_counts(v) for k,v in kth_raw.items()}
     q1=result["kth_neighbor_distance_m"]["1"]
     result["exp_neg_distance_over_8_at_quantiles"]={
         "FIT_k1_nearest_neighbor":{k:(float(math.exp(-v/8.0)) if v is not None else None)
