@@ -154,6 +154,36 @@ def test_virtual_edge_weights_reject_invalid_indices_and_nonfinite_coordinates()
         joint.normalized_virtual_endpoint_weights(np.asarray([[0, 1]]), bad, 2.0)
 
 
+def test_near_optimal_sensitivity_uses_fixed_tolerance_and_excludes_infeasible_rows():
+    rows = []
+    for candidate_id, geometry_id, objective, feasible, radius in (
+        ("best", "g0", 1.000, True, 2.0),
+        ("near", "g1", 1.005, True, 4.0),
+        ("outside", "g2", 1.020, True, 8.0),
+        ("infeasible", "g3", 0.900, False, 16.0),
+    ):
+        rows.append({
+            "candidate_id": candidate_id, "geometry_id": geometry_id, "feasible": feasible,
+            "selection_objective_lambda_0.02": objective,
+            "selection_objective_lambda_0.05": objective,
+            "normalized_bf_cross_entropy": 1.0,
+            "coordinate_mae_m": 5.0, "transport_w1_m": 1.0,
+            "r_max_s1_m": radius, "tau_graph_m": 2.0,
+            "r_max_s2_m": radius, "tau_virt_m": 2.0,
+            "temperature": 1.0, "theta_v": 0.75, "theta_s": 0.75,
+            "alpha_prior": 0.0, "alpha_obs": 0.0, "beta": 0.0,
+        })
+    summary = joint._near_optimal_sensitivity(rows)
+    for lambda_key in ("lambda_0.02", "lambda_0.05"):
+        entry = summary[lambda_key]
+        assert entry["objective_tolerance_absolute"] == pytest.approx(0.01)
+        assert entry["near_optimal_candidate_count"] == 2
+        assert entry["near_optimal_geometry_count"] == 2
+        assert set(entry["top_candidate_ids"]) == {"best", "near"}
+        assert entry["parameter_ranges"]["r_max_s1_m"]["min"] == pytest.approx(2.0)
+        assert entry["parameter_ranges"]["r_max_s1_m"]["max"] == pytest.approx(4.0)
+
+
 def test_test_row_guard_rejects_test_indices_without_reading_labels():
     ctx = {"cal_fit": np.asarray([0, 1, 3]), "cal_eval": np.asarray([2]),
            "roles": {"test": np.asarray([3, 4])}}
