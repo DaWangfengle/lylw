@@ -548,7 +548,7 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
             ap=pars[:,3,None,None]; ao=pars[:,4,None,None]
             prior=scores[None]/temp
             obs=z[None,:,:,0]*tv+z[None,:,:,1]*ts
-            # Exactly two sparse graph multiplies per non-beta parameter tuple.
+            # Two sparse graph multiplies per parameter chunk and row chunk, regardless of beta count.
             pn=torch.sparse.mm(cached_graph,prior.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
             on=torch.sparse.mm(cached_graph,obs.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
             base=prior+obs
