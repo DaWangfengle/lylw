@@ -354,53 +354,58 @@ def _geometry_value_pool(diag):
     return _sample_scale_pool(all_values,required=[x for x in k_medians if x is not None],limit=8)
 
 
+def _ranked_scale_levels(values,count=4):
+    """Pick deterministic, evenly spaced ranks from a FIT-derived scale pool."""
+    values=_unique_positive_scales(values)
+    if len(values)<count:
+        raise RuntimeError(f"need at least {count} distinct FIT-derived scale values; got {len(values)}")
+    indices=np.unique(np.round(np.linspace(0,len(values)-1,count)).astype(int))
+    selected=[values[int(i)] for i in indices]
+    if len(selected)!=count:
+        raise RuntimeError("could not create the requested distinct scale quantile levels")
+    return selected
+
+
 def geometry_candidates(diag):
     pools=_geometry_candidate_pools(diag)
     shared=_geometry_value_pool(diag)
-    r1_pool=pools["r_max_s1_m"]; tau_pool=pools["tau_graph_m"]
-    r2_pool=pools["r_max_s2_m"]; tau_virt_pool=pools["tau_virt_m"]
-    if not all((r1_pool,tau_pool,r2_pool,tau_virt_pool)):
+    r1_levels=_ranked_scale_levels(pools["r_max_s1_m"],4)
+    tau_levels=_ranked_scale_levels(pools["tau_graph_m"],4)
+    r2_pool=pools["r_max_s2_m"]
+    tau_virt_pool=pools["tau_virt_m"]
+    if not r2_pool or not tau_virt_pool:
         raise RuntimeError("incomplete FIT-derived spatial candidate pool")
+
     out=[]; seen=set()
     def add(r1,tau_graph,r2,tau_virt,role):
         r1=float(r1); tau_graph=float(tau_graph); r2=float(r2); tau_virt=float(tau_virt)
-        if r2>r1+1e-10*max(1.0,r1): return
+        if r2>r1+1e-10*max(1.0,r1):
+            raise RuntimeError("candidate violates R_max_S2 <= R_max_S1")
         key=(r1,tau_graph,r2,tau_virt)
-        if key in seen: return
+        if key in seen:
+            return
         seen.add(key)
         out.append({"geometry_id":f"fit_quantile_geometry_{len(out):02d}",
             "r_max_s1_m":r1,"tau_graph_m":tau_graph,"r_max_s2_m":r2,
             "tau_virt_m":tau_virt,"role":role,"r_max_s2_le_r_max_s1":True})
 
-    # Explicit infinite-tau controls; radii remain finite and FIT-derived.
-    for i in range(4):
-        r1=r1_pool[(2*i)%len(r1_pool)]
-        tau_graph=tau_pool[(3*i+1)%len(tau_pool)]
+    # Four FIT-derived R_S1 quantile levels crossed with four FIT-derived
+    # graph-temperature levels. For each radius, S2 uses the low/high eligible
+    # radius ranks; tau_virt has explicit infinity controls and finite low/high
+    # quantile-derived settings. No arbitrary 8-point modulo/LHS pairing.
+    tau_virt_low=float(tau_virt_pool[0]); tau_virt_high=float(tau_virt_pool[-1])
+    for r1 in r1_levels:
         eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
-        r2=eligible[(3*i)%len(eligible)]
-        add(r1,tau_graph,r2,math.inf,"FIT_quantile_tau_virt_infinity_control")
+        r2_low=float(eligible[0]); r2_high=float(eligible[-1])
+        combinations=(
+            (tau_levels[0],r2_low,math.inf,"FIT_quantile_tau_virt_infinity_control"),
+            (tau_levels[1],r2_high,math.inf,"FIT_quantile_tau_virt_infinity_control"),
+            (tau_levels[2],r2_low,tau_virt_low,"FIT_quantile_derived"),
+            (tau_levels[3],r2_high,tau_virt_high,"FIT_quantile_derived"),
+        )
+        for tau_graph,r2,tau_virt,role in combinations:
+            add(r1,tau_graph,r2,tau_virt,role)
 
-    for i in range(128):
-        if len(out)>=16: break
-        r1=r1_pool[(5*i+1)%len(r1_pool)]
-        tau_graph=tau_pool[(3*i+2)%len(tau_pool)]
-        eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
-        r2=eligible[(7*i+i//max(1,len(r2_pool)))%len(eligible)]
-        tau_virt=tau_virt_pool[(5*i+i//max(1,len(r1_pool)))%len(tau_virt_pool)]
-        add(r1,tau_graph,r2,tau_virt,"FIT_quantile_derived")
-
-    # Deterministic fallback handles repeated quantiles without inventing meters.
-    for r1 in r1_pool:
-        if len(out)>=16: break
-        for tau_graph in tau_pool:
-            if len(out)>=16: break
-            eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
-            for r2 in eligible:
-                if len(out)>=16: break
-                for tau_virt in (math.inf,*tau_virt_pool):
-                    add(r1,tau_graph,r2,tau_virt,
-                        "FIT_quantile_tau_virt_infinity_control" if math.isinf(tau_virt) else "FIT_quantile_derived")
-                    if len(out)>=16: break
     if not 12<=len(out)<=16:
         raise RuntimeError(f"FIT quantiles only produced {len(out)} unique spatial configurations; expected 12-16")
     if not any(math.isinf(row["tau_virt_m"]) for row in out):
