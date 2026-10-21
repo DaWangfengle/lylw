@@ -615,7 +615,10 @@ def run(args):
         baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx)
         baseline_eval=_eval_config(fitpack,ctx,baseline_config,seed)
         base=_baseline_row(baseline_config,baseline_eval)
-        base=_add_objectives([base],base)[0]
+        base.update(dataset=ds,seed=int(seed),backbone=arm,checkpoint_sha256=ckpt_sha,
+            split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),
+            anchor_order_sha256=_hash_anchor_order(coords,b,f),geometry_role="clean_baseline_reference")
+        rows_all.append(base)
         rows_all=_add_objectives(rows_all,base)
         chosen={}; s1={}; s2sel={}
         for lam in LAMBDAS:
