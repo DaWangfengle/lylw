@@ -168,6 +168,8 @@ def test_near_optimal_sensitivity_uses_fixed_tolerance_and_excludes_infeasible_r
             "selection_objective_lambda_0.05": objective,
             "normalized_bf_cross_entropy": 1.0,
             "coordinate_mae_m": 5.0, "transport_w1_m": 1.0,
+            "bf_accuracy": 0.9, "bf_cross_entropy": 1.0, "joint_nll": 2.0,
+            "site_p95_mae_m": 8.0, "site_p99_mae_m": 9.0, "worst_site_mae_m": 10.0,
             "r_max_s1_m": radius, "tau_graph_m": 2.0,
             "r_max_s2_m": radius, "tau_virt_m": 2.0,
             "temperature": 1.0, "theta_v": 0.75, "theta_s": 0.75,
