@@ -122,13 +122,25 @@ def test_weighted_cell_mixture_beta_zero_is_exact_clean_softmax():
     assert result2["q"].shape == (1, 4)
 
 
-def test_joint_grid_contains_clean_s1_s2_boundaries_and_locks_gamma_zero():
-    candidates = joint._calibration_candidates()
-    assert {x["beta"] for x in candidates} >= {0., .05, .10, .15, .20, .35, .50, .65, .80}
+def test_joint_grid_is_baseline_centered_and_contains_clean_s1_s2_boundaries():
+    baseline = {"temperature": 1.0, "theta": [0.5, 1.0], "baseline_source": "fixture"}
+    candidates = joint._calibration_candidates(baseline)
+    assert {x["beta"] for x in candidates} == {0., .05, .10, .15, .20, .35, .50, .65, .80}
+    assert {x["alpha_prior"] for x in candidates} == {0., .05, .10, .20, .35, .65}
+    assert {x["alpha_obs"] for x in candidates} == {0., .10, .25}
     assert all("gamma" not in x and "gamma_space" not in x for x in candidates)
-    assert any(x["alpha_prior"] == 0 and x["alpha_obs"] == 0 and x["beta"] == 0 for x in candidates)
-    assert any(x["beta"] == 0 and (x["alpha_prior"] > 0 or x["alpha_obs"] > 0) for x in candidates)
-    assert any(x["alpha_prior"] == 0 and x["alpha_obs"] == 0 and x["beta"] > 0 for x in candidates)
+    assert any(x["temperature"] == 1.0 and x["theta_v"] == 0.5 and x["theta_s"] == 1.0
+               and x["alpha_prior"] == 0 and x["alpha_obs"] == 0 and x["beta"] == 0
+               for x in candidates)
+    spec = joint._calibration_grid_spec(baseline)
+    assert spec["temperature_values"] == pytest.approx([0.75, 1.0, 1.25])
+    assert spec["theta_v_values"] == pytest.approx([0.375, 0.5, 0.625])
+    assert spec["theta_s_values"] == pytest.approx([0.75, 1.0, 1.25])
+    assert len(candidates) == joint._calibration_candidate_count() == 4374
+
+    other = joint._calibration_grid_spec({"temperature": 2.0, "theta": [0.25, 0.5]})
+    assert other["temperature_values"] != spec["temperature_values"]
+    assert other["theta_v_values"] != spec["theta_v_values"]
 
 
 def test_cutoff_graph_is_deterministic_and_rejects_nonfinite_coordinates():
@@ -209,7 +221,7 @@ def test_negative_infinity_scale_and_nonfinite_mixture_logits_are_rejected():
             torch.zeros((1, 1, 2)), torch.ones((1, 1, 2)))
 
 
-def test_geometry_pool_uses_fit_neighbor_scales_for_k1_k2_k4_k8():
+def test_geometry_pool_uses_fit_neighbor_scales_and_builds_12_to_16_valid_configs():
     diag = {"kth_neighbor_distance_m": {
         str(k): {"p50": float(2 * k), "p90": float(3 * k),
                  "p75": float(2.5 * k), "p95": float(3.5 * k), "p25": float(1.5 * k)}
@@ -219,6 +231,17 @@ def test_geometry_pool_uses_fit_neighbor_scales_for_k1_k2_k4_k8():
     assert len(pool) <= 8
     assert {2.0, 4.0, 8.0, 16.0}.issubset(set(pool))
     assert all(math.isfinite(x) and x > 0 for x in pool)
+
+    geoms, metadata = joint.geometry_candidates(diag)
+    assert 12 <= len(geoms) <= 16
+    assert all(math.isfinite(g["r_max_s1_m"]) and math.isfinite(g["tau_graph_m"])
+               and math.isfinite(g["r_max_s2_m"]) for g in geoms)
+    assert all(g["r_max_s2_m"] <= g["r_max_s1_m"] for g in geoms)
+    assert any(math.isinf(g["tau_virt_m"]) for g in geoms)
+    assert all(g["r_max_s1_m"] in metadata["by_parameter_m"]["r_max_s1_m"] for g in geoms)
+    assert all(g["tau_graph_m"] in metadata["by_parameter_m"]["tau_graph_m"] for g in geoms)
+    assert all(g["r_max_s2_m"] <= g["r_max_s1_m"] for g in geoms)
+    assert metadata["r_max_s2_le_r_max_s1"] is True
 
 
 def test_historical_clean_and_old_combo_must_match_frozen_checkpoint(monkeypatch, tmp_path):
@@ -264,7 +287,7 @@ def test_dataset_selector_supports_three_isolated_sequential_experiments():
     with pytest.raises(ValueError, match="unknown dataset"):
         joint._selected_datasets("not-a-dataset")
 
-def test_joint_grid_scores_virtual_candidates_with_model_dtype_and_mass_diagnostics():
+def test_joint_grid_scores_virtual_candidates_with_model_dtype_and_mass_diagnostics(monkeypatch):
     coords = np.asarray([[0., 0.], [1., 0.], [2., 0.]])
     building = np.asarray([0, 1, 1])
     floor = np.asarray([0, 0, 0])
@@ -304,16 +327,28 @@ def test_joint_grid_scores_virtual_candidates_with_model_dtype_and_mass_diagnost
         "temperature": 1., "theta_v": 0.75, "theta_s": 0.75,
         "alpha_prior": 0.25, "alpha_obs": 0.25, "beta": 0.2,
     }
+    candidates = [dict(candidate, candidate_id=f"g__cal_beta_{beta:.2f}", beta=beta)
+                  for beta in joint.BETAS]
+    sparse_mm_calls = {"count": 0}
+    original_sparse_mm = torch.sparse.mm
+    def counted_sparse_mm(*args, **kwargs):
+        sparse_mm_calls["count"] += 1
+        return original_sparse_mm(*args, **kwargs)
+    monkeypatch.setattr(torch.sparse, "mm", counted_sparse_mm)
     rows = joint.evaluate_calibration_grid(
-        pack, ctx, graph, edges.numpy(), {"tau_virt_m": 2.}, [candidate],
+        pack, ctx, graph, edges.numpy(), {"tau_virt_m": 2.}, candidates,
         endpoint_cache=endpoint,
     )
-    assert len(rows) == 1
-    for metric in ("coordinate_mae_m", "transport_w1_m", "bf_accuracy",
-                   "bf_cross_entropy", "joint_nll", "site_p95_mae_m",
-                   "site_p99_mae_m", "worst_site_mae_m"):
-        assert math.isfinite(rows[0][metric])
-    assert rows[0]["beta"] == pytest.approx(0.2)
+    assert len(rows) == len(joint.BETAS)
+    # Parent and observation diffusion are independent of beta: exactly two
+    # sparse multiplications, not two per beta value.
+    assert sparse_mm_calls["count"] == 2
+    for row in rows:
+        for metric in ("coordinate_mae_m", "transport_w1_m", "bf_accuracy",
+                       "bf_cross_entropy", "joint_nll", "site_p95_mae_m",
+                       "site_p99_mae_m", "worst_site_mae_m"):
+            assert math.isfinite(row[metric])
+    assert {row["beta"] for row in rows} == set(joint.BETAS)
     selected = joint._attach_virtual_measure(
         {"geometry_id": "g", "beta": 0.2},
         {"g": {"S2": {
@@ -322,4 +357,60 @@ def test_joint_grid_scores_virtual_candidates_with_model_dtype_and_mass_diagnost
         }}},
     )
     assert selected["pre_normalization_total_measure"] == pytest.approx(3.0)
+
+def test_geometry_scales_change_proportionally_with_dataset_fit_quantiles():
+    def make_diag(scale):
+        return {
+            "kth_neighbor_distance_m": {
+                str(k): {
+                    "p25": 1.0 * k * scale, "p50": 2.0 * k * scale,
+                    "p75": 2.5 * k * scale, "p90": 3.0 * k * scale,
+                    "p95": 3.5 * k * scale, "p99": 4.0 * k * scale,
+                } for k in (1, 2, 4, 8)
+            },
+            "base_union_knn_edge_distance_m": {
+                "p50": 2.0 * scale, "p75": 3.0 * scale,
+                "p90": 4.0 * scale, "p95": 5.0 * scale, "p99": 6.0 * scale,
+            },
+        }
+    a = joint._geometry_candidate_pools(make_diag(1.0))
+    b = joint._geometry_candidate_pools(make_diag(10.0))
+    for name in a:
+        assert b[name] == pytest.approx([10.0 * x for x in a[name]])
+    # No cross-dataset fixed meter list can survive this scale-covariance check.
+
+
+def test_baseline_centered_grid_handles_zero_theta_and_parameter_bounds():
+    baseline = {"temperature": 0.25, "theta": [0.0, 0.0]}
+    spec = joint._calibration_grid_spec(baseline)
+    assert spec["temperature_values"][0] == pytest.approx(0.25)
+    assert 0.25 in spec["temperature_values"]
+    assert spec["theta_v_values"][0] == 0.0
+    assert spec["theta_s_values"][0] == 0.0
+    assert len(spec["temperature_values"]) == len(spec["theta_v_values"]) == len(spec["theta_s_values"]) == 3
+    assert all(0.25 <= x <= 3.0 for x in spec["temperature_values"])
+    assert all(0.0 <= x <= 1.5 for x in spec["theta_v_values"] + spec["theta_s_values"])
+
+
+def test_bf_cross_entropy_guard_uses_floor_and_absolute_tolerance():
+    base = {
+        "coordinate_mae_m": 2.0, "transport_w1_m": 1.0,
+        "bf_accuracy": 1.0, "bf_cross_entropy": 1e-4, "joint_nll": 3.0,
+    }
+    candidate = {
+        "candidate_id": "small_ce_perturbation", "geometry_id": "g0",
+        "coordinate_mae_m": 2.0, "transport_w1_m": 1.0,
+        "bf_accuracy": 1.0, "bf_cross_entropy": 0.004,
+        "joint_nll": 3.0,
+    }
+    checked = joint._add_objectives([candidate], base)[0]
+    assert checked["normalized_bf_cross_entropy"] == pytest.approx(0.004 / 0.05)
+    assert checked["normalized_bf_cross_entropy_delta"] == pytest.approx((0.004 - 1e-4) / 0.05)
+    assert checked["bf_cross_entropy_guard"] is True
+    assert checked["feasible"] is True
+
+    worse = dict(candidate, candidate_id="outside_absolute_tolerance", bf_cross_entropy=0.006)
+    checked_worse = joint._add_objectives([worse], base)[0]
+    assert checked_worse["bf_cross_entropy_guard"] is False
+    assert checked_worse["feasible"] is False
 
