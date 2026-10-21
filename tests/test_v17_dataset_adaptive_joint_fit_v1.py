@@ -45,6 +45,28 @@ def test_cutoff_graph_scales_with_edges_instead_of_dense_anchor_square():
     assert diag["sinkhorn_col_error"] <= 2e-6
 
 
+def test_chunked_fit_neighbor_diagnostics_match_exact_reference():
+    xy = np.asarray([[0., 0.], [1., 0.], [0., 0.], [0., 3.], [4., 0.], [10., 0.]])
+    building = np.asarray([0, 0, 0, 0, 0, 1])
+    floor = np.asarray([0, 0, 0, 0, 0, 0])
+    edges = np.asarray([[0, 1], [1, 2], [2, 3], [4, 3]], dtype=np.int64)
+    diag = joint._pairwise_fit_geometry(xy, building, floor, edges)
+    ids = np.asarray([0, 1, 2, 3, 4])
+    block = xy[ids]
+    distances = np.linalg.norm(block[:, None, :] - block[None, :, :], axis=-1)
+    np.fill_diagonal(distances, np.inf)
+    sorted_distances = np.sort(distances, axis=1)
+    assert diag["zero_distance_pairs_within_building_floor"] == 1
+    for k in (1, 2, 4):
+        expected = sorted_distances[:, k - 1]
+        actual = diag["kth_neighbor_distance_m"][str(k)]
+        assert actual["count"] == len(expected)
+        assert actual["p50"] == pytest.approx(float(np.quantile(expected, .5)))
+        for threshold in (5, 10, 15, 20, 30, 40):
+            expected_count = int((expected > threshold).sum())
+            assert diag["kth_neighbor_threshold_counts"][str(k)][f"gt_{threshold}m"]["count"] == expected_count
+
+
 def test_cutoff_graph_rejects_cross_floor_or_building_edges():
     xy = np.asarray([[0., 0.], [0.5, 0.]])
     with pytest.raises(ValueError, match="cross-BF"):
@@ -178,6 +200,17 @@ def test_run_locks_cal_fit_before_constructing_cal_eval_pack():
     assert "checkpoint_sha=s3.sha(checkpoint_path)" in run_body
     assert "frozen checkpoint changed since selection" in run_body
     assert lock_write < lock_verify < eval_pack
+
+
+def test_smoke_command_is_fit_only_and_does_not_construct_cal_eval_pack():
+    source = Path(joint.__file__).read_text(encoding="utf-8")
+    smoke_body = source.split("def smoke(args):", 1)[1].split("\ndef run(args):", 1)[0]
+    assert 'fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")' in smoke_body
+    assert 's3.make_pack(ctx,model,fit,virtual_gamma=0.0)' in smoke_body
+    assert "ctx[\"cal_eval\"]" not in smoke_body
+    assert 's3.make_pack(ctx,model,ev' not in smoke_body
+    assert '"cal_eval_pack_constructed":False' in smoke_body
+    assert '"cal_eval_rows_scored":0' in smoke_body
 
 
 def test_selection_lock_verifies_config_code_manifest_and_input_hashes(tmp_path):
