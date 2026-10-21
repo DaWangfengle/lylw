@@ -1,4 +1,7 @@
+import hashlib
+import json
 import math
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -132,3 +135,74 @@ def test_negative_infinity_scale_and_nonfinite_mixture_logits_are_rejected():
         joint.weighted_cell_mixture(bad_logits, torch.zeros((1, 1)), torch.tensor([[0, 1]]),
             endpoint, 0.2, torch.zeros((1, 2, 2)), torch.ones((1, 2, 2)),
             torch.zeros((1, 1, 2)), torch.ones((1, 1, 2)))
+
+
+def test_geometry_pool_uses_fit_neighbor_scales_for_k1_k2_k4_k8():
+    diag = {"kth_neighbor_distance_m": {
+        str(k): {"p50": float(2 * k), "p90": float(3 * k),
+                 "p75": float(2.5 * k), "p95": float(3.5 * k), "p25": float(1.5 * k)}
+        for k in (1, 2, 4, 8)
+    }}
+    pool = joint._geometry_value_pool(diag)
+    assert len(pool) <= 8
+    assert {2.0, 4.0, 8.0, 16.0}.issubset(set(pool))
+    assert all(math.isfinite(x) and x > 0 for x in pool)
+
+
+def test_run_locks_cal_fit_before_constructing_cal_eval_pack():
+    source = Path(joint.__file__).read_text(encoding="utf-8")
+    run_body = source.split("def run(args):", 1)[1].split("\ndef _pareto", 1)[0]
+    lock_write = run_body.index("_write_json(lock,")
+    lock_verify = run_body.index("_verify_locked_selection(sp,lock")
+    eval_pack = run_body.index('evalpack=s3.make_pack(ctx,model,ev')
+    assert 'manifest_path=out/"EXECUTION_MANIFEST.json"' in run_body
+    assert lock_write < lock_verify < eval_pack
+
+
+def test_selection_lock_verifies_config_code_manifest_and_input_hashes(tmp_path):
+    input_root = tmp_path / "inputs"
+    run_root = input_root / "fixture_seed7"
+    run_root.mkdir(parents=True)
+    source_file = run_root / "source.json"
+    source_file.write_text('{"immutable": true}', encoding="utf-8")
+    manifest_path = tmp_path / "EXECUTION_MANIFEST.json"
+    manifest_path.write_text('{"manifest": "fixture"}', encoding="utf-8")
+    selection_path = tmp_path / "CAL_FIT_SELECTION.json"
+    lock_path = tmp_path / "CAL_EVAL.lock"
+
+    def sha(path):
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+    selection = {
+        "dataset": "fixture", "seed": 7, "selection_role": "CAL-fit",
+        "checkpoint_sha256": "checkpoint-hash",
+        "fit_split_sha256": "fit-hash", "eval_split_sha256": "eval-hash",
+        "anchor_order_sha256": "anchor-hash",
+        "algorithm_code_sha256": sha(joint.__file__),
+        "source_manifest_sha256": sha(manifest_path),
+        "input_run_file_sha256": {"source.json": sha(source_file)},
+        "internal_test_rows_scored": 0, "official_test_rows_scored": 0,
+    }
+    selection["parameter_config_sha256"] = joint._stable_hash(selection)
+    selection_path.write_text(json.dumps(selection), encoding="utf-8")
+    lock = {
+        "selection_role": "CAL-fit", "evaluation_role": "CAL-eval",
+        "selection_frozen_before_cal_eval": True,
+        "selection_sha256": sha(selection_path),
+        "checkpoint_sha256": selection["checkpoint_sha256"],
+        "fit_split_sha256": selection["fit_split_sha256"],
+        "eval_split_sha256": selection["eval_split_sha256"],
+        "anchor_order_sha256": selection["anchor_order_sha256"],
+        "parameter_config_sha256": selection["parameter_config_sha256"],
+        "algorithm_code_sha256": selection["algorithm_code_sha256"],
+        "source_manifest_sha256": selection["source_manifest_sha256"],
+        "input_run_file_sha256": selection["input_run_file_sha256"],
+        "internal_test_rows_scored": 0, "official_test_rows_scored": 0,
+    }
+    lock_path.write_text(json.dumps(lock), encoding="utf-8")
+    verified = joint._verify_locked_selection(selection_path, lock_path, manifest_path, input_root)
+    assert verified["selection_role"] == "CAL-fit"
+
+    source_file.write_text('{"immutable": false}', encoding="utf-8")
+    with pytest.raises(RuntimeError, match="input_hashes"):
+        joint._verify_locked_selection(selection_path, lock_path, manifest_path, input_root)
