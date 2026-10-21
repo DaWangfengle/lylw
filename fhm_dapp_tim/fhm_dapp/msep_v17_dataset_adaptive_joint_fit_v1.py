@@ -564,7 +564,7 @@ def _csv_read(path):
 def _safe_rows(ctx,rows,role):
     if role not in ("CAL-fit","CAL-eval"): raise RuntimeError(f"unauthorized row role {role}")
     allowed=set(map(int,ctx["cal_fit"] if role=="CAL-fit" else ctx["cal_eval"])); arr=np.asarray(rows,dtype=np.int64)
-    if any(int(i) not in allowed for i in arr): raise RuntimeError(f"{role} rows escaped locked split")
+    if any(int(i) not in allowed for i in arr): raise RuntimeError(f"{role} rows escaped the assigned CAL split")
     if set(map(int,arr))&set(map(int,ctx["roles"]["test"])): raise RuntimeError("TEST row guard blocked pack construction")
     return arr
 
@@ -967,4 +967,3 @@ def main():
 
 if __name__=="__main__":
     main()
-if __name__=="__main__": main()
