@@ -314,4 +314,12 @@ def test_joint_grid_scores_virtual_candidates_with_model_dtype_and_mass_diagnost
                    "site_p99_mae_m", "worst_site_mae_m"):
         assert math.isfinite(rows[0][metric])
     assert rows[0]["beta"] == pytest.approx(0.2)
+    selected = joint._attach_virtual_measure(
+        {"geometry_id": "g", "beta": 0.2},
+        {"g": {"S2": {
+            "retained_virtual_edges": len(endpoint["edges"]),
+            "effective_virtual_mass_by_parent": endpoint["effective_virtual_mass_by_parent"],
+        }}},
+    )
+    assert selected["pre_normalization_total_measure"] == pytest.approx(3.0)
 
