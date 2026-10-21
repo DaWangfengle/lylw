@@ -264,3 +264,54 @@ def test_dataset_selector_supports_three_isolated_sequential_experiments():
     with pytest.raises(ValueError, match="unknown dataset"):
         joint._selected_datasets("not-a-dataset")
 
+def test_joint_grid_scores_virtual_candidates_with_model_dtype_and_mass_diagnostics():
+    coords = np.asarray([[0., 0.], [1., 0.], [2., 0.]])
+    building = np.asarray([0, 1, 1])
+    floor = np.asarray([0, 0, 0])
+    edges = torch.tensor([[1, 2]], dtype=torch.long)
+    graph, _, _ = joint.build_cutoff_graph(coords, building, floor, edges, 10.0, 2.0)
+    endpoint = joint.normalized_virtual_endpoint_weights(edges, coords, 2.0)
+    ctx = {
+        "memory": {
+            "coords": torch.as_tensor(coords, dtype=torch.float32),
+            "building": torch.as_tensor(building),
+            "floor": torch.as_tensor(floor),
+        },
+        "edges": edges,
+        "classes": torch.tensor([0, 1, 1]),
+        "class_pairs": torch.tensor([[0, 0], [1, 0]]),
+    }
+    xy = torch.as_tensor(coords, dtype=torch.float32)[None].repeat(2, 1, 1)
+    pack = {
+        "scores": torch.tensor([[3., 0., -1.], [0., 2., 1.]]),
+        "z": torch.zeros((2, 3, 2)),
+        "virtual_scores": torch.zeros((2, 1)),
+        "virtual_z": torch.zeros((2, 1, 2)),
+        "xy": xy,
+        "sigma": torch.ones_like(xy),
+        "virtual_xy": torch.tensor([[[1.5, 0.]], [[1.5, 0.]]]),
+        "virtual_sigma": torch.ones((2, 1, 2)),
+        "target": torch.tensor([[0.1, 0.1], [1.2, 0.1]]),
+        "building": torch.tensor([0, 1]),
+        "floor": torch.tensor([0, 0]),
+        "weight": torch.tensor([0.5, 0.5]),
+        "keys": ["site_a", "site_b"],
+    }
+    candidate = {
+        "candidate_id": "g__cal_test", "geometry_id": "g",
+        "r_max_s1_m": 10., "tau_graph_m": 2.,
+        "r_max_s2_m": 10., "tau_virt_m": 2.,
+        "temperature": 1., "theta_v": 0.75, "theta_s": 0.75,
+        "alpha_prior": 0.25, "alpha_obs": 0.25, "beta": 0.2,
+    }
+    rows = joint.evaluate_calibration_grid(
+        pack, ctx, graph, edges.numpy(), {"tau_virt_m": 2.}, [candidate],
+        endpoint_cache=endpoint,
+    )
+    assert len(rows) == 1
+    for metric in ("coordinate_mae_m", "transport_w1_m", "bf_accuracy",
+                   "bf_cross_entropy", "joint_nll", "site_p95_mae_m",
+                   "site_p99_mae_m", "worst_site_mae_m"):
+        assert math.isfinite(rows[0][metric])
+    assert rows[0]["beta"] == pytest.approx(0.2)
+
