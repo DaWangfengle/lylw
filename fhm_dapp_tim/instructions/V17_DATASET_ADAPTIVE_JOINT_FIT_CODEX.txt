@@ -150,11 +150,17 @@ smoke 只允许在第一个数据集、seed 和主干 D 的 CAL-fit 上运行三
 - 不写 selection/lock，不进行 CAL-eval，不影响正式候选选择。
 smoke 未 PASS 不得启动完整实验。
 
-第 5 步：正式实验
------------------
-  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --device cuda
+第 5 步：正式实验——三个数据集依次独立运行
+--------------------------------------------
+保持同一个 --output 根目录，依次执行以下三条命令；不要并行运行，不要在数据集之间修改代码、候选池、目标函数或约束：
 
-不要在 run 前执行 all，避免重复 preflight/smoke 和覆盖本轮诊断。run 完成后必须自动 aggregate；检查终端退出码、stdout/stderr、每个 run 的锁与报告。若 CUDA 不可用，上述三个阶段全部统一改为 --device cpu。
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset tuji --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uts --device cuda
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset uji --device cuda
+
+三个数据集各自使用其 FIT 几何诊断生成候选池，并独立选择参数；运行产物按数据集写入同一 output root 下各自的 runs/{dataset}_seed{seed}/{C,D,E}/ 子目录。每次 run 后都会自动 aggregate：TUJI 和 UTS 结束后总状态为 INCOMPLETE 是预期现象，不得误判为最终失败；只有 UJI 结束后，全部 27 个 checkpoint 的 selection/lock/报告均齐全、哈希检查通过且 TEST 计数全零，最终状态才应为 PASS。
+
+不要在 run 前再次执行 all，避免重复 preflight/smoke 和覆盖本轮诊断。每个数据集完成后先检查退出码、stdout/stderr 和该数据集的 9 个报告；发现任何错误就停止，不要继续到下一个数据集。若 CUDA 不可用，以上三条命令全部统一改为 --device cpu，且必须从 TUJI 开始用同一 device 重跑，不要混用不同 device 的半成品输出。
 
 五、必须检查和交付的产物
 ========================
