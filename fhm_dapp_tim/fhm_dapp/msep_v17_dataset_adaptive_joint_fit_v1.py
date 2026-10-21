@@ -645,9 +645,13 @@ def run(args):
             if not sp.is_file() or not lock.is_file():
                 raise RuntimeError(f"completed CAL-eval report lacks its selection/lock: {rd}")
             locked_selection=_verify_locked_selection(sp,lock,manifest_path,Path(args.input_root).resolve())
+            checkpoint_path=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm)
+            checkpoint_sha=s3.sha(checkpoint_path)
+            if locked_selection.get("checkpoint_sha256")!=checkpoint_sha:
+                raise RuntimeError(f"frozen checkpoint changed since selection: {checkpoint_path}")
             saved_report=_read_json(rp)
             if (saved_report.get("selection_sha256")!=s3.sha(sp)
-                or saved_report.get("checkpoint_sha256")!=locked_selection.get("checkpoint_sha256")
+                or saved_report.get("checkpoint_sha256")!=checkpoint_sha
                 or saved_report.get("cal_eval_used_for_selection") is not False
                 or any(saved_report.get(k)!=0 for k in TEST_COUNTS)):
                 raise RuntimeError(f"existing CAL-eval report failed integrity checks: {rp}")
