@@ -14,14 +14,20 @@ DEFAULT_CHECKPOINT_ROOT=comp.DEFAULT_CHECKPOINT_ROOT
 DEFAULT_OUTPUT=REPO/"fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1"
 ARMS=("C","D","E")
 TEST_COUNTS={"internal_test_rows_scored":0,"official_test_rows_scored":0}
-# Coarse joint grid for a fast first iteration; beta remains deliberately fine.
-TEMPERATURES=(0.25,0.75,1.0,3.0)
-THETAS=(0.0,0.75,1.5)
-ALPHAS=(0.0,0.25,0.65,1.0)
+# Dimensionless multipliers are applied only to this dataset's FIT quantiles.
+GEOMETRY_SCALE_MULTIPLIERS=(0.50,0.75,1.0,1.25,1.50)
+CALIBRATION_RELATIVE_MULTIPLIERS=(0.75,1.0,1.25)
+CALIBRATION_EXPANSION_MULTIPLIERS=(0.50,1.50,0.625,1.75,2.0)
+TEMPERATURE_BOUNDS=(0.25,3.0)
+THETA_BOUNDS=(0.0,1.5)
+ALPHA_PRIORS=(0.0,0.05,0.10,0.20,0.35,0.65)
+ALPHA_OBS=(0.0,0.10,0.25)
 BETAS=(0.0,0.05,0.10,0.15,0.20,0.35,0.50,0.65,0.80)
 LAMBDAS=(0.02,0.05)
 BF_CE_WEIGHT=0.25
-BF_CE_RELATIVE_TOLERANCE=0.01
+BF_CE_RELATIVE_TOLERANCE=0.02
+BF_CE_ABSOLUTE_TOLERANCE=0.005
+BF_CE_NORMALIZATION_FLOOR=0.05
 NEAR_OPTIMAL_OBJECTIVE_TOLERANCE=0.01
 QUANTILES=(0.00,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1.00)
 
@@ -304,30 +310,36 @@ def _sample_scale_pool(values,required=(),limit=8):
     return _unique_positive_scales(chosen)[:limit]
 
 
+def _derived_quantile_scales(values):
+    """Create metre-valued candidates only by scaling observed FIT quantiles."""
+    bases=_unique_positive_scales(values)
+    return _unique_positive_scales(
+        [base*multiplier for base in bases for multiplier in GEOMETRY_SCALE_MULTIPLIERS]
+    )
+
+
 def _geometry_candidate_pools(diag):
-    # Geometry is derived only from the FIT anchor dictionary. Use both the
-    # within-building/floor k-NN distributions and the frozen union-kNN edge
-    # lengths; cutoff pools emphasize edge quantiles while kernel pools retain
-    # the k=1/2/4/8 physical spacing scales.
+    # Every base scale comes from this dataset's FIT k-NN / union-kNN quantiles.
+    # Dimensionless multiples increase resolution without a global meter list.
     kth=diag["kth_neighbor_distance_m"]
     edge=diag.get("base_union_knn_edge_distance_m",{})
     quantile_names=("p50","p75","p90","p95","p99")
     k_medians=[kth[str(k)].get("p50") for k in (1,2,4,8)]
     k_all=[kth[str(k)].get(q) for k in (1,2,4,8) for q in quantile_names]
     edge_all=[edge.get(q) for q in quantile_names]
-    physical=[1.,2.,5.,8.,10.,15.,20.,30.,40.,60.]
-    required_k=[x for x in k_medians if x is not None]
-    required_edge=[edge.get(q) for q in ("p50","p75","p90","p95") if edge.get(q) is not None]
+    required_k=[x for x in k_medians if x is not None and math.isfinite(float(x)) and float(x)>0]
+    required_edge=[edge.get(q) for q in ("p50","p75","p90","p95")
+                   if edge.get(q) is not None and math.isfinite(float(edge.get(q))) and float(edge.get(q))>0]
     if not required_k:
         raise RuntimeError("FIT-only nearest-neighbor geometry is unavailable; refusing to guess spatial scales")
+    derived=_derived_quantile_scales(k_all+edge_all)
+    if not derived:
+        raise RuntimeError("no positive FIT-only distance quantiles available for spatial scale search")
     pools={
-      "r_max_s1_m":_sample_scale_pool(k_all+edge_all+physical,required=required_k),
-      "tau_graph_m":_sample_scale_pool(k_all+[edge.get(q) for q in ("p50","p75","p90")]+physical,
-                                      required=required_k),
-      "r_max_s2_m":_sample_scale_pool(edge_all+k_all+physical,
-                                      required=required_edge or required_k),
-      "tau_virt_m":_sample_scale_pool(edge_all+k_all+physical,
-                                      required=(required_edge[:3]+required_k[:4])[:8] or required_k),
+      "r_max_s1_m":_sample_scale_pool(derived,required=required_k),
+      "tau_graph_m":_sample_scale_pool(derived,required=required_k),
+      "r_max_s2_m":_sample_scale_pool(derived,required=required_edge or required_k),
+      "tau_virt_m":_sample_scale_pool(derived,required=(required_edge[:3]+required_k[:4])[:8] or required_k),
     }
     for name,values in pools.items():
         if not values: raise RuntimeError(f"no finite FIT-derived scale candidates for {name}")
@@ -336,8 +348,6 @@ def _geometry_candidate_pools(diag):
 
 def _geometry_value_pool(diag):
     pools=_geometry_candidate_pools(diag)
-    # Compact backward-compatible summary, preserving every k median while
-    # surfacing edge-length and upper-tail scales in the remaining slots.
     all_values=[]
     for values in pools.values(): all_values.extend(values)
     k_medians=[diag["kth_neighbor_distance_m"][str(k)].get("p50") for k in (1,2,4,8)]
@@ -347,28 +357,61 @@ def _geometry_value_pool(diag):
 def geometry_candidates(diag):
     pools=_geometry_candidate_pools(diag)
     shared=_geometry_value_pool(diag)
-    out=[{"geometry_id":"legacy_unbounded_8m","r_max_s1_m":math.inf,"tau_graph_m":8.,
-          "r_max_s2_m":math.inf,"tau_virt_m":math.inf,"role":"legacy_reference"}]
-    # Eight-point deterministic Latin-hypercube design: each parameter gets its
-    # own FIT-derived pool, and every pool is traversed as evenly as its size
-    # allows. This avoids coupling cutoff values to kernel temperatures.
-    multipliers=(1,3,5,7); offsets=(0,1,2,3)
-    names=("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m")
-    for i in range(8):
-        row={"geometry_id":f"fit_lhs_{i:02d}","role":"FIT_neighbor_and_union_edge_LHS"}
-        for j,name in enumerate(names):
-            rank=(i*multipliers[j]+offsets[j])%8
-            values=pools[name]
-            row[name]=float(values[min(len(values)-1,int(rank*len(values)/8))])
-        out.append(row)
-    # Defensive deduplication is scientifically relevant here: tiny datasets
-    # may have repeated quantiles, and repeated geometry tuples waste a full
-    # inner calibration sweep.
-    unique=[]; seen=set()
-    for row in out:
-        key=tuple(row[k] for k in names)
-        if key not in seen: unique.append(row); seen.add(key)
-    return unique,{"shared_union_m":shared,"by_parameter_m":pools}
+    r1_pool=pools["r_max_s1_m"]; tau_pool=pools["tau_graph_m"]
+    r2_pool=pools["r_max_s2_m"]; tau_virt_pool=pools["tau_virt_m"]
+    if not all((r1_pool,tau_pool,r2_pool,tau_virt_pool)):
+        raise RuntimeError("incomplete FIT-derived spatial candidate pool")
+    out=[]; seen=set()
+    def add(r1,tau_graph,r2,tau_virt,role):
+        r1=float(r1); tau_graph=float(tau_graph); r2=float(r2); tau_virt=float(tau_virt)
+        if r2>r1+1e-10*max(1.0,r1): return
+        key=(r1,tau_graph,r2,tau_virt)
+        if key in seen: return
+        seen.add(key)
+        out.append({"geometry_id":f"fit_quantile_geometry_{len(out):02d}",
+            "r_max_s1_m":r1,"tau_graph_m":tau_graph,"r_max_s2_m":r2,
+            "tau_virt_m":tau_virt,"role":role,"r_max_s2_le_r_max_s1":True})
+
+    # Explicit infinite-tau controls; radii remain finite and FIT-derived.
+    for i in range(4):
+        r1=r1_pool[(2*i)%len(r1_pool)]
+        tau_graph=tau_pool[(3*i+1)%len(tau_pool)]
+        eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
+        r2=eligible[(3*i)%len(eligible)]
+        add(r1,tau_graph,r2,math.inf,"FIT_quantile_tau_virt_infinity_control")
+
+    for i in range(128):
+        if len(out)>=16: break
+        r1=r1_pool[(5*i+1)%len(r1_pool)]
+        tau_graph=tau_pool[(3*i+2)%len(tau_pool)]
+        eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
+        r2=eligible[(7*i+i//max(1,len(r2_pool)))%len(eligible)]
+        tau_virt=tau_virt_pool[(5*i+i//max(1,len(r1_pool)))%len(tau_virt_pool)]
+        add(r1,tau_graph,r2,tau_virt,"FIT_quantile_derived")
+
+    # Deterministic fallback handles repeated quantiles without inventing meters.
+    for r1 in r1_pool:
+        if len(out)>=16: break
+        for tau_graph in tau_pool:
+            if len(out)>=16: break
+            eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
+            for r2 in eligible:
+                if len(out)>=16: break
+                for tau_virt in (math.inf,*tau_virt_pool):
+                    add(r1,tau_graph,r2,tau_virt,
+                        "FIT_quantile_tau_virt_infinity_control" if math.isinf(tau_virt) else "FIT_quantile_derived")
+                    if len(out)>=16: break
+    if not 12<=len(out)<=16:
+        raise RuntimeError(f"FIT quantiles only produced {len(out)} unique spatial configurations; expected 12-16")
+    if not any(math.isinf(row["tau_virt_m"]) for row in out):
+        raise RuntimeError("spatial candidate design omitted tau_virt=+inf control")
+    if any(row["r_max_s2_m"]>row["r_max_s1_m"] for row in out):
+        raise RuntimeError("spatial candidate violates R_max_S2 <= R_max_S1")
+    return out,{"shared_union_m":shared,"by_parameter_m":pools,
+        "scale_derivation":"FIT k=1/2/4/8 neighbor and union-kNN edge quantiles × dimensionless GEOMETRY_SCALE_MULTIPLIERS",
+        "geometry_candidate_count":len(out),"r_max_s2_le_r_max_s1":True,
+        "tau_virt_infinity_control_count":sum(math.isinf(row["tau_virt_m"]) for row in out)}
+
 
 def _subset_virtual_pack(pack,edge_ids):
     out=dict(pack); idx=torch.as_tensor(edge_ids,dtype=torch.long,device=pack["scores"].device)
@@ -383,27 +426,88 @@ def _target_class_ids(pack,ctx):
     if not bool(match.any(dim=1).all()): raise RuntimeError("target BF class absent from FIT anchor classes")
     return match.long().argmax(dim=1)
 
-def _calibration_candidates():
+def _local_relative_grid(center,lower,upper,*,counterpart_scale=None):
+    """Three-point local grid centered on the exact dataset/checkpoint baseline."""
+    center=float(center); lower=float(lower); upper=float(upper)
+    if not math.isfinite(center) or center<lower-1e-12 or center>upper+1e-12:
+        raise ValueError(f"baseline calibration center {center} is outside [{lower},{upper}]")
+    if abs(center)<=1e-12:
+        scale=abs(float(counterpart_scale or 0.0))
+        if scale<=1e-12: scale=(upper-lower)/4.0
+        values=[center,center+0.25*scale,center+0.50*scale]
+    else:
+        values=[]
+        for multiplier in CALIBRATION_RELATIVE_MULTIPLIERS+CALIBRATION_EXPANSION_MULTIPLIERS:
+            value=center*multiplier
+            if lower-1e-12<=value<=upper+1e-12: values.append(float(value))
+        values=sorted(set(values+[center]))
+        below=sorted((x for x in values if x<center),reverse=True)
+        above=sorted(x for x in values if x>center)
+        if below and above: values=[below[0],center,above[0]]
+        elif below: values=[below[min(1,len(below)-1)],below[0],center]
+        elif above: values=[center,above[0],above[min(1,len(above)-1)]]
+    values=sorted(set(float(x) for x in values))
+    if len(values)!=3 or not any(x==center for x in values):
+        raise RuntimeError(f"could not form a 3-point local grid around baseline {center}: {values}")
+    return values
+
+
+def _calibration_candidates(baseline_config):
+    """Joint calibration grid centered on this dataset/checkpoint's clean baseline."""
+    theta=baseline_config.get("theta")
+    if not isinstance(theta,(list,tuple)) or len(theta)!=2:
+        raise ValueError("baseline_config must contain theta=[theta_v, theta_s]")
+    temperature=float(baseline_config["temperature"])
+    theta_v=float(theta[0]); theta_s=float(theta[1])
+    temperatures=_local_relative_grid(temperature,*TEMPERATURE_BOUNDS)
+    theta_vs=_local_relative_grid(theta_v,*THETA_BOUNDS,counterpart_scale=theta_s)
+    theta_ss=_local_relative_grid(theta_s,*THETA_BOUNDS,counterpart_scale=theta_v)
     return [dict(candidate_id=f"cal_{i:05d}",temperature=float(t),theta_v=float(tv),theta_s=float(ts),
         alpha_prior=float(ap),alpha_obs=float(ao),beta=float(beta))
-        for i,(t,tv,ts,ap,ao,beta) in enumerate(itertools.product(TEMPERATURES,THETAS,THETAS,ALPHAS,ALPHAS,BETAS))]
+        for i,(t,tv,ts,ap,ao,beta) in enumerate(
+            itertools.product(temperatures,theta_vs,theta_ss,ALPHA_PRIORS,ALPHA_OBS,BETAS))]
+
+
+def _calibration_grid_spec(baseline_config):
+    theta_v,theta_s=(float(x) for x in baseline_config["theta"])
+    return {"baseline_center":{"temperature":float(baseline_config["temperature"]),
+            "theta_v":theta_v,"theta_s":theta_s,
+            "baseline_source":baseline_config.get("baseline_source","current_dataset_checkpoint_clean_baseline")},
+        "relative_multipliers":list(CALIBRATION_RELATIVE_MULTIPLIERS),
+        "expansion_multipliers_for_parameter_boundaries":list(CALIBRATION_EXPANSION_MULTIPLIERS),
+        "temperature_bounds":list(TEMPERATURE_BOUNDS),"theta_bounds":list(THETA_BOUNDS),
+        "temperature_values":_local_relative_grid(float(baseline_config["temperature"]),*TEMPERATURE_BOUNDS),
+        "theta_v_values":_local_relative_grid(theta_v,*THETA_BOUNDS,counterpart_scale=theta_s),
+        "theta_s_values":_local_relative_grid(theta_s,*THETA_BOUNDS,counterpart_scale=theta_v),
+        "alpha_prior_values":list(ALPHA_PRIORS),"alpha_obs_values":list(ALPHA_OBS),
+        "beta_values":list(BETAS),"candidate_count":len(_calibration_candidates(baseline_config))}
+
+
+def _calibration_candidate_count():
+    return 3*3*3*len(ALPHA_PRIORS)*len(ALPHA_OBS)*len(BETAS)
+
 
 @torch.no_grad()
-def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endpoint_cache=None,chunk_size=8,row_chunk_size=256):
-    device=pack_all["scores"].device; coords=ctx["memory"]["coords"].detach().cpu().numpy()
+def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endpoint_cache=None,chunk_size=2,row_chunk_size=128):
+    """Evaluate candidates with sparse graph multiplication shared across all beta variants."""
+    device=pack_all["scores"].device
+    coords=ctx["memory"]["coords"].detach().cpu().numpy()
     cached_graph=graph.to(device).coalesce()
     ep=endpoint_cache if endpoint_cache is not None else normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
     all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
     lookup={tuple(sorted(map(int,e))):i for i,e in enumerate(all_edges.tolist())}
     edge_ids=[lookup[tuple(map(int,e))] for e in ep["edges"].tolist()]
-    pack=_subset_virtual_pack(pack_all,edge_ids); edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=device)
+    pack=_subset_virtual_pack(pack_all,edge_ids)
+    edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=device)
     endpoint={"weight_i":torch.as_tensor(ep["weight_i"],dtype=pack["scores"].dtype,device=device),
               "weight_j":torch.as_tensor(ep["weight_j"],dtype=pack["scores"].dtype,device=device),
               "degree":torch.as_tensor(ep["degree"],dtype=torch.long,device=device)}
-    n=len(ctx["memory"]["coords"]); class_ids=torch.cat([ctx["classes"].to(device).long(),
-        ctx["classes"].to(device).long()[edges[:,0]]])
-    centers=torch.cat([pack["xy"],pack["virtual_xy"]],dim=1); scales=torch.cat([pack["sigma"],pack["virtual_sigma"]],dim=1)
-    ab=ctx["memory"]["building"].to(device).long(); af=ctx["memory"]["floor"].to(device).long()
+    n=len(ctx["memory"]["coords"])
+    class_ids=torch.cat([ctx["classes"].to(device).long(),ctx["classes"].to(device).long()[edges[:,0]]])
+    centers=torch.cat([pack["xy"],pack["virtual_xy"]],dim=1)
+    scales=torch.cat([pack["sigma"],pack["virtual_sigma"]],dim=1)
+    ab=ctx["memory"]["building"].to(device).long()
+    af=ctx["memory"]["floor"].to(device).long()
     component_ids=torch.cat([torch.arange(n,device=device),edges[:,0]])
     valid=((ab[component_ids][None,:]==pack["building"].long()[:,None])&
            (af[component_ids][None,:]==pack["floor"].long()[:,None]))
@@ -411,20 +515,35 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
     keys=pack["keys"]; unique_sites=list(dict.fromkeys(keys)); site_map={k:i for i,k in enumerate(unique_sites)}
     site_ids=torch.as_tensor([site_map[k] for k in keys],dtype=torch.long,device=device)
     site_counts=np.bincount(site_ids.cpu().numpy(),minlength=len(unique_sites)).astype(np.float64)
-    rows_out=[]
-    for start in range(0,len(candidates),chunk_size):
-        chunk=candidates[start:start+chunk_size]
-        pars=torch.as_tensor([[r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],r["alpha_obs"],r["beta"]]
-                              for r in chunk],dtype=pack["scores"].dtype,device=device)
-        c=len(chunk); sums={k:torch.zeros(c,dtype=pars.dtype,device=device) for k in
-            ("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll")}
-        site_sums=torch.zeros((c,len(unique_sites)),dtype=pars.dtype,device=device)
+
+    # beta is absent from parent and virtual logits, so group all beta variants
+    # by the five parameters that actually feed those logits.
+    base_fields=("temperature","theta_v","theta_s","alpha_prior","alpha_obs")
+    grouped={}
+    for idx,candidate in enumerate(candidates):
+        signature=tuple(float(candidate[name]) for name in base_fields)
+        grouped.setdefault(signature,[]).append((idx,candidate))
+    groups=list(grouped.items())
+    beta_values=sorted({float(row["beta"]) for row in candidates})
+    beta_index={value:i for i,value in enumerate(beta_values)}
+    beta_tensor=torch.as_tensor(beta_values,dtype=pack["scores"].dtype,device=device)
+    output=[None]*len(candidates)
+
+    for start in range(0,len(groups),chunk_size):
+        group_chunk=groups[start:start+chunk_size]
+        pars=torch.as_tensor([signature for signature,_ in group_chunk],dtype=pack["scores"].dtype,device=device)
+        c=len(group_chunk); k=len(beta_values)
+        sums={name:torch.zeros((c,k),dtype=pars.dtype,device=device) for name in
+              ("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll")}
+        site_sums=torch.zeros((c,k,len(unique_sites)),dtype=pars.dtype,device=device)
         for rs in range(0,len(pack["scores"]),row_chunk_size):
             re=min(rs+row_chunk_size,len(pack["scores"])); sl=slice(rs,re)
             scores=pack["scores"][sl]; z=pack["z"][sl]; bsz=len(scores)
             temp=pars[:,0,None,None]; tv=pars[:,1,None,None]; ts=pars[:,2,None,None]
-            ap=pars[:,3,None,None]; ao=pars[:,4,None,None]; beta=pars[:,5]
-            prior=scores[None]/temp; obs=z[None,:,:,0]*tv+z[None,:,:,1]*ts
+            ap=pars[:,3,None,None]; ao=pars[:,4,None,None]
+            prior=scores[None]/temp
+            obs=z[None,:,:,0]*tv+z[None,:,:,1]*ts
+            # Exactly two sparse graph multiplies per non-beta parameter tuple.
             pn=torch.sparse.mm(cached_graph,prior.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
             on=torch.sparse.mm(cached_graph,obs.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
             base=prior+obs
@@ -434,45 +553,62 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
             if len(edges):
                 delta=parent-base
                 v_logits=vbase+.5*(delta.index_select(2,edges[:,0])+delta.index_select(2,edges[:,1]))
-            else: v_logits=vbase
+            else:
+                v_logits=vbase
+
+            # All beta values are broadcast only after parent/v_logits exist.
             deg=endpoint["degree"]
-            pmass=torch.where(deg[None,:]>0,1-beta[:,None],torch.ones((c,n),dtype=pars.dtype,device=device))
-            pterms=parent+pmass.log()[:,None,:]
+            pmass=torch.where(deg[None,:]>0,1.0-beta_tensor[:,None],
+                              torch.ones((k,n),dtype=pars.dtype,device=device))
+            pterms=parent[:,None,:,:]+pmass[None,:,None,:].log()
             if len(edges):
-                emass=beta[:,None]*(endpoint["weight_i"]+endpoint["weight_j"])[None,:]
-                eterms=v_logits+emass.clamp_min(torch.finfo(pars.dtype).tiny).log()[:,None,:]
-                eterms=eterms.masked_fill(beta[:,None,None]==0.,-torch.inf)
+                emass=beta_tensor[:,None]*(endpoint["weight_i"]+endpoint["weight_j"])[None,:]
+                eterms=v_logits[:,None,:,:]+emass.clamp_min(torch.finfo(pars.dtype).tiny).log()[None,:,None,:]
+                eterms=eterms.masked_fill(beta_tensor[None,:,None,None]==0.0,-torch.inf)
                 q=torch.softmax(torch.cat([pterms,eterms],dim=-1),dim=-1)
-            else: q=torch.softmax(pterms,dim=-1)
+            else:
+                q=torch.softmax(pterms,dim=-1)
+
             sub_centers=centers[sl]; sub_lp=lp[sl]; target=pack["target"][sl]
-            target_cls=_target_class_ids({**pack,"building":pack["building"][sl],"floor":pack["floor"][sl],
-                                          "scores":pack["scores"][sl]},ctx)
-            masses=torch.zeros((c*bsz,len(ctx["class_pairs"])),dtype=q.dtype,device=device)
-            masses.scatter_add_(1,class_ids[None,:].expand(c*bsz,-1),q.reshape(c*bsz,-1))
-            masses=masses.reshape(c,bsz,-1); correct=(masses.argmax(-1)==target_cls[None]).to(q.dtype)
-            true_mass=masses.gather(2,target_cls[None,:,None].expand(c,bsz,1)).squeeze(-1)
+            target_cls=_target_class_ids({**pack,"building":pack["building"][sl],
+                                          "floor":pack["floor"][sl],"scores":pack["scores"][sl]},ctx)
+            flat_q=q.reshape(c*k*bsz,-1)
+            masses=torch.zeros((c*k*bsz,len(ctx["class_pairs"])),dtype=q.dtype,device=device)
+            masses.scatter_add_(1,class_ids[None,:].expand(c*k*bsz,-1),flat_q)
+            masses=masses.reshape(c,k,bsz,-1)
+            correct=(masses.argmax(-1)==target_cls[None,None,:]).to(q.dtype)
+            true_mass=masses.gather(3,target_cls[None,None,:,None].expand(c,k,bsz,1)).squeeze(-1)
             bfce=-true_mass.clamp_min(torch.finfo(q.dtype).tiny).log()
-            point=torch.einsum("cbm,bmd->cbd",q,sub_centers)
-            err=torch.linalg.vector_norm(point-target[None],dim=-1)
+            point=torch.einsum("ckbm,bmd->ckbd",q,sub_centers)
+            err=torch.linalg.vector_norm(point-target[None,None,:,:],dim=-1)
             dist=torch.linalg.vector_norm(sub_centers-target[:,None,:],dim=-1)
-            risk=(q*dist[None]).sum(-1); logq=q.clamp_min(torch.finfo(q.dtype).tiny).log()
-            valid_nll=(class_ids[None,:]==target_cls[:,None])[None]&(q>0)
-            nll=-torch.logsumexp((logq+sub_lp[None]).masked_fill(~valid_nll,-torch.inf),dim=-1)
-            wt=pack["weight"][sl][None]
-            for key,val in (("coordinate_mae_m",err),("transport_w1_m",risk),("bf_accuracy",correct),
-                            ("bf_cross_entropy",bfce),("joint_nll",nll)): sums[key]+=(val*wt).sum(1)
-            site_sums.scatter_add_(1,site_ids[sl][None,:].expand(c,-1),err)
-        site_means=site_sums/torch.as_tensor(site_counts,dtype=pars.dtype,device=device)[None,:]
-        p95=torch.quantile(site_means,.95,dim=1).cpu().tolist()
-        p99=torch.quantile(site_means,.99,dim=1).cpu().tolist(); worst=site_means.max(1).values.cpu().tolist()
-        vals={k:v.cpu().tolist() for k,v in sums.items()}
-        for i,candidate in enumerate(chunk):
-            row=dict(candidate); row.update({k:float(v[i]) for k,v in vals.items()})
-            row.update(site_p95_mae_m=float(p95[i]),site_p99_mae_m=float(p99[i]),
-                worst_site_mae_m=float(worst[i]),n_fit_rows=len(pack["scores"]),n_fit_sites=len(unique_sites))
-            rows_out.append(row)
-    # If no S2 edge survives the cutoff, beta cannot be identified; retain only beta=0.
-    return rows_out if len(edges) else [r for r in rows_out if float(r["beta"]) == 0.0]
+            risk=(q*dist[None,None,:,:]).sum(-1)
+            logq=q.clamp_min(torch.finfo(q.dtype).tiny).log()
+            valid_nll=(class_ids[None,:]==target_cls[:,None])[None,None,:,:]&(q>0)
+            nll=-torch.logsumexp((logq+sub_lp[None,None,:,:]).masked_fill(~valid_nll,-torch.inf),dim=-1)
+            wt=pack["weight"][sl][None,None,:]
+            for name,val in (("coordinate_mae_m",err),("transport_w1_m",risk),
+                             ("bf_accuracy",correct),("bf_cross_entropy",bfce),("joint_nll",nll)):
+                sums[name]+=(val*wt).sum(-1)
+            site_sums.reshape(c*k,len(unique_sites)).scatter_add_(
+                1,site_ids[None,:].expand(c*k,-1),err.reshape(c*k,bsz))
+
+        site_means=site_sums/torch.as_tensor(site_counts,dtype=pars.dtype,device=device)[None,None,:]
+        p95=torch.quantile(site_means,.95,dim=2).cpu().tolist()
+        p99=torch.quantile(site_means,.99,dim=2).cpu().tolist()
+        worst=site_means.max(2).values.cpu().tolist()
+        vals={name:value.cpu().tolist() for name,value in sums.items()}
+        for ci,(_,members) in enumerate(group_chunk):
+            for original_index,candidate in members:
+                bi=beta_index[float(candidate["beta"])]
+                row=dict(candidate)
+                row.update({name:float(values[ci][bi]) for name,values in vals.items()})
+                row.update(site_p95_mae_m=float(p95[ci][bi]),site_p99_mae_m=float(p99[ci][bi]),
+                    worst_site_mae_m=float(worst[ci][bi]),n_fit_rows=len(pack["scores"]),
+                    n_fit_sites=len(unique_sites))
+                output[original_index]=row
+    rows_out=[row for row in output if row is not None]
+    return rows_out if len(edges) else [row for row in rows_out if float(row["beta"])==0.0]
 
 
 def _primary(r): return float(r["coordinate_mae_m"])+.30*float(r["transport_w1_m"])
