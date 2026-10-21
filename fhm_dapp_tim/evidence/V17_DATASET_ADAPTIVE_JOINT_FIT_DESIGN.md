@@ -39,7 +39,7 @@ That is 3 × 3 × 3 × 6 × 3 × 9 = 4,374 calibration candidates per geometry, 
 
 ## Beta-independent sparse graph work
 
-For candidates sharing \((T,\theta_v,\theta_s,\alpha_{\mathrm{prior}},\alpha_{\mathrm{obs}})\), parent logits and virtual logits do not depend on \(\beta\). Compute the prior-channel and observation-channel sparse graph multiplications once each, then broadcast all nine beta values over the resulting logits. Regression tests require exactly two sparse.mm calls for a full nine-beta group.
+For candidates sharing \((T,\theta_v,\theta_s,\alpha_{\mathrm{prior}},\alpha_{\mathrm{obs}})\), parent logits and virtual logits do not depend on \(\beta\). For each chunk of non-beta parameter tuples and FIT rows, compute the prior-channel and observation-channel sparse graph multiplications once each, then broadcast all nine beta values over the resulting logits. Regression tests require exactly two sparse.mm calls for a full nine-beta group.
 
 ## Selection objective and BF-CE stability
 
