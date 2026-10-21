@@ -1,0 +1,31 @@
+name: V17 dataset-adaptive joint-fit tests
+
+on:
+  push:
+    branches:
+      - v17-dataset-adaptive-spatial-joint-fit-v1
+  workflow_dispatch:
+
+jobs:
+  joint-fit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install CPU test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy scipy pandas pytest
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Compile joint-fit implementation and dependencies
+        run: |
+          python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_spatial_operators_v1.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_spatial_composition_v1.py
+          python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_spatial_structure_v1.py
+          python -m py_compile tests/test_v17_dataset_adaptive_joint_fit_v1.py
+      - name: Run joint-fit unit tests
+        run: python -m pytest -q tests/test_v17_dataset_adaptive_joint_fit_v1.py
