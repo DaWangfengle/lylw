@@ -86,3 +86,35 @@ def test_joint_grid_contains_clean_s1_s2_boundaries_and_locks_gamma_zero():
     assert any(x["alpha_prior"] == 0 and x["alpha_obs"] == 0 and x["beta"] == 0 for x in candidates)
     assert any(x["beta"] == 0 and (x["alpha_prior"] > 0 or x["alpha_obs"] > 0) for x in candidates)
     assert any(x["alpha_prior"] == 0 and x["alpha_obs"] == 0 and x["beta"] > 0 for x in candidates)
+
+
+def test_cutoff_graph_is_deterministic_and_rejects_nonfinite_coordinates():
+    xy = np.asarray([[2., 0.], [0., 0.], [1., 0.]])
+    b = np.asarray([0, 0, 0])
+    f = np.asarray([0, 0, 0])
+    edges = np.asarray([[0, 1], [1, 2], [0, 2]], dtype=np.int64)
+    g1, e1, _ = joint.build_cutoff_graph(xy, b, f, edges, 1.1, 2.0)
+    g2, e2, _ = joint.build_cutoff_graph(xy, b, f, edges, 1.1, 2.0)
+    assert torch.equal(e1, e2)
+    assert torch.equal(g1.to_dense(), g2.to_dense())
+    bad = xy.copy()
+    bad[0, 0] = np.nan
+    with pytest.raises(ValueError, match="nonfinite"):
+        joint.build_cutoff_graph(bad, b, f, edges, 1.1, 2.0)
+
+
+def test_virtual_edge_weights_reject_invalid_indices_and_nonfinite_coordinates():
+    with pytest.raises(ValueError, match="endpoint outside"):
+        joint.normalized_virtual_endpoint_weights(np.asarray([[0, 9]]), np.zeros((2, 2)), 2.0)
+    bad = np.asarray([[0., 0.], [np.inf, 1.]])
+    with pytest.raises(ValueError, match="finite"):
+        joint.normalized_virtual_endpoint_weights(np.asarray([[0, 1]]), bad, 2.0)
+
+
+def test_test_row_guard_rejects_test_indices_without_reading_labels():
+    ctx = {"cal_fit": np.asarray([0, 1]), "cal_eval": np.asarray([2]),
+           "roles": {"test": np.asarray([3, 4])}}
+    assert joint._safe_rows(ctx, [0, 1], "CAL-fit").tolist() == [0, 1]
+    assert joint._safe_rows(ctx, [2], "CAL-eval").tolist() == [2]
+    with pytest.raises(RuntimeError, match="TEST row guard"):
+        joint._safe_rows(ctx, [3], "CAL-fit")
