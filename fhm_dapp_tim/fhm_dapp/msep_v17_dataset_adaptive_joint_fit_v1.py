@@ -709,6 +709,71 @@ def preflight(args):
       "FIT_only_geometry_verified":True,"internal_test_rows_scored":0,"official_test_rows_scored":0})
     print(json.dumps({"stage":"preflight_complete","output":str(out),"geometry_sets":len(spaces),**TEST_COUNTS},ensure_ascii=False),flush=True)
 
+def smoke(args):
+    """Small CAL-fit-only end-to-end check; never builds or scores CAL-eval."""
+    out=Path(args.output).resolve()
+    manifest_path=out/"EXECUTION_MANIFEST.json"
+    search_path=out/"SPATIAL_SCALE_SEARCH_SPACE.json"
+    if not manifest_path.is_file() or not search_path.is_file():
+        raise FileNotFoundError("run preflight first; EXECUTION_MANIFEST.json and SPATIAL_SCALE_SEARCH_SPACE.json are required")
+    manifest=_read_json(manifest_path)
+    comp._verify_source_manifest(manifest)
+    ds=s3.DATASETS[0]; seed=s3.SEEDS[0]; arm="D"
+    input_root=Path(args.input_root).resolve(); checkpoint_root=Path(args.checkpoint_root).resolve()
+    ctx=s3.reconstruct(ds,seed,input_root,torch.device(args.device))
+    fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")
+    checkpoint_path=comp._checkpoint_path(checkpoint_root,ds,seed,arm)
+    relative=str(checkpoint_path.relative_to(checkpoint_root)).replace("\\","/")
+    checkpoint_sha=s3.sha(checkpoint_path)
+    if manifest.get("checkpoint_sha256",{}).get(relative)!=checkpoint_sha:
+        raise RuntimeError("smoke checkpoint SHA does not match preflight manifest")
+    model,payload,native_alpha=comp._load_model(ctx,checkpoint_root,ds,seed,arm,args.device)
+    fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
+    geometry_set=_read_json(search_path)["outer_geometry_candidates"][f"{ds}_seed{seed}"]["geometry_candidates"]
+    geom=next(x for x in geometry_set if x.get("role")!="legacy_reference")
+    coords=ctx["memory"]["coords"].detach().cpu().numpy()
+    buildings=ctx["memory"]["building"].detach().cpu().numpy()
+    floors=ctx["memory"]["floor"].detach().cpu().numpy()
+    all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+    graph,_,gdiag=build_cutoff_graph(coords,buildings,floors,all_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
+    edge_lengths=np.linalg.norm(coords[all_edges[:,0]]-coords[all_edges[:,1]],axis=1) if len(all_edges) else np.empty(0)
+    s2_edges=all_edges[edge_lengths<=float(geom["r_max_s2_m"])] if len(all_edges) else all_edges
+    ep=normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
+    grid=_calibration_candidates()
+    clean=next(x for x in grid if x["alpha_prior"]==0.0 and x["alpha_obs"]==0.0 and x["beta"]==0.0)
+    single_s1=next(x for x in grid if x["alpha_prior"]>0.0 and x["alpha_obs"]==0.0 and x["beta"]==0.0)
+    single_s2=next(x for x in grid if x["alpha_prior"]==0.0 and x["alpha_obs"]==0.0 and x["beta"]>0.0)
+    selected=[dict(x,geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
+        tau_graph_m=geom["tau_graph_m"],r_max_s2_m=geom["r_max_s2_m"],
+        tau_virt_m=geom["tau_virt_m"],geometry_role=geom["role"])
+        for x in (clean,single_s1,single_s2)]
+    rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2_edges,geom,selected,endpoint_cache=ep)
+    required=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
+              "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
+    if len(rows)!=3 or any(not math.isfinite(float(row[k])) for row in rows for k in required):
+        raise RuntimeError("CAL-fit smoke evaluation produced missing/nonfinite metrics")
+    endpoint_sums=np.zeros(len(coords),dtype=np.float64)
+    if len(ep["edges"]):
+        np.add.at(endpoint_sums,ep["edges"][:,0],ep["weight_i"])
+        np.add.at(endpoint_sums,ep["edges"][:,1],ep["weight_j"])
+    active=ep["degree"]>0
+    if not np.allclose(endpoint_sums[active],1.0,atol=1e-10,rtol=1e-10):
+        raise RuntimeError("smoke test failed per-parent virtual measure conservation")
+    result={"status":"PASS","dataset":ds,"seed":int(seed),"backbone":arm,
+      "checkpoint_sha256":checkpoint_sha,"selected_epoch":int(payload["selected_epoch"]),
+      "native_E_alpha":native_alpha,"selection_role":"CAL-fit","evaluation_role":"smoke-only",
+      "cal_fit_rows":int(len(fit)),"candidate_count":len(rows),
+      "candidate_ids":[x["candidate_id"] for x in rows],
+      "candidate_metrics":[{k:float(x[k]) for k in ("coordinate_mae_m","transport_w1_m","bf_accuracy",
+        "bf_cross_entropy","joint_nll","site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")} for x in rows],
+      "geometry":geom,"graph_diagnostics":gdiag,"retained_s2_edges":int(len(s2_edges)),
+      "virtual_parent_measure_max_error":float(np.max(np.abs(endpoint_sums[active]-1.0))) if active.any() else 0.0,
+      "cal_eval_pack_constructed":False,"cal_eval_rows_scored":0,**TEST_COUNTS}
+    _write_json(out/"SMOKE_TEST.json",result)
+    print(json.dumps({"stage":"smoke_complete","dataset":ds,"seed":seed,"backbone":arm,
+      "candidate_count":len(rows),"cal_eval_rows_scored":0,**TEST_COUNTS},ensure_ascii=False),flush=True)
+
+
 def run(args):
     out=Path(args.output).resolve(); manifest_path=out/"EXECUTION_MANIFEST.json"
     manifest=_read_json(manifest_path)
@@ -979,13 +1044,14 @@ def aggregate(args):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__); sub=p.add_subparsers(dest="command",required=True)
-    for name in ("preflight","run","all","aggregate"):
+    for name in ("preflight","smoke","run","all","aggregate"):
         q=sub.add_parser(name); q.add_argument("--input-root",default=str(DEFAULT_INPUT))
         q.add_argument("--checkpoint-root",default=str(DEFAULT_CHECKPOINT_ROOT)); q.add_argument("--output",default=str(DEFAULT_OUTPUT))
         q.add_argument("--device",choices=("cpu","cuda"),default="cuda")
     args=p.parse_args(); torch.set_num_threads(4)
     if args.command=="preflight": preflight(args)
+    elif args.command=="smoke": smoke(args)
     elif args.command=="run": run(args)
     elif args.command=="aggregate": aggregate(argparse.Namespace(output=args.output))
-    else: preflight(args); run(args)
+    else: preflight(args); smoke(args); run(args)
 if __name__=="__main__": main()
