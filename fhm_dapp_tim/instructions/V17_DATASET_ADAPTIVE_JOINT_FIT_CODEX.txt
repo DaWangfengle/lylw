@@ -3,6 +3,8 @@ V17 数据集自适应空间尺度 + 联合参数搜索：本轮实验指令
 
 目标：快速验证统一 S1+S2 结构是否值得继续。只做推理期拟合，不训练 backbone，不读取 TEST 标签，不做工程重构。
 
+注意：这些命令要在本地具有 v17_two_stage_freeze_v1 证据文件和 C/D/E checkpoint 的工作副本中执行。GitHub 云端 quick-check 只验证语法和单元测试；不要在没有这些数据文件的云端 runner 上执行 preflight/run。
+
 代码入口：
   fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
 
