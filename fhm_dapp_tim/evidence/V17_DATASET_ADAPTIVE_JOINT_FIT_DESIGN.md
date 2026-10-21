@@ -35,7 +35,7 @@ Use:
 - \(\alpha_{\mathrm{obs}}\in\{0,0.10,0.25\}\)
 - \(\beta\in\{0,0.05,0.10,0.15,0.20,0.35,0.50,0.65,0.80\}\)
 
-That is 3 × 3 × 3 × 6 × 3 × 9 = 4,374 calibration candidates per geometry, or 69,984 candidates for 16 geometries per run, plus the separate clean-reference row. The actual baseline centers and generated local grids are written to each CAL_FIT_SELECTION.json. No sequential freezing is allowed.
+That is 3 × 3 × 3 × 6 × 3 × 9 = 4,374 calibration candidates per geometry. The current deterministic design uses 12 geometries (52,488 candidates per run) to control search cost, within the required 12–16 range, plus the separate clean-reference row. The actual baseline centers and generated local grids are written to each CAL_FIT_SELECTION.json. No sequential freezing is allowed.
 
 ## Beta-independent sparse graph work
 
