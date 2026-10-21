@@ -100,6 +100,7 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
 
 def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,sinkhorn_iterations=20000,tolerance=1e-10):
     xy=np.asarray(coords,dtype=np.float64); b=np.asarray(buildings,dtype=np.int64); f=np.asarray(floors,dtype=np.int64)
+    if xy.ndim!=2 or xy.shape[1]!=2 or len(b)!=len(xy) or len(f)!=len(xy) or len(xy)<1 or not np.isfinite(xy).all(): raise ValueError("invalid/nonfinite coordinates or building-floor arrays")
     e=np.asarray(torch.as_tensor(base_edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
     if not (math.isinf(float(r_max_m)) or (math.isfinite(float(r_max_m)) and r_max_m>0)): raise ValueError("R_max must be positive or +inf")
     if not (math.isinf(float(tau_graph_m)) or (math.isfinite(float(tau_graph_m)) and tau_graph_m>0)): raise ValueError("tau_graph must be positive or +inf")
@@ -145,6 +146,7 @@ def normalized_virtual_endpoint_weights(edges,coords,tau_virt_m):
     if not (math.isinf(float(tau_virt_m)) or (math.isfinite(float(tau_virt_m)) and tau_virt_m>0)): raise ValueError("tau_virt must be positive or +inf")
     if len(e):
         e=np.sort(e,axis=1)
+        if np.any(e<0) or np.any(e>=n): raise ValueError("virtual edge endpoint outside canonical anchor range")
         if len({tuple(x) for x in e.tolist()})!=len(e) or np.any(e[:,0]==e[:,1]): raise ValueError("virtual edges must be unique undirected non-self edges")
         d=np.linalg.norm(xy[e[:,0]]-xy[e[:,1]],axis=1)
         k=np.ones(len(e)) if math.isinf(float(tau_virt_m)) else np.exp(-np.minimum(d/float(tau_virt_m),745.0))
@@ -168,6 +170,10 @@ def weighted_cell_mixture(parent_logits,virtual_logits,edges,endpoint_weights,be
     if virtual_logits.shape!=(batch,ne): raise ValueError("virtual logits/edge count mismatch")
     if parent_centers.shape!=(batch,n,2) or parent_scales.shape!=parent_centers.shape: raise ValueError("parent components shape mismatch")
     if virtual_centers.shape!=(batch,ne,2) or virtual_scales.shape!=virtual_centers.shape: raise ValueError("virtual components shape mismatch")
+    if not torch.isfinite(parent_logits).all() or not torch.isfinite(virtual_logits).all(): raise ValueError("nonfinite mixture logits")
+    if not torch.isfinite(parent_centers).all() or not torch.isfinite(virtual_centers).all(): raise ValueError("nonfinite component centers")
+    if not torch.isfinite(parent_scales).all() or not torch.isfinite(virtual_scales).all(): raise ValueError("nonfinite component scales")
+    if bool((parent_scales<=0).any()) or bool((virtual_scales<=0).any()): raise ValueError("component scales must be positive")
     wi=torch.as_tensor(endpoint_weights["weight_i"],dtype=parent_logits.dtype,device=parent_logits.device)
     wj=torch.as_tensor(endpoint_weights["weight_j"],dtype=parent_logits.dtype,device=parent_logits.device)
     degree=torch.as_tensor(endpoint_weights["degree"],dtype=torch.long,device=parent_logits.device)
