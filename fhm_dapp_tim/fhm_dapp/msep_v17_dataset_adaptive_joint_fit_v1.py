@@ -99,38 +99,74 @@ def _pairwise_fit_geometry(coords,buildings,floors,edges):
         "groups":groups,"distance_semantics":"FIT anchor k-neighbors are within same building/floor; union-kNN edge lengths are reported separately."}
 
 def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,sinkhorn_iterations=20000,tolerance=1e-10):
+    """Build the symmetric doubly-stochastic cutoff graph in O(N+E) memory.
+
+    The old dense NxN balancing matrix was mathematically sparse (identity plus
+    retained union-kNN edges) but allocated several dense arrays. Here the same
+    symmetric Sinkhorn scaling is computed from endpoint accumulations, avoiding
+    O(N^2) memory while preserving identical graph semantics.
+    """
     xy=np.asarray(coords,dtype=np.float64); b=np.asarray(buildings,dtype=np.int64); f=np.asarray(floors,dtype=np.int64)
-    if xy.ndim!=2 or xy.shape[1]!=2 or len(b)!=len(xy) or len(f)!=len(xy) or len(xy)<1 or not np.isfinite(xy).all(): raise ValueError("invalid/nonfinite coordinates or building-floor arrays")
+    if xy.ndim!=2 or xy.shape[1]!=2 or len(b)!=len(xy) or len(f)!=len(xy) or len(xy)<1 or not np.isfinite(xy).all():
+        raise ValueError("invalid/nonfinite coordinates or building-floor arrays")
     e=np.asarray(torch.as_tensor(base_edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
-    if not (float(r_max_m)==math.inf or (math.isfinite(float(r_max_m)) and r_max_m>0)): raise ValueError("R_max must be positive or +inf")
-    if not (float(tau_graph_m)==math.inf or (math.isfinite(float(tau_graph_m)) and tau_graph_m>0)): raise ValueError("tau_graph must be positive or +inf")
+    if not (float(r_max_m)==math.inf or (math.isfinite(float(r_max_m)) and float(r_max_m)>0)):
+        raise ValueError("R_max must be positive or +inf")
+    if not (float(tau_graph_m)==math.inf or (math.isfinite(float(tau_graph_m)) and float(tau_graph_m)>0)):
+        raise ValueError("tau_graph must be positive or +inf")
+    if int(sinkhorn_iterations)<1 or not (math.isfinite(float(tolerance)) and float(tolerance)>0):
+        raise ValueError("Sinkhorn iteration budget and tolerance must be positive")
     n=len(xy)
     if len(e):
+        if np.any(e<0) or np.any(e>=n): raise ValueError("edge endpoint outside canonical anchor range")
         e=np.unique(np.sort(e,axis=1),axis=0)
-        if np.any(e[:,0]==e[:,1]) or np.any(e<0) or np.any(e>=n): raise ValueError("invalid edge")
-        if np.any(b[e[:,0]]!=b[e[:,1]]) or np.any(f[e[:,0]]!=f[e[:,1]]): raise ValueError("cross-BF edge rejected")
-        lengths=np.linalg.norm(xy[e[:,0]]-xy[e[:,1]],axis=1); keep=lengths<=float(r_max_m)
-        kept=e[keep]; d=lengths[keep]; removed=int((~keep).sum())
-    else: kept=np.empty((0,2),dtype=np.int64); d=np.empty(0); removed=0
-    a=np.eye(n,dtype=np.float64)
-    for (i,j),dist in zip(kept,d):
-        exponent=0.0 if float(tau_graph_m)==math.inf else float(dist)/float(tau_graph_m)
-        w=max(math.exp(-min(exponent,745.0)),np.finfo(np.float64).tiny); a[i,j]=a[j,i]=max(a[i,j],w)
-    scale=np.ones(n); converged=False; iterations=0
-    for iterations in range(1,sinkhorn_iterations+1):
-        mass=scale*(a@scale)
-        if not np.isfinite(mass).all() or np.any(mass<=0): raise RuntimeError("invalid Sinkhorn row mass")
+        if np.any(e[:,0]==e[:,1]): raise ValueError("self-edges are represented by the mandatory diagonal")
+        if np.any(b[e[:,0]]!=b[e[:,1]]) or np.any(f[e[:,0]]!=f[e[:,1]]):
+            raise ValueError("cross-BF edge rejected")
+        lengths=np.linalg.norm(xy[e[:,0]]-xy[e[:,1]],axis=1)
+        keep=lengths<=float(r_max_m); kept=e[keep]; d=lengths[keep]; removed=int((~keep).sum())
+    else:
+        kept=np.empty((0,2),dtype=np.int64); d=np.empty(0,dtype=np.float64); removed=0
+    if len(kept):
+        exponent=np.zeros_like(d) if float(tau_graph_m)==math.inf else d/float(tau_graph_m)
+        edge_kernel=np.maximum(np.exp(-np.minimum(exponent,745.0)),np.finfo(np.float64).tiny)
+        ei,ej=kept[:,0],kept[:,1]
+    else:
+        edge_kernel=np.empty(0,dtype=np.float64); ei=ej=np.empty(0,dtype=np.int64)
+    scale=np.ones(n,dtype=np.float64); converged=False; iterations=0
+    for iterations in range(1,int(sinkhorn_iterations)+1):
+        neighbor=np.zeros(n,dtype=np.float64)
+        if len(kept):
+            np.add.at(neighbor,ei,edge_kernel*scale[ej])
+            np.add.at(neighbor,ej,edge_kernel*scale[ei])
+        mass=scale*(scale+neighbor)  # A has unit diagonal plus retained weighted edges.
+        if not np.isfinite(mass).all() or np.any(mass<=0):
+            raise RuntimeError("invalid Sinkhorn row mass")
         updated=scale/np.sqrt(mass)
-        if float(np.max(np.abs(updated-scale)))<=tolerance: scale=updated; converged=True; break
+        if float(np.max(np.abs(updated-scale)))<=float(tolerance):
+            scale=updated; converged=True; break
         scale=updated
-    w=scale[:,None]*a*scale[None,:]
-    re=float(np.max(np.abs(w.sum(1)-1))); ce=float(np.max(np.abs(w.sum(0)-1)))
-    if not np.isfinite(w).all() or not np.allclose(w,w.T,atol=2e-10,rtol=2e-10): raise RuntimeError("nonfinite/asymmetric graph")
-    if max(re,ce)>2e-6: raise RuntimeError(f"Sinkhorn residual too large: {re},{ce}")
-    if np.any((w>0)&((b[:,None]!=b[None,:])|(f[:,None]!=f[None,:]))): raise RuntimeError("cross-BF graph weight")
-    rr,cc=np.nonzero(w>0)
+    diagonal=scale*scale
+    edge_values=scale[ei]*edge_kernel*scale[ej] if len(kept) else np.empty(0,dtype=np.float64)
+    row_mass=diagonal.copy()
+    if len(kept):
+        np.add.at(row_mass,ei,edge_values); np.add.at(row_mass,ej,edge_values)
+    re=float(np.max(np.abs(row_mass-1.0))); ce=re  # The constructed operator is exactly symmetric.
+    if not np.isfinite(diagonal).all() or not np.isfinite(edge_values).all():
+        raise RuntimeError("nonfinite balanced graph")
+    if max(re,ce)>2e-6:
+        raise RuntimeError(f"Sinkhorn residual too large: {re},{ce}; converged={converged}, iterations={iterations}")
+    rr=np.concatenate((np.arange(n,dtype=np.int64),ei,ej))
+    cc=np.concatenate((np.arange(n,dtype=np.int64),ej,ei))
+    vv=np.concatenate((diagonal,edge_values,edge_values))
     graph=torch.sparse_coo_tensor(torch.as_tensor(np.stack([rr,cc]),dtype=torch.long),
-        torch.as_tensor(w[rr,cc],dtype=torch.float32),(n,n)).coalesce()
+        torch.as_tensor(vv,dtype=torch.float32),(n,n)).coalesce()
+    # Check the actual float32 operator consumed by the model, not just float64 intermediates.
+    actual_rows=torch.sparse.sum(graph,dim=1).to_dense().cpu().numpy()
+    actual_cols=torch.sparse.sum(graph,dim=0).to_dense().cpu().numpy()
+    actual_re=float(np.max(np.abs(actual_rows-1.0))); actual_ce=float(np.max(np.abs(actual_cols-1.0)))
+    if max(actual_re,actual_ce)>2e-6:
+        raise RuntimeError(f"float32 graph residual too large: {actual_re},{actual_ce}")
     deg=np.bincount(kept.reshape(-1),minlength=n) if len(kept) else np.zeros(n,dtype=np.int64)
     return graph,torch.as_tensor(kept.copy(),dtype=torch.long),{
         "r_max_s1_m":float(r_max_m),"tau_graph_m":float(tau_graph_m),"base_edges":int(len(e)),
@@ -138,7 +174,7 @@ def build_cutoff_graph(coords,buildings,floors,base_edges,r_max_m,tau_graph_m,*,
         "retained_fraction":float(len(kept)/len(e)) if len(e) else 0.0,
         "degree_min":int(deg.min()),"degree_median":float(np.median(deg)),"degree_max":int(deg.max()),
         "zero_neighbor_nodes":int((deg==0).sum()),"sinkhorn_converged":converged,
-        "sinkhorn_iterations":iterations,"sinkhorn_row_error":re,"sinkhorn_col_error":ce,
+        "sinkhorn_iterations":iterations,"sinkhorn_row_error":actual_re,"sinkhorn_col_error":actual_ce,
         "retained_edge_distance_m":_quantiles(d),"retained_edge_threshold_counts":_threshold_counts(d)}
 
 def normalized_virtual_endpoint_weights(edges,coords,tau_virt_m):
