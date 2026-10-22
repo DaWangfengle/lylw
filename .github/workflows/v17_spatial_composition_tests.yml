@@ -5,6 +5,7 @@ on:
     branches:
       - v17-spatial-composition-v1
       - v17-dataset-adaptive-spatial-joint-fit-v1
+      - v17-dataset-adaptive-spatial-joint-fit-fix-v1
   workflow_dispatch:
 
 jobs:
