@@ -394,8 +394,8 @@ def geometry_candidates(diag):
     # S1 uses P75/P90/P95/P100. S2 uses P50..P100. Kernel temperatures use
     # neighbor P50 and edge P50/P75/P90 values, never cutoff-derived multipliers.
     for r1_q,r1 in r1_levels:
-        eligible=[(q,cutoff_by_quantile[q]) for q in CUTOFF_QUANTILES
-                  if cutoff_by_quantile[q]<=r1+1e-10*max(1.0,r1)]
+        r1_quantile_index=CUTOFF_QUANTILES.index(r1_q)
+        eligible=[(q,cutoff_by_quantile[q]) for q in CUTOFF_QUANTILES[:r1_quantile_index+1]]
         if not eligible:
             raise RuntimeError(f"no eligible S2 edge quantile for S1 radius {r1_q}")
         r2_low=eligible[0]
@@ -804,6 +804,15 @@ def _assert_clean_anchor_feasible(rows,baseline_config,expected_geometry_count):
         raise RuntimeError(
             f"expected one exact clean calibration anchor per geometry ({expected_geometry_count}); found {len(anchors)}"
         )
+    anchor_geometry_ids={str(r.get("geometry_id")) for r in anchors}
+    if len(anchor_geometry_ids)!=int(expected_geometry_count):
+        raise RuntimeError(
+            f"exact clean calibration anchors do not cover distinct geometries: "
+            f"{len(anchor_geometry_ids)} unique geometry IDs for {expected_geometry_count} geometries"
+        )
+    baseline_refs=[r for r in rows if r.get("candidate_id")=="clean_baseline_reference"]
+    if len(baseline_refs)!=1:
+        raise RuntimeError(f"expected one clean baseline reference row, found {len(baseline_refs)}")
     failed=[r for r in anchors if not r.get("feasible",False)]
     if failed:
         baseline=next((x for x in rows if x.get("candidate_id")=="clean_baseline_reference"),None)
