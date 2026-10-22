@@ -261,7 +261,7 @@ def test_geometry_pool_separates_cutoff_radii_from_kernel_temperatures():
         joint._validate_kernel_scales(pools, invalid_tau)
 
 
-def test_geometry_support_validation_rejects_sparse_or_empty_virtual_graphs():
+def test_geometry_support_validation_rejects_sparse_or_empty_virtual_graphs(monkeypatch):
     coords = np.asarray([[0., 0.], [1., 0.], [3., 0.], [6., 0.], [10., 0.],
                          [15., 0.], [21., 0.], [28., 0.], [36., 0.], [45., 0.]])
     edges = np.asarray([[i, i + 1] for i in range(len(coords) - 1)], dtype=np.int64)
@@ -279,6 +279,21 @@ def test_geometry_support_validation_rejects_sparse_or_empty_virtual_graphs():
     invalid[0]["r_max_s2_m"] = 0.5
     with pytest.raises(RuntimeError, match="R_max_S2 is not FIT edge"):
         joint._validate_geometry_support(coords, edges, invalid)
+
+    # Separately exercise the hard support threshold even if a malformed/stale
+    # diagnostic claimed a sparse radius was a P50 quantile.
+    original_quantiles = joint._quantiles
+    fake_edge_quantiles = {"p50": 1.0, "p75": 2.0, "p90": 3.0, "p95": 4.0, "p100": 9.0}
+    def quantiles_with_sparse_p50(values):
+        if np.asarray(values).size == len(edges):
+            return fake_edge_quantiles
+        return original_quantiles(values)
+    monkeypatch.setattr(joint, "_quantiles", quantiles_with_sparse_p50)
+    sparse = [dict(g) for g in geoms]
+    sparse[0]["r_max_s1_m"] = 9.0
+    sparse[0]["r_max_s2_m"] = 1.0
+    with pytest.raises(RuntimeError, match="requires at least"):
+        joint._validate_geometry_support(coords, edges, sparse)
 
 
 def test_historical_clean_and_old_combo_must_match_frozen_checkpoint(monkeypatch, tmp_path):
@@ -461,20 +476,23 @@ def test_bf_cross_entropy_guard_uses_floor_and_absolute_tolerance():
 def test_mae_guard_blocks_tradeoffs_even_when_bf_ce_and_nll_improve():
     base = {
         "coordinate_mae_m": 2.0, "transport_w1_m": 1.0,
-        "bf_accuracy": 1.0, "bf_cross_entropy": 0.015, "joint_nll": 4.0,
+        "bf_accuracy": 1.0, "bf_cross_entropy": 0.015, "joint_nll": 10.0,
     }
     candidate = {
         "candidate_id": "lower_ce_nll_but_worse_mae", "geometry_id": "g0",
         "coordinate_mae_m": 2.05, "transport_w1_m": 0.8,
-        "bf_accuracy": 1.0, "bf_cross_entropy": 0.0065, "joint_nll": 3.5,
+        "bf_accuracy": 1.0, "bf_cross_entropy": 0.0065, "joint_nll": 5.5,
     }
     checked = joint._add_objectives([candidate], base)[0]
     assert checked["normalized_bf_cross_entropy_penalty"] == pytest.approx(0.0)
     assert checked["normalized_bf_cross_entropy_delta"] < 0.0
     assert checked["normalized_primary"] == pytest.approx(2.05 / 2.0)
     assert checked["normalized_w1_delta"] == pytest.approx(-0.2)
-    expected = 2.05 / 2.0 + 0.10 * (-0.2) + 0.02 * ((3.5 - 4.0) / 4.0)
-    assert checked["selection_objective_lambda_0.02"] == pytest.approx(expected)
+    expected02 = 2.05 / 2.0 + 0.10 * (-0.2) + 0.02 * ((5.5 - 10.0) / 10.0)
+    expected05 = 2.05 / 2.0 + 0.10 * (-0.2) + 0.05 * ((5.5 - 10.0) / 10.0)
+    assert checked["selection_objective_lambda_0.02"] == pytest.approx(expected02)
+    assert checked["selection_objective_lambda_0.05"] == pytest.approx(expected05)
+    assert expected05 < 1.0  # scalar score alone would prefer this candidate
     assert checked["mae_non_degradation"] is False
     assert checked["feasible"] is False
 
