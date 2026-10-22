@@ -1,0 +1,128 @@
+V17 Dataset-Adaptive Spatial Joint Fit — Iter3 Codex Runbook
+==============================================================
+
+Branch: v17-dataset-adaptive-spatial-joint-fit-fix-v1
+Entry point: fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
+Fresh output: fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3
+
+Purpose
+-------
+Verify the two iter2 defects are fixed, preflight all FIT geometry, then run TUJI only.
+Do not start UTS or UJI until the TUJI outputs have been reviewed.
+
+The source and regression tests should already be updated on this branch. Inspect
+the changes; do not blindly reimplement them. Do not commit, push, upload, create
+another branch, train the backbone, or read/score internal TEST or official TEST.
+Git upload is handled by the user.
+
+1. Confirm the workspace before running
+---------------------------------------
+- Confirm the current branch is exactly v17-dataset-adaptive-spatial-joint-fit-fix-v1.
+- Confirm the source and test files contain the iter3 changes described below.
+- If the branch is wrong, local changes are dirty, or the output directory already
+  contains previous results, stop and report that fact. Do not reset or overwrite
+  user work. If needed, ask the user to switch branches first.
+- Use the same Python environment as iter2 if available:
+  D:\miniminiconda\envs\liuyan\python.exe
+  Otherwise use the active project environment and record sys.executable.
+
+2. Compile and run targeted tests
+---------------------------------
+Run:
+
+  python -m py_compile fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
+  python -m pytest -q tests/test_v17_dataset_adaptive_joint_fit_v1.py
+
+If either fails, do not run preflight or scoring. Diagnose the failure and make only
+the smallest scientifically justified source/test change. Do not relax the guards
+to force a passing run. Re-run both commands after any fix.
+
+The tests must cover:
+- cutoff-radius pools are strictly separated from kernel-temperature pools;
+- cutoff candidates are actual FIT union-kNN edge quantiles, including P100=max;
+- S2 support validation rejects unsupported/sparse candidate radii;
+- BF-CE improvements produce zero objective reward;
+- a candidate with better BF-CE/NLL but worse MAE is infeasible;
+- an exact clean calibration anchor passes all feasibility guards.
+
+3. Run FIT-only preflight into the fresh iter3 directory
+-------------------------------------------------------
+Run:
+
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 preflight --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3
+
+Preflight must finish successfully before any dataset run. Inspect:
+- FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md
+- SPATIAL_SCALE_SEARCH_SPACE.json
+
+Expected geometry design for every dataset × seed:
+- exactly 12 geometry configurations;
+- R_max_S1 comes only from the actual union-kNN edge P75/P90/P95/P100 values;
+- R_max_S2 comes only from the actual union-kNN edge P50/P75/P90/P95/P100 values;
+- finite tau_graph and tau_virt come only from FIT k=1/2/4/8 neighbor P50 and edge P50/P75/P90;
+- tau_virt=+infinity is present as a no-distance-decay control;
+- R_max_S2 <= R_max_S1;
+- no cutoff exceeds the actual edge P100;
+- every S1 graph retains at least one base edge;
+- every S2 graph retains at least ceil(0.45 * base_union_knn_edges) edges;
+- each geometry records actual retained S1/S2 edge counts and fractions.
+
+There should be nine dataset/seed geometry sets across TUJI, UTS, and UJI. The preflight
+must validate actual edge distances, not merely trust the quantile labels. If any set
+fails, stop and report the dataset/seed, geometry_id, radius, actual retained counts,
+and exception. Do not start TUJI until the full preflight passes.
+
+4. Run TUJI only
+----------------
+After preflight passes, run:
+
+  python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1 run --dataset tuji --output fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3 --device cuda
+
+If CUDA is unavailable, run the whole TUJI stage with --device cpu; do not mix
+devices within one dataset stage. Do not start UTS or UJI in this iteration yet.
+
+TUJI should complete all 3 seeds × C/D/E (9 checkpoint runs). Each run evaluates
+12 × 4,374 = 52,488 grid candidates plus one clean-reference row. Preserve stdout,
+stderr, exit code, elapsed time, and command in the iter3 run logs without overwriting
+any earlier logs.
+
+5. Audit TUJI before stopping
+-----------------------------
+Inspect each TUJI run's:
+- CAL_FIT_SELECTION.json
+- CAL_EVAL_REPORT.json
+- CANDIDATE_METRICS.csv
+- geometry_diagnostics and the aggregate CAL_EVAL_REPORT.md
+
+Verify:
+- one exact clean calibration anchor exists per geometry;
+- the runtime anchor assertion passes; do not weaken its tolerance after a failure;
+- selected candidates have mae_non_degradation=true;
+- selected BF accuracy is not below the clean CAL-fit baseline;
+- BF-CE feasibility uses BFCE <= 1.02 * BFCE_clean + 0.005;
+- normalized_bf_cross_entropy_penalty is max(0, BFCE-BFCE_clean)/max(BFCE_clean,0.05), so BF-CE improvement is not a negative reward;
+- the objective uses MAE/MAE_clean as the primary term, 0.10 normalized W1 delta,
+  0.25 one-sided BF-CE penalty, and lambda × normalized NLL delta;
+- runtime S1/S2 edge counts equal the preflight support validation;
+- internal_test_rows_scored=0 and official_test_rows_scored=0.
+
+Report CAL-eval MAE, ES/W1, NLL, BF accuracy, BF-CE, P95, P99 and worst-site changes
+paired against the clean baseline. CAL-eval is reporting-only: do not use it to alter
+the objective, thresholds, geometry candidates, or lambda choice.
+
+6. Stop condition
+-----------------
+After TUJI has completed and its outputs are audited, stop. Do not run UTS or UJI,
+do not train any backbone, and do not score TEST. Report the exact output directory,
+test/preflight/run exit codes, candidate/support counts, any failure, and the TUJI
+paired CAL-eval metrics. The user will review these findings before authorizing the
+next dataset stage.
+
+Scientific guardrails
+---------------------
+- Never replace a missing FIT quantile with a guessed value or a fixed meter list.
+- Never relax the 45% S2 support guard or 1e-6 m MAE guard merely to get a run through.
+- If the exact baseline anchor fails, treat it as a metric-path or implementation defect
+  and diagnose it; do not force feasible=true.
+- Do not claim the MAE guard guarantees CAL-eval or external-test improvement.
+- Do not commit, push, or upload Git changes.
