@@ -221,27 +221,59 @@ def test_negative_infinity_scale_and_nonfinite_mixture_logits_are_rejected():
             torch.zeros((1, 1, 2)), torch.ones((1, 1, 2)))
 
 
-def test_geometry_pool_uses_fit_neighbor_scales_and_builds_12_to_16_valid_configs():
-    diag = {"kth_neighbor_distance_m": {
-        str(k): {"p50": float(2 * k), "p90": float(3 * k),
-                 "p75": float(2.5 * k), "p95": float(3.5 * k), "p25": float(1.5 * k)}
-        for k in (1, 2, 4, 8)
-    }}
-    pool = joint._geometry_value_pool(diag)
-    assert len(pool) <= 8
-    assert {2.0, 4.0, 8.0, 16.0}.issubset(set(pool))
-    assert all(math.isfinite(x) and x > 0 for x in pool)
+def test_geometry_pool_separates_cutoff_radii_from_kernel_temperatures():
+    edge_quantiles = {"p50": 2.0, "p75": 3.0, "p90": 4.0, "p95": 5.0, "p100": 6.0}
+    diag = {
+        "base_union_knn_edges": 100,
+        "base_union_knn_edge_distance_m": {**edge_quantiles, "p99": 5.5, "count": 100},
+        "kth_neighbor_distance_m": {
+            str(k): {"p50": float(2 * k), "p90": float(3 * k),
+                     "p75": float(2.5 * k), "p95": float(3.5 * k), "p25": float(1.5 * k)}
+            for k in (1, 2, 4, 8)
+        },
+    }
+    pools = joint._geometry_candidate_pools(diag)
+    assert pools["r_max_s1_m"] == pytest.approx([2.0, 3.0, 4.0, 5.0, 6.0])
+    assert pools["r_max_s2_m"] == pytest.approx([2.0, 3.0, 4.0, 5.0, 6.0])
+    expected_kernel = sorted({2.0, 4.0, 8.0, 16.0, 3.0})
+    assert pools["tau_graph_m"] == pytest.approx(expected_kernel)
+    assert pools["tau_virt_m"] == pytest.approx(expected_kernel)
+    assert 0.5 not in pools["r_max_s1_m"]
+    assert max(pools["r_max_s1_m"]) == pytest.approx(edge_quantiles["p100"])
 
     geoms, metadata = joint.geometry_candidates(diag)
-    assert 12 <= len(geoms) <= 16
+    assert len(geoms) == 12
     assert all(math.isfinite(g["r_max_s1_m"]) and math.isfinite(g["tau_graph_m"])
                and math.isfinite(g["r_max_s2_m"]) for g in geoms)
     assert all(g["r_max_s2_m"] <= g["r_max_s1_m"] for g in geoms)
     assert any(math.isinf(g["tau_virt_m"]) for g in geoms)
-    assert all(g["r_max_s1_m"] in metadata["by_parameter_m"]["r_max_s1_m"] for g in geoms)
-    assert all(g["tau_graph_m"] in metadata["by_parameter_m"]["tau_graph_m"] for g in geoms)
-    assert all(g["r_max_s2_m"] <= g["r_max_s1_m"] for g in geoms)
+    assert all(g["r_max_s1_m"] in pools["r_max_s1_m"] for g in geoms)
+    assert all(g["r_max_s2_m"] in pools["r_max_s2_m"] for g in geoms)
+    assert all(g["tau_graph_m"] in pools["tau_graph_m"] for g in geoms)
+    assert all(math.isinf(g["tau_virt_m"]) or g["tau_virt_m"] in pools["tau_virt_m"] for g in geoms)
+    assert all(g["r_max_s1_quantile"] in ("p75", "p90", "p95", "p100") for g in geoms)
+    assert all(g["r_max_s2_quantile"] in ("p50", "p75", "p90", "p95", "p100") for g in geoms)
     assert metadata["r_max_s2_le_r_max_s1"] is True
+
+
+def test_geometry_support_validation_rejects_sparse_or_empty_virtual_graphs():
+    coords = np.asarray([[0., 0.], [1., 0.], [3., 0.], [6., 0.], [10., 0.],
+                         [15., 0.], [21., 0.], [28., 0.], [36., 0.], [45., 0.]])
+    edges = np.asarray([[i, i + 1] for i in range(len(coords) - 1)], dtype=np.int64)
+    buildings = np.zeros(len(coords), dtype=np.int64)
+    floors = np.zeros(len(coords), dtype=np.int64)
+    diag = joint._pairwise_fit_geometry(coords, buildings, floors, edges)
+    geoms, _ = joint.geometry_candidates(diag)
+    support = joint._validate_geometry_support(coords, edges, geoms)
+    assert len(support) == len(geoms) == 12
+    assert all(v["retained_s1_edges"] > 0 for v in support.values())
+    assert all(v["retained_virtual_edges"] >= v["minimum_required_virtual_edges"] for v in support.values())
+    assert all(v["retained_virtual_fraction"] >= 0.45 for v in support.values())
+
+    invalid = [dict(g) for g in geoms]
+    invalid[0]["r_max_s2_m"] = 0.5
+    with pytest.raises(RuntimeError, match="R_max_S2 is not FIT edge"):
+        joint._validate_geometry_support(coords, edges, invalid)
 
 
 def test_historical_clean_and_old_combo_must_match_frozen_checkpoint(monkeypatch, tmp_path):
@@ -371,7 +403,9 @@ def test_geometry_scales_change_proportionally_with_dataset_fit_quantiles():
             "base_union_knn_edge_distance_m": {
                 "p50": 2.0 * scale, "p75": 3.0 * scale,
                 "p90": 4.0 * scale, "p95": 5.0 * scale, "p99": 6.0 * scale,
+                "p100": 7.0 * scale, "count": 100,
             },
+            "base_union_knn_edges": 100,
         }
     a = joint._geometry_candidate_pools(make_diag(1.0))
     b = joint._geometry_candidate_pools(make_diag(10.0))
@@ -406,6 +440,10 @@ def test_bf_cross_entropy_guard_uses_floor_and_absolute_tolerance():
     checked = joint._add_objectives([candidate], base)[0]
     assert checked["normalized_bf_cross_entropy"] == pytest.approx(0.004 / 0.05)
     assert checked["normalized_bf_cross_entropy_delta"] == pytest.approx((0.004 - 1e-4) / 0.05)
+    assert checked["normalized_bf_cross_entropy_penalty"] == pytest.approx((0.004 - 1e-4) / 0.05)
+    assert checked["normalized_primary"] == pytest.approx(1.0)
+    assert checked["normalized_w1_delta"] == pytest.approx(0.0)
+    assert checked["mae_non_degradation"] is True
     assert checked["bf_cross_entropy_guard"] is True
     assert checked["feasible"] is True
 
@@ -413,6 +451,50 @@ def test_bf_cross_entropy_guard_uses_floor_and_absolute_tolerance():
     checked_worse = joint._add_objectives([worse], base)[0]
     assert checked_worse["bf_cross_entropy_guard"] is False
     assert checked_worse["feasible"] is False
+
+
+def test_mae_guard_blocks_tradeoffs_even_when_bf_ce_and_nll_improve():
+    base = {
+        "coordinate_mae_m": 2.0, "transport_w1_m": 1.0,
+        "bf_accuracy": 1.0, "bf_cross_entropy": 0.015, "joint_nll": 4.0,
+    }
+    candidate = {
+        "candidate_id": "lower_ce_nll_but_worse_mae", "geometry_id": "g0",
+        "coordinate_mae_m": 2.05, "transport_w1_m": 0.8,
+        "bf_accuracy": 1.0, "bf_cross_entropy": 0.0065, "joint_nll": 3.5,
+    }
+    checked = joint._add_objectives([candidate], base)[0]
+    assert checked["normalized_bf_cross_entropy_penalty"] == pytest.approx(0.0)
+    assert checked["normalized_bf_cross_entropy_delta"] < 0.0
+    assert checked["normalized_primary"] == pytest.approx(2.05 / 2.0)
+    assert checked["normalized_w1_delta"] == pytest.approx(-0.2)
+    expected = 2.05 / 2.0 + 0.10 * (-0.2) + 0.02 * ((3.5 - 4.0) / 4.0)
+    assert checked["selection_objective_lambda_0.02"] == pytest.approx(expected)
+    assert checked["mae_non_degradation"] is False
+    assert checked["feasible"] is False
+
+
+def test_exact_clean_anchor_guarantees_nonempty_feasible_set():
+    base = {
+        "candidate_id": "clean_baseline_reference", "coordinate_mae_m": 2.0,
+        "transport_w1_m": 1.0, "bf_accuracy": 1.0, "bf_cross_entropy": 0.015,
+        "joint_nll": 4.0, "site_p95_mae_m": 3.0, "site_p99_mae_m": 4.0,
+        "worst_site_mae_m": 5.0,
+    }
+    baseline_config = {"temperature": 1.0, "theta": [0.75, 0.5]}
+    anchors = []
+    for i in range(3):
+        anchors.append({
+            "candidate_id": f"g{i}__exact_clean_anchor", "geometry_id": f"g{i}",
+            "temperature": 1.0, "theta_v": 0.75, "theta_s": 0.5,
+            "alpha_prior": 0.0, "alpha_obs": 0.0, "beta": 0.0,
+            "coordinate_mae_m": 2.0, "transport_w1_m": 1.0,
+            "bf_accuracy": 1.0, "bf_cross_entropy": 0.015, "joint_nll": 4.0,
+            "site_p95_mae_m": 3.0, "site_p99_mae_m": 4.0, "worst_site_mae_m": 5.0,
+        })
+    rows = joint._add_objectives(anchors + [base], base)
+    joint._assert_clean_anchor_feasible(rows, baseline_config, expected_geometry_count=3)
+    assert all(r["feasible"] for r in rows[:3])
 
 def test_legacy_clean_baseline_is_comparison_only_not_a_search_candidate():
     common = {
