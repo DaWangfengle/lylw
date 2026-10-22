@@ -1,3 +1,13 @@
+SUPERSEDED NOTICE — ITER2 ONLY
+================================
+
+This file is retained for historical provenance and is NOT the runbook for iter3.
+Its earlier allowance for dimensionless multipliers in spatial cutoff pools and its
+earlier MAE + 0.30*W1 objective are superseded by:
+  V17_DATASET_ADAPTIVE_JOINT_FIT_ITER3_CODEX.txt
+Use that iter3 runbook on branch v17-dataset-adaptive-spatial-joint-fit-fix-v1.
+Do not run the commands below as the iter3 protocol.
+
 V17 数据集自适应空间尺度 + 联合参数搜索：修订后的 Codex 执行指令
 ====================================================================
 
