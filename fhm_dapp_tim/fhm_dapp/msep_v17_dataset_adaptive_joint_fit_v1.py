@@ -499,6 +499,28 @@ def _validate_geometry_support(coords,base_edges,geometries,
     return result
 
 
+def _validate_kernel_scales(pools,geometries):
+    """Reject stale or hand-edited temperature values at both preflight and run time."""
+    if not 12<=len(geometries)<=16:
+        raise RuntimeError(f"expected 12-16 spatial geometries, got {len(geometries)}")
+    graph_pool=[float(x) for x in pools["tau_graph_m"]]
+    virt_pool=[float(x) for x in pools["tau_virt_m"]]
+    def matches(value,values):
+        return any(math.isclose(value,x,rel_tol=1e-8,abs_tol=1e-10) for x in values)
+    for geom in geometries:
+        gid=str(geom.get("geometry_id","<missing>"))
+        tau_graph=float(geom["tau_graph_m"])
+        tau_virt=float(geom["tau_virt_m"])
+        if not math.isfinite(tau_graph) or tau_graph<=0 or not matches(tau_graph,graph_pool):
+            raise RuntimeError(f"{gid}: tau_graph is not a current FIT neighbor/edge P50 scale")
+        if math.isinf(tau_virt):
+            if tau_virt<0:
+                raise RuntimeError(f"{gid}: tau_virt must be +infinity, not -infinity")
+        elif not math.isfinite(tau_virt) or tau_virt<=0 or not matches(tau_virt,virt_pool):
+            raise RuntimeError(f"{gid}: finite tau_virt is not a current FIT neighbor/edge P50/P75/P90 scale")
+    return True
+
+
 def _subset_virtual_pack(pack,edge_ids):
     out=dict(pack); idx=torch.as_tensor(edge_ids,dtype=torch.long,device=pack["scores"].device)
     for name in ("virtual_scores","virtual_z","virtual_xy","virtual_sigma","geometric_xy"):
@@ -985,6 +1007,7 @@ def preflight(args):
         d.update(dataset=ds,seed=int(seed),cal_fit_rows=len(fit),cal_eval_rows=len(ev))
         diagnostics[key]=d
         geoms,pools=geometry_candidates(d)
+        _validate_kernel_scales(pools["by_parameter_m"],geoms)
         support=_validate_geometry_support(xy,ctx["edges"],geoms)
         for geom in geoms: geom["support_diagnostics"]=support[geom["geometry_id"]]
         spaces[key]={"dataset":ds,"seed":int(seed),
@@ -1047,6 +1070,12 @@ def run(args):
         ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
         fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")
         ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
+        coords=ctx["memory"]["coords"].detach().cpu().numpy()
+        b=ctx["memory"]["building"].detach().cpu().numpy()
+        f=ctx["memory"]["floor"].detach().cpu().numpy()
+        base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+        runtime_diag=_pairwise_fit_geometry(coords,b,f,base_edges)
+        runtime_pools=_geometry_candidate_pools(runtime_diag)
         for arm in ARMS:
             rd=out/"runs"/f"{ds}_seed{seed}"/arm
             rd.mkdir(parents=True,exist_ok=True)
@@ -1054,15 +1083,12 @@ def run(args):
             ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm)
             ckpt_sha=s3.sha(ckpt)
             model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
-            base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
             fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
             baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx,ckpt_sha)
             inner=_calibration_candidates(baseline_config)
             calibration_grid=_calibration_grid_spec(baseline_config)
-            coords=ctx["memory"]["coords"].detach().cpu().numpy()
-            b=ctx["memory"]["building"].detach().cpu().numpy()
-            f=ctx["memory"]["floor"].detach().cpu().numpy()
             geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
+            _validate_kernel_scales(runtime_pools,geoms)
             support_by_geometry=_validate_geometry_support(coords,base_edges,geoms)
             rows_all=[]; geometry_diagnostics={}
             for geom in geoms:
