@@ -1,0 +1,325 @@
+﻿dataset,seed,backbone,geometry_id,nominal_candidates,eligible_candidates,guard_feasible_candidates,excluded_candidates,reason,retained_s2_edges
+tuji,17301,C,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17301,C,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17301,C,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17301,C,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,C,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17301,D,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17301,D,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17301,D,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17301,D,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,D,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17301,E,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17301,E,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17301,E,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17301,E,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17301,E,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17302,C,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17302,C,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17302,C,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17302,C,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,C,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17302,D,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17302,D,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17302,D,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17302,D,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,D,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17302,E,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17302,E,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17302,E,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17302,E,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17302,E,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17303,C,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17303,C,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17303,C,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17303,C,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,C,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17303,D,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17303,D,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17303,D,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17303,D,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,D,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+tuji,17303,E,fit_quantile_geometry_00,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_01,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_02,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_03,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_04,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_05,4374,4374,4374,0,,1361
+tuji,17303,E,fit_quantile_geometry_06,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_07,4374,4374,4374,0,,1361
+tuji,17303,E,fit_quantile_geometry_08,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_09,4374,4374,4374,0,,2946
+tuji,17303,E,fit_quantile_geometry_10,4374,486,486,3888,No S2 edges: positive beta is undefined,0
+tuji,17303,E,fit_quantile_geometry_11,4374,4374,4374,0,,2946
+uts,17301,C,fit_quantile_geometry_00,4374,4374,2592,0,,9
+uts,17301,C,fit_quantile_geometry_01,4374,4374,2592,0,,9
+uts,17301,C,fit_quantile_geometry_02,4374,4374,2592,0,,9
+uts,17301,C,fit_quantile_geometry_03,4374,4374,2592,0,,9
+uts,17301,C,fit_quantile_geometry_04,4374,4374,2366,0,,9
+uts,17301,C,fit_quantile_geometry_05,4374,4374,2178,0,,1934
+uts,17301,C,fit_quantile_geometry_06,4374,4374,2160,0,,9
+uts,17301,C,fit_quantile_geometry_07,4374,4374,2121,0,,1934
+uts,17301,C,fit_quantile_geometry_08,4374,4374,2329,0,,9
+uts,17301,C,fit_quantile_geometry_09,4374,4374,2019,0,,5000
+uts,17301,C,fit_quantile_geometry_10,4374,4374,2070,0,,9
+uts,17301,C,fit_quantile_geometry_11,4374,4374,1903,0,,5000
+uts,17301,D,fit_quantile_geometry_00,4374,4374,2592,0,,9
+uts,17301,D,fit_quantile_geometry_01,4374,4374,2592,0,,9
+uts,17301,D,fit_quantile_geometry_02,4374,4374,2592,0,,9
+uts,17301,D,fit_quantile_geometry_03,4374,4374,2592,0,,9
+uts,17301,D,fit_quantile_geometry_04,4374,4374,2493,0,,9
+uts,17301,D,fit_quantile_geometry_05,4374,4374,2379,0,,1934
+uts,17301,D,fit_quantile_geometry_06,4374,4374,2327,0,,9
+uts,17301,D,fit_quantile_geometry_07,4374,4374,2317,0,,1934
+uts,17301,D,fit_quantile_geometry_08,4374,4374,2488,0,,9
+uts,17301,D,fit_quantile_geometry_09,4374,4374,2339,0,,5000
+uts,17301,D,fit_quantile_geometry_10,4374,4374,2231,0,,9
+uts,17301,D,fit_quantile_geometry_11,4374,4374,2196,0,,5000
+uts,17301,E,fit_quantile_geometry_00,4374,4374,2754,0,,9
+uts,17301,E,fit_quantile_geometry_01,4374,4374,2754,0,,9
+uts,17301,E,fit_quantile_geometry_02,4374,4374,2754,0,,9
+uts,17301,E,fit_quantile_geometry_03,4374,4374,2754,0,,9
+uts,17301,E,fit_quantile_geometry_04,4374,4374,2574,0,,9
+uts,17301,E,fit_quantile_geometry_05,4374,4374,2479,0,,1934
+uts,17301,E,fit_quantile_geometry_06,4374,4374,2340,0,,9
+uts,17301,E,fit_quantile_geometry_07,4374,4374,2365,0,,1934
+uts,17301,E,fit_quantile_geometry_08,4374,4374,2565,0,,9
+uts,17301,E,fit_quantile_geometry_09,4374,4374,2398,0,,5000
+uts,17301,E,fit_quantile_geometry_10,4374,4374,2223,0,,9
+uts,17301,E,fit_quantile_geometry_11,4374,4374,2232,0,,5000
+uts,17302,C,fit_quantile_geometry_00,4374,4374,2754,0,,9
+uts,17302,C,fit_quantile_geometry_01,4374,4374,2754,0,,9
+uts,17302,C,fit_quantile_geometry_02,4374,4374,2754,0,,9
+uts,17302,C,fit_quantile_geometry_03,4374,4374,2754,0,,9
+uts,17302,C,fit_quantile_geometry_04,4374,4374,2698,0,,9
+uts,17302,C,fit_quantile_geometry_05,4374,4374,2449,0,,1934
+uts,17302,C,fit_quantile_geometry_06,4374,4374,2526,0,,9
+uts,17302,C,fit_quantile_geometry_07,4374,4374,2349,0,,1934
+uts,17302,C,fit_quantile_geometry_08,4374,4374,2691,0,,9
+uts,17302,C,fit_quantile_geometry_09,4374,4374,2602,0,,5000
+uts,17302,C,fit_quantile_geometry_10,4374,4374,2394,0,,9
+uts,17302,C,fit_quantile_geometry_11,4374,4374,2409,0,,5000
+uts,17302,D,fit_quantile_geometry_00,4374,4374,1296,0,,9
+uts,17302,D,fit_quantile_geometry_01,4374,4374,1296,0,,9
+uts,17302,D,fit_quantile_geometry_02,4374,4374,1296,0,,9
+uts,17302,D,fit_quantile_geometry_03,4374,4374,1296,0,,9
+uts,17302,D,fit_quantile_geometry_04,4374,4374,1543,0,,9
+uts,17302,D,fit_quantile_geometry_05,4374,4374,1512,0,,1934
+uts,17302,D,fit_quantile_geometry_06,4374,4374,1638,0,,9
+uts,17302,D,fit_quantile_geometry_07,4374,4374,1500,0,,1934
+uts,17302,D,fit_quantile_geometry_08,4374,4374,1553,0,,9
+uts,17302,D,fit_quantile_geometry_09,4374,4374,1796,0,,5000
+uts,17302,D,fit_quantile_geometry_10,4374,4374,1602,0,,9
+uts,17302,D,fit_quantile_geometry_11,4374,4374,1694,0,,5000
+uts,17302,E,fit_quantile_geometry_00,4374,4374,486,0,,9
+uts,17302,E,fit_quantile_geometry_01,4374,4374,486,0,,9
+uts,17302,E,fit_quantile_geometry_02,4374,4374,486,0,,9
+uts,17302,E,fit_quantile_geometry_03,4374,4374,486,0,,9
+uts,17302,E,fit_quantile_geometry_04,4374,4374,585,0,,9
+uts,17302,E,fit_quantile_geometry_05,4374,4374,262,0,,1934
+uts,17302,E,fit_quantile_geometry_06,4374,4374,675,0,,9
+uts,17302,E,fit_quantile_geometry_07,4374,4374,246,0,,1934
+uts,17302,E,fit_quantile_geometry_08,4374,4374,603,0,,9
+uts,17302,E,fit_quantile_geometry_09,4374,4374,247,0,,5000
+uts,17302,E,fit_quantile_geometry_10,4374,4374,567,0,,9
+uts,17302,E,fit_quantile_geometry_11,4374,4374,193,0,,5000
+uts,17303,C,fit_quantile_geometry_00,4374,4374,2916,0,,9
+uts,17303,C,fit_quantile_geometry_01,4374,4374,2916,0,,9
+uts,17303,C,fit_quantile_geometry_02,4374,4374,2916,0,,9
+uts,17303,C,fit_quantile_geometry_03,4374,4374,2916,0,,9
+uts,17303,C,fit_quantile_geometry_04,4374,4374,2907,0,,9
+uts,17303,C,fit_quantile_geometry_05,4374,4374,2847,0,,1934
+uts,17303,C,fit_quantile_geometry_06,4374,4374,2754,0,,9
+uts,17303,C,fit_quantile_geometry_07,4374,4374,2765,0,,1934
+uts,17303,C,fit_quantile_geometry_08,4374,4374,2898,0,,9
+uts,17303,C,fit_quantile_geometry_09,4374,4374,2802,0,,5000
+uts,17303,C,fit_quantile_geometry_10,4374,4374,2610,0,,9
+uts,17303,C,fit_quantile_geometry_11,4374,4374,2617,0,,5000
+uts,17303,D,fit_quantile_geometry_00,4374,4374,2592,0,,9
+uts,17303,D,fit_quantile_geometry_01,4374,4374,2592,0,,9
+uts,17303,D,fit_quantile_geometry_02,4374,4374,2592,0,,9
+uts,17303,D,fit_quantile_geometry_03,4374,4374,2592,0,,9
+uts,17303,D,fit_quantile_geometry_04,4374,4374,2399,0,,9
+uts,17303,D,fit_quantile_geometry_05,4374,4374,2152,0,,1934
+uts,17303,D,fit_quantile_geometry_06,4374,4374,2142,0,,9
+uts,17303,D,fit_quantile_geometry_07,4374,4374,2056,0,,1934
+uts,17303,D,fit_quantile_geometry_08,4374,4374,2394,0,,9
+uts,17303,D,fit_quantile_geometry_09,4374,4374,2150,0,,5000
+uts,17303,D,fit_quantile_geometry_10,4374,4374,2052,0,,9
+uts,17303,D,fit_quantile_geometry_11,4374,4374,2006,0,,5000
+uts,17303,E,fit_quantile_geometry_00,4374,4374,2592,0,,9
+uts,17303,E,fit_quantile_geometry_01,4374,4374,2592,0,,9
+uts,17303,E,fit_quantile_geometry_02,4374,4374,2592,0,,9
+uts,17303,E,fit_quantile_geometry_03,4374,4374,2592,0,,9
+uts,17303,E,fit_quantile_geometry_04,4374,4374,2520,0,,9
+uts,17303,E,fit_quantile_geometry_05,4374,4374,2278,0,,1934
+uts,17303,E,fit_quantile_geometry_06,4374,4374,2214,0,,9
+uts,17303,E,fit_quantile_geometry_07,4374,4374,2160,0,,1934
+uts,17303,E,fit_quantile_geometry_08,4374,4374,2511,0,,9
+uts,17303,E,fit_quantile_geometry_09,4374,4374,2267,0,,5000
+uts,17303,E,fit_quantile_geometry_10,4374,4374,2124,0,,9
+uts,17303,E,fit_quantile_geometry_11,4374,4374,2113,0,,5000
+uji,17301,C,fit_quantile_geometry_00,4374,4374,0,0,,117
+uji,17301,C,fit_quantile_geometry_01,4374,4374,0,0,,117
+uji,17301,C,fit_quantile_geometry_02,4374,4374,0,0,,117
+uji,17301,C,fit_quantile_geometry_03,4374,4374,0,0,,117
+uji,17301,C,fit_quantile_geometry_04,4374,4374,9,0,,117
+uji,17301,C,fit_quantile_geometry_05,4374,4374,792,0,,1617
+uji,17301,C,fit_quantile_geometry_06,4374,4374,459,0,,117
+uji,17301,C,fit_quantile_geometry_07,4374,4374,831,0,,1617
+uji,17301,C,fit_quantile_geometry_08,4374,4374,16,0,,117
+uji,17301,C,fit_quantile_geometry_09,4374,4374,428,0,,3232
+uji,17301,C,fit_quantile_geometry_10,4374,4374,636,0,,117
+uji,17301,C,fit_quantile_geometry_11,4374,4374,1957,0,,3232
+uji,17301,D,fit_quantile_geometry_00,4374,4374,441,0,,117
+uji,17301,D,fit_quantile_geometry_01,4374,4374,478,0,,117
+uji,17301,D,fit_quantile_geometry_02,4374,4374,487,0,,117
+uji,17301,D,fit_quantile_geometry_03,4374,4374,489,0,,117
+uji,17301,D,fit_quantile_geometry_04,4374,4374,467,0,,117
+uji,17301,D,fit_quantile_geometry_05,4374,4374,106,0,,1617
+uji,17301,D,fit_quantile_geometry_06,4374,4374,145,0,,117
+uji,17301,D,fit_quantile_geometry_07,4374,4374,143,0,,1617
+uji,17301,D,fit_quantile_geometry_08,4374,4374,461,0,,117
+uji,17301,D,fit_quantile_geometry_09,4374,4374,490,0,,3232
+uji,17301,D,fit_quantile_geometry_10,4374,4374,590,0,,117
+uji,17301,D,fit_quantile_geometry_11,4374,4374,1998,0,,3232
+uji,17301,E,fit_quantile_geometry_00,4374,4374,460,0,,117
+uji,17301,E,fit_quantile_geometry_01,4374,4374,457,0,,117
+uji,17301,E,fit_quantile_geometry_02,4374,4374,450,0,,117
+uji,17301,E,fit_quantile_geometry_03,4374,4374,446,0,,117
+uji,17301,E,fit_quantile_geometry_04,4374,4374,274,0,,117
+uji,17301,E,fit_quantile_geometry_05,4374,4374,256,0,,1617
+uji,17301,E,fit_quantile_geometry_06,4374,4374,57,0,,117
+uji,17301,E,fit_quantile_geometry_07,4374,4374,162,0,,1617
+uji,17301,E,fit_quantile_geometry_08,4374,4374,273,0,,117
+uji,17301,E,fit_quantile_geometry_09,4374,4374,3076,0,,3232
+uji,17301,E,fit_quantile_geometry_10,4374,4374,2435,0,,117
+uji,17301,E,fit_quantile_geometry_11,4374,4374,4028,0,,3232
+uji,17302,C,fit_quantile_geometry_00,4374,4374,2450,0,,117
+uji,17302,C,fit_quantile_geometry_01,4374,4374,2469,0,,117
+uji,17302,C,fit_quantile_geometry_02,4374,4374,2482,0,,117
+uji,17302,C,fit_quantile_geometry_03,4374,4374,2486,0,,117
+uji,17302,C,fit_quantile_geometry_04,4374,4374,2526,0,,117
+uji,17302,C,fit_quantile_geometry_05,4374,4374,2742,0,,1617
+uji,17302,C,fit_quantile_geometry_06,4374,4374,1328,0,,117
+uji,17302,C,fit_quantile_geometry_07,4374,4374,2413,0,,1617
+uji,17302,C,fit_quantile_geometry_08,4374,4374,2525,0,,117
+uji,17302,C,fit_quantile_geometry_09,4374,4374,3646,0,,3232
+uji,17302,C,fit_quantile_geometry_10,4374,4374,3139,0,,117
+uji,17302,C,fit_quantile_geometry_11,4374,4374,3864,0,,3232
+uji,17302,D,fit_quantile_geometry_00,4374,4374,570,0,,117
+uji,17302,D,fit_quantile_geometry_01,4374,4374,516,0,,117
+uji,17302,D,fit_quantile_geometry_02,4374,4374,505,0,,117
+uji,17302,D,fit_quantile_geometry_03,4374,4374,501,0,,117
+uji,17302,D,fit_quantile_geometry_04,4374,4374,330,0,,117
+uji,17302,D,fit_quantile_geometry_05,4374,4374,158,0,,1617
+uji,17302,D,fit_quantile_geometry_06,4374,4374,146,0,,117
+uji,17302,D,fit_quantile_geometry_07,4374,4374,127,0,,1617
+uji,17302,D,fit_quantile_geometry_08,4374,4374,330,0,,117
+uji,17302,D,fit_quantile_geometry_09,4374,4374,1133,0,,3232
+uji,17302,D,fit_quantile_geometry_10,4374,4374,500,0,,117
+uji,17302,D,fit_quantile_geometry_11,4374,4374,1186,0,,3232
+uji,17302,E,fit_quantile_geometry_00,4374,4374,1550,0,,117
+uji,17302,E,fit_quantile_geometry_01,4374,4374,1518,0,,117
+uji,17302,E,fit_quantile_geometry_02,4374,4374,1496,0,,117
+uji,17302,E,fit_quantile_geometry_03,4374,4374,1492,0,,117
+uji,17302,E,fit_quantile_geometry_04,4374,4374,1465,0,,117
+uji,17302,E,fit_quantile_geometry_05,4374,4374,1142,0,,1617
+uji,17302,E,fit_quantile_geometry_06,4374,4374,542,0,,117
+uji,17302,E,fit_quantile_geometry_07,4374,4374,842,0,,1617
+uji,17302,E,fit_quantile_geometry_08,4374,4374,1463,0,,117
+uji,17302,E,fit_quantile_geometry_09,4374,4374,2952,0,,3232
+uji,17302,E,fit_quantile_geometry_10,4374,4374,3496,0,,117
+uji,17302,E,fit_quantile_geometry_11,4374,4374,4196,0,,3232
+uji,17303,C,fit_quantile_geometry_00,4374,4374,829,0,,117
+uji,17303,C,fit_quantile_geometry_01,4374,4374,790,0,,117
+uji,17303,C,fit_quantile_geometry_02,4374,4374,777,0,,117
+uji,17303,C,fit_quantile_geometry_03,4374,4374,771,0,,117
+uji,17303,C,fit_quantile_geometry_04,4374,4374,907,0,,117
+uji,17303,C,fit_quantile_geometry_05,4374,4374,981,0,,1617
+uji,17303,C,fit_quantile_geometry_06,4374,4374,271,0,,117
+uji,17303,C,fit_quantile_geometry_07,4374,4374,711,0,,1617
+uji,17303,C,fit_quantile_geometry_08,4374,4374,905,0,,117
+uji,17303,C,fit_quantile_geometry_09,4374,4374,2761,0,,3232
+uji,17303,C,fit_quantile_geometry_10,4374,4374,2202,0,,117
+uji,17303,C,fit_quantile_geometry_11,4374,4374,3311,0,,3232
+uji,17303,D,fit_quantile_geometry_00,4374,4374,1944,0,,117
+uji,17303,D,fit_quantile_geometry_01,4374,4374,1944,0,,117
+uji,17303,D,fit_quantile_geometry_02,4374,4374,1944,0,,117
+uji,17303,D,fit_quantile_geometry_03,4374,4374,1944,0,,117
+uji,17303,D,fit_quantile_geometry_04,4374,4374,1799,0,,117
+uji,17303,D,fit_quantile_geometry_05,4374,4374,1312,0,,1617
+uji,17303,D,fit_quantile_geometry_06,4374,4374,1114,0,,117
+uji,17303,D,fit_quantile_geometry_07,4374,4374,1126,0,,1617
+uji,17303,D,fit_quantile_geometry_08,4374,4374,1799,0,,117
+uji,17303,D,fit_quantile_geometry_09,4374,4374,1429,0,,3232
+uji,17303,D,fit_quantile_geometry_10,4374,4374,1944,0,,117
+uji,17303,D,fit_quantile_geometry_11,4374,4374,2187,0,,3232
+uji,17303,E,fit_quantile_geometry_00,4374,4374,1979,0,,117
+uji,17303,E,fit_quantile_geometry_01,4374,4374,1968,0,,117
+uji,17303,E,fit_quantile_geometry_02,4374,4374,1967,0,,117
+uji,17303,E,fit_quantile_geometry_03,4374,4374,1967,0,,117
+uji,17303,E,fit_quantile_geometry_04,4374,4374,1599,0,,117
+uji,17303,E,fit_quantile_geometry_05,4374,4374,1566,0,,1617
+uji,17303,E,fit_quantile_geometry_06,4374,4374,587,0,,117
+uji,17303,E,fit_quantile_geometry_07,4374,4374,1151,0,,1617
+uji,17303,E,fit_quantile_geometry_08,4374,4374,1599,0,,117
+uji,17303,E,fit_quantile_geometry_09,4374,4374,3686,0,,3232
+uji,17303,E,fit_quantile_geometry_10,4374,4374,3367,0,,117
+uji,17303,E,fit_quantile_geometry_11,4374,4374,4014,0,,3232

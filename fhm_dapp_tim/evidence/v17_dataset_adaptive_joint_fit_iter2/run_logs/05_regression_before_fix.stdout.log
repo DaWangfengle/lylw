@@ -1,0 +1,180 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_calibration_row_chunks_preserve_site_aggregation_for_all_betas _____
+
+    def test_calibration_row_chunks_preserve_site_aggregation_for_all_betas():
+        coords = torch.tensor([[0., 0.], [1., 0.], [2., 0.]])
+        edges = torch.tensor([[0, 1], [1, 2]])
+        building = np.zeros(3, dtype=np.int64)
+        floor = np.zeros(3, dtype=np.int64)
+        graph, _, _ = joint.build_cutoff_graph(
+            coords.numpy(), building, floor, edges, 2.0, 1.0,
+        )
+        ctx = {
+            "memory": {"coords": coords, "building": torch.zeros(3, dtype=torch.long),
+                       "floor": torch.zeros(3, dtype=torch.long)},
+            "edges": edges, "classes": torch.zeros(3, dtype=torch.long),
+            "class_pairs": torch.tensor([[0, 0]]),
+        }
+        targets = torch.tensor([[0.2, 0.1]] * 3 + [[1.7, 0.3]] * 2)
+        pack = {
+            "scores": torch.tensor([[2., 0., -1.], [1., 0., -1.], [2., 1., 0.],
+                                    [-1., 1., 2.], [-1., 0., 1.]]),
+            "z": torch.zeros((5, 3, 2)), "virtual_scores": torch.zeros((5, 2)),
+            "virtual_z": torch.zeros((5, 2, 2)),
+            "xy": coords[None].repeat(5, 1, 1),
+            "sigma": torch.ones((5, 3, 2)),
+            "virtual_xy": torch.tensor([[[0.5, 0.], [1.5, 0.]]]).repeat(5, 1, 1),
+            "virtual_sigma": torch.ones((5, 2, 2)), "target": targets,
+            "building": torch.zeros(5, dtype=torch.long),
+            "floor": torch.zeros(5, dtype=torch.long),
+            "weight": torch.tensor([1. / 6.] * 3 + [1. / 4.] * 2),
+            "keys": ["site_a"] * 3 + ["site_b"] * 2,
+        }
+        candidates = [
+            {"candidate_id": f"beta_{beta}", "temperature": 1., "theta_v": .75,
+             "theta_s": .75, "alpha_prior": .1, "alpha_obs": .25, "beta": beta}
+            for beta in joint.BETAS
+        ]
+        full = joint.evaluate_calibration_grid(
+            pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates, row_chunk_size=5,
+        )
+>       chunked = joint.evaluate_calibration_grid(
+            pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates, row_chunk_size=2,
+        )
+
+tests\test_v17_dataset_adaptive_joint_fit_v1.py:474: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\miniminiconda\envs\liuyan\Lib\site-packages\torch\utils\_contextlib.py:124: in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+pack_all = {'building': tensor([0, 0, 0, 0, 0]), 'floor': tensor([0, 0, 0, 0, 0]), 'keys': ['site_a', 'site_a', 'site_a', 'site_b...,  0., -1.],
+        [ 1.,  0., -1.],
+        [ 2.,  1.,  0.],
+        [-1.,  1.,  2.],
+        [-1.,  0.,  1.]]), ...}
+ctx = {'class_pairs': tensor([[0, 0]]), 'classes': tensor([0, 0, 0]), 'edges': tensor([[0, 1],
+        [1, 2]]), 'memory': {...ing': tensor([0, 0, 0]), 'coords': tensor([[0., 0.],
+        [1., 0.],
+        [2., 0.]]), 'floor': tensor([0, 0, 0])}}
+graph = tensor(indices=tensor([[0, 0, 1, 1, 1, 2, 2],
+                       [0, 1, 0, 1, 2, 1, 2]]),
+       values=tensor([0.7655, 0.2345, 0.2345, 0.5309, 0.2345, 0.2345, 0.7655]),
+       size=(3, 3), nnz=7, layout=torch.sparse_coo)
+s2_edges = tensor([[0, 1],
+        [1, 2]]), geom = {'tau_virt_m': 1.0}
+candidates = [{'alpha_obs': 0.25, 'alpha_prior': 0.1, 'beta': 0.0, 'candidate_id': 'beta_0.0', ...}, {'alpha_obs': 0.25, 'alpha_pri...te_id': 'beta_0.2', ...}, {'alpha_obs': 0.25, 'alpha_prior': 0.1, 'beta': 0.35, 'candidate_id': 'beta_0.35', ...}, ...]
+
+    @torch.no_grad()
+    def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endpoint_cache=None,chunk_size=2,row_chunk_size=128):
+        """Evaluate candidates with sparse graph multiplication shared across all beta variants."""
+        device=pack_all["scores"].device
+        coords=ctx["memory"]["coords"].detach().cpu().numpy()
+        cached_graph=graph.to(device).coalesce()
+        ep=endpoint_cache if endpoint_cache is not None else normalized_virtual_endpoint_weights(s2_edges,coords,geom["tau_virt_m"])
+        all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+        lookup={tuple(sorted(map(int,e))):i for i,e in enumerate(all_edges.tolist())}
+        edge_ids=[lookup[tuple(map(int,e))] for e in ep["edges"].tolist()]
+        pack=_subset_virtual_pack(pack_all,edge_ids)
+        edges=torch.as_tensor(ep["edges"],dtype=torch.long,device=device)
+        endpoint={"weight_i":torch.as_tensor(ep["weight_i"],dtype=pack["scores"].dtype,device=device),
+                  "weight_j":torch.as_tensor(ep["weight_j"],dtype=pack["scores"].dtype,device=device),
+                  "degree":torch.as_tensor(ep["degree"],dtype=torch.long,device=device)}
+        n=len(ctx["memory"]["coords"])
+        class_ids=torch.cat([ctx["classes"].to(device).long(),ctx["classes"].to(device).long()[edges[:,0]]])
+        centers=torch.cat([pack["xy"],pack["virtual_xy"]],dim=1)
+        scales=torch.cat([pack["sigma"],pack["virtual_sigma"]],dim=1)
+        ab=ctx["memory"]["building"].to(device).long()
+        af=ctx["memory"]["floor"].to(device).long()
+        component_ids=torch.cat([torch.arange(n,device=device),edges[:,0]])
+        valid=((ab[component_ids][None,:]==pack["building"].long()[:,None])&
+               (af[component_ids][None,:]==pack["floor"].long()[:,None]))
+        lp=s3.student_t_logpdf(centers,scales,pack["target"]).masked_fill(~valid,-torch.inf)
+        keys=pack["keys"]; unique_sites=list(dict.fromkeys(keys)); site_map={k:i for i,k in enumerate(unique_sites)}
+        site_ids=torch.as_tensor([site_map[k] for k in keys],dtype=torch.long,device=device)
+        site_counts=np.bincount(site_ids.cpu().numpy(),minlength=len(unique_sites)).astype(np.float64)
+    
+        # beta is absent from parent and virtual logits, so group all beta variants
+        # by the five parameters that actually feed those logits.
+        base_fields=("temperature","theta_v","theta_s","alpha_prior","alpha_obs")
+        grouped={}
+        for idx,candidate in enumerate(candidates):
+            signature=tuple(float(candidate[name]) for name in base_fields)
+            grouped.setdefault(signature,[]).append((idx,candidate))
+        groups=list(grouped.items())
+        beta_values=sorted({float(row["beta"]) for row in candidates})
+        beta_index={value:i for i,value in enumerate(beta_values)}
+        beta_tensor=torch.as_tensor(beta_values,dtype=pack["scores"].dtype,device=device)
+        output=[None]*len(candidates)
+    
+        for start in range(0,len(groups),chunk_size):
+            group_chunk=groups[start:start+chunk_size]
+            pars=torch.as_tensor([signature for signature,_ in group_chunk],dtype=pack["scores"].dtype,device=device)
+            c=len(group_chunk); k=len(beta_values)
+            sums={name:torch.zeros((c,k),dtype=pars.dtype,device=device) for name in
+                  ("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll")}
+            site_sums=torch.zeros((c,k,len(unique_sites)),dtype=pars.dtype,device=device)
+            for rs in range(0,len(pack["scores"]),row_chunk_size):
+                re=min(rs+row_chunk_size,len(pack["scores"])); sl=slice(rs,re)
+                scores=pack["scores"][sl]; z=pack["z"][sl]; bsz=len(scores)
+                temp=pars[:,0,None,None]; tv=pars[:,1,None,None]; ts=pars[:,2,None,None]
+                ap=pars[:,3,None,None]; ao=pars[:,4,None,None]
+                prior=scores[None]/temp
+                obs=z[None,:,:,0]*tv+z[None,:,:,1]*ts
+                # Two sparse graph multiplies per parameter chunk and row chunk, regardless of beta count.
+                pn=torch.sparse.mm(cached_graph,prior.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
+                on=torch.sparse.mm(cached_graph,obs.reshape(c*bsz,n).T).T.reshape(c,bsz,n)
+                base=prior+obs
+                parent=(1-ap)*prior+ap*pn+(1-ao)*obs+ao*on
+                vbase=(pack["virtual_scores"][sl][None]/temp+
+                       pack["virtual_z"][sl][None,:,:,0]*tv+pack["virtual_z"][sl][None,:,:,1]*ts)
+                if len(edges):
+                    delta=parent-base
+                    v_logits=vbase+.5*(delta.index_select(2,edges[:,0])+delta.index_select(2,edges[:,1]))
+                else:
+                    v_logits=vbase
+    
+                # All beta values are broadcast only after parent/v_logits exist.
+                deg=endpoint["degree"]
+                pmass=torch.where(deg[None,:]>0,1.0-beta_tensor[:,None],
+                                  torch.ones((k,n),dtype=pars.dtype,device=device))
+                pterms=parent[:,None,:,:]+pmass[None,:,None,:].log()
+                if len(edges):
+                    emass=beta_tensor[:,None]*(endpoint["weight_i"]+endpoint["weight_j"])[None,:]
+                    eterms=v_logits[:,None,:,:]+emass.clamp_min(torch.finfo(pars.dtype).tiny).log()[None,:,None,:]
+                    eterms=eterms.masked_fill(beta_tensor[None,:,None,None]==0.0,-torch.inf)
+                    q=torch.softmax(torch.cat([pterms,eterms],dim=-1),dim=-1)
+                else:
+                    q=torch.softmax(pterms,dim=-1)
+    
+                sub_centers=centers[sl]; sub_lp=lp[sl]; target=pack["target"][sl]
+                target_cls=_target_class_ids({**pack,"building":pack["building"][sl],
+                                              "floor":pack["floor"][sl],"scores":pack["scores"][sl]},ctx)
+                flat_q=q.reshape(c*k*bsz,-1)
+                masses=torch.zeros((c*k*bsz,len(ctx["class_pairs"])),dtype=q.dtype,device=device)
+                masses.scatter_add_(1,class_ids[None,:].expand(c*k*bsz,-1),flat_q)
+                masses=masses.reshape(c,k,bsz,-1)
+                correct=(masses.argmax(-1)==target_cls[None,None,:]).to(q.dtype)
+                true_mass=masses.gather(3,target_cls[None,None,:,None].expand(c,k,bsz,1)).squeeze(-1)
+                bfce=-true_mass.clamp_min(torch.finfo(q.dtype).tiny).log()
+                point=torch.einsum("ckbm,bmd->ckbd",q,sub_centers)
+                err=torch.linalg.vector_norm(point-target[None,None,:,:],dim=-1)
+                dist=torch.linalg.vector_norm(sub_centers-target[:,None,:],dim=-1)
+                risk=(q*dist[None,None,:,:]).sum(-1)
+                logq=q.clamp_min(torch.finfo(q.dtype).tiny).log()
+                valid_nll=(class_ids[None,:]==target_cls[:,None])[None,None,:,:]&(q>0)
+                nll=-torch.logsumexp((logq+sub_lp[None,None,:,:]).masked_fill(~valid_nll,-torch.inf),dim=-1)
+                wt=pack["weight"][sl][None,None,:]
+                for name,val in (("coordinate_mae_m",err),("transport_w1_m",risk),
+                                 ("bf_accuracy",correct),("bf_cross_entropy",bfce),("joint_nll",nll)):
+                    sums[name]+=(val*wt).sum(-1)
+>               site_sums.reshape(c*k,len(unique_sites)).scatter_add_(
+                    1,site_ids[None,:].expand(c*k,-1),err.reshape(c*k,bsz))
+E               RuntimeError: Expected index [9, 5] to be no larger than self [9, 2] apart from dimension 1 and to be no larger size than src [9, 2]
+
+fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py:598: RuntimeError
+=========================== short test summary info ===========================
+FAILED tests/test_v17_dataset_adaptive_joint_fit_v1.py::test_calibration_row_chunks_preserve_site_aggregation_for_all_betas
+1 failed in 4.37s

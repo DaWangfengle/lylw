@@ -194,3 +194,9 @@ fhm_dapp_tim/evidence/v17_spatial_composition_execution_v1/** -text
 fhm_dapp_tim/evidence/v17_gmrf_bandwidth_v1/** -text
 outputs/v17_gmrf_bandwidth_v1/** -text
 docs/reviews/DEEPSEEK_THREE_STRUCTURE_REVIEW_20261021.md -text
+
+# Adaptive joint-fit: retain exact frozen source, evidence and archive bytes.
+fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py -text
+tests/test_v17_dataset_adaptive_joint_fit_v1.py -text
+fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/** -text
+fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/** -text

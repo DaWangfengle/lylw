@@ -1,0 +1,9 @@
+{
+  "authorized_at": "2026-10-22T00:57:53.371948+08:00",
+  "user_reply": "允许最小数值修复，新目录完整重启（推荐）",
+  "scope": "Preserve all iter2 artifacts and failures; fix only BF accuracy site-count aggregation and add regression tests; fully restart TUJI -> UTS -> UJI in a fresh output directory. Do not change predictions, candidates, guards, tolerances, objectives or random seeds.",
+  "preserved_iteration": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2",
+  "fresh_output": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart",
+  "proposal_patch": "run_logs/FIX_02_PROPOSED.patch",
+  "preview_synthetic_test_log": "run_logs/15_fix02_preview_synthetic_only.stdout.log"
+}

@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "aggregate_candidate_rows": 1137267,
+  "expected_candidate_rows": 1137267,
+  "comparison_reference_rows": 27,
+  "candidate_checkpoint_groups": 27,
+  "pareto_rows": 48212,
+  "pareto_checkpoint_groups": 27,
+  "near_optimal_sensitivity_rows": 54
+}

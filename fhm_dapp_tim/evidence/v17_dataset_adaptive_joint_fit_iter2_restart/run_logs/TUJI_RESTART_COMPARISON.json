@@ -1,0 +1,7 @@
+{
+  "dataset": "tuji",
+  "completed_runs_compared": 9,
+  "maximum_primary_or_tail_metric_difference": 0.0,
+  "selected_parameter_changes": 0,
+  "comparison_scope": "Saved artifacts only; no further prediction or scoring"
+}

@@ -1,0 +1,26 @@
+--- frozen/fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
++++ proposed/fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py
+@@ -541,6 +541,7 @@
+         sums={name:torch.zeros((c,k),dtype=pars.dtype,device=device) for name in
+               ("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll")}
+         site_sums=torch.zeros((c,k,len(unique_sites)),dtype=pars.dtype,device=device)
++        site_bf_correct=torch.zeros((c,k,len(unique_sites)),dtype=torch.int64,device=device)
+         for rs in range(0,len(pack["scores"]),row_chunk_size):
+             re=min(rs+row_chunk_size,len(pack["scores"])); sl=slice(rs,re)
+             scores=pack["scores"][sl]; z=pack["z"][sl]; bsz=len(scores)
+@@ -597,11 +598,15 @@
+                 sums[name]+=(val*wt).sum(-1)
+             site_sums.reshape(c*k,len(unique_sites)).scatter_add_(
+                 1,site_ids[sl][None,:].expand(c*k,-1),err.reshape(c*k,bsz))
++            site_bf_correct.reshape(c*k,len(unique_sites)).scatter_add_(
++                1,site_ids[sl][None,:].expand(c*k,-1),correct.to(torch.int64).reshape(c*k,bsz))
+ 
+         site_means=site_sums/torch.as_tensor(site_counts,dtype=pars.dtype,device=device)[None,None,:]
+         p95=torch.quantile(site_means,.95,dim=2).cpu().tolist()
+         p99=torch.quantile(site_means,.99,dim=2).cpu().tolist()
+         worst=site_means.max(2).values.cpu().tolist()
++        sums["bf_accuracy"]=(site_bf_correct.to(torch.float64)/
++            torch.as_tensor(site_counts,dtype=torch.float64,device=device)[None,None,:]).mean(2)
+         vals={name:value.cpu().tolist() for name,value in sums.items()}
+         for ci,(_,members) in enumerate(group_chunk):
+             for original_index,candidate in members:

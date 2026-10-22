@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/v17_iter2_readonly_audit.py",
+    "--dataset",
+    "all",
+    "--final"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-21T18:03:46.902554+00:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2_restart\\run_logs\\10_final_readonly_audit.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2_restart\\run_logs\\10_final_readonly_audit.stderr.log",
+  "pid": 8076,
+  "exit_code": 0,
+  "elapsed_seconds": 40.334969997406006,
+  "finished_at": "2026-10-21T18:04:27.237525+00:00",
+  "stdout_sha256": "445dad7a932495c304cc4109c0cea94b3870c83b6fdbcca1f331e7ef2d66f9c1",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

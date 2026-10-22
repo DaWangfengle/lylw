@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/run_logs/test_fix02_proposed.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-21T16:53:24.480617+00:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\14_fix02_regression_frozen.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\14_fix02_regression_frozen.stderr.log",
+  "pid": 9868,
+  "exit_code": 1,
+  "elapsed_seconds": 6.0177998542785645,
+  "finished_at": "2026-10-21T16:53:30.498417+00:00",
+  "stdout_sha256": "8c8f4f67a769bea1b1a6c11d9394d2418ce78c521997d65af396be4ea8ca91b0",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

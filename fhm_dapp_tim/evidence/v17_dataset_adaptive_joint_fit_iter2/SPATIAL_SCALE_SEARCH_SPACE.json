@@ -1,0 +1,1618 @@
+{
+  "geometry_design": "12-16 deterministic FIT-quantile-derived spatial configurations per dataset/seed; R_S2 <= R_S1; includes tau_virt=+inf controls",
+  "outer_geometry_candidates": {
+    "tuji_seed17301": {
+      "dataset": "tuji",
+      "seed": 17301,
+      "geometry_value_pool_m": [
+        0.2975001335144043,
+        0.5950002670288086,
+        0.5969996452331543,
+        0.8435804339959636,
+        1.330907885325485,
+        1.3320288364763493,
+        1.3413749188184738,
+        3.6818360787697246
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          0.8921250700950623,
+          1.3320288364763493,
+          1.413952633477603,
+          3.6818360787697246
+        ],
+        "tau_graph_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          0.8921250700950623,
+          1.3320288364763493,
+          1.413952633477603,
+          3.6818360787697246
+        ],
+        "r_max_s2_m": [
+          0.2975001335144043,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.3413749188184738,
+          1.7869997024536133,
+          3.6818360787697246
+        ],
+        "tau_virt_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 0.8921250700950623,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 0.8921250700950623,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 3.6818360787697246,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 3.6818360787697246,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "tuji_seed17302": {
+      "dataset": "tuji",
+      "seed": 17302,
+      "geometry_value_pool_m": [
+        0.2975001335144043,
+        0.5950002670288086,
+        0.5969996452331543,
+        0.8435804339959636,
+        1.330907885325485,
+        1.3320288364763493,
+        1.3413749188184738,
+        3.6818360787697246
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          0.8921250700950623,
+          1.3320288364763493,
+          1.413952633477603,
+          3.6818360787697246
+        ],
+        "tau_graph_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          0.8921250700950623,
+          1.3320288364763493,
+          1.413952633477603,
+          3.6818360787697246
+        ],
+        "r_max_s2_m": [
+          0.2975001335144043,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.3413749188184738,
+          1.7869997024536133,
+          3.6818360787697246
+        ],
+        "tau_virt_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 0.8921250700950623,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 0.8921250700950623,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 3.6818360787697246,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 3.6818360787697246,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "tuji_seed17303": {
+      "dataset": "tuji",
+      "seed": 17303,
+      "geometry_value_pool_m": [
+        0.2975001335144043,
+        0.5950002670288086,
+        0.5969996452331543,
+        0.8435804339959636,
+        1.330907885325485,
+        1.3320288364763493,
+        1.3413749188184738,
+        3.6818360787697246
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          0.8921250700950623,
+          1.3320288364763493,
+          1.413952633477603,
+          3.6818360787697246
+        ],
+        "tau_graph_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          0.8921250700950623,
+          1.3320288364763493,
+          1.413952633477603,
+          3.6818360787697246
+        ],
+        "r_max_s2_m": [
+          0.2975001335144043,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.3413749188184738,
+          1.7869997024536133,
+          3.6818360787697246
+        ],
+        "tau_virt_m": [
+          0.2975001335144043,
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 0.2975001335144043,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 0.8921250700950623,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 0.8921250700950623,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 0.8921250700950623,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 0.2975001335144043,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 0.5969996452331543,
+          "r_max_s2_m": 3.6818360787697246,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 1.3320288364763493,
+          "r_max_s2_m": 0.2975001335144043,
+          "tau_virt_m": 0.2975001335144043,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 3.6818360787697246,
+          "tau_graph_m": 3.6818360787697246,
+          "r_max_s2_m": 3.6818360787697246,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "uts_seed17301": {
+      "dataset": "uts",
+      "seed": 17301,
+      "geometry_value_pool_m": [
+        1.3491388208009876,
+        2.698277641601975,
+        3.126136073682303,
+        5.2564264116925905,
+        6.061219991573314,
+        8.15328161581467,
+        9.09182998735997,
+        26.0328753701714
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          4.713204675360725,
+          5.2564264116925905,
+          8.15328161581467,
+          9.09182998735997,
+          26.0328753701714
+        ],
+        "tau_graph_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          4.713204675360725,
+          5.2564264116925905,
+          8.15328161581467,
+          9.09182998735997,
+          26.0328753701714
+        ],
+        "r_max_s2_m": [
+          1.3491388208009876,
+          4.6161785276712255,
+          6.061219991573314,
+          8.307358033890246,
+          9.039121921275198,
+          10.553105375569539,
+          12.072623657054907,
+          26.0328753701714
+        ],
+        "tau_virt_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 5.2564264116925905,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 5.2564264116925905,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 26.0328753701714,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 26.0328753701714,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "uts_seed17302": {
+      "dataset": "uts",
+      "seed": 17302,
+      "geometry_value_pool_m": [
+        1.3491388208009876,
+        2.698277641601975,
+        3.126136073682303,
+        5.2564264116925905,
+        6.061219991573314,
+        8.15328161581467,
+        9.09182998735997,
+        26.0328753701714
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          4.713204675360725,
+          5.2564264116925905,
+          8.15328161581467,
+          9.09182998735997,
+          26.0328753701714
+        ],
+        "tau_graph_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          4.713204675360725,
+          5.2564264116925905,
+          8.15328161581467,
+          9.09182998735997,
+          26.0328753701714
+        ],
+        "r_max_s2_m": [
+          1.3491388208009876,
+          4.6161785276712255,
+          6.061219991573314,
+          8.307358033890246,
+          9.039121921275198,
+          10.553105375569539,
+          12.072623657054907,
+          26.0328753701714
+        ],
+        "tau_virt_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 5.2564264116925905,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 5.2564264116925905,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 26.0328753701714,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 26.0328753701714,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "uts_seed17303": {
+      "dataset": "uts",
+      "seed": 17303,
+      "geometry_value_pool_m": [
+        1.3491388208009876,
+        2.698277641601975,
+        3.126136073682303,
+        5.2564264116925905,
+        6.061219991573314,
+        8.15328161581467,
+        9.09182998735997,
+        26.0328753701714
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          4.713204675360725,
+          5.2564264116925905,
+          8.15328161581467,
+          9.09182998735997,
+          26.0328753701714
+        ],
+        "tau_graph_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          4.713204675360725,
+          5.2564264116925905,
+          8.15328161581467,
+          9.09182998735997,
+          26.0328753701714
+        ],
+        "r_max_s2_m": [
+          1.3491388208009876,
+          4.6161785276712255,
+          6.061219991573314,
+          8.307358033890246,
+          9.039121921275198,
+          10.553105375569539,
+          12.072623657054907,
+          26.0328753701714
+        ],
+        "tau_virt_m": [
+          1.3491388208009876,
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.3491388208009876,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 5.2564264116925905,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 5.2564264116925905,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 5.2564264116925905,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 1.3491388208009876,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 3.126136073682303,
+          "r_max_s2_m": 26.0328753701714,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 8.15328161581467,
+          "r_max_s2_m": 1.3491388208009876,
+          "tau_virt_m": 1.3491388208009876,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 26.0328753701714,
+          "tau_graph_m": 26.0328753701714,
+          "r_max_s2_m": 26.0328753701714,
+          "tau_virt_m": 10.553105375569539,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "uji_seed17301": {
+      "dataset": "uji",
+      "seed": 17301,
+      "geometry_value_pool_m": [
+        1.8849810708195136,
+        3.769962141639027,
+        6.005971608150199,
+        9.794811576380908,
+        19.009120432162444,
+        20.70362083056316,
+        28.38411610456802,
+        100.52781867526903
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          28.38411610456802,
+          100.52781867526903
+        ],
+        "tau_graph_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          28.38411610456802,
+          100.52781867526903
+        ],
+        "r_max_s2_m": [
+          1.8849810708195136,
+          12.046284014189172,
+          12.98444800694916,
+          20.70362083056316,
+          25.87952603820395,
+          32.611668709259305,
+          41.44535268080751,
+          100.52781867526903
+        ],
+        "tau_virt_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 100.52781867526903,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 100.52781867526903,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "uji_seed17302": {
+      "dataset": "uji",
+      "seed": 17302,
+      "geometry_value_pool_m": [
+        1.8849810708195136,
+        3.769962141639027,
+        6.005971608150199,
+        9.794811576380908,
+        19.009120432162444,
+        20.70362083056316,
+        28.38411610456802,
+        100.52781867526903
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          28.38411610456802,
+          100.52781867526903
+        ],
+        "tau_graph_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          28.38411610456802,
+          100.52781867526903
+        ],
+        "r_max_s2_m": [
+          1.8849810708195136,
+          12.046284014189172,
+          12.98444800694916,
+          20.70362083056316,
+          25.87952603820395,
+          32.611668709259305,
+          41.44535268080751,
+          100.52781867526903
+        ],
+        "tau_virt_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 100.52781867526903,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 100.52781867526903,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    },
+    "uji_seed17303": {
+      "dataset": "uji",
+      "seed": 17303,
+      "geometry_value_pool_m": [
+        1.8849810708195136,
+        3.769962141639027,
+        6.005971608150199,
+        9.794811576380908,
+        19.009120432162444,
+        20.70362083056316,
+        28.38411610456802,
+        100.52781867526903
+      ],
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          28.38411610456802,
+          100.52781867526903
+        ],
+        "tau_graph_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          28.38411610456802,
+          100.52781867526903
+        ],
+        "r_max_s2_m": [
+          1.8849810708195136,
+          12.046284014189172,
+          12.98444800694916,
+          20.70362083056316,
+          25.87952603820395,
+          32.611668709259305,
+          41.44535268080751,
+          100.52781867526903
+        ],
+        "tau_virt_m": [
+          1.8849810708195136,
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ]
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.8849810708195136,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 12.98444800694916,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 1.8849810708195136,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 6.005971608150199,
+          "r_max_s2_m": 100.52781867526903,
+          "tau_virt_m": "Infinity",
+          "role": "FIT_quantile_tau_virt_infinity_control",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 19.009120432162444,
+          "r_max_s2_m": 1.8849810708195136,
+          "tau_virt_m": 1.8849810708195136,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 100.52781867526903,
+          "tau_graph_m": 100.52781867526903,
+          "r_max_s2_m": 100.52781867526903,
+          "tau_virt_m": 32.611668709259305,
+          "role": "FIT_quantile_derived",
+          "r_max_s2_le_r_max_s1": true
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "candidate_count_per_run": 52488
+    }
+  },
+  "calibration_grid": {
+    "temperature": "three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.25,3.0]",
+    "theta_v": "three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.0,1.5]",
+    "theta_s": "three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.0,1.5]",
+    "relative_multipliers": [
+      0.75,
+      1.0,
+      1.25
+    ],
+    "alpha_prior": [
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.35,
+      0.65
+    ],
+    "alpha_obs": [
+      0.0,
+      0.1,
+      0.25
+    ],
+    "beta": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.35,
+      0.5,
+      0.65,
+      0.8
+    ],
+    "baseline_center_resolved_at_run_time": true
+  },
+  "inner_joint_grid_size": 4374,
+  "gamma_space_fixed": 0.0,
+  "lambda_2d_nll": [
+    0.02,
+    0.05
+  ],
+  "bf_ce_weight": 0.25,
+  "bf_ce_normalization_floor": 0.05,
+  "bf_ce_guard_relative_tolerance": 0.02,
+  "bf_ce_guard_absolute_tolerance": 0.005,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}

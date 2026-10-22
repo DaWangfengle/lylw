@@ -1,0 +1,275 @@
+{
+  "status": "PASS",
+  "datasets": [
+    "tuji",
+    "uts",
+    "uji"
+  ],
+  "completed_runs_checked": 27,
+  "runs": [
+    {
+      "dataset": "tuji",
+      "seed": 17301,
+      "backbone": "C",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17301,
+      "backbone": "D",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17301,
+      "backbone": "E",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17302,
+      "backbone": "C",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17302,
+      "backbone": "D",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17302,
+      "backbone": "E",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17303,
+      "backbone": "C",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17303,
+      "backbone": "D",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "tuji",
+      "seed": 17303,
+      "backbone": "E",
+      "candidate_rows_including_reference": 21385,
+      "feasible_candidates_excluding_reference": 21384,
+      "cal_eval_sites": 46,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17301,
+      "backbone": "C",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 27514,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17301,
+      "backbone": "D",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 29138,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17301,
+      "backbone": "E",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 30192,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17302,
+      "backbone": "C",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 31134,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17302,
+      "backbone": "D",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 18022,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17302,
+      "backbone": "E",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 5322,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17303,
+      "backbone": "C",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 33864,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17303,
+      "backbone": "D",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 27719,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uts",
+      "seed": 17303,
+      "backbone": "E",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 28555,
+      "cal_eval_sites": 69,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17301,
+      "backbone": "C",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 5128,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17301,
+      "backbone": "D",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 6295,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17301,
+      "backbone": "E",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 12374,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17302,
+      "backbone": "C",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 32070,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17302,
+      "backbone": "D",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 6002,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17302,
+      "backbone": "E",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 22154,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17303,
+      "backbone": "C",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 15216,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17303,
+      "backbone": "D",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 20486,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    },
+    {
+      "dataset": "uji",
+      "seed": 17303,
+      "backbone": "E",
+      "candidate_rows_including_reference": 52489,
+      "feasible_candidates_excluding_reference": 25450,
+      "cal_eval_sites": 44,
+      "status": "PASS"
+    }
+  ],
+  "maximum_site_macro_reduction_error": 1.1177562431186061e-06,
+  "maximum_clean_baseline_drift": 0.0,
+  "maximum_old_combo_drift": 0.0,
+  "source_hashes_verified": 208,
+  "checkpoints_verified": 27,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "nominal_candidates": 1417176,
+  "eligible_candidates": 1137240,
+  "excluded_empty_s2_positive_beta_candidates": 279936,
+  "verified_dataset_execution_order": [
+    "tuji",
+    "uts",
+    "uji"
+  ],
+  "formal_tests_passed": 27,
+  "dataset_command_elapsed_seconds": {
+    "tuji": 616.1239814758301,
+    "uts": 1312.006861448288,
+    "uji": 1847.5029804706573
+  }
+}

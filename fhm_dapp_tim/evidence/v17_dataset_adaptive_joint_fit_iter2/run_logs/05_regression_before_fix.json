@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_v17_dataset_adaptive_joint_fit_v1.py::test_calibration_row_chunks_preserve_site_aggregation_for_all_betas"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-21T16:31:37.310381+00:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\05_regression_before_fix.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\05_regression_before_fix.stderr.log",
+  "pid": 17860,
+  "exit_code": 1,
+  "elapsed_seconds": 5.6814868450164795,
+  "finished_at": "2026-10-21T16:31:42.991868+00:00",
+  "stdout_sha256": "b71c893cf5797ca5011a47023b8026e8ba2b0afb1b50679cb63b3d5b6d2b2546",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

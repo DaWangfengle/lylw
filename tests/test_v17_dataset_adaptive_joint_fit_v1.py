@@ -432,3 +432,102 @@ def test_legacy_clean_baseline_is_comparison_only_not_a_search_candidate():
     candidate["selection_objective_lambda_0.02"] = 1.0
     chosen = joint._choose([baseline, candidate], 0.02)
     assert chosen["candidate_id"] == "fit_quantile_candidate"
+
+
+def test_calibration_row_chunks_preserve_site_aggregation_for_all_betas():
+    coords = torch.tensor([[0., 0.], [1., 0.], [2., 0.]])
+    edges = torch.tensor([[0, 1], [1, 2]])
+    building = np.zeros(3, dtype=np.int64)
+    floor = np.zeros(3, dtype=np.int64)
+    graph, _, _ = joint.build_cutoff_graph(
+        coords.numpy(), building, floor, edges, 2.0, 1.0,
+    )
+    ctx = {
+        "memory": {"coords": coords, "building": torch.zeros(3, dtype=torch.long),
+                   "floor": torch.zeros(3, dtype=torch.long)},
+        "edges": edges, "classes": torch.zeros(3, dtype=torch.long),
+        "class_pairs": torch.tensor([[0, 0]]),
+    }
+    targets = torch.tensor([[0.2, 0.1]] * 3 + [[1.7, 0.3]] * 2)
+    pack = {
+        "scores": torch.tensor([[2., 0., -1.], [1., 0., -1.], [2., 1., 0.],
+                                [-1., 1., 2.], [-1., 0., 1.]]),
+        "z": torch.zeros((5, 3, 2)), "virtual_scores": torch.zeros((5, 2)),
+        "virtual_z": torch.zeros((5, 2, 2)),
+        "xy": coords[None].repeat(5, 1, 1),
+        "sigma": torch.ones((5, 3, 2)),
+        "virtual_xy": torch.tensor([[[0.5, 0.], [1.5, 0.]]]).repeat(5, 1, 1),
+        "virtual_sigma": torch.ones((5, 2, 2)), "target": targets,
+        "building": torch.zeros(5, dtype=torch.long),
+        "floor": torch.zeros(5, dtype=torch.long),
+        "weight": torch.tensor([1. / 6.] * 3 + [1. / 4.] * 2),
+        "keys": ["site_a"] * 3 + ["site_b"] * 2,
+    }
+    candidates = [
+        {"candidate_id": f"beta_{beta}", "temperature": 1., "theta_v": .75,
+         "theta_s": .75, "alpha_prior": .1, "alpha_obs": .25, "beta": beta}
+        for beta in joint.BETAS
+    ]
+    full = joint.evaluate_calibration_grid(
+        pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates, row_chunk_size=5,
+    )
+    chunked = joint.evaluate_calibration_grid(
+        pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates, row_chunk_size=2,
+    )
+    assert len(full) == len(chunked) == 9
+    for reference, actual in zip(full, chunked):
+        assert actual["n_fit_rows"] == 5
+        assert actual["n_fit_sites"] == 2
+        for metric in ("coordinate_mae_m", "transport_w1_m", "bf_accuracy",
+                       "bf_cross_entropy", "joint_nll", "site_p95_mae_m",
+                       "site_p99_mae_m", "worst_site_mae_m"):
+            assert math.isfinite(actual[metric])
+            assert actual[metric] == pytest.approx(reference[metric], abs=1e-6, rel=1e-6)
+
+
+@pytest.mark.parametrize("device,counts", [
+    ("cpu", [3] * 10),
+    pytest.param("cuda", [7] * 30 + [6] * 39,
+                 marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+])
+@pytest.mark.parametrize("one_wrong", [False, True])
+def test_accuracy_uses_integer_site_counts_without_relaxing_the_guard(device, counts, one_wrong):
+    n_rows = sum(counts)
+    coords = torch.tensor([[0., 0.], [1., 0.], [10., 0.]], device=device)
+    edges = torch.tensor([[0, 1]], device=device)
+    graph, _, _ = joint.build_cutoff_graph(
+        coords.cpu().numpy(), np.array([0, 0, 1]), np.zeros(3, dtype=np.int64), edges, 2., 1.,
+    )
+    buildings = torch.zeros(n_rows, dtype=torch.long, device=device)
+    if one_wrong:
+        buildings[-1] = 1
+    ctx = {"memory": {"coords": coords, "building": torch.tensor([0, 0, 1], device=device),
+                      "floor": torch.zeros(3, dtype=torch.long, device=device)},
+           "edges": edges, "classes": torch.tensor([0, 0, 1], device=device),
+           "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+    keys = [f"site_{i}" for i, count in enumerate(counts) for _ in range(count)]
+    pack = {"scores": torch.tensor([[3., -1., -5.]], device=device).repeat(n_rows, 1),
+            "z": torch.zeros((n_rows, 3, 2), device=device),
+            "virtual_scores": torch.zeros((n_rows, 1), device=device),
+            "virtual_z": torch.zeros((n_rows, 1, 2), device=device),
+            "xy": coords[None].repeat(n_rows, 1, 1),
+            "sigma": torch.ones((n_rows, 3, 2), device=device),
+            "virtual_xy": torch.tensor([[[.5, 0.]]], device=device).repeat(n_rows, 1, 1),
+            "virtual_sigma": torch.ones((n_rows, 1, 2), device=device),
+            "target": torch.zeros((n_rows, 2), device=device),
+            "building": buildings, "floor": torch.zeros_like(buildings),
+            "weight": torch.tensor([1. / (len(counts) * count) for count in counts for _ in range(count)], device=device),
+            "keys": keys}
+    candidates = [{"candidate_id": f"beta_{beta}", "temperature": 1., "theta_v": .75,
+                   "theta_s": .75, "alpha_prior": .1, "alpha_obs": .25, "beta": beta}
+                  for beta in joint.BETAS]
+    rows = joint.evaluate_calibration_grid(pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates)
+    exact = ((len(counts) - 1) + (counts[-1] - 1) / counts[-1]) / len(counts) if one_wrong else 1.
+    assert len(rows) == 9
+    for row in rows:
+        assert math.isfinite(row["bf_accuracy"])
+        assert row["bf_accuracy"] == pytest.approx(exact, abs=1e-15, rel=0.)
+        if not one_wrong:
+            base = dict(row, bf_accuracy=1.)
+            checked = joint._add_objectives([dict(row)], base)[0]
+            assert checked["bf_accuracy_non_degradation"] is True

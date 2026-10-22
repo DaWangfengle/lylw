@@ -221,3 +221,14 @@ local_notes/
 
 # DeepSeek exploratory study: retain the original scientific execution logs.
 !/outputs/v17_gmrf_bandwidth_v1/*.log
+
+# Adaptive joint-fit publication: preserve raw execution/failure logs.
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/run_logs/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/run_logs/*.stderr.log
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/run_logs/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/run_logs/*.stderr.log
+# Exact CSV bytes are published as verified gzip archives; keep originals locally.
+/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/**/CANDIDATE_METRICS.csv
+/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/PARETO_FRONTIER.csv
+/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/**/CANDIDATE_METRICS.csv
+/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/PARETO_FRONTIER.csv

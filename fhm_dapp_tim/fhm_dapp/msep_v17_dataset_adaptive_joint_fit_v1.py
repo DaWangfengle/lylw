@@ -541,6 +541,7 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
         sums={name:torch.zeros((c,k),dtype=pars.dtype,device=device) for name in
               ("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll")}
         site_sums=torch.zeros((c,k,len(unique_sites)),dtype=pars.dtype,device=device)
+        site_bf_correct=torch.zeros((c,k,len(unique_sites)),dtype=torch.int64,device=device)
         for rs in range(0,len(pack["scores"]),row_chunk_size):
             re=min(rs+row_chunk_size,len(pack["scores"])); sl=slice(rs,re)
             scores=pack["scores"][sl]; z=pack["z"][sl]; bsz=len(scores)
@@ -596,12 +597,16 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
                              ("bf_accuracy",correct),("bf_cross_entropy",bfce),("joint_nll",nll)):
                 sums[name]+=(val*wt).sum(-1)
             site_sums.reshape(c*k,len(unique_sites)).scatter_add_(
-                1,site_ids[None,:].expand(c*k,-1),err.reshape(c*k,bsz))
+                1,site_ids[sl][None,:].expand(c*k,-1),err.reshape(c*k,bsz))
+            site_bf_correct.reshape(c*k,len(unique_sites)).scatter_add_(
+                1,site_ids[sl][None,:].expand(c*k,-1),correct.to(torch.int64).reshape(c*k,bsz))
 
         site_means=site_sums/torch.as_tensor(site_counts,dtype=pars.dtype,device=device)[None,None,:]
         p95=torch.quantile(site_means,.95,dim=2).cpu().tolist()
         p99=torch.quantile(site_means,.99,dim=2).cpu().tolist()
         worst=site_means.max(2).values.cpu().tolist()
+        sums["bf_accuracy"]=(site_bf_correct.to(torch.float64)/
+            torch.as_tensor(site_counts,dtype=torch.float64,device=device)[None,None,:]).mean(2)
         vals={name:value.cpu().tolist() for name,value in sums.items()}
         for ci,(_,members) in enumerate(group_chunk):
             for original_index,candidate in members:

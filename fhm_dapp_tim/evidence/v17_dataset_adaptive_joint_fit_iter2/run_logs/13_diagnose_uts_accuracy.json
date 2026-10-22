@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/v17_iter2_diagnose_uts_accuracy.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-21T16:51:03.050462+00:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\13_diagnose_uts_accuracy.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\13_diagnose_uts_accuracy.stderr.log",
+  "pid": 3692,
+  "exit_code": 0,
+  "elapsed_seconds": 8.931687593460083,
+  "finished_at": "2026-10-21T16:51:11.982149+00:00",
+  "stdout_sha256": "c3b62f62bcf2db953b8526600b0ef1ece5c2d6fc707fa2426637e2ed23dbfa1d",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

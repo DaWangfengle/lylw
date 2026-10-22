@@ -1,0 +1,23 @@
+{
+  "changes": {
+    "fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py": {
+      "before_sha256": "2eb4952259442fcb91fdae92f9925d5324efb9e64065d19da619b27809e25f4c",
+      "after_sha256": "cef5c13027e38b1fef8c29f64f8ca1c0aa7ba173507b251987dd0a8c48c1f146"
+    },
+    "tests/test_v17_dataset_adaptive_joint_fit_v1.py": {
+      "before_sha256": "2b9afb1f2a4433399eb7d117cd3aafff715fc9a0270ca70f0b08ece682a9499a",
+      "after_sha256": "554641bef12d91fc99c3eb48c9618dc1efd192700ec0d79d34d0be22c711a929"
+    }
+  },
+  "reason": "site_ids must be sliced by the same row block as err before site scatter_add",
+  "scientific_definition_change": false,
+  "source_edit": "site_ids[None,:] -> site_ids[sl][None,:]",
+  "parameters_changed": false,
+  "formal_selection_files_before_fix": [],
+  "formal_eval_files_before_fix": [],
+  "regression": "all nine beta variants: full-row and uneven two-row chunks agree within 1e-6 on synthetic repeated-site data; fails before fix, passes after fix",
+  "tests_before": 22,
+  "regression_before_fix": "1 failed (expected failure reproducing bug)",
+  "tests_after": 23,
+  "old_modules_changed": false
+}

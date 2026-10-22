@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 1128, in <module>
+    main()
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 1122, in main
+    elif args.command=="run": run(args)
+                              ^^^^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 909, in run
+    rows=evaluate_calibration_grid(fitpack,ctx,graph.to(args.device),s2,geom,candidates,endpoint_cache=epdiag)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\miniminiconda\envs\liuyan\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 598, in evaluate_calibration_grid
+    site_sums.reshape(c*k,len(unique_sites)).scatter_add_(
+RuntimeError: Expected index [18, 215] to be no larger than self [18, 45] apart from dimension 1 and to be no larger size than src [18, 128]

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 1128, in <module>
+    main()
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 1122, in main
+    elif args.command=="run": run(args)
+                              ^^^^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 926, in run
+    if r is None: raise RuntimeError(f"no feasible candidate for lambda={lam}")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: no feasible candidate for lambda=0.02

@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-10-22T00:30:29.417267+08:00",
+  "python": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+  "executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "torch": "2.10.0+cu128",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 2060",
+  "gpu_total_memory_bytes": 6442123264,
+  "numpy": "2.4.4",
+  "scipy": "1.17.1",
+  "pandas": "3.0.1",
+  "pytest": "9.0.3",
+  "branch_read_from_HEAD": "ref: refs/heads/v17-dataset-adaptive-spatial-joint-fit-v1",
+  "source_sha256": {
+    "fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py": "2eb4952259442fcb91fdae92f9925d5324efb9e64065d19da619b27809e25f4c",
+    "tests/test_v17_dataset_adaptive_joint_fit_v1.py": "2b9afb1f2a4433399eb7d117cd3aafff715fc9a0270ca70f0b08ece682a9499a",
+    "fhm_dapp_tim/evidence/V17_DATASET_ADAPTIVE_JOINT_FIT_DESIGN.md": "baa7039d53afbe4ad9ce11e9f6d5bf700c53688e88415772f6ef34288a4e2b81",
+    "fhm_dapp_tim/instructions/V17_DATASET_ADAPTIVE_JOINT_FIT_CODEX.txt": "f931bc4041fd37b73ccf54a7aaa0111c71bcb03ad8547e92a7d06d727e252d74"
+  },
+  "attached_instruction_sha256": "b00f8b23113453900bbb9ff39af45c3377b749906b84aa699bd9438d126aa980",
+  "preflight_sha256": {
+    "FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json": "67798d73cc461649ca189589631bde1dfb125f4d1f3d8b5937d5093484dc94ed",
+    "FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md": "9e4b7a3d2220122731bd16e79196b9118a07f944a49711709d7b2d9cc066cf86",
+    "SPATIAL_SCALE_SEARCH_SPACE.json": "0c8c206d7e341e77e1201627adfb3e7a8014c81accc198774af6903c33ad33c5"
+  },
+  "historical_identity_verified": {
+    "historical_sources": 204,
+    "checkpoints": 27,
+    "old_artifacts": 141
+  },
+  "training_runs": 0,
+  "optimizer_steps": 0,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "py_compile",
+    "fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-21T16:28:49.695234+00:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\01_compile.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2\\run_logs\\01_compile.stderr.log",
+  "pid": 17896,
+  "exit_code": 0,
+  "elapsed_seconds": 0.11004424095153809,
+  "finished_at": "2026-10-21T16:28:49.805278+00:00",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

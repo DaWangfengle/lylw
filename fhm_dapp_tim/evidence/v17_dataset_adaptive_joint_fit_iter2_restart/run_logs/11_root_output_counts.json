@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/v17_iter2_root_counts.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-21T18:04:50.603538+00:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2_restart\\run_logs\\11_root_output_counts.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter2_restart\\run_logs\\11_root_output_counts.stderr.log",
+  "pid": 8044,
+  "exit_code": 0,
+  "elapsed_seconds": 14.262108087539673,
+  "finished_at": "2026-10-21T18:05:04.865646+00:00",
+  "stdout_sha256": "0c0233f19accff8b072b96cffb057d92738303114df0ef90dae59f6ebe420f10",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

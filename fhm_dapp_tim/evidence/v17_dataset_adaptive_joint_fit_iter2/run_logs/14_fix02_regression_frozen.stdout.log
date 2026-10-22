@@ -1,0 +1,220 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+_ test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[False-cpu-counts0] _
+
+device = 'cpu', counts = [3, 3, 3, 3, 3, 3, ...], one_wrong = False
+
+    @pytest.mark.parametrize("device,counts", [
+        ("cpu", [3] * 10),
+        pytest.param("cuda", [7] * 30 + [6] * 39,
+                     marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    @pytest.mark.parametrize("one_wrong", [False, True])
+    def test_accuracy_uses_integer_site_counts_without_relaxing_the_guard(device, counts, one_wrong):
+        n_rows = sum(counts)
+        coords = torch.tensor([[0., 0.], [1., 0.], [10., 0.]], device=device)
+        edges = torch.tensor([[0, 1]], device=device)
+        graph, _, _ = joint.build_cutoff_graph(
+            coords.cpu().numpy(), np.array([0, 0, 1]), np.zeros(3, dtype=np.int64), edges, 2., 1.,
+        )
+        buildings = torch.zeros(n_rows, dtype=torch.long, device=device)
+        if one_wrong:
+            buildings[-1] = 1
+        ctx = {"memory": {"coords": coords, "building": torch.tensor([0, 0, 1], device=device),
+                          "floor": torch.zeros(3, dtype=torch.long, device=device)},
+               "edges": edges, "classes": torch.tensor([0, 0, 1], device=device),
+               "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+        keys = [f"site_{i}" for i, count in enumerate(counts) for _ in range(count)]
+        pack = {"scores": torch.tensor([[3., -1., -5.]], device=device).repeat(n_rows, 1),
+                "z": torch.zeros((n_rows, 3, 2), device=device),
+                "virtual_scores": torch.zeros((n_rows, 1), device=device),
+                "virtual_z": torch.zeros((n_rows, 1, 2), device=device),
+                "xy": coords[None].repeat(n_rows, 1, 1),
+                "sigma": torch.ones((n_rows, 3, 2), device=device),
+                "virtual_xy": torch.tensor([[[.5, 0.]]], device=device).repeat(n_rows, 1, 1),
+                "virtual_sigma": torch.ones((n_rows, 1, 2), device=device),
+                "target": torch.zeros((n_rows, 2), device=device),
+                "building": buildings, "floor": torch.zeros_like(buildings),
+                "weight": torch.tensor([1. / (len(counts) * count) for count in counts for _ in range(count)], device=device),
+                "keys": keys}
+        candidates = [{"candidate_id": f"beta_{beta}", "temperature": 1., "theta_v": .75,
+                       "theta_s": .75, "alpha_prior": .1, "alpha_obs": .25, "beta": beta}
+                      for beta in joint.BETAS]
+        rows = joint.evaluate_calibration_grid(pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates)
+        exact = ((len(counts) - 1) + (counts[-1] - 1) / counts[-1]) / len(counts) if one_wrong else 1.
+        assert len(rows) == 9
+        for row in rows:
+            assert math.isfinite(row["bf_accuracy"])
+>           assert row["bf_accuracy"] == pytest.approx(exact, abs=1e-15, rel=0.)
+E           assert 1.0000001192092896 == 1.0 ¡À 1.0e-15
+E             
+E             comparison failed
+E             Obtained: 1.0000001192092896
+E             Expected: 1.0 ¡À 1.0e-15
+
+fhm_dapp_tim\evidence\v17_dataset_adaptive_joint_fit_iter2\run_logs\test_fix02_proposed.py:50: AssertionError
+_ test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[False-cuda-counts1] _
+
+device = 'cuda', counts = [7, 7, 7, 7, 7, 7, ...], one_wrong = False
+
+    @pytest.mark.parametrize("device,counts", [
+        ("cpu", [3] * 10),
+        pytest.param("cuda", [7] * 30 + [6] * 39,
+                     marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    @pytest.mark.parametrize("one_wrong", [False, True])
+    def test_accuracy_uses_integer_site_counts_without_relaxing_the_guard(device, counts, one_wrong):
+        n_rows = sum(counts)
+        coords = torch.tensor([[0., 0.], [1., 0.], [10., 0.]], device=device)
+        edges = torch.tensor([[0, 1]], device=device)
+        graph, _, _ = joint.build_cutoff_graph(
+            coords.cpu().numpy(), np.array([0, 0, 1]), np.zeros(3, dtype=np.int64), edges, 2., 1.,
+        )
+        buildings = torch.zeros(n_rows, dtype=torch.long, device=device)
+        if one_wrong:
+            buildings[-1] = 1
+        ctx = {"memory": {"coords": coords, "building": torch.tensor([0, 0, 1], device=device),
+                          "floor": torch.zeros(3, dtype=torch.long, device=device)},
+               "edges": edges, "classes": torch.tensor([0, 0, 1], device=device),
+               "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+        keys = [f"site_{i}" for i, count in enumerate(counts) for _ in range(count)]
+        pack = {"scores": torch.tensor([[3., -1., -5.]], device=device).repeat(n_rows, 1),
+                "z": torch.zeros((n_rows, 3, 2), device=device),
+                "virtual_scores": torch.zeros((n_rows, 1), device=device),
+                "virtual_z": torch.zeros((n_rows, 1, 2), device=device),
+                "xy": coords[None].repeat(n_rows, 1, 1),
+                "sigma": torch.ones((n_rows, 3, 2), device=device),
+                "virtual_xy": torch.tensor([[[.5, 0.]]], device=device).repeat(n_rows, 1, 1),
+                "virtual_sigma": torch.ones((n_rows, 1, 2), device=device),
+                "target": torch.zeros((n_rows, 2), device=device),
+                "building": buildings, "floor": torch.zeros_like(buildings),
+                "weight": torch.tensor([1. / (len(counts) * count) for count in counts for _ in range(count)], device=device),
+                "keys": keys}
+        candidates = [{"candidate_id": f"beta_{beta}", "temperature": 1., "theta_v": .75,
+                       "theta_s": .75, "alpha_prior": .1, "alpha_obs": .25, "beta": beta}
+                      for beta in joint.BETAS]
+        rows = joint.evaluate_calibration_grid(pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates)
+        exact = ((len(counts) - 1) + (counts[-1] - 1) / counts[-1]) / len(counts) if one_wrong else 1.
+        assert len(rows) == 9
+        for row in rows:
+            assert math.isfinite(row["bf_accuracy"])
+>           assert row["bf_accuracy"] == pytest.approx(exact, abs=1e-15, rel=0.)
+E           assert 0.9999998807907104 == 1.0 ¡À 1.0e-15
+E             
+E             comparison failed
+E             Obtained: 0.9999998807907104
+E             Expected: 1.0 ¡À 1.0e-15
+
+fhm_dapp_tim\evidence\v17_dataset_adaptive_joint_fit_iter2\run_logs\test_fix02_proposed.py:50: AssertionError
+_ test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[True-cpu-counts0] _
+
+device = 'cpu', counts = [3, 3, 3, 3, 3, 3, ...], one_wrong = True
+
+    @pytest.mark.parametrize("device,counts", [
+        ("cpu", [3] * 10),
+        pytest.param("cuda", [7] * 30 + [6] * 39,
+                     marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    @pytest.mark.parametrize("one_wrong", [False, True])
+    def test_accuracy_uses_integer_site_counts_without_relaxing_the_guard(device, counts, one_wrong):
+        n_rows = sum(counts)
+        coords = torch.tensor([[0., 0.], [1., 0.], [10., 0.]], device=device)
+        edges = torch.tensor([[0, 1]], device=device)
+        graph, _, _ = joint.build_cutoff_graph(
+            coords.cpu().numpy(), np.array([0, 0, 1]), np.zeros(3, dtype=np.int64), edges, 2., 1.,
+        )
+        buildings = torch.zeros(n_rows, dtype=torch.long, device=device)
+        if one_wrong:
+            buildings[-1] = 1
+        ctx = {"memory": {"coords": coords, "building": torch.tensor([0, 0, 1], device=device),
+                          "floor": torch.zeros(3, dtype=torch.long, device=device)},
+               "edges": edges, "classes": torch.tensor([0, 0, 1], device=device),
+               "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+        keys = [f"site_{i}" for i, count in enumerate(counts) for _ in range(count)]
+        pack = {"scores": torch.tensor([[3., -1., -5.]], device=device).repeat(n_rows, 1),
+                "z": torch.zeros((n_rows, 3, 2), device=device),
+                "virtual_scores": torch.zeros((n_rows, 1), device=device),
+                "virtual_z": torch.zeros((n_rows, 1, 2), device=device),
+                "xy": coords[None].repeat(n_rows, 1, 1),
+                "sigma": torch.ones((n_rows, 3, 2), device=device),
+                "virtual_xy": torch.tensor([[[.5, 0.]]], device=device).repeat(n_rows, 1, 1),
+                "virtual_sigma": torch.ones((n_rows, 1, 2), device=device),
+                "target": torch.zeros((n_rows, 2), device=device),
+                "building": buildings, "floor": torch.zeros_like(buildings),
+                "weight": torch.tensor([1. / (len(counts) * count) for count in counts for _ in range(count)], device=device),
+                "keys": keys}
+        candidates = [{"candidate_id": f"beta_{beta}", "temperature": 1., "theta_v": .75,
+                       "theta_s": .75, "alpha_prior": .1, "alpha_obs": .25, "beta": beta}
+                      for beta in joint.BETAS]
+        rows = joint.evaluate_calibration_grid(pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates)
+        exact = ((len(counts) - 1) + (counts[-1] - 1) / counts[-1]) / len(counts) if one_wrong else 1.
+        assert len(rows) == 9
+        for row in rows:
+            assert math.isfinite(row["bf_accuracy"])
+>           assert row["bf_accuracy"] == pytest.approx(exact, abs=1e-15, rel=0.)
+E           assert 0.9666668176651001 == 0.9666666666666666 ¡À 1.0e-15
+E             
+E             comparison failed
+E             Obtained: 0.9666668176651001
+E             Expected: 0.9666666666666666 ¡À 1.0e-15
+
+fhm_dapp_tim\evidence\v17_dataset_adaptive_joint_fit_iter2\run_logs\test_fix02_proposed.py:50: AssertionError
+_ test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[True-cuda-counts1] _
+
+device = 'cuda', counts = [7, 7, 7, 7, 7, 7, ...], one_wrong = True
+
+    @pytest.mark.parametrize("device,counts", [
+        ("cpu", [3] * 10),
+        pytest.param("cuda", [7] * 30 + [6] * 39,
+                     marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    @pytest.mark.parametrize("one_wrong", [False, True])
+    def test_accuracy_uses_integer_site_counts_without_relaxing_the_guard(device, counts, one_wrong):
+        n_rows = sum(counts)
+        coords = torch.tensor([[0., 0.], [1., 0.], [10., 0.]], device=device)
+        edges = torch.tensor([[0, 1]], device=device)
+        graph, _, _ = joint.build_cutoff_graph(
+            coords.cpu().numpy(), np.array([0, 0, 1]), np.zeros(3, dtype=np.int64), edges, 2., 1.,
+        )
+        buildings = torch.zeros(n_rows, dtype=torch.long, device=device)
+        if one_wrong:
+            buildings[-1] = 1
+        ctx = {"memory": {"coords": coords, "building": torch.tensor([0, 0, 1], device=device),
+                          "floor": torch.zeros(3, dtype=torch.long, device=device)},
+               "edges": edges, "classes": torch.tensor([0, 0, 1], device=device),
+               "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+        keys = [f"site_{i}" for i, count in enumerate(counts) for _ in range(count)]
+        pack = {"scores": torch.tensor([[3., -1., -5.]], device=device).repeat(n_rows, 1),
+                "z": torch.zeros((n_rows, 3, 2), device=device),
+                "virtual_scores": torch.zeros((n_rows, 1), device=device),
+                "virtual_z": torch.zeros((n_rows, 1, 2), device=device),
+                "xy": coords[None].repeat(n_rows, 1, 1),
+                "sigma": torch.ones((n_rows, 3, 2), device=device),
+                "virtual_xy": torch.tensor([[[.5, 0.]]], device=device).repeat(n_rows, 1, 1),
+                "virtual_sigma": torch.ones((n_rows, 1, 2), device=device),
+                "target": torch.zeros((n_rows, 2), device=device),
+                "building": buildings, "floor": torch.zeros_like(buildings),
+                "weight": torch.tensor([1. / (len(counts) * count) for count in counts for _ in range(count)], device=device),
+                "keys": keys}
+        candidates = [{"candidate_id": f"beta_{beta}", "temperature": 1., "theta_v": .75,
+                       "theta_s": .75, "alpha_prior": .1, "alpha_obs": .25, "beta": beta}
+                      for beta in joint.BETAS]
+        rows = joint.evaluate_calibration_grid(pack, ctx, graph, edges, {"tau_virt_m": 1.}, candidates)
+        exact = ((len(counts) - 1) + (counts[-1] - 1) / counts[-1]) / len(counts) if one_wrong else 1.
+        assert len(rows) == 9
+        for row in rows:
+            assert math.isfinite(row["bf_accuracy"])
+>           assert row["bf_accuracy"] == pytest.approx(exact, abs=1e-15, rel=0.)
+E           assert 0.9975844621658325 == 0.9975845410628018 ¡À 1.0e-15
+E             
+E             comparison failed
+E             Obtained: 0.9975844621658325
+E             Expected: 0.9975845410628018 ¡À 1.0e-15
+
+fhm_dapp_tim\evidence\v17_dataset_adaptive_joint_fit_iter2\run_logs\test_fix02_proposed.py:50: AssertionError
+=========================== short test summary info ===========================
+FAILED fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/run_logs/test_fix02_proposed.py::test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[False-cpu-counts0]
+FAILED fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/run_logs/test_fix02_proposed.py::test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[False-cuda-counts1]
+FAILED fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/run_logs/test_fix02_proposed.py::test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[True-cpu-counts0]
+FAILED fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/run_logs/test_fix02_proposed.py::test_accuracy_uses_integer_site_counts_without_relaxing_the_guard[True-cuda-counts1]
+4 failed in 4.61s

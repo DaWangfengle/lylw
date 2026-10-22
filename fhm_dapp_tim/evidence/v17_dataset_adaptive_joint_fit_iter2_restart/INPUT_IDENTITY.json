@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "training_input_sha256": {
+    "data/TUJI1/Formatted_data_A12.mat": "73c59c6a8a12c45c4b6bf9b93b45cb89d0cfb7bb147260dc763f0d5f5af314a5",
+    "data/TUJI1/Formatted_data_POCO.mat": "9973384ac04365a55a2e6b33b16b61724cf41869e828b1544c7c4bc61c9d2495",
+    "data/TUJI1/Formatted_data_S20.mat": "e3e327243852ba38087c4e8f07c4d94c7b8acc0987e961d5dc6e8fcf23dd354e",
+    "data/TUJI1/Formatted_data_S7.mat": "c33ac65f9b61f6b24272b256b091c54747d5bce3f186a8a96e83cbc3e9f9fdab",
+    "data/TUJI1/Formatted_data_tabS7.mat": "f8a9bf0a94367f2255a3c94b2bd4b633d73d7000a8f1a0cf5c25e90d231b0e23",
+    "data/UTSIndoorLoc/UTS_training.csv": "a7cc7d12169be4d6cd9197f5761e463ecdd9e0e798b4f67790ca468d3028785b",
+    "data/UJIndoorLoc/trainingData.csv": "45ca0128bd12019c976bb4793e407c979c82995d7a5940ab7288620247905168"
+  },
+  "old_composition_artifacts_verified": 141,
+  "note": "TUJI physical MAT containers also contain test variables; the historical loader requests results_train only. Container hashing does not claim byte-level test isolation."
+}
