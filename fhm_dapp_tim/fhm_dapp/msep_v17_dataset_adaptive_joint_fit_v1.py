@@ -11,7 +11,7 @@ from . import msep_v17_spatial_structure_v1 as s3
 REPO=s3.REPO
 DEFAULT_INPUT=s3.DEFAULT_INPUT
 DEFAULT_CHECKPOINT_ROOT=comp.DEFAULT_CHECKPOINT_ROOT
-DEFAULT_OUTPUT=REPO/"fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1"
+DEFAULT_OUTPUT=REPO/"fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3"
 ARMS=("C","D","E")
 TEST_COUNTS={"internal_test_rows_scored":0,"official_test_rows_scored":0}
 # Spatial parameters use separate, operator-specific FIT-derived scale pools.
@@ -446,13 +446,17 @@ def _validate_geometry_support(coords,base_edges,geometries,
         raise RuntimeError("invalid coordinates while validating geometry support")
     if len(edges)==0:
         raise RuntimeError("base union-kNN graph has no edges; spatial search is undefined")
+    if not math.isfinite(float(min_s2_fraction)) or not 0.0<float(min_s2_fraction)<=1.0:
+        raise RuntimeError("minimum S2 retained-edge fraction must lie in (0,1]")
+    if not 12<=len(geometries)<=16:
+        raise RuntimeError(f"expected 12-16 spatial geometries, got {len(geometries)}")
     if np.any(edges<0) or np.any(edges>=len(xy)) or np.any(edges[:,0]==edges[:,1]):
         raise RuntimeError("invalid base union-kNN edge indices during support validation")
     if len({tuple(sorted(map(int,e))) for e in edges.tolist()})!=len(edges):
         raise RuntimeError("duplicate base union-kNN edges during support validation")
     lengths=np.linalg.norm(xy[edges[:,0]]-xy[edges[:,1]],axis=1)
-    if not np.isfinite(lengths).all() or np.any(lengths<=0):
-        raise RuntimeError("nonfinite or nonpositive base union-kNN edge lengths")
+    if not np.isfinite(lengths).all():
+        raise RuntimeError("nonfinite base union-kNN edge lengths")
     quantiles=_quantiles(lengths)
     allowed_s1=[float(quantiles[q]) for q in S1_CUTOFF_QUANTILES]
     allowed_s2=[float(quantiles[q]) for q in CUTOFF_QUANTILES]
@@ -989,6 +993,8 @@ def preflight(args):
           "geometry_candidates":geoms,
           "calibration_candidate_count":_calibration_candidate_count(),
           "gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
+          "w1_weight":W1_WEIGHT,"selection_objective_formula":SELECTION_OBJECTIVE_FORMULA,
+          "mae_non_degradation_tolerance_m":MAE_NON_DEGRADATION_TOLERANCE_M,
           "candidate_count_per_run":len(geoms)*_calibration_candidate_count()}
     _write_json(out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.json",{
         "source":"FIT anchor dictionary only","datasets_and_seeds":diagnostics,**TEST_COUNTS})
@@ -1123,7 +1129,7 @@ def run(args):
                 "near_optimal_objective_tolerance_absolute":NEAR_OPTIMAL_OBJECTIVE_TOLERANCE,
                 "finite_candidate_metric_count":int(finite_count),
                 "nonfinite_candidate_metric_count":int(len(rows_all)-finite_count),
-                "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
+                "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,"w1_weight":W1_WEIGHT,
                 "candidate_count":len(rows_all),"geometry_count":len(geoms),"inner_grid_count":len(inner),
                 "calibration_grid":calibration_grid,
                 "geometry_diagnostics":geometry_diagnostics,
