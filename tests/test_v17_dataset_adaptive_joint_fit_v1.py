@@ -254,6 +254,11 @@ def test_geometry_pool_separates_cutoff_radii_from_kernel_temperatures():
     assert all(g["r_max_s1_quantile"] in ("p75", "p90", "p95", "p100") for g in geoms)
     assert all(g["r_max_s2_quantile"] in ("p50", "p75", "p90", "p95", "p100") for g in geoms)
     assert metadata["r_max_s2_le_r_max_s1"] is True
+    assert joint._validate_kernel_scales(pools, geoms) is True
+    invalid_tau = [dict(g) for g in geoms]
+    invalid_tau[0]["tau_graph_m"] = 0.5
+    with pytest.raises(RuntimeError, match="tau_graph is not a current FIT"):
+        joint._validate_kernel_scales(pools, invalid_tau)
 
 
 def test_geometry_support_validation_rejects_sparse_or_empty_virtual_graphs():
