@@ -14,8 +14,10 @@ DEFAULT_CHECKPOINT_ROOT=comp.DEFAULT_CHECKPOINT_ROOT
 DEFAULT_OUTPUT=REPO/"fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_v1"
 ARMS=("C","D","E")
 TEST_COUNTS={"internal_test_rows_scored":0,"official_test_rows_scored":0}
-# Dimensionless multipliers are applied only to this dataset's FIT quantiles.
-GEOMETRY_SCALE_MULTIPLIERS=(0.50,0.75,1.0,1.25,1.50)
+# Spatial parameters use separate, operator-specific FIT-derived scale pools.
+CUTOFF_QUANTILES=("p50","p75","p90","p95","p100")
+S1_CUTOFF_QUANTILES=("p75","p90","p95","p100")
+KERNEL_EDGE_QUANTILES=("p50","p75","p90")
 CALIBRATION_RELATIVE_MULTIPLIERS=(0.75,1.0,1.25)
 CALIBRATION_EXPANSION_MULTIPLIERS=(0.50,1.50,0.625,1.75,2.0)
 TEMPERATURE_BOUNDS=(0.25,3.0)
@@ -25,9 +27,17 @@ ALPHA_OBS=(0.0,0.10,0.25)
 BETAS=(0.0,0.05,0.10,0.15,0.20,0.35,0.50,0.65,0.80)
 LAMBDAS=(0.02,0.05)
 BF_CE_WEIGHT=0.25
+W1_WEIGHT=0.10
 BF_CE_RELATIVE_TOLERANCE=0.02
 BF_CE_ABSOLUTE_TOLERANCE=0.005
 BF_CE_NORMALIZATION_FLOOR=0.05
+MAE_NON_DEGRADATION_TOLERANCE_M=1e-6
+MIN_S2_RETAINED_EDGE_FRACTION=0.45
+SELECTION_OBJECTIVE_FORMULA=(
+    "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + "
+    "0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + "
+    "lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)"
+)
 NEAR_OPTIMAL_OBJECTIVE_TOLERANCE=0.01
 QUANTILES=(0.00,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1.00)
 
@@ -296,62 +306,46 @@ def _unique_positive_scales(values):
     return out
 
 
-def _sample_scale_pool(values,required=(),limit=8):
-    all_values=_unique_positive_scales(values)
-    chosen=_unique_positive_scales(required)
-    if len(chosen)>limit:
-        chosen=[chosen[int(round(i*(len(chosen)-1)/(limit-1)))] for i in range(limit)]
-        chosen=_unique_positive_scales(chosen)
-    remaining=[x for x in all_values if not any(abs(x-y)<=1e-8*max(1.0,x,y) for y in chosen)]
-    need=max(0,limit-len(chosen))
-    if need and remaining:
-        ids=np.unique(np.round(np.linspace(0,len(remaining)-1,min(need,len(remaining)))).astype(int))
-        chosen.extend(remaining[int(i)] for i in ids)
-    return _unique_positive_scales(chosen)[:limit]
-
-
-def _derived_quantile_scales(values):
-    """Create metre-valued candidates only by scaling observed FIT quantiles."""
-    bases=_unique_positive_scales(values)
-    return _unique_positive_scales(
-        [base*multiplier for base in bases for multiplier in GEOMETRY_SCALE_MULTIPLIERS]
-    )
-
-
 def _geometry_candidate_pools(diag):
-    # Every base scale comes from this dataset's FIT k-NN / union-kNN quantiles.
-    # Dimensionless multiples increase resolution without a global meter list.
-    kth=diag["kth_neighbor_distance_m"]
+    """Separate cutoff radii from kernel temperatures using only FIT geometry."""
+    kth=diag.get("kth_neighbor_distance_m",{})
     edge=diag.get("base_union_knn_edge_distance_m",{})
-    quantile_names=("p50","p75","p90","p95","p99")
-    k_medians=[kth[str(k)].get("p50") for k in (1,2,4,8)]
-    k_all=[kth[str(k)].get(q) for k in (1,2,4,8) for q in quantile_names]
-    edge_all=[edge.get(q) for q in quantile_names]
-    required_k=[x for x in k_medians if x is not None and math.isfinite(float(x)) and float(x)>0]
-    required_edge=[edge.get(q) for q in ("p50","p75","p90","p95")
-                   if edge.get(q) is not None and math.isfinite(float(edge.get(q))) and float(edge.get(q))>0]
-    if not required_k:
-        raise RuntimeError("FIT-only nearest-neighbor geometry is unavailable; refusing to guess spatial scales")
-    derived=_derived_quantile_scales(k_all+edge_all)
-    if not derived:
-        raise RuntimeError("no positive FIT-only distance quantiles available for spatial scale search")
-    pools={
-      "r_max_s1_m":_sample_scale_pool(derived,required=required_k),
-      "tau_graph_m":_sample_scale_pool(derived,required=required_k),
-      "r_max_s2_m":_sample_scale_pool(derived,required=required_edge or required_k),
-      "tau_virt_m":_sample_scale_pool(derived,required=(required_edge[:3]+required_k[:4])[:8] or required_k),
+    edge_count=int(diag.get("base_union_knn_edges",edge.get("count",0)) or 0)
+    if edge_count<=0:
+        raise RuntimeError("cannot derive cutoff radii without a nonempty FIT union-kNN edge set")
+    cutoff_by_quantile={}
+    for q in CUTOFF_QUANTILES:
+        value=edge.get(q)
+        if value is None or not math.isfinite(float(value)) or float(value)<=0:
+            raise RuntimeError(f"missing positive FIT union-kNN edge quantile {q}; refusing to guess cutoff radii")
+        cutoff_by_quantile[q]=float(value)
+    ordered=[cutoff_by_quantile[q] for q in CUTOFF_QUANTILES]
+    if any(right+1e-10*max(1.0,left,right)<left for left,right in zip(ordered,ordered[1:])):
+        raise RuntimeError("FIT union-kNN edge quantiles are not monotone")
+    k_medians=[]
+    for k in (1,2,4,8):
+        value=kth.get(str(k),{}).get("p50")
+        if value is not None and math.isfinite(float(value)) and float(value)>0:
+            k_medians.append(float(value))
+    if not k_medians:
+        raise RuntimeError("FIT-only nearest-neighbor medians are unavailable; refusing to guess kernel temperatures")
+    kernel_values=_unique_positive_scales(
+        k_medians+[cutoff_by_quantile[q] for q in KERNEL_EDGE_QUANTILES]
+    )
+    if len(kernel_values)<3:
+        raise RuntimeError(
+            f"FIT geometry yields only {len(kernel_values)} distinct finite kernel scales; "
+            "cannot construct three distinguishable temperature levels"
+        )
+    cutoff_values=_unique_positive_scales([cutoff_by_quantile[q] for q in CUTOFF_QUANTILES])
+    if not cutoff_values:
+        raise RuntimeError("no positive FIT edge-quantile cutoff radii")
+    return {
+        "r_max_s1_m":cutoff_values,
+        "r_max_s2_m":cutoff_values,
+        "tau_graph_m":kernel_values,
+        "tau_virt_m":kernel_values,
     }
-    for name,values in pools.items():
-        if not values: raise RuntimeError(f"no finite FIT-derived scale candidates for {name}")
-    return pools
-
-
-def _geometry_value_pool(diag):
-    pools=_geometry_candidate_pools(diag)
-    all_values=[]
-    for values in pools.values(): all_values.extend(values)
-    k_medians=[diag["kth_neighbor_distance_m"][str(k)].get("p50") for k in (1,2,4,8)]
-    return _sample_scale_pool(all_values,required=[x for x in k_medians if x is not None],limit=8)
 
 
 def _ranked_scale_levels(values,count=4):
@@ -368,54 +362,137 @@ def _ranked_scale_levels(values,count=4):
 
 def geometry_candidates(diag):
     pools=_geometry_candidate_pools(diag)
-    shared=_geometry_value_pool(diag)
-    r1_levels=_ranked_scale_levels(pools["r_max_s1_m"],3)
-    tau_levels=_ranked_scale_levels(pools["tau_graph_m"],4)
-    r2_pool=pools["r_max_s2_m"]
-    tau_virt_pool=pools["tau_virt_m"]
-    if not r2_pool or not tau_virt_pool:
-        raise RuntimeError("incomplete FIT-derived spatial candidate pool")
-
+    edge=diag["base_union_knn_edge_distance_m"]
+    cutoff_by_quantile={q:float(edge[q]) for q in CUTOFF_QUANTILES}
+    r1_levels=[(q,cutoff_by_quantile[q]) for q in S1_CUTOFF_QUANTILES]
+    tau_levels=_ranked_scale_levels(pools["tau_graph_m"],3)
+    tau_virt_low=float(cutoff_by_quantile["p50"])
+    tau_virt_high=float(cutoff_by_quantile["p90"])
     out=[]; seen=set()
-    def add(r1,tau_graph,r2,tau_virt,role):
+    def add(r1_q,r1,r2_q,r2,tau_graph,tau_virt,role):
         r1=float(r1); tau_graph=float(tau_graph); r2=float(r2); tau_virt=float(tau_virt)
-        if r2>r1+1e-10*max(1.0,r1):
+        tol=1e-10*max(1.0,r1,r2)
+        if r2>r1+tol:
             raise RuntimeError("candidate violates R_max_S2 <= R_max_S1")
+        if r1 not in pools["r_max_s1_m"] or r2 not in pools["r_max_s2_m"]:
+            raise RuntimeError("cutoff radius is not an observed FIT union-kNN edge quantile")
+        if tau_graph not in pools["tau_graph_m"]:
+            raise RuntimeError("tau_graph is not an observed FIT neighbor/edge scale")
+        if not math.isinf(tau_virt) and tau_virt not in pools["tau_virt_m"]:
+            raise RuntimeError("finite tau_virt is not an observed FIT neighbor/edge scale")
         key=(r1,tau_graph,r2,tau_virt)
         if key in seen:
             return
         seen.add(key)
-        out.append({"geometry_id":f"fit_quantile_geometry_{len(out):02d}",
+        out.append({
+            "geometry_id":f"fit_quantile_geometry_{len(out):02d}",
             "r_max_s1_m":r1,"tau_graph_m":tau_graph,"r_max_s2_m":r2,
-            "tau_virt_m":tau_virt,"role":role,"r_max_s2_le_r_max_s1":True})
-
-    # Three FIT-derived R_S1 quantile levels crossed with four FIT-derived
-    # graph-temperature levels, yielding 12 configurations. For each radius,
-    # S2 uses low/high eligible radius ranks; tau_virt has infinity controls
-    # and finite low/high quantile-derived settings. No arbitrary modulo/LHS.
-    tau_virt_low=float(tau_virt_pool[0]); tau_virt_high=float(tau_virt_pool[-1])
-    for r1 in r1_levels:
-        eligible=sorted({x for x in r2_pool if x<=r1+1e-10*max(1.0,r1)}|{r1})
-        r2_low=float(eligible[0]); r2_high=float(eligible[-1])
+            "tau_virt_m":tau_virt,"role":role,
+            "r_max_s1_quantile":r1_q,"r_max_s2_quantile":r2_q,
+            "r_max_s2_le_r_max_s1":True,
+        })
+    # S1 uses P75/P90/P95/P100. S2 uses P50..P100. Kernel temperatures use
+    # neighbor P50 and edge P50/P75/P90 values, never cutoff-derived multipliers.
+    for r1_q,r1 in r1_levels:
+        eligible=[(q,cutoff_by_quantile[q]) for q in CUTOFF_QUANTILES
+                  if cutoff_by_quantile[q]<=r1+1e-10*max(1.0,r1)]
+        if not eligible:
+            raise RuntimeError(f"no eligible S2 edge quantile for S1 radius {r1_q}")
+        r2_low=eligible[0]
+        r2_mid=eligible[len(eligible)//2]
+        r2_high=eligible[-1]
         combinations=(
-            (tau_levels[0],r2_low,math.inf,"FIT_quantile_tau_virt_infinity_control"),
-            (tau_levels[1],r2_high,math.inf,"FIT_quantile_tau_virt_infinity_control"),
-            (tau_levels[2],r2_low,tau_virt_low,"FIT_quantile_derived"),
-            (tau_levels[3],r2_high,tau_virt_high,"FIT_quantile_derived"),
+            (tau_levels[0],r2_low,math.inf,"low_S2_tau_virt_infinity_control"),
+            (tau_levels[1],r2_mid,tau_virt_low,"mid_S2_finite_tau_edge_p50"),
+            (tau_levels[2],r2_high,tau_virt_high,"high_S2_finite_tau_edge_p90"),
         )
-        for tau_graph,r2,tau_virt,role in combinations:
-            add(r1,tau_graph,r2,tau_virt,role)
-
+        for tau_graph,(r2_q,r2),tau_virt,role in combinations:
+            add(r1_q,r1,r2_q,r2,tau_graph,tau_virt,
+                f"S1_{r1_q}__S2_{r2_q}__{role}")
     if not 12<=len(out)<=16:
-        raise RuntimeError(f"FIT quantiles only produced {len(out)} unique spatial configurations; expected 12-16")
+        raise RuntimeError(
+            f"FIT edge/neighbor quantiles produced {len(out)} unique spatial configurations; expected 12-16"
+        )
     if not any(math.isinf(row["tau_virt_m"]) for row in out):
         raise RuntimeError("spatial candidate design omitted tau_virt=+inf control")
     if any(row["r_max_s2_m"]>row["r_max_s1_m"] for row in out):
         raise RuntimeError("spatial candidate violates R_max_S2 <= R_max_S1")
-    return out,{"shared_union_m":shared,"by_parameter_m":pools,
-        "scale_derivation":"FIT k=1/2/4/8 neighbor and union-kNN edge quantiles × dimensionless GEOMETRY_SCALE_MULTIPLIERS",
-        "geometry_candidate_count":len(out),"r_max_s2_le_r_max_s1":True,
-        "tau_virt_infinity_control_count":sum(math.isinf(row["tau_virt_m"]) for row in out)}
+    return out,{
+        "by_parameter_m":{
+            "r_max_s1_m":pools["r_max_s1_m"],
+            "r_max_s2_m":pools["r_max_s2_m"],
+            "tau_graph_m":pools["tau_graph_m"],
+            "tau_virt_m":pools["tau_virt_m"],
+        },
+        "cutoff_quantile_values_m":cutoff_by_quantile,
+        "scale_derivation":(
+            "R_max_S1 uses FIT union-kNN edge P75/P90/P95/P100; "
+            "R_max_S2 uses FIT union-kNN edge P50/P75/P90/P95/P100; "
+            "kernel temperatures use FIT k=1/2/4/8 neighbor P50 plus edge P50/P75/P90; "
+            "no cross-pool multipliers"
+        ),
+        "geometry_candidate_count":len(out),
+        "r_max_s2_le_r_max_s1":True,
+        "tau_virt_infinity_control_count":sum(math.isinf(row["tau_virt_m"]) for row in out),
+    }
+
+
+def _validate_geometry_support(coords,base_edges,geometries,
+                               min_s2_fraction=MIN_S2_RETAINED_EDGE_FRACTION):
+    """Validate actual retained edge support for every proposed FIT geometry."""
+    xy=np.asarray(coords,dtype=np.float64)
+    edges=np.asarray(torch.as_tensor(base_edges).detach().cpu(),dtype=np.int64).reshape(-1,2)
+    if xy.ndim!=2 or xy.shape[1]!=2 or len(xy)<1 or not np.isfinite(xy).all():
+        raise RuntimeError("invalid coordinates while validating geometry support")
+    if len(edges)==0:
+        raise RuntimeError("base union-kNN graph has no edges; spatial search is undefined")
+    if np.any(edges<0) or np.any(edges>=len(xy)) or np.any(edges[:,0]==edges[:,1]):
+        raise RuntimeError("invalid base union-kNN edge indices during support validation")
+    if len({tuple(sorted(map(int,e))) for e in edges.tolist()})!=len(edges):
+        raise RuntimeError("duplicate base union-kNN edges during support validation")
+    lengths=np.linalg.norm(xy[edges[:,0]]-xy[edges[:,1]],axis=1)
+    if not np.isfinite(lengths).all() or np.any(lengths<=0):
+        raise RuntimeError("nonfinite or nonpositive base union-kNN edge lengths")
+    quantiles=_quantiles(lengths)
+    allowed_s1=[float(quantiles[q]) for q in S1_CUTOFF_QUANTILES]
+    allowed_s2=[float(quantiles[q]) for q in CUTOFF_QUANTILES]
+    def is_quantile_radius(value,allowed):
+        value=float(value)
+        return any(abs(value-candidate)<=1e-8*max(1.0,abs(value),abs(candidate))
+                   for candidate in allowed)
+    minimum_s2_edges=max(1,int(math.ceil(float(min_s2_fraction)*len(edges)-1e-12)))
+    result={}
+    for geom in geometries:
+        geometry_id=str(geom.get("geometry_id","<missing>"))
+        r1=float(geom["r_max_s1_m"]); r2=float(geom["r_max_s2_m"])
+        if not math.isfinite(r1) or not math.isfinite(r2) or r1<=0 or r2<=0:
+            raise RuntimeError(f"{geometry_id}: cutoff radii must be finite and positive")
+        tol=1e-10*max(1.0,r1,r2)
+        if r2>r1+tol:
+            raise RuntimeError(f"{geometry_id}: R_max_S2 exceeds R_max_S1")
+        if not is_quantile_radius(r1,allowed_s1):
+            raise RuntimeError(f"{geometry_id}: R_max_S1 is not FIT edge P75/P90/P95/P100")
+        if not is_quantile_radius(r2,allowed_s2):
+            raise RuntimeError(f"{geometry_id}: R_max_S2 is not FIT edge P50/P75/P90/P95/P100")
+        retained_s1=int(np.count_nonzero(lengths<=r1))
+        retained_s2=int(np.count_nonzero(lengths<=r2))
+        if retained_s1<=0:
+            raise RuntimeError(f"{geometry_id}: S1 cutoff retained no base graph edges")
+        if retained_s2<minimum_s2_edges:
+            raise RuntimeError(
+                f"{geometry_id}: S2 retained {retained_s2}/{len(edges)} edges; "
+                f"requires at least {minimum_s2_edges} ({min_s2_fraction:.0%})"
+            )
+        result[geometry_id]={
+            "base_edges":int(len(edges)),
+            "retained_s1_edges":retained_s1,
+            "retained_s1_fraction":float(retained_s1/len(edges)),
+            "retained_virtual_edges":retained_s2,
+            "retained_virtual_fraction":float(retained_s2/len(edges)),
+            "minimum_required_virtual_edges":int(minimum_s2_edges),
+            "minimum_required_virtual_fraction":float(min_s2_fraction),
+        }
+    return result
 
 
 def _subset_virtual_pack(pack,edge_ids):
@@ -621,28 +698,105 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
     return rows_out if len(edges) else [row for row in rows_out if float(row["beta"])==0.0]
 
 
-def _primary(r): return float(r["coordinate_mae_m"])+.30*float(r["transport_w1_m"])
+def _primary(r):
+    """Primary tie-break metric: point-coordinate MAE only."""
+    return float(r["coordinate_mae_m"])
+
+
 def _clean_baseline(rows):
     clean=[r for r in rows if r["alpha_prior"]==0 and r["alpha_obs"]==0 and r["beta"]==0]
     if not clean: raise RuntimeError("joint grid omitted clean-base alpha=0,beta=0 boundary")
-    return min(clean,key=lambda r:(_primary(r),r["bf_cross_entropy"],r["joint_nll"],r["temperature"],r["theta_v"],r["theta_s"]))
+    return min(clean,key=lambda r:(_primary(r),float(r["transport_w1_m"]),
+        float(r["joint_nll"]),r["temperature"],r["theta_v"],r["theta_s"]))
+
+
 def _add_objectives(rows,base):
-    pbase=max(_primary(base),1e-9); nscale=max(abs(float(base["joint_nll"])),1.0)
-    bfbase=float(base["bf_cross_entropy"]); accbase=float(base["bf_accuracy"])
+    maebase=max(float(base["coordinate_mae_m"]),1e-9)
+    w1base=max(float(base["transport_w1_m"]),1e-9)
+    nllbase=float(base["joint_nll"])
+    nscale=max(abs(nllbase),1.0)
+    bfbase=float(base["bf_cross_entropy"])
+    bfdenom=max(bfbase,BF_CE_NORMALIZATION_FLOOR)
+    accbase=float(base["bf_accuracy"])
+    maetol=MAE_NON_DEGRADATION_TOLERANCE_M
     for r in rows:
-        r["primary_mae_plus_030_w1_m"]=_primary(r); r["normalized_primary"]=_primary(r)/pbase
-        r["normalized_joint_nll_delta"]=(float(r["joint_nll"])-float(base["joint_nll"]))/nscale
-        r["normalized_bf_cross_entropy"]=float(r["bf_cross_entropy"])/max(bfbase,BF_CE_NORMALIZATION_FLOOR)
-        r["normalized_bf_cross_entropy_delta"]=(float(r["bf_cross_entropy"])-bfbase)/max(bfbase,BF_CE_NORMALIZATION_FLOOR)
+        mae=float(r["coordinate_mae_m"])
+        w1=float(r["transport_w1_m"])
+        bfce=float(r["bf_cross_entropy"])
+        nll=float(r["joint_nll"])
+        r["primary_coordinate_mae_m"]=mae
+        r["normalized_primary"]=mae/maebase
+        r["normalized_w1_delta"]=(w1-float(base["transport_w1_m"]))/w1base
+        r["normalized_joint_nll_delta"]=(nll-nllbase)/nscale
+        r["normalized_bf_cross_entropy"]=bfce/bfdenom
+        # Keep the signed delta for diagnostics; the objective uses only the
+        # one-sided penalty so a BF-CE improvement cannot compensate for MAE loss.
+        r["normalized_bf_cross_entropy_delta"]=(bfce-bfbase)/bfdenom
+        r["normalized_bf_cross_entropy_penalty"]=max(0.0,bfce-bfbase)/bfdenom
         r["negative_bf_accuracy"]=-float(r["bf_accuracy"])
-        r["bf_accuracy_non_degradation"]=float(r["bf_accuracy"])>=accbase-1e-12
-        r["bf_cross_entropy_guard"]=float(r["bf_cross_entropy"])<=bfbase*(1.0+BF_CE_RELATIVE_TOLERANCE)+BF_CE_ABSOLUTE_TOLERANCE
-        r["feasible"]=bool(r["bf_accuracy_non_degradation"] and r["bf_cross_entropy_guard"])
+        r["mae_non_degradation"]=bool(
+            math.isfinite(mae) and mae<=float(base["coordinate_mae_m"])+maetol
+        )
+        r["bf_accuracy_non_degradation"]=bool(
+            math.isfinite(float(r["bf_accuracy"])) and float(r["bf_accuracy"])>=accbase-1e-12
+        )
+        r["bf_cross_entropy_guard"]=bool(
+            math.isfinite(bfce) and bfce<=bfbase*(1.0+BF_CE_RELATIVE_TOLERANCE)+BF_CE_ABSOLUTE_TOLERANCE
+        )
+        r["feasible"]=bool(
+            r["mae_non_degradation"] and r["bf_accuracy_non_degradation"] and r["bf_cross_entropy_guard"]
+        )
         for lam in LAMBDAS:
-            r[f"selection_objective_lambda_{lam:.2f}"]=(r["normalized_primary"]
-                + BF_CE_WEIGHT*r["normalized_bf_cross_entropy_delta"]
-                + lam*r["normalized_joint_nll_delta"])
+            r[f"selection_objective_lambda_{lam:.2f}"]=(
+                r["normalized_primary"]
+                + W1_WEIGHT*r["normalized_w1_delta"]
+                + BF_CE_WEIGHT*r["normalized_bf_cross_entropy_penalty"]
+                + lam*r["normalized_joint_nll_delta"]
+            )
     return rows
+
+
+def _is_clean_anchor_candidate(row,baseline_config):
+    if row.get("candidate_id")=="clean_baseline_reference":
+        return False
+    return (
+        float(row.get("alpha_prior",math.nan))==0.0
+        and float(row.get("alpha_obs",math.nan))==0.0
+        and float(row.get("beta",math.nan))==0.0
+        and math.isclose(float(row.get("temperature",math.nan)),
+                         float(baseline_config["temperature"]),rel_tol=0.0,abs_tol=1e-12)
+        and math.isclose(float(row.get("theta_v",math.nan)),
+                         float(baseline_config["theta"][0]),rel_tol=0.0,abs_tol=1e-12)
+        and math.isclose(float(row.get("theta_s",math.nan)),
+                         float(baseline_config["theta"][1]),rel_tol=0.0,abs_tol=1e-12)
+    )
+
+
+def _assert_clean_anchor_feasible(rows,baseline_config,expected_geometry_count):
+    anchors=[r for r in rows if _is_clean_anchor_candidate(r,baseline_config)]
+    if len(anchors)!=int(expected_geometry_count):
+        raise RuntimeError(
+            f"expected one exact clean calibration anchor per geometry ({expected_geometry_count}); found {len(anchors)}"
+        )
+    failed=[r for r in anchors if not r.get("feasible",False)]
+    if failed:
+        baseline=next((x for x in rows if x.get("candidate_id")=="clean_baseline_reference"),None)
+        details=[{
+            "candidate_id":r.get("candidate_id"),
+            "mae_non_degradation":r.get("mae_non_degradation"),
+            "bf_accuracy_non_degradation":r.get("bf_accuracy_non_degradation"),
+            "bf_cross_entropy_guard":r.get("bf_cross_entropy_guard"),
+            "mae_delta_m":(
+                float(r["coordinate_mae_m"])-float(baseline["coordinate_mae_m"])
+                if baseline is not None else None
+            ),
+        } for r in failed[:3]]
+        raise RuntimeError(
+            "exact clean calibration anchor is not feasible; stop rather than relaxing the MAE/BF guards: "
+            +json.dumps(details,ensure_ascii=False)
+        )
+
+
 def _choose(rows,lam,kind="joint"):
     objective_key=f"selection_objective_lambda_{lam:.2f}"
     metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
@@ -652,8 +806,9 @@ def _choose(rows,lam,kind="joint"):
         all(math.isfinite(float(r.get(field,math.nan))) for field in metric_fields)]
     if kind=="single_S1": rs=[r for r in rs if r["beta"]==0 and (r["alpha_prior"]!=0 or r["alpha_obs"]!=0)]
     if kind=="single_S2": rs=[r for r in rs if r["alpha_prior"]==0 and r["alpha_obs"]==0 and r["beta"]>0]
-    return min(rs,key=lambda r:(r[objective_key],r["normalized_bf_cross_entropy"],
-        _primary(r),r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],r["alpha_obs"],r["beta"],r["geometry_id"])) if rs else None
+    return min(rs,key=lambda r:(r[objective_key],_primary(r),r["transport_w1_m"],r["joint_nll"],
+        r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],r["alpha_obs"],r["beta"],
+        r["geometry_id"])) if rs else None
 def _near_optimal_sensitivity(rows):
     """Summarize CAL-fit near-optimal parameter ambiguity without CAL-eval access."""
     parameter_fields=("r_max_s1_m","tau_graph_m","r_max_s2_m","tau_virt_m","temperature",
@@ -667,8 +822,8 @@ def _near_optimal_sensitivity(rows):
         near=[r for r in rows if r.get("candidate_id")!="clean_baseline_reference" and r.get("feasible") and
               math.isfinite(float(r[objective_key])) and
               float(r[objective_key])<=best_value+NEAR_OPTIMAL_OBJECTIVE_TOLERANCE+1e-12]
-        near.sort(key=lambda r:(float(r[objective_key]),r["normalized_bf_cross_entropy"],
-            _primary(r),r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],
+        near.sort(key=lambda r:(float(r[objective_key]),_primary(r),r["transport_w1_m"],r["joint_nll"],
+            r["temperature"],r["theta_v"],r["theta_s"],r["alpha_prior"],
             r["alpha_obs"],r["beta"],r["geometry_id"]))
         ranges={}
         for field in parameter_fields:
@@ -694,9 +849,13 @@ def _config(r):
         "temperature":float(r["temperature"]),"theta":[float(r["theta_v"]),float(r["theta_s"])],
         "alpha_prior":float(r["alpha_prior"]),"alpha_obs":float(r["alpha_obs"]),"beta":float(r["beta"]),
         "gamma_space":0.0,"selection_objective":{f"lambda_{lam:.2f}":float(r[f"selection_objective_lambda_{lam:.2f}"]) for lam in LAMBDAS},
-        "normalized_primary":float(r["normalized_primary"]),"normalized_joint_nll_delta":float(r["normalized_joint_nll_delta"]),
+        "normalized_primary":float(r["normalized_primary"]),
+        "normalized_w1_delta":float(r["normalized_w1_delta"]),
+        "normalized_joint_nll_delta":float(r["normalized_joint_nll_delta"]),
         "normalized_bf_cross_entropy":float(r["normalized_bf_cross_entropy"]),
         "normalized_bf_cross_entropy_delta":float(r["normalized_bf_cross_entropy_delta"]),
+        "normalized_bf_cross_entropy_penalty":float(r["normalized_bf_cross_entropy_penalty"]),
+        "mae_non_degradation":bool(r["mae_non_degradation"]),
         "bf_accuracy_non_degradation":bool(r["bf_accuracy_non_degradation"]),
         "bf_cross_entropy_guard":bool(r["bf_cross_entropy_guard"]),
         "fit_metrics":{k:float(r[k]) for k in ("coordinate_mae_m","transport_w1_m","bf_accuracy",
@@ -822,8 +981,12 @@ def preflight(args):
         d.update(dataset=ds,seed=int(seed),cal_fit_rows=len(fit),cal_eval_rows=len(ev))
         diagnostics[key]=d
         geoms,pools=geometry_candidates(d)
-        spaces[key]={"dataset":ds,"seed":int(seed),"geometry_value_pool_m":pools["shared_union_m"],
-          "geometry_candidate_pools_m":pools["by_parameter_m"],"geometry_candidates":geoms,
+        support=_validate_geometry_support(xy,ctx["edges"],geoms)
+        for geom in geoms: geom["support_diagnostics"]=support[geom["geometry_id"]]
+        spaces[key]={"dataset":ds,"seed":int(seed),
+          "geometry_candidate_pools_m":pools["by_parameter_m"],
+          "cutoff_quantile_values_m":pools["cutoff_quantile_values_m"],
+          "geometry_candidates":geoms,
           "calibration_candidate_count":_calibration_candidate_count(),
           "gamma_space":0.0,"lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
           "candidate_count_per_run":len(geoms)*_calibration_candidate_count()}
@@ -844,7 +1007,10 @@ def preflight(args):
         md.append("")
     (out/"FIT_NEIGHBOR_DISTANCE_DIAGNOSTICS.md").write_text("\n".join(md),encoding="utf-8")
     _write_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json",{
-      "geometry_design":"12-16 deterministic FIT-quantile-derived spatial configurations per dataset/seed; R_S2 <= R_S1; includes tau_virt=+inf controls",
+      "geometry_design":"12 deterministic FIT-derived spatial configurations per dataset/seed; cutoff radii use actual union-kNN edge P50/P75/P90/P95/P100 only; S1 uses P75/P90/P95/P100; S2 retains at least 45% of base edges; includes tau_virt=+inf controls",
+      "selection_objective_formula":SELECTION_OBJECTIVE_FORMULA,
+      "w1_objective_weight":W1_WEIGHT,
+      "mae_non_degradation_tolerance_m":MAE_NON_DEGRADATION_TOLERANCE_M,
       "outer_geometry_candidates":spaces,
       "calibration_grid":{
         "temperature":"three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.25,3.0]",
@@ -854,7 +1020,9 @@ def preflight(args):
         "alpha_prior":list(ALPHA_PRIORS),"alpha_obs":list(ALPHA_OBS),"beta":list(BETAS),
         "baseline_center_resolved_at_run_time":True},
       "inner_joint_grid_size":_calibration_candidate_count(),"gamma_space_fixed":0.0,
-      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
+      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,"w1_weight":W1_WEIGHT,
+      "mae_non_degradation_tolerance_m":MAE_NON_DEGRADATION_TOLERANCE_M,
+      "selection_objective_formula":SELECTION_OBJECTIVE_FORMULA,
       "bf_ce_normalization_floor":BF_CE_NORMALIZATION_FLOOR,
       "bf_ce_guard_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
       "bf_ce_guard_absolute_tolerance":BF_CE_ABSOLUTE_TOLERANCE,**TEST_COUNTS})
@@ -889,13 +1057,19 @@ def run(args):
             b=ctx["memory"]["building"].detach().cpu().numpy()
             f=ctx["memory"]["floor"].detach().cpu().numpy()
             geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
+            support_by_geometry=_validate_geometry_support(coords,base_edges,geoms)
             rows_all=[]; geometry_diagnostics={}
             for geom in geoms:
+                support=support_by_geometry[geom["geometry_id"]]
                 if float(geom["r_max_s2_m"])>float(geom["r_max_s1_m"]):
                     raise RuntimeError("preflight geometry violates R_max_S2 <= R_max_S1")
-                graph,_,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
+                graph,kept_s1,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
+                if int(gdiag["retained_edges"])<=0 or int(len(kept_s1))!=int(support["retained_s1_edges"]):
+                    raise RuntimeError(f"{geom['geometry_id']}: S1 edge support differs from preflight validation")
                 lens=np.linalg.norm(coords[base_edges[:,0]]-coords[base_edges[:,1]],axis=1) if len(base_edges) else np.empty(0)
                 s2=base_edges[lens<=float(geom["r_max_s2_m"])] if len(base_edges) else base_edges
+                if len(s2)<int(support["minimum_required_virtual_edges"]) or int(len(s2))!=int(support["retained_virtual_edges"]):
+                    raise RuntimeError(f"{geom['geometry_id']}: S2 edge support below validated minimum")
                 epdiag=normalized_virtual_endpoint_weights(s2,coords,geom["tau_virt_m"])
                 s2lens=np.linalg.norm(coords[s2[:,0]]-coords[s2[:,1]],axis=1) if len(s2) else np.empty(0)
                 gdiag["S2"]={"r_max_s2_m":float(geom["r_max_s2_m"]),"tau_virt_m":float(geom["tau_virt_m"]),
@@ -906,6 +1080,7 @@ def run(args):
                     "zero_virtual_neighbor_nodes":int((epdiag["degree"]==0).sum()),
                     "effective_virtual_mass_by_parent":epdiag["effective_virtual_mass_by_parent"],
                     "effective_virtual_mass_quantiles":_quantiles(epdiag["effective_virtual_mass_by_parent"])}
+                gdiag["preflight_support_validation"]=support
                 geometry_diagnostics[geom["geometry_id"]]=gdiag
                 candidates=[dict(x,candidate_id=f'{geom["geometry_id"]}__{x["candidate_id"]}',
                     geometry_id=geom["geometry_id"],r_max_s1_m=geom["r_max_s1_m"],
@@ -922,6 +1097,7 @@ def run(args):
                 split_hash=s3.key_sha(ctx["keys"][int(i)] for i in fit),geometry_role="clean_baseline_reference")
             rows_all.append(base)
             rows_all=_add_objectives(rows_all,base)
+            _assert_clean_anchor_feasible(rows_all,baseline_config,len(geoms))
             metric_fields=("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll",
                 "site_p95_mae_m","site_p99_mae_m","worst_site_mae_m")
             finite_count=sum(all(math.isfinite(float(r.get(k,math.nan))) for k in metric_fields) for r in rows_all)
@@ -953,8 +1129,15 @@ def run(args):
                 "geometry_diagnostics":geometry_diagnostics,
                 "fit_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in fit),
                 "eval_split_sha256":s3.key_sha(ctx["keys"][int(i)] for i in ev),
+                "selection_objective_formula":SELECTION_OBJECTIVE_FORMULA,
+                "w1_objective_weight":W1_WEIGHT,
+                "mae_non_degradation_guard":(
+                    f"candidate coordinate MAE <= clean CAL-fit baseline + "
+                    f"{MAE_NON_DEGRADATION_TOLERANCE_M:g} m"
+                ),
                 "bf_accuracy_guard":"candidate macro BF accuracy >= clean CAL-fit baseline",
                 "bf_cross_entropy_guard":"candidate BF CE <= clean baseline * 1.02 + 0.005",
+                "bf_cross_entropy_objective_penalty":"max(0, candidate BF-CE - clean BF-CE) / max(clean BF-CE, 0.05)",
                 "bf_cross_entropy_normalization_denominator":"max(clean BF-CE, 0.05)",
                 **TEST_COUNTS}
             _write_json(sp,selection)
@@ -1096,7 +1279,9 @@ def aggregate(args):
     _write_json(out/"JOINT_FIT_SELECTION.json",{"status":status,"runs":selections,
       "cal_eval_report_count":len(reports),"expected_run_count":expected,
       "selection_role":"CAL-fit","evaluation_role":"CAL-eval","gamma_space":0.0,
-      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,
+      "lambda_2d_nll":list(LAMBDAS),"bf_ce_weight":BF_CE_WEIGHT,"w1_weight":W1_WEIGHT,
+      "mae_non_degradation_tolerance_m":MAE_NON_DEGRADATION_TOLERANCE_M,
+      "selection_objective_formula":SELECTION_OBJECTIVE_FORMULA,
       "bf_ce_normalization_floor":BF_CE_NORMALIZATION_FLOOR,
       "bf_ce_guard_relative_tolerance":BF_CE_RELATIVE_TOLERANCE,
       "bf_ce_guard_absolute_tolerance":BF_CE_ABSOLUTE_TOLERANCE,**TEST_COUNTS})
