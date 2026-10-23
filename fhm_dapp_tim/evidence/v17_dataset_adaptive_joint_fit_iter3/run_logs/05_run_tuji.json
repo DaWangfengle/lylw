@@ -1,0 +1,24 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1",
+    "run",
+    "--dataset",
+    "tuji",
+    "--output",
+    "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3",
+    "--device",
+    "cuda"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-22T15:44:57.886281+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\05_run_tuji.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\05_run_tuji.stderr.log",
+  "pid": 19500,
+  "exit_code": 1,
+  "elapsed_seconds": 12.436672925949097,
+  "finished_at": "2026-10-22T15:45:10.322954+08:00",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "42720011c1ee156681a0c31644d387fd6141858186f53c24fae7851d5614f248"
+}

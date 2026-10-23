@@ -1,0 +1,7 @@
+{
+  "status": "PROPOSED_ONLY_NOT_APPLIED",
+  "actual_source_sha256": "125fd47b2e4d778ead948120f3e47cd5e1ed36cb1562cdb7ff75e4085ec05489",
+  "preview_source_sha256": "2895555096b253f66a7eccf445510dccc5de027e0429960bdae337bf826fe498",
+  "source_changes": "Two coordinate-distance paths cast float32 anchor storage to float64 before cutoff norm/comparison, matching preflight.",
+  "unchanged": "Anchor coordinate values, model tensors, candidate quantiles, radius values, 45% support gate, MAE 1e-6 gate, coefficients, objectives, seeds and data roles."
+}

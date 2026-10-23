@@ -910,7 +910,7 @@ def _safe_rows(ctx,rows,role):
     return arr
 
 def _make_probability(pack_all,ctx,config):
-    coords=ctx["memory"]["coords"].detach().cpu().numpy(); b=ctx["memory"]["building"].detach().cpu().numpy()
+    coords=ctx["memory"]["coords"].detach().cpu().numpy().astype(np.float64,copy=False); b=ctx["memory"]["building"].detach().cpu().numpy()
     f=ctx["memory"]["floor"].detach().cpu().numpy(); all_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
     graph,_,gdiag=build_cutoff_graph(coords,b,f,all_edges,config["R_max_S1_m"],config["tau_graph_m"])
     lengths=np.linalg.norm(coords[all_edges[:,0]]-coords[all_edges[:,1]],axis=1) if len(all_edges) else np.empty(0)
@@ -1079,7 +1079,7 @@ def run(args):
         ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
         fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")
         ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
-        coords=ctx["memory"]["coords"].detach().cpu().numpy()
+        coords=ctx["memory"]["coords"].detach().cpu().numpy().astype(np.float64,copy=False)
         b=ctx["memory"]["building"].detach().cpu().numpy()
         f=ctx["memory"]["floor"].detach().cpu().numpy()
         base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)

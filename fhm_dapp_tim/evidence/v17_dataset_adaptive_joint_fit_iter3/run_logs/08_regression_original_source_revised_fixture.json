@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tmp/test_iter3_cutoff_precision_regression.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-22T15:54:16.482574+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\08_regression_original_source_revised_fixture.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\08_regression_original_source_revised_fixture.stderr.log",
+  "pid": 1828,
+  "exit_code": 1,
+  "elapsed_seconds": 5.34139609336853,
+  "finished_at": "2026-10-22T15:54:21.823970+08:00",
+  "stdout_sha256": "59f423bfaa632da7fb560701d5bd2b75191cc2f80173a8a62cabd38eb74ac8ae",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\liuyanlunwen\tmp\v17_iter3_write_final_report.py", line 44, in <module>
+    assert len(group) == 3
+           ^^^^^^^^^^^^^^^
+AssertionError

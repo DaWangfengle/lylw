@@ -1,0 +1,83 @@
+"""Pure synthetic boundary regressions; no dataset or checkpoint is loaded."""
+import argparse
+import math
+import numpy as np
+import pytest
+import torch
+from fhm_dapp_tim.fhm_dapp import msep_v17_dataset_adaptive_joint_fit_v1 as joint
+
+
+def boundary_context():
+    xy = np.asarray([[0., 0.], [1., 1.],
+                     [np.nextafter(np.float32(1.), np.float32(math.inf)), 1.]], dtype=np.float32)
+    edges = np.asarray([[0, 1], [0, 2]], dtype=np.int64)
+    exact = np.linalg.norm(xy.astype(np.float64)[edges[:, 0]] - xy.astype(np.float64)[edges[:, 1]], axis=1)
+    radius = float(np.quantile(exact, .5))
+    expected = edges[exact <= radius]
+    rounded = np.linalg.norm(xy[edges[:, 0]] - xy[edges[:, 1]], axis=1)
+    assert len(expected) == 1
+    assert int((rounded <= radius).sum()) == 2  # Demonstrate the old boundary ambiguity.
+    ctx = {"memory": {"coords": torch.from_numpy(xy), "building": torch.zeros(3, dtype=torch.long),
+                       "floor": torch.zeros(3, dtype=torch.long)}, "edges": torch.from_numpy(edges),
+           "cal_fit": np.asarray([0]), "cal_eval": np.asarray([1]), "roles": {"test": np.asarray([2])}}
+    return ctx, radius, expected, exact
+
+
+def test_evaluation_cutoff_matches_float64_preflight_without_changing_components():
+    ctx, radius, expected, exact = boundary_context()
+    xy = ctx["memory"]["coords"]
+    centers = (xy[ctx["edges"][:, 0]] + xy[ctx["edges"][:, 1]]) / 2
+    pack = {"scores": torch.tensor([[.4, .2, -.1]]), "z": torch.zeros(1, 3, 2),
+            "xy": xy[None], "sigma": torch.ones(1, 3, 2),
+            "virtual_scores": torch.tensor([[.1, .3]]), "virtual_z": torch.zeros(1, 2, 2),
+            "virtual_xy": centers[None], "virtual_sigma": torch.ones(1, 2, 2),
+            "geometric_xy": centers[None]}
+    config = {"R_max_S1_m": float(exact.max()), "tau_graph_m": 1.,
+              "R_max_S2_m": radius, "tau_virt_m": math.inf,
+              "theta": [0., 0.], "temperature": 1., "alpha_prior": 0., "alpha_obs": 0., "beta": .5}
+    mix, sub, _ = joint._make_probability(pack, ctx, config)
+    assert sub["virtual_scores"].shape[1] == len(expected)
+    assert torch.equal(sub["virtual_xy"], pack["virtual_xy"][:, :1])
+    assert torch.equal(mix["xy"][:, :3], pack["xy"])
+    assert torch.equal(mix["sigma"][:, :3], pack["sigma"])
+    assert mix["q"].shape[1] == 3 + len(expected)
+
+
+def test_run_cutoff_matches_preflight_on_float32_anchor_storage(monkeypatch, tmp_path):
+    upper = np.nextafter(np.float32(1.), np.float32(math.inf))
+    xy = np.asarray([[0., 0.], [1., 1.], [upper, 1.], [10., 0.],
+                     [20., 0.], [30., 0.], [40., 0.]], dtype=np.float32)
+    edges = np.asarray([[0, 1], [0, 2], [1, 2], [3, 4]], dtype=np.int64)
+    ctx = {"memory": {"coords": torch.from_numpy(xy), "building": torch.zeros(7, dtype=torch.long),
+                       "floor": torch.zeros(7, dtype=torch.long)}, "edges": torch.from_numpy(edges),
+           "cal_fit": np.asarray([0]), "cal_eval": np.asarray([1]), "roles": {"test": np.asarray([2])}}
+    diag = joint._pairwise_fit_geometry(xy, np.zeros(7), np.zeros(7), edges)
+    geoms, _ = joint.geometry_candidates(diag)
+    radius = geoms[0]["r_max_s2_m"]
+    xy64 = xy.astype(np.float64)
+    expected = edges[np.linalg.norm(xy64[edges[:, 0]] - xy64[edges[:, 1]], axis=1) <= radius]
+    assert len(expected) == 2
+    assert int((np.linalg.norm(xy[edges[:, 0]] - xy[edges[:, 1]], axis=1) <= radius).sum()) == 3
+    support = joint._validate_geometry_support(xy, ctx["edges"], geoms)
+    assert support[geoms[0]["geometry_id"]]["retained_virtual_edges"] == len(expected)
+    checkpoint = tmp_path / "synthetic_identity.pt"
+    checkpoint.write_bytes(b"not loaded; synthetic identity only")
+    monkeypatch.setattr(joint.s3, "SEEDS", (17301,))
+    monkeypatch.setattr(joint, "ARMS", ("C",))
+    monkeypatch.setattr(joint.s3, "reconstruct", lambda *args: ctx)
+    monkeypatch.setattr(joint, "_read_json", lambda *args: {"outer_geometry_candidates": {"tuji_seed17301": {"geometry_candidates": geoms}}})
+    monkeypatch.setattr(joint.comp, "_checkpoint_path", lambda *args: checkpoint)
+    monkeypatch.setattr(joint.comp, "_load_model", lambda *args: (None, {}, 0.))
+    monkeypatch.setattr(joint.s3, "make_pack", lambda *args, **kwargs: {})
+    monkeypatch.setattr(joint, "_legacy_clean_config", lambda *args: {})
+    monkeypatch.setattr(joint, "_calibration_candidates", lambda *args: [{"candidate_id": "synthetic"}])
+    monkeypatch.setattr(joint, "_calibration_grid_spec", lambda *args: {})
+    class CanonicalSubsetReached(Exception):
+        pass
+    def stop_before_scoring(pack, runtime_ctx, graph, s2, geom, candidates, **kwargs):
+        assert np.array_equal(s2, expected)
+        raise CanonicalSubsetReached
+    monkeypatch.setattr(joint, "evaluate_calibration_grid", stop_before_scoring)
+    with pytest.raises(CanonicalSubsetReached):
+        joint.run(argparse.Namespace(output=str(tmp_path), input_root=str(tmp_path), checkpoint_root=str(tmp_path),
+                                     dataset="tuji", device="cpu"))

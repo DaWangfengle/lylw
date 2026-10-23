@@ -1,0 +1,134 @@
+{
+  "status": "PASS",
+  "geometry_sets": {
+    "tuji_seed17301": {
+      "fit_anchors": 646,
+      "base_edges": 2946,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        2209,
+        2946
+      ],
+      "s2_edge_count_range": [
+        1473,
+        2946
+      ]
+    },
+    "tuji_seed17302": {
+      "fit_anchors": 646,
+      "base_edges": 2946,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        2209,
+        2946
+      ],
+      "s2_edge_count_range": [
+        1473,
+        2946
+      ]
+    },
+    "tuji_seed17303": {
+      "fit_anchors": 646,
+      "base_edges": 2946,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        2209,
+        2946
+      ],
+      "s2_edge_count_range": [
+        1473,
+        2946
+      ]
+    },
+    "uji_seed17301": {
+      "fit_anchors": 672,
+      "base_edges": 3232,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        2424,
+        3232
+      ],
+      "s2_edge_count_range": [
+        1617,
+        3232
+      ]
+    },
+    "uji_seed17302": {
+      "fit_anchors": 672,
+      "base_edges": 3232,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        2424,
+        3232
+      ],
+      "s2_edge_count_range": [
+        1617,
+        3232
+      ]
+    },
+    "uji_seed17303": {
+      "fit_anchors": 672,
+      "base_edges": 3232,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        2424,
+        3232
+      ],
+      "s2_edge_count_range": [
+        1617,
+        3232
+      ]
+    },
+    "uts_seed17301": {
+      "fit_anchors": 1052,
+      "base_edges": 5000,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        3750,
+        5000
+      ],
+      "s2_edge_count_range": [
+        2500,
+        5000
+      ]
+    },
+    "uts_seed17302": {
+      "fit_anchors": 1052,
+      "base_edges": 5000,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        3750,
+        5000
+      ],
+      "s2_edge_count_range": [
+        2500,
+        5000
+      ]
+    },
+    "uts_seed17303": {
+      "fit_anchors": 1052,
+      "base_edges": 5000,
+      "geometry_count": 12,
+      "infinite_tau_controls": 4,
+      "s1_edge_count_range": [
+        3750,
+        5000
+      ],
+      "s2_edge_count_range": [
+        2500,
+        5000
+      ]
+    }
+  },
+  "checkpoints_verified": 9,
+  "training_input_files_verified": 7,
+  "source_files_frozen": 138
+}

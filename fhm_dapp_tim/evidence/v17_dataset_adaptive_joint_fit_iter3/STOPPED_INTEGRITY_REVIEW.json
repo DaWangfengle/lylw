@@ -1,0 +1,306 @@
+{
+  "status": "STOPPED_ENGINEERING_FAILURE",
+  "created_at": "2026-10-22T15:56:34.961410+08:00",
+  "required_scope": "TUJI 9 runs only; other datasets FIT geometry preflight only",
+  "completed_checkpoint_runs": 0,
+  "cal_eval_reports": 0,
+  "original_tests_passed": 30,
+  "preview_tests_passed": 32,
+  "frozen_source_changed": false,
+  "proposed_fix_applied": false,
+  "preflight_sets_passed": 9,
+  "geometries_per_set": 12,
+  "formal_dataset_run_attempts": 1,
+  "failed_support": {
+    "geometry_id": "fit_quantile_geometry_01",
+    "r_max_s1_m": 1.330907885325485,
+    "r_max_s2_m": 1.330907885325485,
+    "base_edges": 2946,
+    "minimum_required_virtual_edges": 1326,
+    "preflight_retained_s2_edges": 2209,
+    "runtime_float32_retained_s2_edges": 2216,
+    "canonical_float64_retained_s2_edges": 2209,
+    "mismatch_edge_count": 7,
+    "boundary_examples": [
+      {
+        "edge_index": 632,
+        "anchor_ids": [
+          122,
+          168
+        ],
+        "coords": [
+          [
+            -4.685511589050293,
+            -10.40091609954834
+          ],
+          [
+            -3.495511531829834,
+            -10.996915817260742
+          ]
+        ],
+        "distance_float32_m": 1.330907940864563,
+        "distance_float64_m": 1.3309078855044623,
+        "float32_included": true,
+        "float64_included": false
+      },
+      {
+        "edge_index": 634,
+        "anchor_ids": [
+          122,
+          170
+        ],
+        "coords": [
+          [
+            -4.685511589050293,
+            -10.40091609954834
+          ],
+          [
+            -3.495511531829834,
+            -9.804916381835938
+          ]
+        ],
+        "distance_float32_m": 1.330907940864563,
+        "distance_float64_m": 1.3309078855044623,
+        "float32_included": true,
+        "float64_included": false
+      },
+      {
+        "edge_index": 638,
+        "anchor_ids": [
+          123,
+          169
+        ],
+        "coords": [
+          [
+            -4.685511589050293,
+            -9.804916381835938
+          ],
+          [
+            -3.495511531829834,
+            -10.40091609954834
+          ]
+        ],
+        "distance_float32_m": 1.330907940864563,
+        "distance_float64_m": 1.3309078855044623,
+        "float32_included": true,
+        "float64_included": false
+      },
+      {
+        "edge_index": 671,
+        "anchor_ids": [
+          130,
+          176
+        ],
+        "coords": [
+          [
+            -4.685511589050293,
+            0.33008384704589844
+          ],
+          [
+            -3.495511531829834,
+            -0.2659158706665039
+          ]
+        ],
+        "distance_float32_m": 1.330907940864563,
+        "distance_float64_m": 1.3309078855044623,
+        "float32_included": true,
+        "float64_included": false
+      }
+    ]
+  },
+  "post_failure_new_dataset_scoring_attempts": 0,
+  "training_runs": 0,
+  "optimizer_steps": 0,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "hash_verification_counts": {
+    "source_sha256": 138,
+    "checkpoint_sha256": 9,
+    "training_input_sha256": 7,
+    "preflight_sha256": 3
+  },
+  "proposed_patch_sha256": "df4e6eb1f591c6135e08e48d55cf8f76154048adb144c69b96023fb00ea3ef4c",
+  "regression_fixture_v2_sha256": "396d97d67e1455bd9ac86df883024c4277fbec08577195d26fb8112b919fcb7b",
+  "commands": [
+    {
+      "label": "01_compile",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "py_compile",
+        "fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:40:43.460304+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\01_compile.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\01_compile.stderr.log",
+      "pid": 9180,
+      "exit_code": 0,
+      "elapsed_seconds": 0.11280131340026855,
+      "finished_at": "2026-10-22T15:40:43.573105+08:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "02_pytest",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_v17_dataset_adaptive_joint_fit_v1.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:40:44.691526+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\02_pytest.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\02_pytest.stderr.log",
+      "pid": 2124,
+      "exit_code": 0,
+      "elapsed_seconds": 7.697810411453247,
+      "finished_at": "2026-10-22T15:40:52.389337+08:00",
+      "stdout_sha256": "d8a4e8ba4e88aac5e5143617d222c3022d1b7e2a7b0a24dcb392c5158c3d5ad8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "03_preflight",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1",
+        "preflight",
+        "--output",
+        "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:41:04.726554+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\03_preflight.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\03_preflight.stderr.log",
+      "pid": 10088,
+      "exit_code": 0,
+      "elapsed_seconds": 28.820735931396484,
+      "finished_at": "2026-10-22T15:41:33.547290+08:00",
+      "stdout_sha256": "9f8fd6006d7371ce7a79b274c3cb2e169712fea41cfbbb062d6122b14fed3df1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "04_inspect_preflight",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "tmp/v17_iter3_freeze.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:44:47.808441+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\04_inspect_preflight.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\04_inspect_preflight.stderr.log",
+      "pid": 4868,
+      "exit_code": 0,
+      "elapsed_seconds": 0.2199840545654297,
+      "finished_at": "2026-10-22T15:44:48.028425+08:00",
+      "stdout_sha256": "d83b958cf200e125c163a98a366f0141914a699ea2961dc7ef5eac6594f84360",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "05_run_tuji",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1",
+        "run",
+        "--dataset",
+        "tuji",
+        "--output",
+        "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3",
+        "--device",
+        "cuda"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:44:57.886281+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\05_run_tuji.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\05_run_tuji.stderr.log",
+      "pid": 19500,
+      "exit_code": 1,
+      "elapsed_seconds": 12.436672925949097,
+      "finished_at": "2026-10-22T15:45:10.322954+08:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "42720011c1ee156681a0c31644d387fd6141858186f53c24fae7851d5614f248"
+    },
+    {
+      "label": "06_diagnose_support_fit_only",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "tmp/v17_iter3_diagnose_support.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:48:33.133653+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\06_diagnose_support_fit_only.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\06_diagnose_support_fit_only.stderr.log",
+      "pid": 16312,
+      "exit_code": 0,
+      "elapsed_seconds": 6.626509666442871,
+      "finished_at": "2026-10-22T15:48:39.760162+08:00",
+      "stdout_sha256": "8405e3f5eddfb602b29587514ce4e8839212da9f7f81eebf3b57c1381b5b98e2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "07_regression_original_source",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tmp/test_iter3_cutoff_precision_regression.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:51:35.458723+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\07_regression_original_source.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\07_regression_original_source.stderr.log",
+      "pid": 7780,
+      "exit_code": 1,
+      "elapsed_seconds": 5.36815619468689,
+      "finished_at": "2026-10-22T15:51:40.826880+08:00",
+      "stdout_sha256": "44b94b5e7194b738aaab2f6663764e641367f08698c83ba159ad13556898f8b8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "08_regression_original_source_revised_fixture",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tmp/test_iter3_cutoff_precision_regression.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:54:16.482574+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\08_regression_original_source_revised_fixture.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\08_regression_original_source_revised_fixture.stderr.log",
+      "pid": 1828,
+      "exit_code": 1,
+      "elapsed_seconds": 5.34139609336853,
+      "finished_at": "2026-10-22T15:54:21.823970+08:00",
+      "stdout_sha256": "59f423bfaa632da7fb560701d5bd2b75191cc2f80173a8a62cabd38eb74ac8ae",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "09_validate_proposed_precision_fix",
+      "command": [
+        "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+        "tmp/v17_iter3_validate_fix_preview.py"
+      ],
+      "cwd": "D:\\liuyanlunwen",
+      "started_at": "2026-10-22T15:54:22.956891+08:00",
+      "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\09_validate_proposed_precision_fix.stdout.log",
+      "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\09_validate_proposed_precision_fix.stderr.log",
+      "pid": 21792,
+      "exit_code": 0,
+      "elapsed_seconds": 6.737802505493164,
+      "finished_at": "2026-10-22T15:54:29.694693+08:00",
+      "stdout_sha256": "986f5ed420f35c9fd0291ef8516fa4fe0f5ae4710ad6f44d98dd3097f2f01952",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "auxiliary_setup_issues": [
+    "Proposal helper initially assumed two textual coordinate references, but found three (including the calibration evaluator's already-normalized endpoint path); its assertion stopped before writing a preview. The helper was corrected to target run and _make_probability only.",
+    "First synthetic runtime fixture had near-identical kernel scales that the existing geometry-pool de-duplication merged, so it stopped before reaching the intended cutoff regression. That fixture and its original failure logs are preserved. A revised synthetic fixture uses well-separated kernel scales, retains the real geometry/support validators, and reproduces the actual count mismatch. Both revised regressions fail on the original source and pass on the two-line preview."
+  ]
+}

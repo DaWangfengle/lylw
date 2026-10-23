@@ -1,0 +1,123 @@
+{
+  "status": "TUJI_SCOPE_PASS",
+  "required_scope_completed": "9/9",
+  "native_all_domain_aggregate_status": "INCOMPLETE 9/27, expected because UTS/UJI scoring was not authorized",
+  "runs": [
+    {
+      "seed": 17301,
+      "backbone": "C",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 6070,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17301,
+      "backbone": "D",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 930,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17301,
+      "backbone": "E",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 3443,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17302,
+      "backbone": "C",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 16987,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17302,
+      "backbone": "D",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 66,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17302,
+      "backbone": "E",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 1702,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17303,
+      "backbone": "C",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 4795,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17303,
+      "backbone": "D",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 10686,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    },
+    {
+      "seed": 17303,
+      "backbone": "E",
+      "status": "PASS",
+      "candidate_rows": 52489,
+      "feasible_search_candidates": 141,
+      "exact_clean_anchors": 12,
+      "cal_eval_sites": 46,
+      "cal_eval_scans": 234
+    }
+  ],
+  "root_csv_rows": {
+    "CANDIDATE_METRICS.csv": 472401,
+    "PARETO_FRONTIER.csv": 8949,
+    "NEAR_OPTIMAL_SENSITIVITY.csv": 18
+  },
+  "all_candidate_metrics_finite": true,
+  "nominal_evaluated_candidates_excluding_references": 472392,
+  "exact_clean_anchors": 108,
+  "maximum_site_macro_reduction_error": 4.050308379799361e-07,
+  "maximum_clean_baseline_drift": 0.0,
+  "maximum_old_combo_drift": 0.0,
+  "maximum_exact_anchor_mae_drift": 3.5762786865234375e-07,
+  "source_hashes_verified": 138,
+  "checkpoints_verified": 9,
+  "training_input_files_verified": 7,
+  "preflight_output_bytes_identical_to_failed_attempt": true,
+  "formal_dataset_run_attempts_total": 2,
+  "completed_dataset_run_attempts_after_authorized_fix": 1,
+  "tests_passed": 32,
+  "training_runs": 0,
+  "optimizer_steps": 0,
+  "uts_scoring_runs": 0,
+  "uji_scoring_runs": 0,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "bfce_audit_limit": "CAL-fit CSV BFCE guards/objective are independently recomputed from saved scalar values. CAL-eval BFCE is the saved site-weighted scan reduction; per-scan true-class probabilities were not exported, so it cannot be independently reconstructed from the site JSON."
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/v17_iter3_write_final_report.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-22T16:14:53.809116+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\08_write_report_optional_groups_fixed.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\08_write_report_optional_groups_fixed.stderr.log",
+  "pid": 10892,
+  "exit_code": 0,
+  "elapsed_seconds": 0.11235690116882324,
+  "finished_at": "2026-10-22T16:14:53.921473+08:00",
+  "stdout_sha256": "71d006057abd2dec58cd8a3cae68e82f71271bb10731fade221b4fdb4e1103d9",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

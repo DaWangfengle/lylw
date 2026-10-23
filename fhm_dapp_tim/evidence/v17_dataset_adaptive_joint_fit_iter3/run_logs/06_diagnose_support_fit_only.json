@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/v17_iter3_diagnose_support.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-22T15:48:33.133653+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\06_diagnose_support_fit_only.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\06_diagnose_support_fit_only.stderr.log",
+  "pid": 16312,
+  "exit_code": 0,
+  "elapsed_seconds": 6.626509666442871,
+  "finished_at": "2026-10-22T15:48:39.760162+08:00",
+  "stdout_sha256": "8405e3f5eddfb602b29587514ce4e8839212da9f7f81eebf3b57c1381b5b98e2",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

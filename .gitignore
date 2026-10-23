@@ -232,3 +232,14 @@ local_notes/
 /fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/PARETO_FRONTIER.csv
 /fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/**/CANDIDATE_METRICS.csv
 /fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/PARETO_FRONTIER.csv
+
+# ITER3 TUJI publication: retain raw failure and restart command evidence.
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3/run_logs/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3/run_logs/*.stderr.log
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/run_logs/*.stdout.log
+!/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/run_logs/*.stderr.log
+# Candidate tables and their large gzip archives stay local at the user's request.
+/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/**/CANDIDATE_METRICS.csv
+/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/**/CANDIDATE_METRICS.csv*.gz
+# Publish the smaller Pareto table as verified gzip; keep its original locally.
+/fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/PARETO_FRONTIER.csv

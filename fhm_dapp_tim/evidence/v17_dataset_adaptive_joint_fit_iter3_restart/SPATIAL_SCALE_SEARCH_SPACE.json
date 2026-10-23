@@ -1,0 +1,2738 @@
+{
+  "geometry_design": "12 deterministic FIT-derived spatial configurations per dataset/seed; cutoff radii use actual union-kNN edge P50/P75/P90/P95/P100 only; S1 uses P75/P90/P95/P100; S2 retains at least 45% of base edges; includes tau_virt=+inf controls",
+  "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+  "w1_objective_weight": 0.1,
+  "mae_non_degradation_tolerance_m": 1e-06,
+  "outer_geometry_candidates": {
+    "tuji_seed17301": {
+      "dataset": "tuji",
+      "seed": 17301,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.7869997024536133,
+          2.9770007133483887
+        ],
+        "r_max_s2_m": [
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.7869997024536133,
+          2.9770007133483887
+        ],
+        "tau_graph_m": [
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ],
+        "tau_virt_m": [
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 1.189500093460083,
+        "p75": 1.330907885325485,
+        "p90": 1.3362743961519672,
+        "p95": 1.7869997024536133,
+        "p100": 2.9770007133483887
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.7869997024536133,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 2801,
+            "retained_virtual_fraction": 0.9507807196198235,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 2.9770007133483887,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2946,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "tuji_seed17302": {
+      "dataset": "tuji",
+      "seed": 17302,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.7869997024536133,
+          2.9770007133483887
+        ],
+        "r_max_s2_m": [
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.7869997024536133,
+          2.9770007133483887
+        ],
+        "tau_graph_m": [
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ],
+        "tau_virt_m": [
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 1.189500093460083,
+        "p75": 1.330907885325485,
+        "p90": 1.3362743961519672,
+        "p95": 1.7869997024536133,
+        "p100": 2.9770007133483887
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.7869997024536133,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 2801,
+            "retained_virtual_fraction": 0.9507807196198235,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 2.9770007133483887,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2946,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "tuji_seed17303": {
+      "dataset": "tuji",
+      "seed": 17303,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.7869997024536133,
+          2.9770007133483887
+        ],
+        "r_max_s2_m": [
+          1.189500093460083,
+          1.330907885325485,
+          1.3362743961519672,
+          1.7869997024536133,
+          2.9770007133483887
+        ],
+        "tau_graph_m": [
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ],
+        "tau_virt_m": [
+          0.5950002670288086,
+          0.5969996452331543,
+          0.8435804339959636,
+          1.189500093460083,
+          1.330907885325485,
+          1.3320288364763493,
+          1.3362743961519672
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 1.189500093460083,
+        "p75": 1.330907885325485,
+        "p90": 1.3362743961519672,
+        "p95": 1.7869997024536133,
+        "p100": 2.9770007133483887
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 1.330907885325485,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2209,
+            "retained_s1_fraction": 0.7498302783435167,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.330907885325485,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 2209,
+            "retained_virtual_fraction": 0.7498302783435167,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 1.3362743961519672,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2651,
+            "retained_s1_fraction": 0.8998642226748133,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 1.7869997024536133,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 1.7869997024536133,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2801,
+            "retained_s1_fraction": 0.9507807196198235,
+            "retained_virtual_edges": 2801,
+            "retained_virtual_fraction": 0.9507807196198235,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 0.5950002670288086,
+          "r_max_s2_m": 1.189500093460083,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 1473,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 1.189500093460083,
+          "r_max_s2_m": 1.3362743961519672,
+          "tau_virt_m": 1.189500093460083,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2651,
+            "retained_virtual_fraction": 0.8998642226748133,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 2.9770007133483887,
+          "tau_graph_m": 1.3362743961519672,
+          "r_max_s2_m": 2.9770007133483887,
+          "tau_virt_m": 1.3362743961519672,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 2946,
+            "retained_s1_edges": 2946,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2946,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 1326,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "uts_seed17301": {
+      "dataset": "uts",
+      "seed": 17301,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          6.061219991573314,
+          8.307358033890246,
+          10.553105375569539,
+          12.072623657054907,
+          21.2677134167253
+        ],
+        "r_max_s2_m": [
+          6.061219991573314,
+          8.307358033890246,
+          10.553105375569539,
+          12.072623657054907,
+          21.2677134167253
+        ],
+        "tau_graph_m": [
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ],
+        "tau_virt_m": [
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 6.061219991573314,
+        "p75": 8.307358033890246,
+        "p90": 10.553105375569539,
+        "p95": 12.072623657054907,
+        "p100": 21.2677134167253
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 12.072623657054907,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 4750,
+            "retained_virtual_fraction": 0.95,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 21.2677134167253,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 5000,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "uts_seed17302": {
+      "dataset": "uts",
+      "seed": 17302,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          6.061219991573314,
+          8.307358033890246,
+          10.553105375569539,
+          12.072623657054907,
+          21.2677134167253
+        ],
+        "r_max_s2_m": [
+          6.061219991573314,
+          8.307358033890246,
+          10.553105375569539,
+          12.072623657054907,
+          21.2677134167253
+        ],
+        "tau_graph_m": [
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ],
+        "tau_virt_m": [
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 6.061219991573314,
+        "p75": 8.307358033890246,
+        "p90": 10.553105375569539,
+        "p95": 12.072623657054907,
+        "p100": 21.2677134167253
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 12.072623657054907,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 4750,
+            "retained_virtual_fraction": 0.95,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 21.2677134167253,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 5000,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "uts_seed17303": {
+      "dataset": "uts",
+      "seed": 17303,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          6.061219991573314,
+          8.307358033890246,
+          10.553105375569539,
+          12.072623657054907,
+          21.2677134167253
+        ],
+        "r_max_s2_m": [
+          6.061219991573314,
+          8.307358033890246,
+          10.553105375569539,
+          12.072623657054907,
+          21.2677134167253
+        ],
+        "tau_graph_m": [
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ],
+        "tau_virt_m": [
+          2.698277641601975,
+          3.126136073682303,
+          5.2564264116925905,
+          6.061219991573314,
+          8.15328161581467,
+          8.307358033890246,
+          10.553105375569539
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 6.061219991573314,
+        "p75": 8.307358033890246,
+        "p90": 10.553105375569539,
+        "p95": 12.072623657054907,
+        "p100": 21.2677134167253
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 8.307358033890246,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 3750,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 8.307358033890246,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 3750,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 10.553105375569539,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4500,
+            "retained_s1_fraction": 0.9,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 12.072623657054907,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 12.072623657054907,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 4750,
+            "retained_s1_fraction": 0.95,
+            "retained_virtual_edges": 4750,
+            "retained_virtual_fraction": 0.95,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 2.698277641601975,
+          "r_max_s2_m": 6.061219991573314,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2500,
+            "retained_virtual_fraction": 0.5,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 6.061219991573314,
+          "r_max_s2_m": 10.553105375569539,
+          "tau_virt_m": 6.061219991573314,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 4500,
+            "retained_virtual_fraction": 0.9,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 21.2677134167253,
+          "tau_graph_m": 10.553105375569539,
+          "r_max_s2_m": 21.2677134167253,
+          "tau_virt_m": 10.553105375569539,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 5000,
+            "retained_s1_edges": 5000,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 5000,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 2250,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "uji_seed17301": {
+      "dataset": "uji",
+      "seed": 17301,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          12.98444800694916,
+          20.70362083056316,
+          32.611668709259305,
+          41.44535268080751,
+          77.53708182392329
+        ],
+        "r_max_s2_m": [
+          12.98444800694916,
+          20.70362083056316,
+          32.611668709259305,
+          41.44535268080751,
+          77.53708182392329
+        ],
+        "tau_graph_m": [
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ],
+        "tau_virt_m": [
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 12.98444800694916,
+        "p75": 20.70362083056316,
+        "p90": 32.611668709259305,
+        "p95": 41.44535268080751,
+        "p100": 77.53708182392329
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 41.44535268080751,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 3070,
+            "retained_virtual_fraction": 0.9498762376237624,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 77.53708182392329,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 3232,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "uji_seed17302": {
+      "dataset": "uji",
+      "seed": 17302,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          12.98444800694916,
+          20.70362083056316,
+          32.611668709259305,
+          41.44535268080751,
+          77.53708182392329
+        ],
+        "r_max_s2_m": [
+          12.98444800694916,
+          20.70362083056316,
+          32.611668709259305,
+          41.44535268080751,
+          77.53708182392329
+        ],
+        "tau_graph_m": [
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ],
+        "tau_virt_m": [
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 12.98444800694916,
+        "p75": 20.70362083056316,
+        "p90": 32.611668709259305,
+        "p95": 41.44535268080751,
+        "p100": 77.53708182392329
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 41.44535268080751,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 3070,
+            "retained_virtual_fraction": 0.9498762376237624,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 77.53708182392329,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 3232,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    },
+    "uji_seed17303": {
+      "dataset": "uji",
+      "seed": 17303,
+      "geometry_candidate_pools_m": {
+        "r_max_s1_m": [
+          12.98444800694916,
+          20.70362083056316,
+          32.611668709259305,
+          41.44535268080751,
+          77.53708182392329
+        ],
+        "r_max_s2_m": [
+          12.98444800694916,
+          20.70362083056316,
+          32.611668709259305,
+          41.44535268080751,
+          77.53708182392329
+        ],
+        "tau_graph_m": [
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ],
+        "tau_virt_m": [
+          3.769962141639027,
+          6.005971608150199,
+          9.794811576380908,
+          12.98444800694916,
+          19.009120432162444,
+          20.70362083056316,
+          32.611668709259305
+        ]
+      },
+      "cutoff_quantile_values_m": {
+        "p50": 12.98444800694916,
+        "p75": 20.70362083056316,
+        "p90": 32.611668709259305,
+        "p95": 41.44535268080751,
+        "p100": 77.53708182392329
+      },
+      "geometry_candidates": [
+        {
+          "geometry_id": "fit_quantile_geometry_00",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p75__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_01",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p75__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_02",
+          "r_max_s1_m": 20.70362083056316,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p75__S2_p75__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p75",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2424,
+            "retained_s1_fraction": 0.75,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_03",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p90__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_04",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 20.70362083056316,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p90__S2_p75__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p75",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 2424,
+            "retained_virtual_fraction": 0.75,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_05",
+          "r_max_s1_m": 32.611668709259305,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p90__S2_p90__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p90",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 2908,
+            "retained_s1_fraction": 0.8997524752475248,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_06",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p95__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_07",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p95__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_08",
+          "r_max_s1_m": 41.44535268080751,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 41.44535268080751,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p95__S2_p95__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p95",
+          "r_max_s2_quantile": "p95",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3070,
+            "retained_s1_fraction": 0.9498762376237624,
+            "retained_virtual_edges": 3070,
+            "retained_virtual_fraction": 0.9498762376237624,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_09",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 3.769962141639027,
+          "r_max_s2_m": 12.98444800694916,
+          "tau_virt_m": "Infinity",
+          "role": "S1_p100__S2_p50__low_S2_tau_virt_infinity_control",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p50",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 1617,
+            "retained_virtual_fraction": 0.500309405940594,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_10",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 12.98444800694916,
+          "r_max_s2_m": 32.611668709259305,
+          "tau_virt_m": 12.98444800694916,
+          "role": "S1_p100__S2_p90__mid_S2_finite_tau_edge_p50",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p90",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 2908,
+            "retained_virtual_fraction": 0.8997524752475248,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        },
+        {
+          "geometry_id": "fit_quantile_geometry_11",
+          "r_max_s1_m": 77.53708182392329,
+          "tau_graph_m": 32.611668709259305,
+          "r_max_s2_m": 77.53708182392329,
+          "tau_virt_m": 32.611668709259305,
+          "role": "S1_p100__S2_p100__high_S2_finite_tau_edge_p90",
+          "r_max_s1_quantile": "p100",
+          "r_max_s2_quantile": "p100",
+          "r_max_s2_le_r_max_s1": true,
+          "support_diagnostics": {
+            "base_edges": 3232,
+            "retained_s1_edges": 3232,
+            "retained_s1_fraction": 1.0,
+            "retained_virtual_edges": 3232,
+            "retained_virtual_fraction": 1.0,
+            "minimum_required_virtual_edges": 1455,
+            "minimum_required_virtual_fraction": 0.45
+          }
+        }
+      ],
+      "calibration_candidate_count": 4374,
+      "gamma_space": 0.0,
+      "lambda_2d_nll": [
+        0.02,
+        0.05
+      ],
+      "bf_ce_weight": 0.25,
+      "w1_weight": 0.1,
+      "selection_objective_formula": "MAE/MAE_clean + 0.10*(W1-W1_clean)/max(W1_clean,1e-9) + 0.25*max(0,BFCE-BFCE_clean)/max(BFCE_clean,0.05) + lambda*(NLL-NLL_clean)/max(abs(NLL_clean),1)",
+      "mae_non_degradation_tolerance_m": 1e-06,
+      "candidate_count_per_run": 52488
+    }
+  },
+  "calibration_grid": {
+    "temperature": "three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.25,3.0]",
+    "theta_v": "three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.0,1.5]",
+    "theta_s": "three-point relative neighborhood around dataset/seed/checkpoint clean baseline; legal bounds [0.0,1.5]",
+    "relative_multipliers": [
+      0.75,
+      1.0,
+      1.25
+    ],
+    "alpha_prior": [
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.35,
+      0.65
+    ],
+    "alpha_obs": [
+      0.0,
+      0.1,
+      0.25
+    ],
+    "beta": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.35,
+      0.5,
+      0.65,
+      0.8
+    ],
+    "baseline_center_resolved_at_run_time": true
+  },
+  "inner_joint_grid_size": 4374,
+  "gamma_space_fixed": 0.0,
+  "lambda_2d_nll": [
+    0.02,
+    0.05
+  ],
+  "bf_ce_weight": 0.25,
+  "w1_weight": 0.1,
+  "bf_ce_normalization_floor": 0.05,
+  "bf_ce_guard_relative_tolerance": 0.02,
+  "bf_ce_guard_absolute_tolerance": 0.005,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}

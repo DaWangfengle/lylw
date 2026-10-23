@@ -1,0 +1,12 @@
+{
+  "recorded_at": "2026-10-22T15:58:33.556516+08:00",
+  "answer": "允许最小修复，新目录重跑 TUJI（推荐）",
+  "scope": "Only two NumPy float64 distance casts, two synthetic regressions; preserve original ITER3 failure evidence; new directory; compile/tests/all nine FIT preflight sets; TUJI 9 runs only.",
+  "unchanged_guards": "45% S2 support; 1e-6 m MAE; all radii, weights, random numbers, models and physical roles",
+  "failed_output": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3",
+  "restart_output": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart",
+  "source_before_sha256": "125fd47b2e4d778ead948120f3e47cd5e1ed36cb1562cdb7ff75e4085ec05489",
+  "source_after_sha256": "2895555096b253f66a7eccf445510dccc5de027e0429960bdae337bf826fe498",
+  "tests_before_sha256": "6f115bba7e59adeb9ac1d1451cce95a0565847e78bcf0e000c6473a44eecc196",
+  "tests_after_sha256": "2adc3e21ca71dc9c975e808c634900b94e3895d15c91f6ba2777795590801dc5"
+}

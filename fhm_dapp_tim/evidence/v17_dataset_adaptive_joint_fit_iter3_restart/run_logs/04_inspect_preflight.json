@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/v17_iter3_restart_freeze.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-22T15:59:48.072030+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\04_inspect_preflight.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\04_inspect_preflight.stderr.log",
+  "pid": 21568,
+  "exit_code": 0,
+  "elapsed_seconds": 0.1916813850402832,
+  "finished_at": "2026-10-22T15:59:48.263712+08:00",
+  "stdout_sha256": "d83b958cf200e125c163a98a366f0141914a699ea2961dc7ef5eac6594f84360",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

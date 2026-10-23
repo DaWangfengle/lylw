@@ -200,3 +200,7 @@ fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py -text
 tests/test_v17_dataset_adaptive_joint_fit_v1.py -text
 fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2/** -text
 fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter2_restart/** -text
+
+# ITER3 failed attempt and authorized TUJI restart: preserve exact evidence bytes.
+fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3/** -text
+fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/** -text

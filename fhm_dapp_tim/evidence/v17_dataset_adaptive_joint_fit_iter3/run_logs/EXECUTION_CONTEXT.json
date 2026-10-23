@@ -1,0 +1,35 @@
+{
+  "started_at": "2026-10-22T15:40:32.722677+08:00",
+  "cwd": "D:\\liuyanlunwen",
+  "branch": "v17-dataset-adaptive-spatial-joint-fit-fix-v1",
+  "head_commit": "c247d547893f2abb8c4fffaa531578a86e291bdc",
+  "initial_git_status_porcelain": "",
+  "sys_executable": "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+  "python": "3.12.12 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 20:05:38) [MSC v.1929 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "packages": {
+    "torch": "2.10.0+cu128",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "pandas": "3.0.1",
+    "pytest": "9.0.3"
+  },
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "scope": "FIT-only geometry preflight for TUJI/UTS/UJI; scoring TUJI only; no training or TEST scoring",
+  "files_sha256": {
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\fhm_dapp\\msep_v17_dataset_adaptive_joint_fit_v1.py": "125fd47b2e4d778ead948120f3e47cd5e1ed36cb1562cdb7ff75e4085ec05489",
+    "D:\\liuyanlunwen\\tests\\test_v17_dataset_adaptive_joint_fit_v1.py": "6f115bba7e59adeb9ac1d1451cce95a0565847e78bcf0e000c6473a44eecc196",
+    "D:\\liuyanlunwen\\fhm_dapp_tim\\instructions\\V17_DATASET_ADAPTIVE_JOINT_FIT_ITER3_CODEX.txt": "2747f0e5c92bc25de9e8505dc4b614d51c6795cf730edc7fb5323045c9d6b1f5",
+    "D:\\liulanqi\\V17_DATASET_ADAPTIVE_JOINT_FIT_ITER3_CODEX.txt": "5b4f93d1912ee96cec49dce2cfef65f4efc74a5009afbe06204d756196e96b94"
+  },
+  "cuda_device": {
+    "name": "NVIDIA GeForce RTX 2060",
+    "total_memory_bytes": 6442123264,
+    "free_memory_bytes": 5361369088,
+    "compute_capability": [
+      7,
+      5
+    ]
+  }
+}

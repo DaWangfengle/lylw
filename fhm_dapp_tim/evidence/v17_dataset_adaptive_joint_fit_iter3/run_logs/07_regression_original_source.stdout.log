@@ -1,0 +1,61 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_evaluation_cutoff_matches_float64_preflight_without_changing_components _
+
+    def test_evaluation_cutoff_matches_float64_preflight_without_changing_components():
+        ctx, radius, expected, exact = boundary_context()
+        xy = ctx["memory"]["coords"]
+        centers = (xy[ctx["edges"][:, 0]] + xy[ctx["edges"][:, 1]]) / 2
+        pack = {"scores": torch.tensor([[.4, .2, -.1]]), "z": torch.zeros(1, 3, 2),
+                "xy": xy[None], "sigma": torch.ones(1, 3, 2),
+                "virtual_scores": torch.tensor([[.1, .3]]), "virtual_z": torch.zeros(1, 2, 2),
+                "virtual_xy": centers[None], "virtual_sigma": torch.ones(1, 2, 2),
+                "geometric_xy": centers[None]}
+        config = {"R_max_S1_m": float(exact.max()), "tau_graph_m": 1.,
+                  "R_max_S2_m": radius, "tau_virt_m": math.inf,
+                  "theta": [0., 0.], "temperature": 1., "alpha_prior": 0., "alpha_obs": 0., "beta": .5}
+        mix, sub, _ = joint._make_probability(pack, ctx, config)
+>       assert sub["virtual_scores"].shape[1] == len(expected)
+E       assert 2 == 1
+E        +  where 1 = len(array([[0, 1]]))
+
+tmp\test_iter3_cutoff_precision_regression.py:39: AssertionError
+_________ test_run_cutoff_matches_preflight_on_float32_anchor_storage _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002466DA96630>
+tmp_path = WindowsPath('C:/Users/LiuYan/AppData/Local/Temp/pytest-of-LiuYan/pytest-77/test_run_cutoff_matches_prefli0')
+
+    def test_run_cutoff_matches_preflight_on_float32_anchor_storage(monkeypatch, tmp_path):
+        ctx, _, expected, _ = boundary_context()
+        diag = joint._pairwise_fit_geometry(ctx["memory"]["coords"].numpy(), np.zeros(3), np.zeros(3), ctx["edges"])
+>       geoms, _ = joint.geometry_candidates(diag)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tmp\test_iter3_cutoff_precision_regression.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py:410: in geometry_candidates
+    add(r1_q,r1,r2_q,r2,tau_graph,tau_virt,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+r1_q = 'p75', r1 = 1.4142136255933697, r2_q = 'p75', r2 = 1.4142136255933697
+tau_graph = 1.4142136466667945, tau_virt = 1.4142136382374246
+role = 'S1_p75__S2_p75__high_S2_finite_tau_edge_p90'
+
+    def add(r1_q,r1,r2_q,r2,tau_graph,tau_virt,role):
+        r1=float(r1); tau_graph=float(tau_graph); r2=float(r2); tau_virt=float(tau_virt)
+        tol=1e-10*max(1.0,r1,r2)
+        if r2>r1+tol:
+            raise RuntimeError("candidate violates R_max_S2 <= R_max_S1")
+        if r1 not in pools["r_max_s1_m"] or r2 not in pools["r_max_s2_m"]:
+            raise RuntimeError("cutoff radius is not an observed FIT union-kNN edge quantile")
+        if tau_graph not in pools["tau_graph_m"]:
+            raise RuntimeError("tau_graph is not an observed FIT neighbor/edge scale")
+        if not math.isinf(tau_virt) and tau_virt not in pools["tau_virt_m"]:
+>           raise RuntimeError("finite tau_virt is not an observed FIT neighbor/edge scale")
+E           RuntimeError: finite tau_virt is not an observed FIT neighbor/edge scale
+
+fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py:382: RuntimeError
+=========================== short test summary info ===========================
+FAILED tmp/test_iter3_cutoff_precision_regression.py::test_evaluation_cutoff_matches_float64_preflight_without_changing_components
+FAILED tmp/test_iter3_cutoff_precision_regression.py::test_run_cutoff_matches_preflight_on_float32_anchor_storage
+2 failed in 4.19s

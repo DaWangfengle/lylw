@@ -1,0 +1,92 @@
+{
+  "created_at": "2026-10-23T03:55:46.709316+00:00",
+  "purpose": "User requested omitting large candidate tables and their archives; publish remaining scientific artifacts and Pareto archive only",
+  "compression": {
+    "format": "gzip",
+    "level": 6,
+    "mtime": 0,
+    "uncompressed_chunk_bytes": 67108864,
+    "parts_order": "Concatenate decompressed part bytes in listed order; boundaries need not match CSV rows"
+  },
+  "original_delivery_manifest_sha256": "331e0267713f44c1f588af4bb160e6544121229ff6597be42bccbd56df4b8977",
+  "original_delivery_files_verified": 72,
+  "preserved_failure_files_verified": 45,
+  "source_sha256": "2895555096b253f66a7eccf445510dccc5de027e0429960bdae337bf826fe498",
+  "tests_sha256": "2adc3e21ca71dc9c975e808c634900b94e3895d15c91f6ba2777795590801dc5",
+  "csv_file_count": 1,
+  "archive_part_count": 1,
+  "uncompressed_bytes": 6403702,
+  "compressed_bytes": 1363539,
+  "decompressed_sha256_matches_all_originals": true,
+  "original_files_preserved_locally": true,
+  "csv_files": [
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/PARETO_FRONTIER.csv",
+      "original_bytes": 6403702,
+      "original_sha256": "666222e40b4828c6ea1ab7ba0f4baa412e5bff84c0be5b0ccd012bf8e8598533",
+      "gzip_parts": [
+        {
+          "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/PARETO_FRONTIER.csv.gz",
+          "bytes": 1363539,
+          "sha256": "04efb50ddbb553d1f5b55323728e570f3503726e5585188ebdb15770a545d7f2"
+        }
+      ]
+    }
+  ],
+  "updated_at": "2026-10-23T04:20:42.180155+00:00",
+  "local_only_csv_files": [
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv",
+      "original_bytes": 340364935,
+      "original_sha256": "954d61648ee76c4c22fc03e61d1f4c504d4e54e0cebec9d4a6773e62b141cf47"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/C/CANDIDATE_METRICS.csv",
+      "original_bytes": 37807587,
+      "original_sha256": "c1aec682eb92ac126748f3a10cf2929849aaad49348385745388b279aff99b55"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/D/CANDIDATE_METRICS.csv",
+      "original_bytes": 37845728,
+      "original_sha256": "228868f41f19bcb5b4cb3c1a169ddc225d582af8181cf534371957e2dce6f9a3"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/E/CANDIDATE_METRICS.csv",
+      "original_bytes": 37834574,
+      "original_sha256": "38a5fce42ced649fb0d10059719e7435fb1255b426a7a5ceee20c740a2730ca4"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/C/CANDIDATE_METRICS.csv",
+      "original_bytes": 37757987,
+      "original_sha256": "707ac39af5c5acc4545db5d044ab82cd6885d2797f1a79c288eeda3b76525a62"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/D/CANDIDATE_METRICS.csv",
+      "original_bytes": 37853526,
+      "original_sha256": "f52ee90ead8966b14816f9b7da60285b6bd98fbc8537a7221d14d122d742e9b7"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/E/CANDIDATE_METRICS.csv",
+      "original_bytes": 37827388,
+      "original_sha256": "15871dee4a514f1c272783abf4253dc0eb72fb74d586cb47bc42c68a7deb6897"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/C/CANDIDATE_METRICS.csv",
+      "original_bytes": 37802990,
+      "original_sha256": "ecac3c238cd589a5ff155005cccc0059050cf85892224d61e2487dde931dddb4"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/D/CANDIDATE_METRICS.csv",
+      "original_bytes": 37825216,
+      "original_sha256": "5ebda090af767404d62f7d19313078cfddebe125f01fb1a37e6d36c9c451bd11"
+    },
+    {
+      "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/E/CANDIDATE_METRICS.csv",
+      "original_bytes": 37815579,
+      "original_sha256": "27ee18f3e323cac4a4e1cb2acd69c93cec6842902e618c3d5b880b1657993b39"
+    }
+  ],
+  "user_omission_instruction": "算了，那个大文件不传了，忽略他",
+  "candidate_originals_and_archives_retained_locally": true,
+  "full_delivery_manifest_restorable_from_this_publication_alone": false
+}

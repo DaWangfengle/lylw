@@ -1,0 +1,16 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/v17_iter3_validate_fix_preview.py"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-22T15:54:22.956891+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\09_validate_proposed_precision_fix.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3\\run_logs\\09_validate_proposed_precision_fix.stderr.log",
+  "pid": 21792,
+  "exit_code": 0,
+  "elapsed_seconds": 6.737802505493164,
+  "finished_at": "2026-10-22T15:54:29.694693+08:00",
+  "stdout_sha256": "986f5ed420f35c9fd0291ef8516fa4fe0f5ae4710ad6f44d98dd3097f2f01952",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

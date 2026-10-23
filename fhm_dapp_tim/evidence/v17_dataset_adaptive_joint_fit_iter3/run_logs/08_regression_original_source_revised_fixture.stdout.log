@@ -1,0 +1,121 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_evaluation_cutoff_matches_float64_preflight_without_changing_components _
+
+    def test_evaluation_cutoff_matches_float64_preflight_without_changing_components():
+        ctx, radius, expected, exact = boundary_context()
+        xy = ctx["memory"]["coords"]
+        centers = (xy[ctx["edges"][:, 0]] + xy[ctx["edges"][:, 1]]) / 2
+        pack = {"scores": torch.tensor([[.4, .2, -.1]]), "z": torch.zeros(1, 3, 2),
+                "xy": xy[None], "sigma": torch.ones(1, 3, 2),
+                "virtual_scores": torch.tensor([[.1, .3]]), "virtual_z": torch.zeros(1, 2, 2),
+                "virtual_xy": centers[None], "virtual_sigma": torch.ones(1, 2, 2),
+                "geometric_xy": centers[None]}
+        config = {"R_max_S1_m": float(exact.max()), "tau_graph_m": 1.,
+                  "R_max_S2_m": radius, "tau_virt_m": math.inf,
+                  "theta": [0., 0.], "temperature": 1., "alpha_prior": 0., "alpha_obs": 0., "beta": .5}
+        mix, sub, _ = joint._make_probability(pack, ctx, config)
+>       assert sub["virtual_scores"].shape[1] == len(expected)
+E       assert 2 == 1
+E        +  where 1 = len(array([[0, 1]]))
+
+tmp\test_iter3_cutoff_precision_regression.py:39: AssertionError
+_________ test_run_cutoff_matches_preflight_on_float32_anchor_storage _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014EFB8767B0>
+tmp_path = WindowsPath('C:/Users/LiuYan/AppData/Local/Temp/pytest-of-LiuYan/pytest-78/test_run_cutoff_matches_prefli0')
+
+    def test_run_cutoff_matches_preflight_on_float32_anchor_storage(monkeypatch, tmp_path):
+        upper = np.nextafter(np.float32(1.), np.float32(math.inf))
+        xy = np.asarray([[0., 0.], [1., 1.], [upper, 1.], [10., 0.],
+                         [20., 0.], [30., 0.], [40., 0.]], dtype=np.float32)
+        edges = np.asarray([[0, 1], [0, 2], [1, 2], [3, 4]], dtype=np.int64)
+        ctx = {"memory": {"coords": torch.from_numpy(xy), "building": torch.zeros(7, dtype=torch.long),
+                           "floor": torch.zeros(7, dtype=torch.long)}, "edges": torch.from_numpy(edges),
+               "cal_fit": np.asarray([0]), "cal_eval": np.asarray([1]), "roles": {"test": np.asarray([2])}}
+        diag = joint._pairwise_fit_geometry(xy, np.zeros(7), np.zeros(7), edges)
+        geoms, _ = joint.geometry_candidates(diag)
+        radius = geoms[0]["r_max_s2_m"]
+        xy64 = xy.astype(np.float64)
+        expected = edges[np.linalg.norm(xy64[edges[:, 0]] - xy64[edges[:, 1]], axis=1) <= radius]
+        assert len(expected) == 2
+        assert int((np.linalg.norm(xy[edges[:, 0]] - xy[edges[:, 1]], axis=1) <= radius).sum()) == 3
+        support = joint._validate_geometry_support(xy, ctx["edges"], geoms)
+        assert support[geoms[0]["geometry_id"]]["retained_virtual_edges"] == len(expected)
+        checkpoint = tmp_path / "synthetic_identity.pt"
+        checkpoint.write_bytes(b"not loaded; synthetic identity only")
+        monkeypatch.setattr(joint.s3, "SEEDS", (17301,))
+        monkeypatch.setattr(joint, "ARMS", ("C",))
+        monkeypatch.setattr(joint.s3, "reconstruct", lambda *args: ctx)
+        monkeypatch.setattr(joint, "_read_json", lambda *args: {"outer_geometry_candidates": {"tuji_seed17301": {"geometry_candidates": geoms}}})
+        monkeypatch.setattr(joint.comp, "_checkpoint_path", lambda *args: checkpoint)
+        monkeypatch.setattr(joint.comp, "_load_model", lambda *args: (None, {}, 0.))
+        monkeypatch.setattr(joint.s3, "make_pack", lambda *args, **kwargs: {})
+        monkeypatch.setattr(joint, "_legacy_clean_config", lambda *args: {})
+        monkeypatch.setattr(joint, "_calibration_candidates", lambda *args: [{"candidate_id": "synthetic"}])
+        monkeypatch.setattr(joint, "_calibration_grid_spec", lambda *args: {})
+        class CanonicalSubsetReached(Exception):
+            pass
+        def stop_before_scoring(pack, runtime_ctx, graph, s2, geom, candidates, **kwargs):
+            assert np.array_equal(s2, expected)
+            raise CanonicalSubsetReached
+        monkeypatch.setattr(joint, "evaluate_calibration_grid", stop_before_scoring)
+        with pytest.raises(CanonicalSubsetReached):
+>           joint.run(argparse.Namespace(output=str(tmp_path), input_root=str(tmp_path), checkpoint_root=str(tmp_path),
+                                         dataset="tuji", device="cpu"))
+
+tmp\test_iter3_cutoff_precision_regression.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = Namespace(output='C:\\Users\\LiuYan\\AppData\\Local\\Temp\\pytest-of-LiuYan\\pytest-78\\test_run_cutoff_matches_prefli...Yan\\AppData\\Local\\Temp\\pytest-of-LiuYan\\pytest-78\\test_run_cutoff_matches_prefli0', dataset='tuji', device='cpu')
+
+    def run(args):
+        """Jointly fit spatial scales and calibration parameters on CAL-fit, then report CAL-eval."""
+        out=Path(args.output).resolve()
+        search=_read_json(out/"SPATIAL_SCALE_SEARCH_SPACE.json")["outer_geometry_candidates"]
+        reports=[]
+        datasets=_selected_datasets(getattr(args,"dataset","all"))
+        for ds in datasets:
+          for seed in s3.SEEDS:
+            ctx=s3.reconstruct(ds,seed,Path(args.input_root).resolve(),torch.device(args.device))
+            fit=_safe_rows(ctx,ctx["cal_fit"],"CAL-fit")
+            ev=_safe_rows(ctx,ctx["cal_eval"],"CAL-eval")
+            coords=ctx["memory"]["coords"].detach().cpu().numpy()
+            b=ctx["memory"]["building"].detach().cpu().numpy()
+            f=ctx["memory"]["floor"].detach().cpu().numpy()
+            base_edges=np.asarray(ctx["edges"].detach().cpu(),dtype=np.int64).reshape(-1,2)
+            runtime_diag=_pairwise_fit_geometry(coords,b,f,base_edges)
+            runtime_pools=_geometry_candidate_pools(runtime_diag)
+            for arm in ARMS:
+                rd=out/"runs"/f"{ds}_seed{seed}"/arm
+                rd.mkdir(parents=True,exist_ok=True)
+                sp=rd/"CAL_FIT_SELECTION.json"; rp=rd/"CAL_EVAL_REPORT.json"
+                ckpt=comp._checkpoint_path(Path(args.checkpoint_root).resolve(),ds,seed,arm)
+                ckpt_sha=s3.sha(ckpt)
+                model,payload,native_alpha=comp._load_model(ctx,Path(args.checkpoint_root).resolve(),ds,seed,arm,args.device)
+                fitpack=s3.make_pack(ctx,model,fit,virtual_gamma=0.0)
+                baseline_config=_legacy_clean_config(ds,seed,arm,fitpack,ctx,ckpt_sha)
+                inner=_calibration_candidates(baseline_config)
+                calibration_grid=_calibration_grid_spec(baseline_config)
+                geoms=search[f"{ds}_seed{seed}"]["geometry_candidates"]
+                _validate_kernel_scales(runtime_pools,geoms)
+                support_by_geometry=_validate_geometry_support(coords,base_edges,geoms)
+                rows_all=[]; geometry_diagnostics={}
+                for geom in geoms:
+                    support=support_by_geometry[geom["geometry_id"]]
+                    if float(geom["r_max_s2_m"])>float(geom["r_max_s1_m"]):
+                        raise RuntimeError("preflight geometry violates R_max_S2 <= R_max_S1")
+                    graph,kept_s1,gdiag=build_cutoff_graph(coords,b,f,base_edges,geom["r_max_s1_m"],geom["tau_graph_m"])
+                    if int(gdiag["retained_edges"])<=0 or int(len(kept_s1))!=int(support["retained_s1_edges"]):
+                        raise RuntimeError(f"{geom['geometry_id']}: S1 edge support differs from preflight validation")
+                    lens=np.linalg.norm(coords[base_edges[:,0]]-coords[base_edges[:,1]],axis=1) if len(base_edges) else np.empty(0)
+                    s2=base_edges[lens<=float(geom["r_max_s2_m"])] if len(base_edges) else base_edges
+                    if len(s2)<int(support["minimum_required_virtual_edges"]) or int(len(s2))!=int(support["retained_virtual_edges"]):
+>                       raise RuntimeError(f"{geom['geometry_id']}: S2 edge support below validated minimum")
+E                       RuntimeError: fit_quantile_geometry_00: S2 edge support below validated minimum
+
+fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py:1113: RuntimeError
+=========================== short test summary info ===========================
+FAILED tmp/test_iter3_cutoff_precision_regression.py::test_evaluation_cutoff_matches_float64_preflight_without_changing_components
+FAILED tmp/test_iter3_cutoff_precision_regression.py::test_run_cutoff_matches_preflight_on_float32_anchor_storage
+2 failed in 4.18s

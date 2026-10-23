@@ -1,0 +1,417 @@
+{
+  "dataset": "tuji",
+  "seed": 17301,
+  "backbone": "C",
+  "failed_geometry_id": "fit_quantile_geometry_01",
+  "memory_coordinate_dtype": "float32",
+  "preflight_distance_dtype": "float64",
+  "runtime_distance_dtype": "float32",
+  "reason": "Preflight and support validator cast FIT coordinates to float64; run and _make_probability compute cutoff distances in float32, changing boundary edge inclusion.",
+  "all_canonical_float64_counts_match_preflight": true,
+  "complete_selection_files": 0,
+  "complete_cal_eval_files": 0,
+  "geometry_checks": [
+    {
+      "geometry_id": "fit_quantile_geometry_00",
+      "r_max_s1_m": 1.330907885325485,
+      "r_max_s2_m": 1.189500093460083,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 1473,
+      "runtime_float32_retained_s2_edges": 1473,
+      "canonical_float64_retained_s2_edges": 1473,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_01",
+      "r_max_s1_m": 1.330907885325485,
+      "r_max_s2_m": 1.330907885325485,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2209,
+      "runtime_float32_retained_s2_edges": 2216,
+      "canonical_float64_retained_s2_edges": 2209,
+      "mismatch_edge_count": 7,
+      "boundary_examples": [
+        {
+          "edge_index": 632,
+          "anchor_ids": [
+            122,
+            168
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -10.40091609954834
+            ],
+            [
+              -3.495511531829834,
+              -10.996915817260742
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 634,
+          "anchor_ids": [
+            122,
+            170
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -10.40091609954834
+            ],
+            [
+              -3.495511531829834,
+              -9.804916381835938
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 638,
+          "anchor_ids": [
+            123,
+            169
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -9.804916381835938
+            ],
+            [
+              -3.495511531829834,
+              -10.40091609954834
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 671,
+          "anchor_ids": [
+            130,
+            176
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              0.33008384704589844
+            ],
+            [
+              -3.495511531829834,
+              -0.2659158706665039
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        }
+      ]
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_02",
+      "r_max_s1_m": 1.330907885325485,
+      "r_max_s2_m": 1.330907885325485,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2209,
+      "runtime_float32_retained_s2_edges": 2216,
+      "canonical_float64_retained_s2_edges": 2209,
+      "mismatch_edge_count": 7,
+      "boundary_examples": [
+        {
+          "edge_index": 632,
+          "anchor_ids": [
+            122,
+            168
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -10.40091609954834
+            ],
+            [
+              -3.495511531829834,
+              -10.996915817260742
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 634,
+          "anchor_ids": [
+            122,
+            170
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -10.40091609954834
+            ],
+            [
+              -3.495511531829834,
+              -9.804916381835938
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 638,
+          "anchor_ids": [
+            123,
+            169
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -9.804916381835938
+            ],
+            [
+              -3.495511531829834,
+              -10.40091609954834
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 671,
+          "anchor_ids": [
+            130,
+            176
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              0.33008384704589844
+            ],
+            [
+              -3.495511531829834,
+              -0.2659158706665039
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        }
+      ]
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_03",
+      "r_max_s1_m": 1.3362743961519672,
+      "r_max_s2_m": 1.189500093460083,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 1473,
+      "runtime_float32_retained_s2_edges": 1473,
+      "canonical_float64_retained_s2_edges": 1473,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_04",
+      "r_max_s1_m": 1.3362743961519672,
+      "r_max_s2_m": 1.330907885325485,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2209,
+      "runtime_float32_retained_s2_edges": 2216,
+      "canonical_float64_retained_s2_edges": 2209,
+      "mismatch_edge_count": 7,
+      "boundary_examples": [
+        {
+          "edge_index": 632,
+          "anchor_ids": [
+            122,
+            168
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -10.40091609954834
+            ],
+            [
+              -3.495511531829834,
+              -10.996915817260742
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 634,
+          "anchor_ids": [
+            122,
+            170
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -10.40091609954834
+            ],
+            [
+              -3.495511531829834,
+              -9.804916381835938
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 638,
+          "anchor_ids": [
+            123,
+            169
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              -9.804916381835938
+            ],
+            [
+              -3.495511531829834,
+              -10.40091609954834
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        },
+        {
+          "edge_index": 671,
+          "anchor_ids": [
+            130,
+            176
+          ],
+          "coords": [
+            [
+              -4.685511589050293,
+              0.33008384704589844
+            ],
+            [
+              -3.495511531829834,
+              -0.2659158706665039
+            ]
+          ],
+          "distance_float32_m": 1.330907940864563,
+          "distance_float64_m": 1.3309078855044623,
+          "float32_included": true,
+          "float64_included": false
+        }
+      ]
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_05",
+      "r_max_s1_m": 1.3362743961519672,
+      "r_max_s2_m": 1.3362743961519672,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2651,
+      "runtime_float32_retained_s2_edges": 2651,
+      "canonical_float64_retained_s2_edges": 2651,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_06",
+      "r_max_s1_m": 1.7869997024536133,
+      "r_max_s2_m": 1.189500093460083,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 1473,
+      "runtime_float32_retained_s2_edges": 1473,
+      "canonical_float64_retained_s2_edges": 1473,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_07",
+      "r_max_s1_m": 1.7869997024536133,
+      "r_max_s2_m": 1.3362743961519672,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2651,
+      "runtime_float32_retained_s2_edges": 2651,
+      "canonical_float64_retained_s2_edges": 2651,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_08",
+      "r_max_s1_m": 1.7869997024536133,
+      "r_max_s2_m": 1.7869997024536133,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2801,
+      "runtime_float32_retained_s2_edges": 2801,
+      "canonical_float64_retained_s2_edges": 2801,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_09",
+      "r_max_s1_m": 2.9770007133483887,
+      "r_max_s2_m": 1.189500093460083,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 1473,
+      "runtime_float32_retained_s2_edges": 1473,
+      "canonical_float64_retained_s2_edges": 1473,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_10",
+      "r_max_s1_m": 2.9770007133483887,
+      "r_max_s2_m": 1.3362743961519672,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2651,
+      "runtime_float32_retained_s2_edges": 2651,
+      "canonical_float64_retained_s2_edges": 2651,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    },
+    {
+      "geometry_id": "fit_quantile_geometry_11",
+      "r_max_s1_m": 2.9770007133483887,
+      "r_max_s2_m": 2.9770007133483887,
+      "base_edges": 2946,
+      "minimum_required_virtual_edges": 1326,
+      "preflight_retained_s2_edges": 2946,
+      "runtime_float32_retained_s2_edges": 2946,
+      "canonical_float64_retained_s2_edges": 2946,
+      "mismatch_edge_count": 0,
+      "boundary_examples": []
+    }
+  ],
+  "new_model_forward_calls": 0,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0
+}
