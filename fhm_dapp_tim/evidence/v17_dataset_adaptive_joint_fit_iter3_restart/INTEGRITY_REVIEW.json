@@ -1,7 +1,7 @@
 {
-  "status": "INCOMPLETE",
+  "status": "PASS",
   "phase": "aggregate",
-  "completed_runs": 9,
+  "completed_runs": 27,
   "expected_runs": 27,
   "cal_eval_used_for_selection": false,
   "gamma_space": 0.0,

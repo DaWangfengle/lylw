@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 1359, in <module>
+    main()
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 1353, in main
+    elif args.command=="run": run(args)
+                              ^^^^^^^^^
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 1141, in run
+    _assert_clean_anchor_feasible(rows_all,baseline_config,len(geoms))
+  File "D:\liuyanlunwen\fhm_dapp_tim\fhm_dapp\msep_v17_dataset_adaptive_joint_fit_v1.py", line 829, in _assert_clean_anchor_feasible
+    raise RuntimeError(
+RuntimeError: exact clean calibration anchor is not feasible; stop rather than relaxing the MAE/BF guards: [{"candidate_id": "fit_quantile_geometry_00__cal_02754", "mae_non_degradation": false, "bf_accuracy_non_degradation": true, "bf_cross_entropy_guard": true, "mae_delta_m": 1.430511474609375e-06}, {"candidate_id": "fit_quantile_geometry_01__cal_02754", "mae_non_degradation": false, "bf_accuracy_non_degradation": true, "bf_cross_entropy_guard": true, "mae_delta_m": 1.430511474609375e-06}, {"candidate_id": "fit_quantile_geometry_02__cal_02754", "mae_non_degradation": false, "bf_accuracy_non_degradation": true, "bf_cross_entropy_guard": true, "mae_delta_m": 1.430511474609375e-06}]

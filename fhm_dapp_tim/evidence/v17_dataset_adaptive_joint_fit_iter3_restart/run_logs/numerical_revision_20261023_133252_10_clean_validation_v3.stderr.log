@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "D:\liuyanlunwen\tmp\validate_iter3_clean_revision.py", line 121, in <module>
+    main()
+  File "D:\miniminiconda\envs\liuyan\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\liuyanlunwen\tmp\validate_iter3_clean_revision.py", line 109, in main
+    raise RuntimeError(json.dumps(record,ensure_ascii=False))
+RuntimeError: {"dataset": "uji", "seed": 17301, "backbone": "C", "geometry_id": "fit_quantile_geometry_00", "passed": false, "reference_mae": 6.931545734405518, "grid_mae": 6.931545734405518, "mae_delta_m": 0.0, "reference_bf_accuracy": 0.9653558135032654, "grid_bf_accuracy": 0.9653557380274773, "bf_accuracy_delta": -7.547578806388344e-08, "bfce_delta": 0.0, "checkpoint_sha256": "7a7c1e28f18589cfd887ed15be1274c85910d6dca43ad90bc41e031d5fbc4e3f", "cal_fit_key_sha256": "f931e3a45b6699c33d2b64f5bd8e37d83633a9718e12706e8add50c8c7165f43", "cal_fit_rows": 959, "s1_edges": 2424, "s2_edges": 1617}

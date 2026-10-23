@@ -1,0 +1,80 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_________ test_reference_bf_macro_matches_integer_correct_counts[cpu] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AAA72E8980>
+device = 'cpu'
+
+    @pytest.mark.parametrize("device", [
+        "cpu", pytest.param("cuda", marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    def test_reference_bf_macro_matches_integer_correct_counts(monkeypatch, device):
+        # Ten sites, three scans each; exactly one scan is assigned the wrong BF.
+        scans = 30
+        q = torch.tensor([[.9, .1]] * scans, device=device)
+        q[0] = torch.tensor([.1, .9], device=device)
+        centers = torch.tensor([[0., 0.], [10., 0.]], device=device)[None].repeat(scans, 1, 1)
+        ids = torch.arange(2, device=device)[None].expand(scans, -1)
+        pack = {"xy": centers, "sigma": torch.ones_like(centers), "ids": ids,
+                "scores": torch.zeros(scans, 2, device=device), "target": torch.zeros(scans, 2, device=device),
+                "building": torch.zeros(scans, dtype=torch.long, device=device),
+                "floor": torch.zeros(scans, dtype=torch.long, device=device),
+                "keys": [(0, 0, i // 3, 0) for i in range(scans)],
+                "weight": torch.full((scans,), 1 / scans, device=device)}
+        ctx = {"memory": {"building": torch.tensor([0, 1], device=device),
+                           "floor": torch.tensor([0, 0], device=device)},
+               "classes": torch.tensor([0, 1], device=device),
+               "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+        mix = {"q": q, "xy": centers, "sigma": pack["sigma"], "ids": ids}
+        monkeypatch.setattr(joint, "_make_probability", lambda *args: (mix, pack, {}))
+        scored = joint._eval_config(pack, ctx, {}, 131)
+        expected = (9. + 2. / 3.) / 10.
+>       assert scored["metrics"]["macro_bf_accuracy"] == pytest.approx(expected, abs=1e-15, rel=0.)
+E       assert 0.9666666984558105 == 0.9666666666666666 ¡À 1.0e-15
+E         
+E         comparison failed
+E         Obtained: 0.9666666984558105
+E         Expected: 0.9666666666666666 ¡À 1.0e-15
+
+tests\test_v17_dataset_adaptive_joint_fit_v1.py:789: AssertionError
+________ test_reference_bf_macro_matches_integer_correct_counts[cuda] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AA82CEA300>
+device = 'cuda'
+
+    @pytest.mark.parametrize("device", [
+        "cpu", pytest.param("cuda", marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    def test_reference_bf_macro_matches_integer_correct_counts(monkeypatch, device):
+        # Ten sites, three scans each; exactly one scan is assigned the wrong BF.
+        scans = 30
+        q = torch.tensor([[.9, .1]] * scans, device=device)
+        q[0] = torch.tensor([.1, .9], device=device)
+        centers = torch.tensor([[0., 0.], [10., 0.]], device=device)[None].repeat(scans, 1, 1)
+        ids = torch.arange(2, device=device)[None].expand(scans, -1)
+        pack = {"xy": centers, "sigma": torch.ones_like(centers), "ids": ids,
+                "scores": torch.zeros(scans, 2, device=device), "target": torch.zeros(scans, 2, device=device),
+                "building": torch.zeros(scans, dtype=torch.long, device=device),
+                "floor": torch.zeros(scans, dtype=torch.long, device=device),
+                "keys": [(0, 0, i // 3, 0) for i in range(scans)],
+                "weight": torch.full((scans,), 1 / scans, device=device)}
+        ctx = {"memory": {"building": torch.tensor([0, 1], device=device),
+                           "floor": torch.tensor([0, 0], device=device)},
+               "classes": torch.tensor([0, 1], device=device),
+               "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+        mix = {"q": q, "xy": centers, "sigma": pack["sigma"], "ids": ids}
+        monkeypatch.setattr(joint, "_make_probability", lambda *args: (mix, pack, {}))
+        scored = joint._eval_config(pack, ctx, {}, 131)
+        expected = (9. + 2. / 3.) / 10.
+>       assert scored["metrics"]["macro_bf_accuracy"] == pytest.approx(expected, abs=1e-15, rel=0.)
+E       assert 0.9666666984558105 == 0.9666666666666666 ¡À 1.0e-15
+E         
+E         comparison failed
+E         Obtained: 0.9666666984558105
+E         Expected: 0.9666666666666666 ¡À 1.0e-15
+
+tests\test_v17_dataset_adaptive_joint_fit_v1.py:789: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_v17_dataset_adaptive_joint_fit_v1.py::test_reference_bf_macro_matches_integer_correct_counts[cpu]
+FAILED tests/test_v17_dataset_adaptive_joint_fit_v1.py::test_reference_bf_macro_matches_integer_correct_counts[cuda]
+2 failed, 36 deselected in 4.45s

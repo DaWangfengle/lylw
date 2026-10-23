@@ -1,0 +1,2 @@
+{"label": "isolated_uts_17301_C_CAL_fit", "dtype": "torch.float32", "device": "cuda:0", "reference_mae": 3.971050262451172, "grid_mae": 3.9710516929626465, "grid_minus_reference_mae": 1.430511474609375e-06, "maxima": {"parent_logit_gap": 0.0, "q_gap": 4.172325134277344e-07, "virtual_mass": 0.0, "point_gap_m": 7.057350740069523e-05, "point_gap_same_q_m": 6.675763142993674e-05}}
+D:\liuyanlunwen\fhm_dapp_tim\evidence\v17_dataset_adaptive_joint_fit_iter3_restart\run_logs\diagnosis_clean_anchor_20261023_130525\isolated-real_RESULT.json

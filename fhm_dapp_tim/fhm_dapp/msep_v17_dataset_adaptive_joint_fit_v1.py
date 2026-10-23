@@ -622,7 +622,9 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
     lp=s3.student_t_logpdf(centers,scales,pack["target"]).masked_fill(~valid,-torch.inf)
     keys=pack["keys"]; unique_sites=list(dict.fromkeys(keys)); site_map={k:i for i,k in enumerate(unique_sites)}
     site_ids=torch.as_tensor([site_map[k] for k in keys],dtype=torch.long,device=device)
-    site_counts=np.bincount(site_ids.cpu().numpy(),minlength=len(unique_sites)).astype(np.float64)
+    site_ids_np=site_ids.cpu().numpy()
+    site_counts=np.bincount(site_ids_np,minlength=len(unique_sites)).astype(np.float64)
+    site_indices=[np.flatnonzero(site_ids_np==i) for i in range(len(unique_sites))]
 
     # beta is absent from parent and virtual logits, so group all beta variants
     # by the five parameters that actually feed those logits.
@@ -634,6 +636,7 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
     groups=list(grouped.items())
     beta_values=sorted({float(row["beta"]) for row in candidates})
     beta_index={value:i for i,value in enumerate(beta_values)}
+    zero_beta=beta_index.get(0.0)
     beta_tensor=torch.as_tensor(beta_values,dtype=pack["scores"].dtype,device=device)
     output=[None]*len(candidates)
 
@@ -645,6 +648,7 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
               ("coordinate_mae_m","transport_w1_m","bf_accuracy","bf_cross_entropy","joint_nll")}
         site_sums=torch.zeros((c,k,len(unique_sites)),dtype=pars.dtype,device=device)
         site_bf_correct=torch.zeros((c,k,len(unique_sites)),dtype=torch.int64,device=device)
+        error_chunks=[]
         for rs in range(0,len(pack["scores"]),row_chunk_size):
             re=min(rs+row_chunk_size,len(pack["scores"])); sl=slice(rs,re)
             scores=pack["scores"][sl]; z=pack["z"][sl]; bsz=len(scores)
@@ -678,6 +682,11 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
             else:
                 q=torch.softmax(pterms,dim=-1)
 
+            # Match the reference physical-only shortcut when beta is zero.
+            if zero_beta is not None:
+                for ci in range(c):
+                    q[ci,zero_beta,:,:n]=torch.softmax(parent[ci],dim=-1)
+                    q[ci,zero_beta,:,n:]=0.0
             sub_centers=centers[sl]; sub_lp=lp[sl]; target=pack["target"][sl]
             target_cls=_target_class_ids({**pack,"building":pack["building"][sl],
                                           "floor":pack["floor"][sl],"scores":pack["scores"][sl]},ctx)
@@ -688,8 +697,12 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
             correct=(masses.argmax(-1)==target_cls[None,None,:]).to(q.dtype)
             true_mass=masses.gather(3,target_cls[None,None,:,None].expand(c,k,bsz,1)).squeeze(-1)
             bfce=-true_mass.clamp_min(torch.finfo(q.dtype).tiny).log()
-            point=torch.einsum("ckbm,bmd->ckbd",q,sub_centers)
+            point=(q[...,None]*sub_centers[None,None]).sum(-2)
+            if zero_beta is not None:
+                for ci in range(c):
+                    point[ci,zero_beta]=(q[ci,zero_beta,:,:n,None]*pack["xy"][sl]).sum(1)
             err=torch.linalg.vector_norm(point-target[None,None,:,:],dim=-1)
+            error_chunks.append(err.cpu().numpy())
             dist=torch.linalg.vector_norm(sub_centers-target[:,None,:],dim=-1)
             risk=(q*dist[None,None,:,:]).sum(-1)
             logq=q.clamp_min(torch.finfo(q.dtype).tiny).log()
@@ -711,6 +724,10 @@ def evaluate_calibration_grid(pack_all,ctx,graph,s2_edges,geom,candidates,*,endp
         sums["bf_accuracy"]=(site_bf_correct.to(torch.float64)/
             torch.as_tensor(site_counts,dtype=torch.float64,device=device)[None,None,:]).mean(2)
         vals={name:value.cpu().tolist() for name,value in sums.items()}
+        # Same scan-within-site then site-macro reduction as spatial_metrics.
+        all_errors=np.concatenate(error_chunks,axis=-1)
+        canonical_sites=np.stack([np.ascontiguousarray(all_errors[...,ix]).mean(-1) for ix in site_indices],axis=-1)
+        vals["coordinate_mae_m"]=canonical_sites.mean(-1).tolist()
         for ci,(_,members) in enumerate(group_chunk):
             for original_index,candidate in members:
                 bi=beta_index[float(candidate["beta"])]
@@ -930,6 +947,7 @@ def _make_probability(pack_all,ctx,config):
 def _eval_config(pack,ctx,config,seed):
     mix,sub,gdiag=_make_probability(pack,ctx,config)
     metrics,sites=s3.score_mixture(sub,ctx,mix["q"],centers=mix["xy"],scales=mix["sigma"],ids=mix["ids"],seed=seed+900)
+    metrics["macro_bf_accuracy"]=float(np.mean([site["bf_accuracy"] for site in sites.values()]))
     cls=ctx["classes"].to(mix["q"].device)[mix["ids"]]
     masses=torch.zeros((len(mix["q"]),len(ctx["class_pairs"])),dtype=mix["q"].dtype,device=mix["q"].device)
     masses.scatter_add_(1,cls,mix["q"]); target_cls=_target_class_ids(sub,ctx)

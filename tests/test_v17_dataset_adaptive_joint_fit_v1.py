@@ -715,3 +715,75 @@ def test_run_cutoff_matches_preflight_on_float32_anchor_storage(monkeypatch, tmp
     with pytest.raises(CanonicalSubsetReached):
         joint.run(argparse.Namespace(output=str(tmp_path), input_root=str(tmp_path), checkpoint_root=str(tmp_path),
                                      dataset="tuji", device="cpu"))
+
+
+@pytest.mark.parametrize("device", [
+    "cpu", pytest.param("cuda", marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+])
+@pytest.mark.parametrize("rows", [413, 444])
+def test_clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size(device, rows):
+    # No real data/checkpoint: zero spatial coefficients must retain the same
+    # point decision even with 2500 virtual columns and uneven scan counts.
+    generator = torch.Generator().manual_seed(131)
+    anchors, virtual_count = 1052, 2500
+    coords = (torch.randn(anchors, 2, generator=generator) * 20 + 50).to(device)
+    pairs = [(i, i + gap) for gap in (1, 2, 3) for i in range(anchors - gap)]
+    edges = torch.tensor(pairs[:virtual_count], dtype=torch.long, device=device)
+    xy = coords[None].expand(rows, -1, -1).contiguous()
+    virtual_xy = (xy[:, edges[:, 0]] + xy[:, edges[:, 1]]) / 2
+    def normal(*shape):
+        return torch.randn(*shape, generator=generator).to(device)
+    pack = {"scores": normal(rows, anchors), "z": normal(rows, anchors, 2),
+            "virtual_scores": normal(rows, virtual_count), "virtual_z": normal(rows, virtual_count, 2),
+            "xy": xy, "sigma": torch.ones_like(xy), "virtual_xy": virtual_xy,
+            "virtual_sigma": torch.ones_like(virtual_xy), "target": normal(rows, 2) * 5 + 45,
+            "building": torch.zeros(rows, dtype=torch.long, device=device),
+            "floor": torch.zeros(rows, dtype=torch.long, device=device),
+            "keys": [(0, 0, i // 5, 0) for i in range(rows)]}
+    counts = {key: pack["keys"].count(key) for key in set(pack["keys"])}
+    pack["weight"] = torch.tensor([1 / (len(counts) * counts[key]) for key in pack["keys"]], device=device)
+    ctx = {"memory": {"coords": coords, "building": torch.zeros(anchors, dtype=torch.long, device=device),
+                       "floor": torch.zeros(anchors, dtype=torch.long, device=device)},
+           "edges": edges, "classes": torch.zeros(anchors, dtype=torch.long, device=device),
+           "class_pairs": torch.tensor([[0, 0]], device=device)}
+    graph = torch.eye(anchors, device=device).to_sparse().coalesce()
+    endpoint = joint.normalized_virtual_endpoint_weights(edges.cpu().numpy(), coords.cpu().numpy(), math.inf)
+    candidates = [{"candidate_id": f"synthetic_{group}_{beta}", "temperature": .9805950440880841,
+                   "theta_v": 1.5, "theta_s": 1.5, "alpha_prior": 0., "alpha_obs": group * .1, "beta": beta}
+                  for group in range(2) for beta in joint.BETAS]
+    actual = joint.evaluate_calibration_grid(pack, ctx, graph, edges.cpu().numpy(),
+        {"tau_virt_m": math.inf}, candidates, endpoint_cache=endpoint)
+    logits = joint.op.combine_retrieval_and_g13_logits(pack["scores"], pack["z"], candidates[0]["temperature"],
+                                                     torch.tensor([1.5, 1.5], device=device))
+    q = torch.softmax(logits, dim=-1)
+    reference, _ = joint.s3.spatial_metrics(q, torch.arange(anchors, device=device)[None].expand(rows, -1),
+        xy, pack["target"], pack["building"], pack["floor"], ctx["classes"], ctx["class_pairs"], keys=pack["keys"])
+    assert len(actual) == 2 * len(joint.BETAS)
+    assert abs(actual[0]["coordinate_mae_m"] - reference["macro_mae_full_m"]) <= joint.MAE_NON_DEGRADATION_TOLERANCE_M
+
+
+@pytest.mark.parametrize("device", [
+    "cpu", pytest.param("cuda", marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+])
+def test_reference_bf_macro_matches_integer_correct_counts(monkeypatch, device):
+    # Ten sites, three scans each; exactly one scan is assigned the wrong BF.
+    scans = 30
+    q = torch.tensor([[.9, .1]] * scans, device=device)
+    q[0] = torch.tensor([.1, .9], device=device)
+    centers = torch.tensor([[0., 0.], [10., 0.]], device=device)[None].repeat(scans, 1, 1)
+    ids = torch.arange(2, device=device)[None].expand(scans, -1)
+    pack = {"xy": centers, "sigma": torch.ones_like(centers), "ids": ids,
+            "scores": torch.zeros(scans, 2, device=device), "target": torch.zeros(scans, 2, device=device),
+            "building": torch.zeros(scans, dtype=torch.long, device=device),
+            "floor": torch.zeros(scans, dtype=torch.long, device=device),
+            "keys": [(0, 0, i // 3, 0) for i in range(scans)],
+            "weight": torch.full((scans,), 1 / scans, device=device)}
+    ctx = {"memory": {"building": torch.tensor([0, 1], device=device),
+                       "floor": torch.tensor([0, 0], device=device)},
+           "classes": torch.tensor([0, 1], device=device),
+           "class_pairs": torch.tensor([[0, 0], [1, 0]], device=device)}
+    mix = {"q": q, "xy": centers, "sigma": pack["sigma"], "ids": ids}
+    monkeypatch.setattr(joint, "_make_probability", lambda *args: (mix, pack, {}))
+    scored = joint._eval_config(pack, ctx, {}, 131)
+    expected = (9. + 2. / 3.) / 10.
+    assert scored["metrics"]["macro_bf_accuracy"] == pytest.approx(expected, abs=1e-15, rel=0.)

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_v17_dataset_adaptive_joint_fit_v1.py",
+    "-k",
+    "clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-23T13:33:39.809284+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_02_old_regression_corrected_fixture.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_02_old_regression_corrected_fixture.stderr.log",
+  "pid": 19908,
+  "exit_code": 1,
+  "elapsed_seconds": 6.47706151008606,
+  "finished_at": "2026-10-23T13:33:46.286346+08:00",
+  "stdout_sha256": "c57b49b94b98f0443cf40f503af923759fc5484210960e9ade5056cf4e0601c1",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

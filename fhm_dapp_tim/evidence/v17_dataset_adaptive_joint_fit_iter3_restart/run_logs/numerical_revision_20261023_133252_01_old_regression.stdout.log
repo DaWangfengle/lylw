@@ -1,0 +1,134 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size[cpu] _
+
+device = 'cpu'
+
+    @pytest.mark.parametrize("device", [
+        "cpu", pytest.param("cuda", marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    def test_clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size(device):
+        # No real data/checkpoint: zero spatial coefficients must retain the same
+        # point decision even with 2500 virtual columns and uneven scan counts.
+        generator = torch.Generator().manual_seed(131)
+        rows, anchors, virtual_count = 413, 1052, 2500
+        coords = (torch.randn(anchors, 2, generator=generator) * 20 + 50).to(device)
+        pairs = [(i, i + gap) for gap in (1, 2, 3) for i in range(anchors - gap)]
+        edges = torch.tensor(pairs[:virtual_count], dtype=torch.long, device=device)
+        xy = coords[None].expand(rows, -1, -1).contiguous()
+        virtual_xy = (xy[:, edges[:, 0]] + xy[:, edges[:, 1]]) / 2
+        def normal(*shape):
+            return torch.randn(*shape, generator=generator).to(device)
+        pack = {"scores": normal(rows, anchors), "z": normal(rows, anchors, 2),
+                "virtual_scores": normal(rows, virtual_count), "virtual_z": normal(rows, virtual_count, 2),
+                "xy": xy, "sigma": torch.ones_like(xy), "virtual_xy": virtual_xy,
+                "virtual_sigma": torch.ones_like(virtual_xy), "target": normal(rows, 2) * 5 + 45,
+                "building": torch.zeros(rows, dtype=torch.long, device=device),
+                "floor": torch.zeros(rows, dtype=torch.long, device=device), "keys": [i // 5 for i in range(rows)]}
+        counts = {key: pack["keys"].count(key) for key in set(pack["keys"])}
+        pack["weight"] = torch.tensor([1 / (len(counts) * counts[key]) for key in pack["keys"]], device=device)
+        ctx = {"memory": {"coords": coords, "building": torch.zeros(anchors, dtype=torch.long, device=device),
+                           "floor": torch.zeros(anchors, dtype=torch.long, device=device)},
+               "edges": edges, "classes": torch.zeros(anchors, dtype=torch.long, device=device),
+               "class_pairs": torch.tensor([[0, 0]], device=device)}
+        graph = torch.eye(anchors, device=device).to_sparse().coalesce()
+        endpoint = joint.normalized_virtual_endpoint_weights(edges.cpu().numpy(), coords.cpu().numpy(), math.inf)
+        candidates = [{"candidate_id": f"synthetic_{group}_{beta}", "temperature": .9805950440880841,
+                       "theta_v": 1.5, "theta_s": 1.5, "alpha_prior": 0., "alpha_obs": group * .1, "beta": beta}
+                      for group in range(2) for beta in joint.BETAS]
+        actual = joint.evaluate_calibration_grid(pack, ctx, graph, edges.cpu().numpy(),
+            {"tau_virt_m": math.inf}, candidates, endpoint_cache=endpoint)
+        logits = joint.op.combine_retrieval_and_g13_logits(pack["scores"], pack["z"], candidates[0]["temperature"],
+                                                         torch.tensor([1.5, 1.5], device=device))
+        q = torch.softmax(logits, dim=-1)
+>       reference, _ = joint.s3.spatial_metrics(q, torch.arange(anchors, device=device)[None].expand(rows, -1),
+            xy, pack["target"], pack["building"], pack["floor"], ctx["classes"], ctx["class_pairs"], keys=pack["keys"])
+
+tests\test_v17_dataset_adaptive_joint_fit_v1.py:757: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+fhm_dapp_tim\fhm_dapp\msep_joint_science_v1.py:199: in spatial_metrics
+    "macro_mae_full_m": site_mean(err_full, keys),
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = array([ 3.8482685 ,  3.2140281 ,  9.57582   ,  2.142563  , 10.066401  ,
+        5.1025853 ,  8.724145  , 11.397605  , ...53  ,  1.874351  , 11.274117  , 10.14307   , 11.573689  ,
+        6.952578  , 15.689376  , 20.246239  ], dtype=float32)
+keys = [0, 0, 0, 0, 0, 1, ...]
+
+    def site_mean(values, keys):
+        groups = {}
+        for i, key in enumerate(keys):
+>           groups.setdefault(tuple(key), []).append(i)
+                              ^^^^^^^^^^
+E           TypeError: 'int' object is not iterable
+
+fhm_dapp_tim\fhm_dapp\msep_joint_science_v1.py:176: TypeError
+_ test_clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size[cuda] _
+
+device = 'cuda'
+
+    @pytest.mark.parametrize("device", [
+        "cpu", pytest.param("cuda", marks=pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")),
+    ])
+    def test_clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size(device):
+        # No real data/checkpoint: zero spatial coefficients must retain the same
+        # point decision even with 2500 virtual columns and uneven scan counts.
+        generator = torch.Generator().manual_seed(131)
+        rows, anchors, virtual_count = 413, 1052, 2500
+        coords = (torch.randn(anchors, 2, generator=generator) * 20 + 50).to(device)
+        pairs = [(i, i + gap) for gap in (1, 2, 3) for i in range(anchors - gap)]
+        edges = torch.tensor(pairs[:virtual_count], dtype=torch.long, device=device)
+        xy = coords[None].expand(rows, -1, -1).contiguous()
+        virtual_xy = (xy[:, edges[:, 0]] + xy[:, edges[:, 1]]) / 2
+        def normal(*shape):
+            return torch.randn(*shape, generator=generator).to(device)
+        pack = {"scores": normal(rows, anchors), "z": normal(rows, anchors, 2),
+                "virtual_scores": normal(rows, virtual_count), "virtual_z": normal(rows, virtual_count, 2),
+                "xy": xy, "sigma": torch.ones_like(xy), "virtual_xy": virtual_xy,
+                "virtual_sigma": torch.ones_like(virtual_xy), "target": normal(rows, 2) * 5 + 45,
+                "building": torch.zeros(rows, dtype=torch.long, device=device),
+                "floor": torch.zeros(rows, dtype=torch.long, device=device), "keys": [i // 5 for i in range(rows)]}
+        counts = {key: pack["keys"].count(key) for key in set(pack["keys"])}
+        pack["weight"] = torch.tensor([1 / (len(counts) * counts[key]) for key in pack["keys"]], device=device)
+        ctx = {"memory": {"coords": coords, "building": torch.zeros(anchors, dtype=torch.long, device=device),
+                           "floor": torch.zeros(anchors, dtype=torch.long, device=device)},
+               "edges": edges, "classes": torch.zeros(anchors, dtype=torch.long, device=device),
+               "class_pairs": torch.tensor([[0, 0]], device=device)}
+        graph = torch.eye(anchors, device=device).to_sparse().coalesce()
+        endpoint = joint.normalized_virtual_endpoint_weights(edges.cpu().numpy(), coords.cpu().numpy(), math.inf)
+        candidates = [{"candidate_id": f"synthetic_{group}_{beta}", "temperature": .9805950440880841,
+                       "theta_v": 1.5, "theta_s": 1.5, "alpha_prior": 0., "alpha_obs": group * .1, "beta": beta}
+                      for group in range(2) for beta in joint.BETAS]
+        actual = joint.evaluate_calibration_grid(pack, ctx, graph, edges.cpu().numpy(),
+            {"tau_virt_m": math.inf}, candidates, endpoint_cache=endpoint)
+        logits = joint.op.combine_retrieval_and_g13_logits(pack["scores"], pack["z"], candidates[0]["temperature"],
+                                                         torch.tensor([1.5, 1.5], device=device))
+        q = torch.softmax(logits, dim=-1)
+>       reference, _ = joint.s3.spatial_metrics(q, torch.arange(anchors, device=device)[None].expand(rows, -1),
+            xy, pack["target"], pack["building"], pack["floor"], ctx["classes"], ctx["class_pairs"], keys=pack["keys"])
+
+tests\test_v17_dataset_adaptive_joint_fit_v1.py:757: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+fhm_dapp_tim\fhm_dapp\msep_joint_science_v1.py:199: in spatial_metrics
+    "macro_mae_full_m": site_mean(err_full, keys),
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = array([ 3.8482687 ,  3.214032  ,  9.575803  ,  2.1425667 , 10.066403  ,
+        5.1025825 ,  8.7241335 , 11.39761   , ...53  ,  1.874351  , 11.274121  , 10.143068  , 11.573679  ,
+        6.9525743 , 15.689369  , 20.246244  ], dtype=float32)
+keys = [0, 0, 0, 0, 0, 1, ...]
+
+    def site_mean(values, keys):
+        groups = {}
+        for i, key in enumerate(keys):
+>           groups.setdefault(tuple(key), []).append(i)
+                              ^^^^^^^^^^
+E           TypeError: 'int' object is not iterable
+
+fhm_dapp_tim\fhm_dapp\msep_joint_science_v1.py:176: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_v17_dataset_adaptive_joint_fit_v1.py::test_clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size[cpu]
+FAILED tests/test_v17_dataset_adaptive_joint_fit_v1.py::test_clean_grid_mean_matches_reference_point_reduction_at_realistic_support_size[cuda]
+2 failed, 32 deselected in 5.78s

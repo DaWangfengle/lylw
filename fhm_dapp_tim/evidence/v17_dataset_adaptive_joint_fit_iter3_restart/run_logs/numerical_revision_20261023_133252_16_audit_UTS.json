@@ -1,0 +1,18 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/iter3_continuation_readonly_check.py",
+    "tuji",
+    "uts"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-23T14:25:24.867505+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_16_audit_UTS.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_16_audit_UTS.stderr.log",
+  "pid": 18992,
+  "exit_code": 0,
+  "elapsed_seconds": 34.566919803619385,
+  "finished_at": "2026-10-23T14:25:59.434425+08:00",
+  "stdout_sha256": "56886b6d2c91dc5ac33cc36854e08b0fb9242b9fd874c6e8b3834f05cc1b2197",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

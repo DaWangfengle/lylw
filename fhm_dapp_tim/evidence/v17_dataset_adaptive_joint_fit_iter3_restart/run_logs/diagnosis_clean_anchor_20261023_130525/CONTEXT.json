@@ -1,0 +1,5 @@
+{
+  "created_at": "2026-10-23T13:05:25.931066+08:00",
+  "scope": "Numerical cause investigation only; synthetic probes then isolated failed UTS CAL-fit clean-anchor diagnostics; no formal rerun, CAL-eval, UJI, TEST, training, source edits or gate changes",
+  "user_request": "是不是TUJI一样的float64和float32问题？你要找到原因啊，"
+}

@@ -1,0 +1,92 @@
+TUJI / UTS / UJI Iter3 Restart — Codex 执行指令
+目标：在冻结源码、冻结参数、冻结数据划分不变的前提下，依次完成 UTS 与
+UJI，并核验三域 27/27 闭环。
+
+一、任务 TUJI 已完成
+9/9。现在必须在同一冻结源码、同一预检产物与同一输出目录中，顺序运行 UTS
+和 UJI：
+输出目录：fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart
+
+二、绝对约束 1. 不修改任何源码、参数池、默认值、目标函数、选择规则、MAE
+非退化护栏、BF-CE 惩罚、几何配置、支持集门禁或报告逻辑。 2.
+不重新训练模型，不更新、覆盖或重新导出任何 C/D/E checkpoint。 3.
+不改变训练、校准、验证、内部测试或官方测试的数据划分；不将 TEST
+数据用于选参。 4. 保留现有 TUJI
+产物、预检产物、审计文件和日志；不删除或手工编辑既有证据。 5.
+不切换分支，不创建分支，不提交或推送 Git。Git 上传由用户自行处理。 6.
+UTS 和 UJI 不得并行运行。必须先完整结束 UTS 并核验成功，再运行 UJI。 7.
+必须使用 –device cuda。CUDA 不可用或运行失败时，不得静默改用
+CPU，不得改代码绕过；保留完整日志并报告。 8. 不要因中间状态 INCOMPLETE
+9/27 而停止；UTS、UJI 完成前该状态是预期的。 9.
+两条命令必须使用指定输出目录，不要另建输出目录。
+
+三、运行前只读检查 1. 确认入口文件存在：
+fhm_dapp_tim/fhm_dapp/msep_v17_dataset_adaptive_joint_fit_v1.py 2.
+确认目标目录存在且包含 TUJI 9/9 产物。 3.
+只读检查程序的输出命名/汇总行为，确认 UTS/UJI 不会破坏 TUJI 的逐
+checkpoint 原始结果。如果发现确定会覆盖或破坏 TUJI
+原始产物的冲突，停止并报告具体路径；不得修改源码解决。 4. 确认 CUDA
+可用。 5.
+将本次完整终端输出、开始时间、实际命令和退出码记录到目标目录内一个新的、不会覆盖既有文件的日志文件中。
+
+四、正式执行（严格按顺序）
+
+阶段 1：UTS。执行并等待进程完整退出：
+
+python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1
+run –dataset uts –output
+fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart
+–device cuda
+
+只有当命令退出码为 0，且现有产物核验确认 UTS 的 9/9 checkpoint
+均完成后，才进入下一阶段。若失败，保存完整日志和已生成产物；不要自动重试、不要改代码/参数、不要继续
+UJI；先报告错误。
+
+阶段 2：UJI。执行并等待进程完整退出：
+
+python -m fhm_dapp_tim.fhm_dapp.msep_v17_dataset_adaptive_joint_fit_v1
+run –dataset uji –output
+fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart
+–device cuda
+
+只有当命令退出码为 0，且现有产物核验确认 UJI 的 9/9 checkpoint
+均完成后，才判定成功。若失败，保留日志和产物，不要自动重试或修改代码。
+
+五、运行后只读核验
+
+A. 完整性 - TUJI 9/9、UTS 9/9、UJI 9/9，合计 27/27。 - 最终
+CAL_EVAL_REPORT.md 必须确实包含三个数据集，不能只是最后运行的 UJI
+单域报告，也不能仍显示 INCOMPLETE 9/27。 - 逐 checkpoint
+数量、数据集标签、seed/backbone 身份和报告相互一致，无重复计数、无漏计。
+
+B. 冻结条件与门禁 -
+确认源码、参数池、几何配置、选择规则和数据划分未改变。 -
+核对各数据集自己的几何支持集审计：空边集数、边数范围、干净基线锚点可行性门禁须与该数据集的预检/报告一致。不要把
+TUJI 的边数范围错误套用于 UTS/UJI。 - 核对 MAE 非退化护栏、单侧 BF-CE
+惩罚及选择约束确实由原程序执行。 - 确认 internal_test_rows_scored = 0 且
+official_test_rows_scored = 0。任一非零都必须报告，不能宣称合规。
+
+C. 结果 按 TUJI、UTS、UJI 分别报告，再给三域汇总。至少比较 clean
+baseline、joint lambda=0.02、joint
+lambda=0.05，以及报告中已有的旧组合： - MAE、ES、W1/transport
+risk、joint NLL、BF-CE； - 站点 P95/P99、worst-site MAE； -
+每个数据集/方案的 MAE 改善与恶化 checkpoint 数量； -
+最坏站点变化、护栏是否通过； - 选参是否退化（例如 alpha_obs=0 或
+beta=0）。 不要预设 UTS/UJI
+必然改善，不要把单项指标改善称为全面成功，不得删去不利结果。
+
+D. 报告 使用仓库现有流程生成标准汇总产物与最终
+CAL_EVAL_REPORT.md。不得手工编造或编辑数值、复制单域报告冒充三域报告、伪造
+27/27。
+若两个命令成功但未生成三域报告，只检查是否有仓库已有且有文档依据的聚合命令；存在则按原用法运行。不得新写脚本、修改源码或猜测命令。没有既有聚合流程时，保留所有产物并报告具体缺口。
+
+六、最终汇报必须包含 1. UTS 命令退出码、9/9 状态和日志路径。 2. UJI
+命令退出码、9/9 状态和日志路径。 3. TUJI x/9、UTS x/9、UJI x/9、合计
+x/27。 4. 最终 CAL_EVAL_REPORT.md 实际路径，以及是否真正包含三域。 5.
+分数据集报告 joint lambda=0.02 和 0.05 相对 clean baseline 的 MAE
+变化，并给出 ES、W1、NLL、P95/P99、worst-site MAE 关键变化。 6. MAE
+护栏、BF-CE 惩罚、几何支持集门禁和 TEST 零评分约束核验结果。 7.
+失败、警告、缺失报告、覆盖风险或无法独立核验的项目。
+
+执行原则：只运行已冻结实验，不重新设计实验；先 UTS 后
+UJI；先报告可审计证据，再做科学解释。严禁为了追求漂亮指标而修改模型、参数、数据划分或门禁。

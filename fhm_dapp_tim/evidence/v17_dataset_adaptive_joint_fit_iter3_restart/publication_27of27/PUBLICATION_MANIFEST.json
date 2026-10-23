@@ -1,0 +1,309 @@
+{
+  "status": "PUBLICATION_READY_27_OF_27",
+  "created_at": "2026-10-23T15:32:18.117353+08:00",
+  "authorization": "User separately requested local commit and push of this round's artifacts.",
+  "completed_runs": {
+    "tuji": 9,
+    "uts": 9,
+    "uji": 9,
+    "total": 27
+  },
+  "experiments_rerun_for_publication": 0,
+  "weights_uploaded": false,
+  "candidate_tables_uploaded": false,
+  "native_aggregate_sha256": {
+    "CANDIDATE_METRICS.csv": "3fa8f7fb83f55ad2f1a6d42e53a679137186aff207880e3032bc4a9041edea05",
+    "PARETO_FRONTIER.csv": "405537b3f979ed6bc23b727c507d72ab11c24972e31cbd889a5f797c22bae93f",
+    "NEAR_OPTIMAL_SENSITIVITY.csv": "ed298768139ec232a296f6067fbba45bd4615db1d63baf2d610338f9a0728a42",
+    "CAL_EVAL_REPORT.md": "9237665c657ee1ebbe97432817a00729cdc41fc688dc769ad669e94dd1c80c00",
+    "JOINT_FIT_SELECTION.json": "6b39c72586450ce6b42bd2f6a819872cb2e350d2dd6797b1fc57e33d14877cc2",
+    "INTEGRITY_REVIEW.json": "0b2dc1e765719d61d886010a1ff85d7a7d32fd306862988cdb75d5228264608b",
+    "RUN_REPORT_V17_DATASET_ADAPTIVE_JOINT_FIT.md": "297c577bd9fa578c5bed3420d0dfe8dbc0c530abc061b98abf7f2da139f0fdd2"
+  },
+  "report_sha256": "e14e0f91c6d91bd4bcc3cbbd75142aea35954b78d9f3ee1dad7677ad6ecf02ee",
+  "read_only_verification_sha256": "9891f9f2174c7ffbfef6bc683bc6013918b3deaf420cb5efa7b06ec4d0dcc63c",
+  "source_provenance": {
+    "tuji": "2895555096b253f66a7eccf445510dccc5de027e0429960bdae337bf826fe498",
+    "uts_uji": "89a59244a52c47c6cb53938301f59962c4c4e0015f43c7d6fb5c64430884f0ca",
+    "limitation": "TUJI nine completed results retain the original source revision. UTS/UJI use this authorized numerical revision. All 27 must not be described as byte-identical source executions.",
+    "revision_freeze_sha256": "82ec6d9b22b02973d0c0f80e4bced927a89d70586d85a35c056b02ecdf73c575"
+  },
+  "checkpoint_identity_record": "run_logs/numerical_revision_20261023_133252/REVISION_FREEZE.json",
+  "scientific_status": "Retrospective CAL-eval descriptive comparison; completion PASS is not scientific promotion.",
+  "pareto_archive": {
+    "archive_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/publication_27of27/PARETO_FRONTIER.csv.gz",
+    "archive_bytes": 3540658,
+    "archive_sha256": "016829ad58292b5ca15aff4e1b357f02c1d2579ad3a780927b6dbe8e9545e670",
+    "original_path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/PARETO_FRONTIER.csv",
+    "original_bytes": 16657198,
+    "original_sha256": "405537b3f979ed6bc23b727c507d72ab11c24972e31cbd889a5f797c22bae93f",
+    "decompressed_sha256_verified": true
+  },
+  "local_only_candidate_files": [
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv",
+      "bytes": 1020120111,
+      "sha256": "3fa8f7fb83f55ad2f1a6d42e53a679137186aff207880e3032bc4a9041edea05",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv.part001.gz",
+      "bytes": 13979708,
+      "sha256": "0eabb6357b7f6ca1d02befce8a54bbc363be9dd30f76b38b659a836b35509a00",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv.part002.gz",
+      "bytes": 13986596,
+      "sha256": "22dada10bd5dfb7ad84bb3e508a3cd7bad744145481902b91aa5a6385f7a2e34",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv.part003.gz",
+      "bytes": 13947397,
+      "sha256": "75dff2b40fce7e18985a0ad904de4e48360003dbc21754f51ab77adfdbad9c5e",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv.part004.gz",
+      "bytes": 14005018,
+      "sha256": "8e345a865b082ee71e4b73645990698a46573f2a7a23e0a464bda3c2db1a6abb",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv.part005.gz",
+      "bytes": 13986123,
+      "sha256": "4e560bb9c4013a58e61756182f5ba27d53bd2d64985906eece0018313ae52fdd",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/CANDIDATE_METRICS.csv.part006.gz",
+      "bytes": 1006569,
+      "sha256": "859ce3443eb68085b3d546d76362151d8ca7677282217490fe221cf3afc65231",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/run_logs/continuation_27of27_20261023_125047_before_UTS_aggregate/CANDIDATE_METRICS.csv",
+      "bytes": 340364935,
+      "sha256": "954d61648ee76c4c22fc03e61d1f4c504d4e54e0cebec9d4a6773e62b141cf47",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/C/CANDIDATE_METRICS.csv",
+      "bytes": 37807587,
+      "sha256": "c1aec682eb92ac126748f3a10cf2929849aaad49348385745388b279aff99b55",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/C/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7877833,
+      "sha256": "76119f4e522a25bb117f9f5e64a96845e99cb0ab7ed6c0b8f8e6181d0f94fa93",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/D/CANDIDATE_METRICS.csv",
+      "bytes": 37845728,
+      "sha256": "228868f41f19bcb5b4cb3c1a169ddc225d582af8181cf534371957e2dce6f9a3",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/D/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7879895,
+      "sha256": "4d365dc283c91f98090049c394e8c848fe7d41268a132b13c1fd7e1cdcb035a3",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/E/CANDIDATE_METRICS.csv",
+      "bytes": 37834574,
+      "sha256": "38a5fce42ced649fb0d10059719e7435fb1255b426a7a5ceee20c740a2730ca4",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17301/E/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7895389,
+      "sha256": "8533c6e2f921d6c503d394ae9eca0613d8b158cc1a496fbc265c88fc31b01793",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/C/CANDIDATE_METRICS.csv",
+      "bytes": 37757987,
+      "sha256": "707ac39af5c5acc4545db5d044ab82cd6885d2797f1a79c288eeda3b76525a62",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/C/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7855785,
+      "sha256": "e7911dd44fbcee428b5f08c0b38a214f3ebf42430a7d4e17512f573020b50edb",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/D/CANDIDATE_METRICS.csv",
+      "bytes": 37853526,
+      "sha256": "f52ee90ead8966b14816f9b7da60285b6bd98fbc8537a7221d14d122d742e9b7",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/D/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7860334,
+      "sha256": "92e44ca905f1352745df2997d391f74b43f49ef793ddea198cc599b8028feeb9",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/E/CANDIDATE_METRICS.csv",
+      "bytes": 37827388,
+      "sha256": "15871dee4a514f1c272783abf4253dc0eb72fb74d586cb47bc42c68a7deb6897",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17302/E/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7881113,
+      "sha256": "a75452a506039598ac1e1db696bf0481e19879bf5d42404f98954b74bfc88adb",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/C/CANDIDATE_METRICS.csv",
+      "bytes": 37802990,
+      "sha256": "ecac3c238cd589a5ff155005cccc0059050cf85892224d61e2487dde931dddb4",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/C/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7896157,
+      "sha256": "0e872a34d9a67cdc30bf6446d2760e8a3eff6f3d53aeaf39814f5f95ab3b19b3",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/D/CANDIDATE_METRICS.csv",
+      "bytes": 37825216,
+      "sha256": "5ebda090af767404d62f7d19313078cfddebe125f01fb1a37e6d36c9c451bd11",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/D/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7883777,
+      "sha256": "700b6240b4a86cd4d1e9f560c5ef9915991606646bccf92357185659fe9681c5",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/E/CANDIDATE_METRICS.csv",
+      "bytes": 37815579,
+      "sha256": "27ee18f3e323cac4a4e1cb2acd69c93cec6842902e618c3d5b880b1657993b39",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/tuji_seed17303/E/CANDIDATE_METRICS.csv.gz",
+      "bytes": 7884254,
+      "sha256": "8ff36085f2f3515481f64495a1dca4a95a960c8483081d4c0200c336da47f225",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17301/C/CANDIDATE_METRICS.csv",
+      "bytes": 38428248,
+      "sha256": "74063b3c37a223a288d8faf857a7a96ac5a40bc7062710ae2f877dfe53045d05",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17301/D/CANDIDATE_METRICS.csv",
+      "bytes": 38536452,
+      "sha256": "b7afab1813e8bb4e73a5ff28e488a36fec06cc5be5bf51a48502cbcdc71b7c00",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17301/E/CANDIDATE_METRICS.csv",
+      "bytes": 38384704,
+      "sha256": "b34865b15d04f438fea531b4eab528580e3d306ed902e8d99e997760fc7676d5",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17302/C/CANDIDATE_METRICS.csv",
+      "bytes": 38187942,
+      "sha256": "b23b8ba85ff85030952bfab09a4b948276b33092cb3ee537d026f18dcebdbabc",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17302/D/CANDIDATE_METRICS.csv",
+      "bytes": 38563301,
+      "sha256": "7a8cb6bd5a65deb38454e4e76515e02a472d916fc5dbeac79ff2a9c78ee67424",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17302/E/CANDIDATE_METRICS.csv",
+      "bytes": 38267560,
+      "sha256": "bfd0811e2791698c28e46bc04e43d160815f547847b31a10a8d24a8df5143b68",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17303/C/CANDIDATE_METRICS.csv",
+      "bytes": 38300277,
+      "sha256": "8feedf526a2a4804bb1bc4935d45c21020ac3cffc77aa26bc6d216839ca7c673",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17303/D/CANDIDATE_METRICS.csv",
+      "bytes": 38560088,
+      "sha256": "66dba74f9c675f4a98a4a35b19bc1b969fbea43570bfabbba41ffeef1699224e",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uji_seed17303/E/CANDIDATE_METRICS.csv",
+      "bytes": 38410707,
+      "sha256": "4e8ad6886e690d27934d7539271cdc78482d2fe864512b847566204231f8ec75",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17301/C/CANDIDATE_METRICS.csv",
+      "bytes": 36905135,
+      "sha256": "e20e0495cda979bfb01e9e68175bfe1874fcf7c780d511998d6e7978946bceb3",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17301/D/CANDIDATE_METRICS.csv",
+      "bytes": 36883732,
+      "sha256": "70564f63f5ca13d72b6f1d5ea0499dc8a138dc17bc4d55ae217fc3701b9e12d9",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17301/E/CANDIDATE_METRICS.csv",
+      "bytes": 36873293,
+      "sha256": "b190b304b8ba27da482db8922c03cc4ce2f6b4e44a4387453d631177a85f8ff2",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17302/C/CANDIDATE_METRICS.csv",
+      "bytes": 36986664,
+      "sha256": "94485a88aac8fcb49bdfd44cdf8538d2e37e6b4d8e93044c5276881117326595",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17302/D/CANDIDATE_METRICS.csv",
+      "bytes": 37418795,
+      "sha256": "6163f983f7f70c7ce9ee41fac55494ba35ffe35c3b98fba482a679337236c37e",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17302/E/CANDIDATE_METRICS.csv",
+      "bytes": 38370318,
+      "sha256": "59ce8d12d135d57553d3b0638f34cf0934099fef729d46e628e7594dc71df79d",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17303/C/CANDIDATE_METRICS.csv",
+      "bytes": 36935618,
+      "sha256": "9ff066bca26839fe0b759b7415ac77e7d8f251d3a9228775d06368f9d918f65a",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17303/D/CANDIDATE_METRICS.csv",
+      "bytes": 36852926,
+      "sha256": "613320d37a59a492522bf5c192fd0cfd05cd7ca35c5b0de6475d5ad2205f8192",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    },
+    {
+      "path": "fhm_dapp_tim/evidence/v17_dataset_adaptive_joint_fit_iter3_restart/runs/uts_seed17303/E/CANDIDATE_METRICS.csv",
+      "bytes": 36902106,
+      "sha256": "4c1caed6c75db88f88932ae872007e7554369d50e53527c1f89dd93b8b8ffb2d",
+      "publication_status": "LOCAL_ONLY_USER_REQUEST"
+    }
+  ],
+  "earlier_publication": "publication/ and old TUJI-only audits are preserved original 9/27 stage snapshots."
+}

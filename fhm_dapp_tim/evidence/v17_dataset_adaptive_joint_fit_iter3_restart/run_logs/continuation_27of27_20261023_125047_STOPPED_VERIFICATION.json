@@ -1,0 +1,220 @@
+{
+  "status": "STOPPED_UTS_CLEAN_ANCHOR_GUARD_FAILED",
+  "audited_at": "2026-10-23T12:59:46.113666+08:00",
+  "UTS": {
+    "status": "FAILED",
+    "exit_code": 1,
+    "completed_checkpoints": 0,
+    "expected_checkpoints": 9,
+    "formal_attempts_this_continuation": 1,
+    "metadata": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\continuation_27of27_20261023_125047_UTS.json",
+    "failure_candidates_shown_in_traceback": [
+      {
+        "candidate_id": "fit_quantile_geometry_00__cal_02754",
+        "mae_non_degradation": false,
+        "bf_accuracy_non_degradation": true,
+        "bf_cross_entropy_guard": true,
+        "mae_delta_m": 1.430511474609375e-06
+      },
+      {
+        "candidate_id": "fit_quantile_geometry_01__cal_02754",
+        "mae_non_degradation": false,
+        "bf_accuracy_non_degradation": true,
+        "bf_cross_entropy_guard": true,
+        "mae_delta_m": 1.430511474609375e-06
+      },
+      {
+        "candidate_id": "fit_quantile_geometry_02__cal_02754",
+        "mae_non_degradation": false,
+        "bf_accuracy_non_degradation": true,
+        "bf_cross_entropy_guard": true,
+        "mae_delta_m": 1.430511474609375e-06
+      }
+    ]
+  },
+  "UJI": {
+    "status": "NOT_RUN",
+    "exit_code": null,
+    "completed_checkpoints": 0,
+    "expected_checkpoints": 9,
+    "formal_attempts_this_continuation": 0
+  },
+  "completed_runs_by_dataset": {
+    "tuji": 9,
+    "uts": 0,
+    "uji": 0
+  },
+  "total_completed_runs": 9,
+  "expected_runs": 27,
+  "native_report_path": "D:\\liuyanlunwen\\fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\CAL_EVAL_REPORT.md",
+  "native_report_domains": [
+    "tuji"
+  ],
+  "native_report_is_three_domain_report": false,
+  "source_files_unchanged": 138,
+  "all_checkpoints_unchanged": 27,
+  "training_inputs_unchanged": 7,
+  "preflight_files_unchanged": 3,
+  "tuji_raw_files_unchanged": 36,
+  "previous_delivery_files_unchanged": 72,
+  "previous_failed_attempt_files_unchanged": 45,
+  "aggregate_files_unchanged": 7,
+  "no_source_fix_no_retry_no_new_training": true,
+  "internal_test_rows_scored": 0,
+  "official_test_rows_scored": 0,
+  "geometry_preflight_summary_only": {
+    "tuji": {
+      "seeds": 3,
+      "fit_anchors": [
+        646
+      ],
+      "base_edges": [
+        2946
+      ],
+      "s1_edge_range": [
+        2209,
+        2946
+      ],
+      "s2_edge_range": [
+        1473,
+        2946
+      ],
+      "minimum_required_s2_edges": [
+        1326
+      ]
+    },
+    "uts": {
+      "seeds": 3,
+      "fit_anchors": [
+        1052
+      ],
+      "base_edges": [
+        5000
+      ],
+      "s1_edge_range": [
+        3750,
+        5000
+      ],
+      "s2_edge_range": [
+        2500,
+        5000
+      ],
+      "minimum_required_s2_edges": [
+        2250
+      ]
+    },
+    "uji": {
+      "seeds": 3,
+      "fit_anchors": [
+        672
+      ],
+      "base_edges": [
+        3232
+      ],
+      "s1_edge_range": [
+        2424,
+        3232
+      ],
+      "s2_edge_range": [
+        1617,
+        3232
+      ],
+      "minimum_required_s2_edges": [
+        1455
+      ]
+    }
+  },
+  "prior_tuji_mean_paired_deltas_3_seeds": [
+    {
+      "dataset": "tuji",
+      "backbone": "C",
+      "lambda": 0.02,
+      "source": "Previously completed TUJI run; not rerun in this continuation",
+      "delta_macro_mae_full_m": 0.010930180549621582,
+      "delta_macro_es_m": 0.029276433630266146,
+      "delta_macro_transport_risk_m": -0.1428717513015306,
+      "delta_macro_joint_nll": -0.013795729132665802,
+      "delta_bf_cross_entropy": -1.1049184915160974e-07,
+      "delta_site_p95_full_m": 0.21849074165026364,
+      "delta_site_p99_full_m": 0.11028224719895219,
+      "delta_worst_site_mae_m": 0.19033757580651178
+    },
+    {
+      "dataset": "tuji",
+      "backbone": "C",
+      "lambda": 0.05,
+      "source": "Previously completed TUJI run; not rerun in this continuation",
+      "delta_macro_mae_full_m": 0.010930180549621582,
+      "delta_macro_es_m": 0.029276433630266146,
+      "delta_macro_transport_risk_m": -0.1428717513015306,
+      "delta_macro_joint_nll": -0.013795729132665802,
+      "delta_bf_cross_entropy": -1.1468148386484245e-07,
+      "delta_site_p95_full_m": 0.21849074165026364,
+      "delta_site_p99_full_m": 0.11028224719895219,
+      "delta_worst_site_mae_m": 0.19033757580651178
+    },
+    {
+      "dataset": "tuji",
+      "backbone": "D",
+      "lambda": 0.02,
+      "source": "Previously completed TUJI run; not rerun in this continuation",
+      "delta_macro_mae_full_m": 0.002364555994669596,
+      "delta_macro_es_m": 0.0038704252329426017,
+      "delta_macro_transport_risk_m": -0.08422897734503805,
+      "delta_macro_joint_nll": 0.017055505427761315,
+      "delta_bf_cross_entropy": -1.247522997497678e-07,
+      "delta_site_p95_full_m": -0.016711777945359607,
+      "delta_site_p99_full_m": 0.06581669522656315,
+      "delta_worst_site_mae_m": 0.09067310227288121
+    },
+    {
+      "dataset": "tuji",
+      "backbone": "D",
+      "lambda": 0.05,
+      "source": "Previously completed TUJI run; not rerun in this continuation",
+      "delta_macro_mae_full_m": 0.0028525988260904946,
+      "delta_macro_es_m": -0.004263177730035039,
+      "delta_macro_transport_risk_m": -0.08517143994137848,
+      "delta_macro_joint_nll": -0.009555136811906006,
+      "delta_bf_cross_entropy": 1.9663081237316268e-07,
+      "delta_site_p95_full_m": -0.013746569057305832,
+      "delta_site_p99_full_m": 0.06630039102501313,
+      "delta_worst_site_mae_m": 0.08680469459957522
+    },
+    {
+      "dataset": "tuji",
+      "backbone": "E",
+      "lambda": 0.02,
+      "source": "Previously completed TUJI run; not rerun in this continuation",
+      "delta_macro_mae_full_m": 0.005882104237874349,
+      "delta_macro_es_m": 0.027429366025371715,
+      "delta_macro_transport_risk_m": -0.12458036688790797,
+      "delta_macro_joint_nll": 0.033740183581476714,
+      "delta_bf_cross_entropy": -1.8137676723502713e-07,
+      "delta_site_p95_full_m": -0.012899245818455954,
+      "delta_site_p99_full_m": 0.08039953516589253,
+      "delta_worst_site_mae_m": 0.09849499331580258
+    },
+    {
+      "dataset": "tuji",
+      "backbone": "E",
+      "lambda": 0.05,
+      "source": "Previously completed TUJI run; not rerun in this continuation",
+      "delta_macro_mae_full_m": 0.0063203175862630205,
+      "delta_macro_es_m": 0.020711759510247507,
+      "delta_macro_transport_risk_m": -0.12562486745309132,
+      "delta_macro_joint_nll": 0.005804128404976794,
+      "delta_bf_cross_entropy": 1.2064917124613808e-07,
+      "delta_site_p95_full_m": -0.012959104776382327,
+      "delta_site_p99_full_m": 0.08269160343541015,
+      "delta_worst_site_mae_m": 0.10313226117028125
+    }
+  ],
+  "limitations": [
+    "UTS stopped before selections, CAL-eval report or candidate CSV were written; the complete in-memory candidate table cannot be independently reconstructed from the saved outputs.",
+    "Only the first three failing clean anchors are printed by the frozen error handler; total failing anchor count is not exported.",
+    "A difference between batched CAL-fit calculations and the reference path may involve floating-point arithmetic, but the root cause was not independently proven; no synthetic rerun or corrective patch was authorized or performed.",
+    "No UTS/UJI CAL-eval metrics or 27/27 conclusions are available. Geometry runtime audit for all 27 runs is incomplete.",
+    "TEST zero counts are checked from native metadata and source role guards, not from an OS file-access trace."
+  ]
+}

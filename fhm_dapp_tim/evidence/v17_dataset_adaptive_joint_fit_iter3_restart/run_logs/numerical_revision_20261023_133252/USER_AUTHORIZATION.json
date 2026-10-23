@@ -1,0 +1,10 @@
+{
+  "authorized_at_recorded": "2026-10-23T13:32:52.294819+08:00",
+  "user_instruction": "那开始继续跑",
+  "interpretation": "Authorize the diagnosed minimal numerical implementation repair and continuation of UTS then UJI with original failures, freezes, checkpoints and data roles preserved. No tolerance/parameter/method change or Git operations.",
+  "source_before_sha256": "2895555096b253f66a7eccf445510dccc5de027e0429960bdae337bf826fe498",
+  "tests_before_sha256": "2adc3e21ca71dc9c975e808c634900b94e3895d15c91f6ba2777795590801dc5",
+  "old_freeze_preserved": true,
+  "old_TUJI_results_preserved": true,
+  "revision_scope": "New UTS/UJI runs will use a disclosed numerical source revision; TUJI remains the original completed revision and must not be represented as bit-identical source execution."
+}

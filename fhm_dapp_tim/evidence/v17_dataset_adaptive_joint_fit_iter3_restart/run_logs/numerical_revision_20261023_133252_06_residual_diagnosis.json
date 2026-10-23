@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/diagnose_iter3_residual_seed17303.py",
+    "isolated-real"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-23T13:39:50.112931+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_06_residual_diagnosis.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_06_residual_diagnosis.stderr.log",
+  "pid": 19984,
+  "exit_code": 0,
+  "elapsed_seconds": 8.8351571559906,
+  "finished_at": "2026-10-23T13:39:58.948088+08:00",
+  "stdout_sha256": "694cda2fee1d9ef7691d312f09f808732ca721565e7e39aac121811c16156750",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

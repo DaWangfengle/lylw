@@ -1,0 +1,19 @@
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17301, "backbone": "C", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17301, "backbone": "D", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17301, "backbone": "E", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17302, "backbone": "C", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17302, "backbone": "D", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17302, "backbone": "E", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17303, "backbone": "C", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17303, "backbone": "D", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17303, "backbone": "E", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17301, "backbone": "C", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17301, "backbone": "D", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17301, "backbone": "E", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17302, "backbone": "C", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17302, "backbone": "D", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17302, "backbone": "E", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17303, "backbone": "C", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17303, "backbone": "D", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uji", "seed": 17303, "backbone": "E", "geometries": 12, "mae_delta_range": [0.0, 0.0]}
+{"status": "PASS", "checkpoints": 18, "clean_anchors": 216}

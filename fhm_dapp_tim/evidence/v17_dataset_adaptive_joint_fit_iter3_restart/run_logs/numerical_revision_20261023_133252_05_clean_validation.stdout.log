@@ -1,0 +1,6 @@
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17301, "backbone": "C", "geometries": 12, "mae_delta_range": [-2.384185791015625e-07, -2.384185791015625e-07]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17301, "backbone": "D", "geometries": 12, "mae_delta_range": [7.152557373046875e-07, 7.152557373046875e-07]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17301, "backbone": "E", "geometries": 12, "mae_delta_range": [0.0, 4.76837158203125e-07]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17302, "backbone": "C", "geometries": 12, "mae_delta_range": [-2.384185791015625e-07, -2.384185791015625e-07]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17302, "backbone": "D", "geometries": 12, "mae_delta_range": [-7.152557373046875e-07, -7.152557373046875e-07]}
+{"stage": "clean_anchor_checkpoint_validated", "dataset": "uts", "seed": 17302, "backbone": "E", "geometries": 12, "mae_delta_range": [-4.76837158203125e-07, 0.0]}

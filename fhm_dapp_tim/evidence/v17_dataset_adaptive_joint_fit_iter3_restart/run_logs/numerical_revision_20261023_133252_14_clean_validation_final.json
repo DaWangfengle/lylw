@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/validate_iter3_clean_revision.py",
+    "VALIDATION_CLEAN_ANCHORS_FINAL.json"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-23T13:48:21.364164+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_14_clean_validation_final.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\numerical_revision_20261023_133252_14_clean_validation_final.stderr.log",
+  "pid": 3124,
+  "exit_code": 0,
+  "elapsed_seconds": 78.51376533508301,
+  "finished_at": "2026-10-23T13:49:39.877930+08:00",
+  "stdout_sha256": "29d078b60d72850ab2929238ecbb78d76bb7d1fe0379988f170cb09bb6b71bd6",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

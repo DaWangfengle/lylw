@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:\\miniminiconda\\envs\\liuyan\\python.exe",
+    "tmp/diagnose_iter3_clean_mae.py",
+    "isolated-real"
+  ],
+  "cwd": "D:\\liuyanlunwen",
+  "started_at": "2026-10-23T13:10:13.103819+08:00",
+  "stdout": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\diagnosis_clean_anchor_20261023_130525_ISOLATED_CAL_FIT.stdout.log",
+  "stderr": "fhm_dapp_tim\\evidence\\v17_dataset_adaptive_joint_fit_iter3_restart\\run_logs\\diagnosis_clean_anchor_20261023_130525_ISOLATED_CAL_FIT.stderr.log",
+  "pid": 17760,
+  "exit_code": 0,
+  "elapsed_seconds": 8.593884229660034,
+  "finished_at": "2026-10-23T13:10:21.697704+08:00",
+  "stdout_sha256": "f92beb29f630782b31143a3de4efe632d7c9295074099d8db6c2b82acc9ee719",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
